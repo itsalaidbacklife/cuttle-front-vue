@@ -19,6 +19,7 @@
 					<v-btn
 						color="primary"
 						rounded
+						@click="submitLogin"
 					>
 						Log In
 					</v-btn>
@@ -60,8 +61,20 @@
 <script>
 export default {
 	name: 'LoginSignup',
-	data: () => {
-
+	data() {
+		return {
+			username: '',
+			pw: '',
+		}
+	},
+	methods: {
+		submitLogin() {
+			console.log('Submitting Login from vue component');
+			this.$store.dispatch('requestLogin', {
+				email: this.username,
+				password: this.password,
+			});
+		},
 	},
 }
 </script>
