@@ -12,12 +12,7 @@ Vue.use(VueRouter)
     name: 'Home',
     component: Home,
     beforeEnter: (to, from, next) => {
-      console.log(store);
-      console.log(store.state);
-      console.log(store.state.auth);
-      console.log(store.state.auth.authenticated);
       if (store.state.auth.authenticated) {
-        console.log('navigating home');
         next();
       }
       else {
