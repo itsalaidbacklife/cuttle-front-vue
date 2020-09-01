@@ -15,7 +15,6 @@ export default {
 	},
 	actions: {
 		requestLogin(context, data) {
-			console.log('store action requestLogin');
 			io.socket.post('/user/login', {
 				email: data.email,
 				password: data.password
