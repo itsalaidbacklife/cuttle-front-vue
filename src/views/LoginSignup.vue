@@ -101,6 +101,14 @@ export default {
 				this.$store.dispatch('requestLogin', {
 					email: this.username,
 					password: this.pw,
+				})
+				.then(() => {
+					this.username = '';
+					this.pw = '';
+					this.$router.push('/');
+				})
+				.catch(() => {
+					console.log('Error logging in');
 				});
 			} else {
 				this.$store.dispatch('requestSignup', {
@@ -108,11 +116,15 @@ export default {
 					password: this.pw,
 				})
 				.then(() => {
+					console.log('Success logging in');
+					console.log(this.$store.state.auth.authenticated);
 					this.username = '';
 					this.pw = '';
+					this.$router.push('/');
 				})
 				.catch(() => {
 					// Handle Error
+					console.log('Error signing up');
 				});
 			}
 		},
