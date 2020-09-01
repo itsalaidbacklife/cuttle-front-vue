@@ -5,12 +5,14 @@
 			<v-col
 				cols="5"
 			>
-				<h1>Login</h1>
+				<h1>{{ buttonText }}</h1>
 				<v-text-field
+					v-model="username"
 					outlined
 					hint="Username"
 				/>
 				<v-text-field
+					v-model="pw"
 					outlined
 					hint="Password"
 					type="password"
@@ -21,16 +23,18 @@
 						rounded
 						@click="submitLogin"
 					>
-						Log In
+						{{ buttonText }}
 					</v-btn>
 				</div>
 
-				<p>Don't Have an account?
+				<p>
+					{{ switchLabelText }}
 					<v-btn
 						text
 						color="primary"
+						@click="switchMode"
 					>
-						Sign Up
+						{{ inverseButtonText }}
 					</v-btn>
 				</p>
 			</v-col>
@@ -65,16 +69,57 @@ export default {
 		return {
 			username: '',
 			pw: '',
+			isLoggingIn: true,
+		}
+	},
+	computed: {
+		isSigningUp() {
+			return !this.isLoggingIn;
+		},
+		buttonText() {
+			if (this.isLoggingIn) {
+				return 'Log In';
+			}
+			return 'Sign Up';
+		},
+		inverseButtonText() {
+			if (this.isLoggingIn) {
+				return 'Sign Up';
+			}
+			return 'Log In';
+		},
+		switchLabelText() {
+			if (this.isLoggingIn) {
+				return "Don't have an account?"
+			}
+			return 'Already have an account?'
 		}
 	},
 	methods: {
 		submitLogin() {
-			console.log('Submitting Login from vue component');
-			this.$store.dispatch('requestLogin', {
-				email: this.username,
-				password: this.password,
-			});
+			if (this.isLoggingIn) {
+				this.$store.dispatch('requestLogin', {
+					email: this.username,
+					password: this.pw,
+				});
+			} else {
+				this.$store.dispatch('requestSignup', {
+					email: this.username,
+					password: this.pw,
+				})
+				.then(() => {
+					this.username = '';
+					this.pw = '';
+				})
+				.catch(() => {
+					// Handle Error
+				});
+			}
 		},
+		switchMode() {
+			this.isLoggingIn = !this.isLoggingIn;
+			this.pw = '';
+		}
 	},
 }
 </script>

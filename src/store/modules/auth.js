@@ -23,6 +23,22 @@ export default {
 				console.log(resData); // response body
 				console.log(jwres); // Json wrapped data
 			});
-		}
+		},
+
+		requestSignup(context, data) {
+			io.socket.put('/user/signup', {
+				email: data.email,
+				password: data.password
+			}, function handleResponse(resData, jwres) {
+				console.log(resData);
+				console.log(jwres);
+				if (jwres.statusCode === 200) {
+					return Promise.resolve();
+				}
+				else {
+					return Promise.reject(new Error('Error Signing Up :('));
+				}
+			});
+		},
 	}
 }
