@@ -1,29 +1,8 @@
 <template>
   <v-app id="app">
-    <v-main>
-      <login-signup/>
-    </v-main>
+    <router-view/>
   </v-app>
 </template>
-
-<script>
-import LoginSignup from './components/LoginSignup';
-
-export default {
-  name: 'App',
-
-  components: {
-    LoginSignup
-  },
-
-  data() {
-    return {
-
-    }
-  },
-
-};
-</script>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap');
