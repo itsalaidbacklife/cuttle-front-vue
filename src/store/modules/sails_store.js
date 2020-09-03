@@ -3,9 +3,9 @@ io.sails.url = "localhost:1337";
 io.sails.useCORSRouteToGetCookie = false;
 
 export default {
-  state: {
-    io: io
-  },
-  mutations: {},
-  actions: {}
+	state: {
+		io: io
+	},
+	mutations: {},
+	actions: {}
 };
