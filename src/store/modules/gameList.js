@@ -18,7 +18,7 @@ export default {
 					console.log(jwres);
 					if (jwres.statusCode === 200) {
 						context.commit('refreshGames', resData);
-						return resolve(resData);
+						return resolve(resData.games);
 					}
 					return reject(new Error('Could not retrieve list of games'))
 				});
