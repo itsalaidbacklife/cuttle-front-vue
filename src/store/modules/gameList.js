@@ -8,6 +8,9 @@ export default {
 	mutations: {
 		refreshGames(state, newList) {
 			state.games = newList;
+		},
+		addGameToList(state, newGame) {
+			state.games.push(newGame);
 		}
 	},
 	actions: {
