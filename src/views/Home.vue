@@ -6,6 +6,15 @@
 		>
 		<h1>HOME PAGE</h1>
 		<!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
+		<ul>
+			<li
+				v-for="game in gameList"
+				:key="game.id"
+			>
+				Game: {{ game.name }}
+			</li>
+		</ul>
+		{{ gameList }}
 	</div>
 </template>
 
@@ -18,8 +27,12 @@ export default {
 	components: {
 		// HelloWorld
 	},
+	computed: {
+		gameList() {
+			return this.$store.state.gameList.games;
+		},
+	},
 	mounted() {
-		console.log('loaded home component');
 		this.$store.dispatch('requestGameList');
 	}
 };

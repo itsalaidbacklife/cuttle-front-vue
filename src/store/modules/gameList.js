@@ -1,4 +1,5 @@
 import { io } from '../../plugins/sails.js';
+let _ = require('lodash');
 
 export default {
 	state: {
@@ -17,7 +18,8 @@ export default {
 					console.log(resData);
 					console.log(jwres);
 					if (jwres.statusCode === 200) {
-						context.commit('refreshGames', resData);
+						const games = _.cloneDeep(resData.games);
+						context.commit('refreshGames', games);
 						return resolve(resData.games);
 					}
 					return reject(new Error('Could not retrieve list of games'))
