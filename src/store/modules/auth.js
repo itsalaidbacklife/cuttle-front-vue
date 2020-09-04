@@ -1,6 +1,4 @@
-const io = require("sails.io.js")(require("socket.io-client"));
-io.sails.url = "localhost:1337";
-io.sails.useCORSRouteToGetCookie = false;
+import { io } from '../../plugins/sails.js';
 
 export default {
 	state: {
