@@ -8,17 +8,20 @@
 					v-model="username"
 					outlined
 					hint="Username"
+					data-cy="username"
 				/>
 				<v-text-field
 					v-model="pw"
 					outlined
 					hint="Password"
 					type="password"
+					data-cy="password"
 				/>
 				<div id="login-button-container">
 					<v-btn
 						color="primary"
 						rounded
+						data-cy="submit"
 						@click="submitLogin"
 					>
 						{{ buttonText }}
@@ -31,6 +34,7 @@
 						text
 						color="primary"
 						@click="switchMode"
+						data-cy="switch-mode"
 					>
 						{{ inverseButtonText }}
 					</v-btn>
