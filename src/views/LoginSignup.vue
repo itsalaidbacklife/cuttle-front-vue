@@ -76,12 +76,6 @@ export default {
 			}
 			return "Sign Up";
 		},
-		inverseButtonText() {
-			if (this.isLoggingIn) {
-				return "Sign Up";
-			}
-			return "Log In";
-		},
 		switchLabelText() {
 			if (this.isLoggingIn) {
 				return "Don't have an account?";
@@ -91,7 +85,6 @@ export default {
 	},
 	methods: {
 		submitLogin() {
-			console.log('attempting login or signup');
 			if (this.isLoggingIn) {
 				this.$store
 					.dispatch("requestLogin", {
