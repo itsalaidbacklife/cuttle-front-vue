@@ -7,7 +7,7 @@
 				src="../assets/logo.png"
 			>
 			<h1 class="page-title">
-				HOME PAGE
+				CUTTLE
 			</h1>
 			<div id="game-list-card">
 				<h2 id="home-card-title">
@@ -109,7 +109,7 @@ export default {
 #side-nav {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	justify-content: center;
 }
 
 #home-card-title {
