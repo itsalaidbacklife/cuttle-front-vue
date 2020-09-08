@@ -1,5 +1,5 @@
 <template>
-	<v-row class="text-left">
+	<v-row class="list-item">
 		<v-col cols="3">
 			<v-img
 				:src="require('../assets/logo.svg')"
@@ -14,6 +14,7 @@
 		</v-col>
 		<v-col
 			cols="3"
+			class="list-item-button"
 		>
 			<v-btn
 				color="primary"
@@ -49,3 +50,19 @@ export default {
 	}
 };
 </script>
+<style scoped lang="scss">
+.list-item {
+	margin-left: 0;
+	margin-right: 0;
+	text-align: left;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+.list-item-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+</style>

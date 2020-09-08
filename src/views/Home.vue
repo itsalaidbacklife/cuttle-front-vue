@@ -16,6 +16,9 @@
 				<v-row>
 					<v-col cols="9">
 						<div id="game-list">
+							<p v-if="gameList.length === 0">
+								No Active Games
+							</p>
 							<div
 								v-for="game in gameList"
 								:key="game.id"
@@ -28,7 +31,10 @@
 							</div>
 						</div>
 					</v-col>
-					<v-col cols="2">
+					<v-col
+						id="side-nav"
+						cols="3"
+					>
 						<v-btn
 							rounded
 							color="primary"
@@ -63,7 +69,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .container {
-	width: 50%;
+	width: 75%;
 	margin: 10px auto;
 	display: flex;
 	justify-content: center;
@@ -74,23 +80,39 @@ export default {
 	margin: 0 auto;
 }
 
-.page-title{
+.page-title {
 	margin: 0 auto;
 	text-align: center;
 }
 
-#game-list-card{
+#game-list-card {
 	border-radius: 15px;
 	padding: 45px;
 	-webkit-box-shadow: 1px 2px 6px 3px rgba(119,119,119,0.24) ;
 	box-shadow: 1px 2px 6px 3px rgba(119,119,119,0.24) ;
 }
 
-#game-list{
+#game-list {
 	background-color: #efefef;
+	min-height: 30vh;
+	max-height: 50vh;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	padding: 20px 10px;
+
+	p {
+		text-align: center;
+	}
 }
 
-#home-card-title{
+#side-nav {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#home-card-title {
 	font-size: 2em;
 }
 
