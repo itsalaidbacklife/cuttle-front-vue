@@ -1,0 +1,71 @@
+<template>
+	<v-row class="list-item">
+		<v-col cols="3">
+			<v-img
+				:src="require('../assets/logo.svg')"
+				class="my-3"
+				contain
+				height="64"
+			/>
+		</v-col>
+		<v-col cols="6">
+			<p>{{ name }}</p>
+			<p>{{ readyText }} players ready</p>
+		</v-col>
+		<v-col
+			cols="3"
+			class="list-item-button"
+		>
+			<v-btn
+				color="primary"
+				rounded
+			>
+				JOIN
+			</v-btn>
+		</v-col>
+	</v-row>
+</template>
+
+<script>
+export default {
+	name: "GameListItem",
+	props: {
+		name: {
+			type: String, 
+			default: ""
+		},
+		p0ready:{
+			type: Number,
+			default: 0
+		},
+		p1ready:{
+			type: Number, 
+			default: 0
+		}
+	},
+	computed:{
+		numPlayersReady() {
+			return this.p0ready + this.p1ready
+		},
+		readyText() {
+			return `${this.numPlayersReady} / 2`;
+		},
+	}
+};
+</script>
+<style scoped lang="scss">
+.list-item {
+	margin-left: 0;
+	margin-right: 0;
+	text-align: left;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+.list-item-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+</style>
