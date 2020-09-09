@@ -4,8 +4,8 @@
 			alt="Vue logo"
 			src="../assets/logo.png"
 		>
-		<h1>HOME PAGE</h1>
-		<!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
+		<h1>Open Games</h1>
+		<!-- List of existing games -->
 		<ul>
 			<li
 				v-for="game in gameList"
@@ -14,18 +14,35 @@
 				Game: {{ game.name }}
 			</li>
 		</ul>
-		{{ gameList }}
+		<!-- Create New Game -->
+		<div>
+			<h2>Create Game</h2>
+			<v-text-field
+				v-model="newGameName"
+				outlined
+				@keyup.enter="submitNewGame"
+			/>
+			<v-btn
+				color="primary"
+				@click="submitNewGame"
+			>
+				Submit
+			</v-btn>
+		</div>
 	</div>
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
 	name: "Home",
 	components: {
 		// HelloWorld
+	},
+	data() {
+		return {
+			newGameName: ''
+		}
 	},
 	computed: {
 		gameList() {
@@ -34,6 +51,18 @@ export default {
 	},
 	mounted() {
 		this.$store.dispatch('requestGameList');
+	},
+	methods: {
+		submitNewGame() {
+			console.log('submitting new game');
+			this.$store.dispatch('requestCreateGame', this.newGameName)
+				.then(() => {
+					this.newGameName = '';
+				})
+				.catch(() => {
+					console.log('Error creating game');
+				});
+		}
 	}
 };
 </script>
