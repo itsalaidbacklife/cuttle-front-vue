@@ -10,7 +10,7 @@
 		</v-col>
 		<v-col cols="6">
 			<p>{{ name }}</p>
-			<p>{{ numPlayersReady }} players ready</p>
+			<p>{{ readyText }} players ready</p>
 		</v-col>
 		<v-col
 			cols="3"
@@ -46,7 +46,10 @@ export default {
 	computed:{
 		numPlayersReady() {
 			return this.p0ready + this.p1ready
-		}
+		},
+		readyText() {
+			return `${this.numPlayersReady} / 2`;
+		},
 	}
 };
 </script>
