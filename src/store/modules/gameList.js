@@ -28,6 +28,19 @@ export default {
 					return reject(new Error('Could not retrieve list of games'))
 				});
 			});
-		}
+		},
+		requestCreateGame(context, newGameName) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/create', {
+					gameName: newGameName
+				}, function handleResponse(resData, jwres) {
+					if (jwres.statusCode === 200) {
+						console.log(resData);
+						return resolve();
+					}
+					return reject(new Error('Error creating game'));
+				});
+			});
+		},
 	}
 }

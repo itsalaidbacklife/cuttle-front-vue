@@ -4,37 +4,37 @@
 			<!-- Left side form -->
 			<v-col cols="5">
 				<h1>{{ buttonText }}</h1>
-				<v-text-field
-					v-model="username"
-					outlined
-					hint="Username"
-				/>
-				<v-text-field
-					v-model="pw"
-					outlined
-					hint="Password"
-					type="password"
-				/>
-				<div id="login-button-container">
-					<v-btn
-						color="primary"
-						rounded
-						@click="submitLogin"
-					>
-						{{ buttonText }}
-					</v-btn>
-				</div>
-
-				<p>
-					{{ switchLabelText }}
+				<form @submit="submitLogin">
+					<v-text-field
+						v-model="username"
+						outlined
+						hint="Email"
+					/>
+					<v-text-field
+						v-model="pw"
+						outlined
+						hint="Password"
+						type="password"
+					/>
+					<div id="login-button-container">
+						<v-btn
+							color="primary"
+							rounded
+							type="submit"
+						>
+							{{ buttonText }}
+						</v-btn>
+					</div>
+				</form>
+				<div id="switch-button-container">
 					<v-btn
 						text
 						color="primary"
 						@click="switchMode"
 					>
-						{{ inverseButtonText }}
+						{{ switchLabelText }}
 					</v-btn>
-				</p>
+				</div>
 			</v-col>
 
 			<!-- Middle Divider -->
@@ -75,12 +75,6 @@ export default {
 				return "Log In";
 			}
 			return "Sign Up";
-		},
-		inverseButtonText() {
-			if (this.isLoggingIn) {
-				return "Sign Up";
-			}
-			return "Log In";
 		},
 		switchLabelText() {
 			if (this.isLoggingIn) {
@@ -142,7 +136,12 @@ export default {
   justify-content: center;
   width: 100%;
 }
-p {
-  margin-top: 16px;
+
+#switch-button-container {
+	display: flex;
+	position: relative;
+	width: 100%;
+	justify-content: center;
+	margin-top: 16px;;
 }
 </style>

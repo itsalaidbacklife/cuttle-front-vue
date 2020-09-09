@@ -43,19 +43,36 @@
 						</v-btn>
 					</v-col>
 				</v-row>
+				<v-row>
+					<h2>Create Game</h2>
+					<v-text-field
+						v-model="newGameName"
+						outlined
+						@keyup.enter="submitNewGame"
+					/>
+					<v-btn
+						color="primary"
+						@click="submitNewGame"
+					>
+						Submit
+					</v-btn>
+				</v-row>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
-// @ is an alias to /src
-// import HelloWorld from "@/components/HelloWorld.vue";
 import GameListItem from "@/components/GameListItem.vue";
 export default {
 	name: "Home",
 	components: {
 		// HelloWorld
 		GameListItem
+	},
+	data() {
+		return {
+			newGameName: ''
+		}
 	},
 	computed: {
 		gameList() {
@@ -64,6 +81,18 @@ export default {
 	},
 	mounted() {
 		this.$store.dispatch('requestGameList');
+	},
+	methods: {
+		submitNewGame() {
+			console.log('submitting new game');
+			this.$store.dispatch('requestCreateGame', this.newGameName)
+				.then(() => {
+					this.newGameName = '';
+				})
+				.catch(() => {
+					console.log('Error creating game');
+				});
+		}
 	}
 };
 </script>
