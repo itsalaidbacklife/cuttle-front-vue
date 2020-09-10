@@ -4,7 +4,7 @@
 			<!-- Left side form -->
 			<v-col cols="5">
 				<h1>{{ buttonText }}</h1>
-				<form @submit="submitLogin">
+				<form @submit.prevent="submitLogin">
 					<v-text-field
 						v-model="username"
 						outlined
