@@ -4,23 +4,26 @@
 			<!-- Left side form -->
 			<v-col cols="5">
 				<h1>{{ buttonText }}</h1>
-				<form @submit="submitLogin">
+				<form @submit.prevent="submitLogin">
 					<v-text-field
 						v-model="username"
 						outlined
 						hint="Email"
+						data-cy="username"
 					/>
 					<v-text-field
 						v-model="pw"
 						outlined
 						hint="Password"
 						type="password"
+						data-cy="password"
 					/>
 					<div id="login-button-container">
 						<v-btn
 							color="primary"
 							rounded
 							type="submit"
+							data-cy="submit"
 						>
 							{{ buttonText }}
 						</v-btn>
@@ -31,6 +34,7 @@
 						text
 						color="primary"
 						@click="switchMode"
+						data-cy="switch-mode"
 					>
 						{{ switchLabelText }}
 					</v-btn>
