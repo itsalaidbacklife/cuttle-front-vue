@@ -7,7 +7,7 @@ function setup() {
     cy.vueRoute('/');
 }
 
-describe('Home - Static Content', () => {
+describe('Home - Page Content', () => {
     beforeEach(setup);
 
     it('Displays headers', () => {
@@ -17,6 +17,9 @@ describe('Home - Static Content', () => {
         expect(true).to.eq(false);
     });
     it('Play AI button links to CuttleBot', () => {
+        expect(true).to.eq(false);
+    });
+    it('Logs user out', () => {
         expect(true).to.eq(false);
     });
 });
