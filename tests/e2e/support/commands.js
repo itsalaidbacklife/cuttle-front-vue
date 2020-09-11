@@ -13,6 +13,15 @@ Cypress.Commands.add('signup', (email, password) => {
         password
     });
 });
+Cypress.Commands.add('signupThroughStore', (email, password) => {
+    cy.window().its('app.$store').invoke('dispatch', 'requestSignup', {email, password});
+});
+Cypress.Commands.add('loginThroughStore', (email, password) => {
+    cy.window().its('app.$store').invoke('dispatch', 'requestLogin', {email, password});
+});
+Cypress.Commands.add('vueRoute', (route) => {
+    cy.window().its('app.$router').invoke('push', route);
+});
 
 /**
  * Did not work -- reequest.body was undefined on server
