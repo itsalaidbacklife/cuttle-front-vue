@@ -1,14 +1,26 @@
 const validEmail = "myCustomEmail@gmail.com";
 const validPassword = "passwordLongerThanEight";
 
-function assertSuccessfulAuth(email, password) {
+function assertSuccessfulAuth(email) {
+    // Confirm we have navigated to home
     cy.hash().should('eq', '#/');
-    // Check store.auth.authenticated and .email
+    // Check store auth data
+    cy.window().its('app.$store.state.auth').as('authState')
+    .then((authState) => {
+        expect(authState.authenticated).to.eq(true);
+        expect(authState.email).to.eq(email);
+    });
 }
 
 function assertFailedAuth() {
+    // Confirm we have not navigated away from login/signup
     cy.hash().should('eq', '#/login');
-    // Check store.auth.authenticated and .email
+    // Check store auth data
+    cy.window().its('app.$store.state.auth').as('authState')
+    .then((authState) => {
+        expect(authState.authenticated).to.eq(false);
+        expect(authState.email).to.eq(null);
+    });
 }
 
 describe('Logging In', () => {
@@ -25,19 +37,17 @@ describe('Logging In', () => {
         cy.get('[data-cy=username]').type(validEmail);
         cy.get('[data-cy=password]').type(validPassword);
         cy.get('[data-cy=submit]').click();
-        // Should have redirected to homepage
-        // cy.hash().should('eq', '#/');
-        assertSuccessfulAuth();
+        assertSuccessfulAuth(validEmail);
     });
     it('Can login via enter key in email', () => {
         cy.get('[data-cy=password]').type(validPassword);
         cy.get('[data-cy=username]').type(validEmail + '{enter}');
-        cy.hash().should('eq', '#/');
+        assertSuccessfulAuth(validEmail);
     });
     it('Can login via enter key in password', () => {
         cy.get('[data-cy=username]').type(validEmail);
         cy.get('[data-cy=password]').type(validPassword + '{enter}');
-        cy.hash().should('eq', '#/');
+        assertSuccessfulAuth(validEmail);
     });
 
     /**
@@ -49,7 +59,6 @@ describe('Logging In', () => {
         cy.get('[data-cy=submit]').click();
         assertFailedAuth();
     });
-
     it('Rejects incorrect password', () => {
         cy.get('[data-cy=username]').type(validEmail);
         cy.get('[data-cy=password]').type('incorrectPw');
@@ -72,20 +81,17 @@ describe('Signing Up', () => {
         cy.get('[data-cy=username]').type(validEmail);
         cy.get('[data-cy=password]').type(validPassword);
         cy.get('[data-cy=submit]').click();
-        // Should have redirected to homepage
-        cy.hash().should('eq', '#/');
+        assertSuccessfulAuth(validEmail);
     });
-
     it('Signs up by pressing enter on the email field', () => {
         cy.get('[data-cy=password]').type(validPassword);
         cy.get('[data-cy=username]').type(validEmail + '{enter}');
-        cy.hash().should('eq', '#/');
+        assertSuccessfulAuth(validEmail);
     });
-
     it('Signs up by pressing enter on the password field', () => {
         cy.get('[data-cy=username]').type(validEmail);
         cy.get('[data-cy=password]').type(validPassword + '{enter}');
-        cy.hash().should('eq', '#/');
+        assertSuccessfulAuth(validEmail);
     });
 
     /**
@@ -95,34 +101,28 @@ describe('Signing Up', () => {
         cy.get('[data-cy=username]').type(validEmail);
         cy.get('[data-cy=password]').type('sh0rt');
         cy.get('[data-cy=submit]').click();
-        // Should have failed - stayed on this page
-        cy.hash().should('eq', '#/login');
+        assertFailedAuth();
     });
-
     it('Requires valid email', () => {
         cy.get('[data-cy=username]').type('incompleteEmail');
         cy.get('[data-cy=password]').type(validPassword);
-        // Should have failed - stayed on this page
-        cy.hash().should('eq', '#/login');
+        assertFailedAuth();
     });
-
     it('Password is required', () => {
         cy.get('[data-cy=username]').type(validEmail);
         cy.get('[data-cy=submit]').click();
-        cy.hash().should('eq', '#/login');
+        assertFailedAuth();
     });
-
     it('Email is required', () => {
         cy.get('[data-cy=password]').type(validPassword);
         cy.get('[data-cy=submit]').click();
-        cy.hash().should('eq', '#/login');
+        assertFailedAuth();
     });
-
     it('Rejects signup if username already exists', () => {
         cy.signup(validEmail, validPassword);
         cy.get('[data-cy=username]').type(validEmail);
         cy.get('[data-cy=password]').type(validPassword);
         cy.get('[data-cy=submit]').click();
-        cy.hash().should('eq', '#/login');
+        assertFailedAuth();
     });
 });

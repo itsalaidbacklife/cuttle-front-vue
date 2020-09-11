@@ -5,9 +5,14 @@ import store from "./store/store";
 import router from "./router";
 Vue.config.productionTip = false;
 
-new Vue({
+const app = new Vue({
 	vuetify,
 	store,
 	router,
 	render: h => h(App)
 }).$mount("#app");
+
+// Expose app for testing
+if (window.Cypress) {
+	window.app = app;
+}
