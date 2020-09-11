@@ -27,6 +27,9 @@ describe('Home - Game List', () => {
     it('Displays a game for every open game on the server', () => {
         expect(true).to.eq(false);
     });
+    it('Displays placeholder text when no games are available', () => {
+        expect(true).to.eq(false);
+    });
     it('Adds a new game to the list when one comes in through the socket', () => {
         expect(true).to.eq(false);
     });
