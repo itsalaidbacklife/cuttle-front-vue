@@ -19,7 +19,8 @@ describe('Home - Page Content', () => {
         expect(true).to.eq(false);
     });
     it('Play AI button links to CuttleBot', () => {
-        expect(true).to.eq(false);
+        cy.contains('a', 'Play with AI')
+        .should('have.attr', 'href', 'https://human-ai-interaction.github.io/cuttle-bot/');
     });
     it('Logs user out', () => {
         expect(true).to.eq(false);
