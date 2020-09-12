@@ -44,7 +44,7 @@ describe('Home - Game List', () => {
         .then((gameState) => {
             expect(gameState.gameId).to.eq(null);
         });
-        cy.createGame();
+        cy.createGameThroughStore('Test Game');
         cy.get('[data-cy=game-list-item]')
         .contains('button.v-btn', 'JOIN')
         .click();

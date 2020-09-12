@@ -22,9 +22,21 @@ Cypress.Commands.add('loginThroughStore', (email, password) => {
 Cypress.Commands.add('vueRoute', (route) => {
     cy.window().its('app.$router').invoke('push', route);
 });
-Cypress.Commands.add('createGame', () => {
-    cy.window().its('app.$store').invoke('dispatch', 'requestCreateGame', 'Test Game');
+Cypress.Commands.add('createGame', (name) => {
+    io.socket.get('/game/create', {
+        gameName: newGameName
+    }, function handleResponse(resData, jwres) {
+        if (jwres.statusCode === 200) {
+            console.log(resData);
+            return resolve();
+        }
+        return reject(new Error('Error creating game'));
+    });
 });
+Cypress.Commands.add('createGameThroughStore', (name) => {
+    cy.window().its('app.$store').invoke('dispatch', 'requestCreateGame', name);
+});
+
 
 /**
  * Did not work -- reequest.body was undefined on server
