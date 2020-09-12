@@ -27,6 +27,7 @@
 									:name="game.name"
 									:p0ready="game.p0Ready ? 1 : 0"
 									:p1ready="game.p1Ready ? 1 : 0"
+									:game-id="game.id"
 								/>
 							</div>
 						</div>
@@ -73,26 +74,27 @@ export default {
 	},
 	data() {
 		return {
-			newGameName: ''
-		}
+			newGameName: ""
+		};
 	},
 	computed: {
 		gameList() {
 			return this.$store.state.gameList.games;
-		},
+		}
 	},
 	mounted() {
-		this.$store.dispatch('requestGameList');
+		this.$store.dispatch("requestGameList");
 	},
 	methods: {
 		submitNewGame() {
-			console.log('submitting new game');
-			this.$store.dispatch('requestCreateGame', this.newGameName)
+			console.log("submitting new game");
+			this.$store
+				.dispatch("requestCreateGame", this.newGameName)
 				.then(() => {
-					this.newGameName = '';
+					this.newGameName = "";
 				})
 				.catch(() => {
-					console.log('Error creating game');
+					console.log("Error creating game");
 				});
 		}
 	}
@@ -100,55 +102,54 @@ export default {
 </script>
 <style scoped lang="scss">
 .container {
-	width: 75%;
-	margin: 10px auto;
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
+  width: 75%;
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 #logo {
-	margin: 0 auto;
+  margin: 0 auto;
 }
 
 .page-title {
-	margin: 0 auto;
-	text-align: center;
+  margin: 0 auto;
+  text-align: center;
 }
 
 #game-list-card {
-	border-radius: 15px;
-	padding: 45px;
-	-webkit-box-shadow: 1px 2px 6px 3px rgba(119,119,119,0.24) ;
-	box-shadow: 1px 2px 6px 3px rgba(119,119,119,0.24) ;
+  border-radius: 15px;
+  padding: 45px;
+  -webkit-box-shadow: 1px 2px 6px 3px rgba(119, 119, 119, 0.24);
+  box-shadow: 1px 2px 6px 3px rgba(119, 119, 119, 0.24);
 }
 
 #game-list {
-	background-color: #efefef;
-	min-height: 30vh;
-	max-height: 50vh;
-	overflow: auto;
-	display: flex;
-	flex-direction: column;
-	padding: 20px 10px;
+  background-color: #efefef;
+  min-height: 30vh;
+  max-height: 50vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px;
 
-	p {
-		text-align: center;
-	}
+  p {
+    text-align: center;
+  }
 }
 
 #side-nav {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #home-card-title {
-	font-size: 2em;
+  font-size: 2em;
 }
 
 p {
   margin-top: 16px;
 }
-
 </style>
