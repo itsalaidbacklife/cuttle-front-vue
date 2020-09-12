@@ -33,8 +33,8 @@
 					<v-btn
 						text
 						color="primary"
-						@click="switchMode"
 						data-cy="switch-mode"
+						@click="switchMode"
 					>
 						{{ switchLabelText }}
 					</v-btn>

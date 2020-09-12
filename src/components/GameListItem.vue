@@ -19,6 +19,7 @@
 			<v-btn
 				color="primary"
 				rounded
+				@click="subscribeToGame"
 			>
 				JOIN
 			</v-btn>
@@ -41,6 +42,10 @@ export default {
 		p1ready:{
 			type: Number, 
 			default: 0
+		},
+		gameId: {
+			type: Number,
+			required: true
 		}
 	},
 	computed:{
@@ -50,6 +55,19 @@ export default {
 		readyText() {
 			return `${this.numPlayersReady} / 2`;
 		},
+	},
+	methods: {
+		subscribeToGame() {
+			console.log(`click handler for subscribe to ${this.gameId}`);
+			console.log(this.gameId);
+			this.$store.dispatch('requestSubscribe', this.gameId)
+				.then(() => {
+					this.$router.push(`/lobby/${this.gameId}`);
+				})
+				.catch(() => {
+					console.log('error subscribing');
+				});
+		}
 	}
 };
 </script>
