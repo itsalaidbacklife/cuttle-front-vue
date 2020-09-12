@@ -10,6 +10,7 @@ const validProps = {
 	name: 'Test Game',
 	p0Ready: true,
 	p1Ready: false,
+	gameId: 0,
 };
 describe('Prop config', () => {
 	wrapper = shallowMount(GameListItem, {
