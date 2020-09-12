@@ -11,7 +11,9 @@ describe('Home - Page Content', () => {
     beforeEach(setup);
 
     it('Displays headers', () => {
-        expect(true).to.eq(false);
+        cy.contains('h1', 'CUTTLE');
+        cy.contains('h2', 'Games');
+        cy.contains('h2', 'Create Game');
     });
     it('Displays logo', () => {
         expect(true).to.eq(false);
