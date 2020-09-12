@@ -39,6 +39,7 @@
 						<v-btn
 							rounded
 							color="primary"
+							href="https://human-ai-interaction.github.io/cuttle-bot/"
 						>
 							Play with AI
 						</v-btn>
