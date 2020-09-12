@@ -1,5 +1,5 @@
 <template>
-	<v-row class="list-item">
+	<v-row class="list-item" data-cy="game-list-item">
 		<v-col cols="3">
 			<v-img
 				:src="require('../assets/logo.svg')"

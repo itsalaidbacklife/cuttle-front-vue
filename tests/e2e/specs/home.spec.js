@@ -40,7 +40,19 @@ describe('Home - Game List', () => {
         expect(true).to.eq(false);
     });
     it('Joins an open game', () => {
-        expect(true).to.eq(false);
+        cy.window().its('app.$store.state.game')
+        .then((gameState) => {
+            expect(gameState.gameId).to.eq(null);
+        });
+        cy.createGame();
+        cy.get('[data-cy=game-list-item]')
+        .contains('button.v-btn', 'JOIN')
+        .click();
+        cy.hash().should('contain', '#/lobby');
+        cy.window().its('app.$store.state.game')
+        .then((gameState) => {
+            expect(gameState.gameId).to.not.eq(null);
+        });
     });
     it('Disables join when a game becomes full', () => {
         expect(true).to.eq(false);
