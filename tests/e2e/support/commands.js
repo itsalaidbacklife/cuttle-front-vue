@@ -22,6 +22,9 @@ Cypress.Commands.add('loginThroughStore', (email, password) => {
 Cypress.Commands.add('vueRoute', (route) => {
     cy.window().its('app.$router').invoke('push', route);
 });
+Cypress.Commands.add('createGame', () => {
+    cy.window().its('app.$store').invoke('dispatch', 'requestCreateGame', 'Test Game');
+});
 
 /**
  * Did not work -- reequest.body was undefined on server
