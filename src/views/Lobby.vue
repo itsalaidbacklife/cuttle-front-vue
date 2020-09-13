@@ -22,7 +22,6 @@
 				<v-btn
 					contained
 					color="primary"
-					@click="iAmReady = !iAmReady"
 				>
 					READY
 				</v-btn>
@@ -49,12 +48,15 @@ export default {
 	},
 	data() {
 		return {
-			iAmReady: false,
+			// iAmReady: false,
 		}
 	},
 	computed: {
 		gameId() {
-			return this.$store.state.game.gameId;
+			return this.$store.state.game.id;
+		},
+		iAmReady() {
+			return this.$store.state.game.myPNum === 0 ? this.$store.state.game.p0Ready : this.$store.state.game.p1Ready;
 		}
 	}
 }

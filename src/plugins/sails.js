@@ -19,7 +19,7 @@ io.socket.on('game', function(evData) {
 });
 
 io.socket.on('gameFull', function(evData) {
-	store.commit('updateGameStatus', {
+	store.commit('updateGame', {
 		id: evData.id,
 		newStatus: false,
 	});
