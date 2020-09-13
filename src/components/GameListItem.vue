@@ -19,6 +19,7 @@
 			<v-btn
 				color="primary"
 				rounded
+				:disabled="!status"
 				@click="subscribeToGame"
 			>
 				JOIN
@@ -46,6 +47,10 @@ export default {
 		gameId: {
 			type: Number,
 			required: true
+		},
+		status: {
+			type: Boolean,
+			required: true,
 		}
 	},
 	computed:{

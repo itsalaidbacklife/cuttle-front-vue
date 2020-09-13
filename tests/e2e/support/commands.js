@@ -7,10 +7,17 @@ io.sails.useCORSRouteToGetCookie = false;
 
 Cypress.Commands.add('wipeDatabase', () => {cy.request('localhost:1337/test/wipeDatabase')});
 Cypress.Commands.add('signup', (email, password) => {
-    io.socket.get('localhost:1337/user/signup',
-    {
-        email,
-        password
+    return new Promise((resolve, reject) => {
+        io.socket.get('localhost:1337/user/signup',
+        {
+            email,
+            password
+        }, function(res, jwres) {
+            if (jwres.statusCode !== 200) {
+                return reject(new Error('Failed to sign up via command'));
+            }
+            return resolve(res);
+        });
     });
 });
 Cypress.Commands.add('signupThroughStore', (email, password) => {
@@ -23,18 +30,31 @@ Cypress.Commands.add('vueRoute', (route) => {
     cy.window().its('app.$router').invoke('push', route);
 });
 Cypress.Commands.add('createGame', (name) => {
-    io.socket.get('/game/create', {
-        gameName: newGameName
-    }, function handleResponse(resData, jwres) {
-        if (jwres.statusCode === 200) {
-            console.log(resData);
-            return resolve();
-        }
-        return reject(new Error('Error creating game'));
-    });
+    return new Promise((resolve, reject) => {
+        io.socket.post('/game/create', {
+            gameName: name
+        }, function handleResponse(resData, jwres) {
+            if (jwres.statusCode === 200) {
+                return resolve(resData);
+            }
+            return reject(new Error('Error creating game'));
+        });
+    })
 });
 Cypress.Commands.add('createGameThroughStore', (name) => {
-    cy.window().its('app.$store').invoke('dispatch', 'requestCreateGame', name);
+    return cy.window().its('app.$store').invoke('dispatch', 'requestCreateGame', name);
+});
+Cypress.Commands.add('subscribeOtherUser', (id) => {
+    return new Promise((resolve, reject) => {
+        io.socket.get('/game/subscribe', {
+            id,
+        }, function handleResponse(res, jwres) {
+            if (jwres.statusCode === 200) {
+                return resolve();
+            }
+            return reject(new Error('error subscribing'));
+        });
+    });
 });
 
 

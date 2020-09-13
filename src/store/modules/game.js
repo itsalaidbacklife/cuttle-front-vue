@@ -11,6 +11,7 @@ export default {
 	},
 	actions: {
 		async requestSubscribe(context, id) {
+			console.log(`Requesting to subscribe ${id}`);
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/subscribe', {
 					id,

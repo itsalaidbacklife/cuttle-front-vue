@@ -55,7 +55,25 @@ describe('Home - Game List', () => {
         });
     });
     it('Disables join when a game becomes full', () => {
-        expect(true).to.eq(false);
+        /**
+         * Set up:
+         * Create game, sign up two other users, subscribe them to the game
+         */
+        cy.createGameThroughStore('Test Game').then((gameData) => {
+            // Test that JOIN button starts enabled
+            cy.contains('button.v-btn', 'JOIN')
+            .should('not.be.disabled');
+            // Sign up 2 users and subscribe them to game
+            cy.signup('secondUser@aol.com', 'myNewPassword');
+            cy.subscribeOtherUser(gameData.gameId);
+            cy.signup('thirdUser@facebook.com', 'anotherUserPw');
+            cy.subscribeOtherUser(gameData.gameId);
+            
+            // Test that join button is now disabled
+            cy.contains('button.v-btn', 'JOIN')
+            .should('be.disabled');
+        });
+
     });
 });
 
