@@ -22,7 +22,6 @@ export default {
 			state.id = val;
 		},
 		updateGame(state, newGame) {
-			console.log('updating game');
 			state.id = newGame.id;
 			state.chat = _.cloneDeep(newGame.chat);
 			state.deck = _.cloneDeep(newGame.deck);
@@ -34,20 +33,26 @@ export default {
 			state.players = _.cloneDeep(newGame.players);
 			state.scrap = _.cloneDeep(newGame.scrap);
 			state.twos = _.cloneDeep(newGame.twos);
-			console.log(state)
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
+		},
+		updateReady(state, pNum) {
+			if (pNum === 0) {
+				state.p0Ready = !state.p0Ready;
+			}
+			else {
+				state.p1Ready = !state.p1Ready;
+			}
 		}
+
 	},
 	actions: {
 		async requestSubscribe(context, id) {
-			console.log(`Requesting to subscribe ${id}`);
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/subscribe', {
 					id,
 				}, function handleResponse(res, jwres) {
-					console.log(jwres);
 					if (jwres.statusCode === 200) {
 						context.commit('updateGame', res.game);
 						context.commit('setMyPNum', res.pNum);
@@ -56,6 +61,16 @@ export default {
 					return reject(new Error('error subscribing'));
 				});
 			});
-		}
+		},
+		async requestReady() {
+			return new Promise((resolve, reject) => {
+				io.socket.post('/game/ready', function handleResponse(res, jwres) {
+					if (jwres.statusCode === 200) {
+						return Promise.resolve(res);
+					}
+					return reject(new Error('Error readying for game'));
+				});
+			});
+		} 
 	}
 }

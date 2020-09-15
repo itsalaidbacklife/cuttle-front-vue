@@ -13,6 +13,13 @@ io.socket.on('game', function(evData) {
 		const newGame = _.cloneDeep(evData.data);
 		store.commit('addGameToList', newGame);
 		break;
+	case 'updated':
+		switch(evData.data.change) {
+			case 'ready':
+				store.commit('updateReady', evData.data.pNum);
+				break;
+		}
+		break;
 	default:
 		break;
 	}

@@ -22,6 +22,7 @@
 				<v-btn
 					contained
 					color="primary"
+					@click="ready"
 				>
 					READY
 				</v-btn>
@@ -46,17 +47,17 @@ export default {
 	components: {
 		LobbyPlayerIndicator,
 	},
-	data() {
-		return {
-			// iAmReady: false,
-		}
-	},
 	computed: {
 		gameId() {
 			return this.$store.state.game.id;
 		},
 		iAmReady() {
 			return this.$store.state.game.myPNum === 0 ? this.$store.state.game.p0Ready : this.$store.state.game.p1Ready;
+		}
+	},
+	methods: {
+		ready() {
+			this.$store.dispatch('requestReady');
 		}
 	}
 }
