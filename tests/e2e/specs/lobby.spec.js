@@ -26,7 +26,7 @@ describe('Lobby - Page Content', () => {
 		expect(true).to.eq(false);
 	});
 	it('Defaults to not-ready', () => {
-		expect(true).to.eq(false);
+		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
     
 });
