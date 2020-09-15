@@ -7,6 +7,7 @@ function setup() {
 	cy.signupThroughStore(validEmail, validPassword);
 	cy.createGameThroughStore('Test Game')
 		.then((gameSummary) => {
+			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
 		});
 }
@@ -38,7 +39,8 @@ describe('Lobby - Event Handling', () => {
 		expect(true).to.eq(false);
 	});
 	it('Ready button works', () => {
-		expect(true).to.eq(false);
+		cy.get('[data-cy=ready-button]').click();
+		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
 	});
 	it('Unready button works', () => {
 		expect(true).to.eq(false);

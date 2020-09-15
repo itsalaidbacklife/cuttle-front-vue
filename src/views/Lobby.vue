@@ -23,6 +23,7 @@
 					contained
 					color="primary"
 					@click="ready"
+					data-cy="ready-button"
 				>
 					READY
 				</v-btn>
@@ -34,6 +35,7 @@
 				<lobby-player-indicator
 					:player-email="$store.state.auth.email"
 					:player-ready="iAmReady"
+					data-cy="my-indicator"
 				/>
 			</v-col>
 		</v-row>
