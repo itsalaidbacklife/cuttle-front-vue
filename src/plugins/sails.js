@@ -15,9 +15,9 @@ io.socket.on('game', function(evData) {
 		break;
 	case 'updated':
 		switch(evData.data.change) {
-			case 'ready':
-				store.commit('updateReady', evData.data.pNum);
-				break;
+		case 'ready':
+			store.commit('updateReady', evData.data.pNum);
+			break;
 		}
 		break;
 	default:
