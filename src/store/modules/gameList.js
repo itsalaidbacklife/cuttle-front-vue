@@ -11,15 +11,16 @@ export default {
 		},
 		addGameToList(state, newGame) {
 			state.games.push(newGame);
+		},
+		updateGameStatus(state, data) {
+			const updatedGame = state.games.find((game) => game.id === data.id);
+			updatedGame.status = data.newStatus;
 		}
 	},
 	actions: {
 		requestGameList(context) {
-			console.log('Requesting game list');
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/getList', function handleResponse(resData, jwres) {
-					console.log(resData);
-					console.log(jwres);
 					if (jwres.statusCode === 200) {
 						const games = _.cloneDeep(resData.games);
 						context.commit('refreshGames', games);
@@ -35,8 +36,7 @@ export default {
 					gameName: newGameName
 				}, function handleResponse(resData, jwres) {
 					if (jwres.statusCode === 200) {
-						console.log(resData);
-						return resolve();
+						return resolve(resData);
 					}
 					return reject(new Error('Error creating game'));
 				});

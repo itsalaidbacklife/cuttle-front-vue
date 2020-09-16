@@ -17,3 +17,10 @@ io.socket.on('game', function(evData) {
 		break;
 	}
 });
+
+io.socket.on('gameFull', function(evData) {
+	store.commit('updateGameStatus', {
+		id: evData.id,
+		newStatus: false,
+	});
+});

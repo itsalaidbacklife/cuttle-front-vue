@@ -1,5 +1,8 @@
 <template>
-	<v-row class="list-item" data-cy="game-list-item">
+	<v-row
+		class="list-item"
+		data-cy="game-list-item"
+	>
 		<v-col cols="3">
 			<v-img
 				:src="require('../assets/logo.svg')"
@@ -19,6 +22,7 @@
 			<v-btn
 				color="primary"
 				rounded
+				:disabled="!status"
 				@click="subscribeToGame"
 			>
 				JOIN
@@ -46,6 +50,10 @@ export default {
 		gameId: {
 			type: Number,
 			required: true
+		},
+		status: {
+			type: Boolean,
+			required: true,
 		}
 	},
 	computed:{
