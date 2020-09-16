@@ -22,8 +22,8 @@
 				<v-btn
 					contained
 					color="primary"
-					@click="ready"
 					data-cy="ready-button"
+					@click="ready"
 				>
 					READY
 				</v-btn>
