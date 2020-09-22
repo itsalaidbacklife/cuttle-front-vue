@@ -24,10 +24,8 @@ export default {
 			updatedGame.status = data.newStatus;
 		},
 		joinGame(state, data) {
-			// debugger;
 			const updatedGame = state.games.find((game) => game.id === data.gameId);
 			if (updatedGame) {
-				updatedGame.players.push(_.cloneDeep(data.newPlayer));
 				updatedGame.numPlayers++;
 				updatedGame.status = data.newStatus;
 			}
