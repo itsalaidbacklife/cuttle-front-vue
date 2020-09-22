@@ -8,11 +8,7 @@ function setup() {
 	cy.createGameThroughStore('Test Game')
 		.then((gameSummary) => {
 			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
-			cy.window().its('app.$store.state.gameList').then(gameList => {
-				debugger;
-			});
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
-			// debugger;
 		});
 }
 describe('Lobby - Page Content', () => {
@@ -22,7 +18,7 @@ describe('Lobby - Page Content', () => {
 	it('Displays headers', () => {
 		expect(true).to.eq(false);
 	});
-	it.only('Displays buttons', () => {
+	it('Displays buttons', () => {
 		cy.contains('button.v-btn', 'EXIT');
 		cy.contains('button.v-btn', 'READY');
 	});
