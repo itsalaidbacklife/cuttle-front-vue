@@ -37,6 +37,9 @@ export default {
 		setMyPNum(state, val) {
 			state.myPNum = val;
 		},
+		opponentJoined(state, newPlayer) {
+			state.players.push(_.cloneDeep(newPlayer));
+		},
 		updateReady(state, pNum) {
 			if (pNum === 0) {
 				state.p0Ready = !state.p0Ready;
