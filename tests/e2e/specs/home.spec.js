@@ -42,7 +42,7 @@ describe('Home - Game List', () => {
 	it('Joins an open game', () => {
 		cy.window().its('app.$store.state.game')
 			.then((gameState) => {
-				expect(gameState.gameId).to.eq(null);
+				expect(gameState.id).to.eq(null);
 			});
 		cy.createGameThroughStore('Test Game');
 		cy.get('[data-cy=game-list-item]')

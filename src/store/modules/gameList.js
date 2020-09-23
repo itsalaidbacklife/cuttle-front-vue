@@ -1,20 +1,37 @@
 import { io } from '../../plugins/sails.js';
 let _ = require('lodash');
 
+class GameSummary {
+	constructor(obj) {
+		this.id = obj.id ? obj.id : null;
+		this.name = obj.name ? obj.name : null;
+		this.numPlayers = Object.prototype.hasOwnProperty.call(obj, 'players') ? obj.players.length : 0;
+		this.status = Object.prototype.hasOwnProperty.call(obj, 'status') ? obj.status : false;
+	}
+}
 export default {
 	state: {
 		games: [],
 	},
 	mutations: {
 		refreshGames(state, newList) {
-			state.games = newList;
+			state.games = newList.map(game => new GameSummary(game));
 		},
 		addGameToList(state, newGame) {
-			state.games.push(newGame);
+			state.games.push(new GameSummary(newGame));
 		},
 		updateGameStatus(state, data) {
 			const updatedGame = state.games.find((game) => game.id === data.id);
-			updatedGame.status = data.newStatus;
+			if (updatedGame) {
+				updatedGame.status = data.newStatus;
+			}
+		},
+		joinGame(state, data) {
+			const updatedGame = state.games.find((game) => game.id === data.gameId);
+			if (updatedGame) {
+				updatedGame.numPlayers++;
+				updatedGame.status = data.newStatus;
+			}
 		}
 	},
 	actions: {
