@@ -5,7 +5,8 @@ class GameSummary {
 	constructor(obj) {
 		this.id = obj.id ? obj.id : null;
 		this.name = obj.name ? obj.name : null;
-		this.numPlayers = Object.prototype.hasOwnProperty.call(obj, 'players') ? obj.players.length : 0
+		this.numPlayers = Object.prototype.hasOwnProperty.call(obj, 'players') ? obj.players.length : 0;
+		this.status = Object.prototype.hasOwnProperty.call(obj, 'status') ? obj.status : false;
 	}
 }
 export default {
