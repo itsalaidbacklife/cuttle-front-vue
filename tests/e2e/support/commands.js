@@ -29,24 +29,24 @@ Cypress.Commands.add("vueRoute", (route) => {
 		.its("app.$router")
 		.invoke("push", route);
 });
+
 Cypress.Commands.add("createGame", (name) => {
-	io.socket.get(
-		"localhost:1337/game/create",
-		{
-			gameName: name,
-		},
-		// function handleResponse(resData, jwres) {
-		//   if (jwres.statusCode === 200) {
-		//     console.log(resData);
-		//     return resolve();
-		//   }
-		//   return reject(new Error("Error creating game"));
-		// }
-		(res) => {
-			console.log(res);
-		}
-	);
+	return new Promise((resolve, reject) => {
+		io.socket.post(
+			"localhost:1337/game/create",
+			{
+				gameName: name,
+			},
+			function handleResponse(resData, jwres) {
+				if (jwres.statusCode === 200) {
+					return resolve(resData);
+				}
+				return reject(new Error("Error creating game"));
+			}
+		);
+	});
 });
+
 Cypress.Commands.add("createGameThroughStore", (name) => {
 	cy.window()
 		.its("app.$store")
@@ -57,8 +57,8 @@ Cypress.Commands.add("createGameThroughStore", (name) => {
  * Did not work -- reequest.body was undefined on server
  */
 // Cypress.Commands.add('signup', (email, password) => {
-//     cy.request({
-//         url: 'localhost:1337/user/signup',
-//         body: {email, password}
-//     });
+//		 cy.request({
+//				 url: 'localhost:1337/user/signup',
+//				 body: {email, password}
+//		 });
 // });
