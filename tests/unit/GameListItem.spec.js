@@ -4,6 +4,10 @@ import { shallowMount } from '@vue/test-utils'
 import GameListItem from '@/components/GameListItem.vue';
 
 Vue.use(Vuetify);
+// Simulate v-app application wrapper element
+const app = document.createElement('div');
+app.setAttribute('data-app', true);
+document.body.appendChild(app);
 
 let wrapper;
 const validProps = {
@@ -11,6 +15,8 @@ const validProps = {
 	p0Ready: true,
 	p1Ready: false,
 	gameId: 0,
+	status: true,
+	numPlayers: 0,
 };
 describe('Prop config', () => {
 	wrapper = shallowMount(GameListItem, {
