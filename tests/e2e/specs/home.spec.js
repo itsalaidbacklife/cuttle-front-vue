@@ -34,15 +34,13 @@ describe("Home - Game List", () => {
 	beforeEach(setup);
 
 	it("Displays a game for every open game on the server", () => {
-		cy.createGame("111");
-		cy.createGame("222");
-		cy.get("[data-cy=game-list-item]").should("have.length", 1);
+		cy.createGameThroughStore("111");
+		cy.createGameThroughStore("33");
 		cy.request({
 			method: "POST",
 			url: "localhost:1337/game/getList",
 			body: {},
 		})
-		// this changes the subject to the body property from the cy.request object
 			.its("body")
 			.then((body) => {
 				cy.get("[data-cy=game-list-item]").should(
@@ -51,14 +49,30 @@ describe("Home - Game List", () => {
 				);
 				console.log("body", body.games.length);
 			});
-
-		// cy.get("[data-cy=game-list-item]").should("have.length", len);
 	});
 	it("Displays placeholder text when no games are available", () => {
-		expect(true).to.eq(false);
+		cy.get("[data-cy=text-if-no-game]").should(
+			"have.text",
+			" No Active Games "
+		);
+		cy.contains("p", "No Active Games");
 	});
 	it("Adds a new game to the list when one comes in through the socket", () => {
-		expect(true).to.eq(false);
+		cy.createGameThroughStore("111");
+		cy.createGameThroughStore("33");
+		cy.request({
+			method: "POST",
+			url: "localhost:1337/game/getList",
+			body: {},
+		})
+			.its("body")
+			.then((body) => {
+				cy.get("[data-cy=game-list-item]").should(
+					"have.length",
+					body.games.length
+				);
+				console.log("body", body.games.length);
+			});
 	});
 	it("Joins an open game", () => {
 		cy.window()
@@ -85,12 +99,43 @@ describe("Home - Game List", () => {
 describe("Home - Create Game", () => {
 	beforeEach(setup);
 	it("Creates a new game by hitting enter in text field", () => {
-		expect(true).to.eq(false);
+		cy.get("[data-cy=create-game-input]").type("test game" + "{enter}");
+		cy.request({
+			method: "POST",
+			url: "localhost:1337/game/getList",
+			body: {},
+		})
+			.its("body")
+			.then((body) => {
+				cy.get("[data-cy=game-list-item-name]").should(
+					"have.text",
+					" test game "
+				);
+			});
 	});
+
 	it("Creates a new game by hitting the submit button", () => {
-		expect(true).to.eq(false);
+		cy.get("[data-cy=create-game-input]").type("test game");
+		cy.get("[data-cy=create-game-btn]").click();
+		cy.request({
+			method: "POST",
+			url: "localhost:1337/game/getList",
+			body: {},
+		})
+			.its("body")
+			.then((body) => {
+				cy.get("[data-cy=game-list-item-name]").should(
+					"have.text",
+					" test game "
+				);
+			});
 	});
 	it("Does not create game without game name", () => {
-		expect(true).to.eq(false);
+		cy.get("[data-cy=create-game-btn]").click();
+		cy.window()
+			.its("app.$store.state.game")
+			.then((gameState) => {
+				expect(gameState.gameId).to.eq(null);
+			});
 	});
 });
