@@ -16,7 +16,10 @@
 				<v-row>
 					<v-col cols="9">
 						<div id="game-list">
-							<p v-if="gameList.length === 0">
+							<p
+								v-if="gameList.length === 0"
+								data-cy="text-if-no-game"
+							>
 								No Active Games
 							</p>
 							<div
@@ -51,10 +54,12 @@
 					<v-text-field
 						v-model="newGameName"
 						outlined
+						data-cy="create-game-input"
 						@keyup.enter="submitNewGame"
 					/>
 					<v-btn
 						color="primary"
+						data-cy="create-game-btn"
 						@click="submitNewGame"
 					>
 						Submit
