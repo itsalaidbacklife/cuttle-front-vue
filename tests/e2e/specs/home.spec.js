@@ -6,6 +6,10 @@ function setup() {
 	cy.signupThroughStore(validEmail, validPassword);
 	cy.vueRoute('/');
 }
+function assertSuccessfulJoin(gameState) {
+	expect(gameState.id).to.not.eq(null);
+	cy.contains('h1', `Lobby for ${gameState.id}`);
+}
 
 describe('Home - Page Content', () => {
 	beforeEach(setup);
@@ -51,7 +55,7 @@ describe('Home - Game List', () => {
 		cy.hash().should('contain', '#/lobby');
 		cy.window().its('app.$store.state.game')
 			.then((gameState) => {
-				expect(gameState.gameId).to.not.eq(null);
+				assertSuccessfulJoin(gameState);
 			});
 	});
 	it('Joins a game that already has one player', () => {
@@ -72,7 +76,8 @@ describe('Home - Game List', () => {
 			cy.hash().should('contain', '#/lobby');
 			cy.window().its('app.$store.state.game')
 				.then((gameState) => {
-					expect(gameState.gameId).to.not.eq(null);
+					// expect(gameState.gameId).to.not.eq(null);
+					assertSuccessfulJoin(gameState);
 				});
 		});
 	});
