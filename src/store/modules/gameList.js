@@ -22,7 +22,9 @@ export default {
 		},
 		updateGameStatus(state, data) {
 			const updatedGame = state.games.find((game) => game.id === data.id);
-			updatedGame.status = data.newStatus;
+			if (updatedGame) {
+				updatedGame.status = data.newStatus;
+			}
 		},
 		joinGame(state, data) {
 			const updatedGame = state.games.find((game) => game.id === data.gameId);
