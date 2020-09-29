@@ -87,7 +87,7 @@ describe('Lobby - P1 Perspective', () => {
 				cy.vueRoute(`/lobby/${gameSummary.gameId}`);
 			});
 	});
-	it('Shows opponent already in lobby for player joining second', () => {
-		expect(true).to.eq(false);
+	it.only('Shows opponent already in lobby for player joining second', () => {
+		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 	});
 })
