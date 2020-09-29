@@ -38,11 +38,19 @@
 					data-cy="my-indicator"
 				/>
 			</v-col>
+			<v-col offset="1">
+				<lobby-player-indicator
+					:player-email="opponentName"
+					:player-ready="opponentIsReady"
+					data-cy="opponent-indicator"
+				/>
+			</v-col>
 		</v-row>
 	</v-container>
 </template>
 <script>
 import LobbyPlayerIndicator from '../components/LobbyPlayerIndicator';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'Lobby',
@@ -50,17 +58,30 @@ export default {
 		LobbyPlayerIndicator,
 	},
 	computed: {
+		...mapGetters([
+			'opponentName',
+			'opponentIsReady'
+		]),
 		gameId() {
 			return this.$store.state.game.id;
 		},
 		iAmReady() {
 			return this.$store.state.game.myPNum === 0 ? this.$store.state.game.p0Ready : this.$store.state.game.p1Ready;
+		},
+		opponentIsHere() {
+			return this.$store.state.game.players.length == 2;
+		},
+		opponentIsReady() {
+			return this.opponentIsHere && this.$store.state.game.myPNum === 0 ? this.$store.state.game.p1Ready : this.$store.state.game.p0Ready;
 		}
 	},
 	methods: {
 		ready() {
 			this.$store.dispatch('requestReady');
 		}
+	},
+	mounted() {
+		this.$store.dispatch('requestLobbyData');
 	}
 }
 </script>

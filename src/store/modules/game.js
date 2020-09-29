@@ -17,6 +17,26 @@ export default {
 		twos: [],
 		myPNum: null,
 	},
+	getters: {
+		opponent(state) {
+			if (state.players.length < 2) {
+				return null;
+			}
+			return state.players[(state.myPNum + 1) % 2];
+		},
+		opponentName(state, getters) {
+			if (!getters.opponent) {
+				return null;
+			}
+			return getters.opponent.email.split('@')[0];
+		},
+		opponentIsReady(state, getters) {
+			if (!getters.opponent) {
+				return null;
+			}
+			return state.myPNum === 0 ? state.p1Ready : state.p1Ready;
+		}
+	},
 	mutations: {
 		setGameId(state, val) {
 			state.id = val;
@@ -40,6 +60,9 @@ export default {
 		opponentJoined(state, newPlayer) {
 			state.players.push(_.cloneDeep(newPlayer));
 		},
+		successfullyJoined(state, player) {
+			state.players.push(_.cloneDeep(player));
+		},
 		updateReady(state, pNum) {
 			if (pNum === 0) {
 				state.p0Ready = !state.p0Ready;
@@ -59,6 +82,7 @@ export default {
 					if (jwres.statusCode === 200) {
 						context.commit('updateGame', res.game);
 						context.commit('setMyPNum', res.pNum);
+						context.commit('successfullyJoined', {email: res.playerEmail, pNum: res.pNum});
 						return resolve();
 					}
 					return reject(new Error('error subscribing'));
@@ -74,6 +98,16 @@ export default {
 					return reject(new Error('Error readying for game'));
 				});
 			});
-		} 
+		},
+		async requestLobbyData(context) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/getLobbyData', function handleResponse(res, jwres) {
+					if (jwres.statusCode === 200) {
+						context.commit('updateGame', res.game);
+						return Promise.resolve(res);
+					}
+				});
+			});
+		}
 	}
 }

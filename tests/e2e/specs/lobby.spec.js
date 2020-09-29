@@ -1,5 +1,7 @@
-const validEmail = "myCustomEmail@gmail.com";
-const validPassword = "passwordLongerThanEight";
+const validEmail = 'myCustomEmail@gmail.com';
+const validPassword = 'passwordLongerThanEight';
+const opponentEmail = 'yourMortalEnemy@cia.gov';
+const opponentPassword = 'deviousTrickery';
 
 function setup() {
 	cy.wipeDatabase();
@@ -45,8 +47,17 @@ describe('Lobby - Event Handling', () => {
 	it('Unready button works', () => {
 		expect(true).to.eq(false);
 	});
-	it('Shows when opponent joins', () => {
-		expect(true).to.eq(false);
+	it.only('Shows when opponent joins', () => {
+		cy.contains('[data-cy=opponent-indicator]', 'Invite');
+		cy.window().its('app.$store.state.game').then(gameData => {
+			cy.contains('[data-cy=opponent-indicator]', 'Invite');
+			
+			// Sign up new user and subscribe them to game
+			cy.signup(opponentEmail, opponentPassword);
+			cy.subscribeOtherUser(gameData.id);
+			cy.contains('[data-cy=opponent-indicator]', opponentEmail);
+
+		});
 	});
 	it('Shows when opponent leaves', () => {
 		expect(true).to.eq(false);
