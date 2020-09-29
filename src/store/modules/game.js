@@ -100,12 +100,16 @@ export default {
 			});
 		},
 		async requestLobbyData(context) {
+			console.log('requesting lobby data');
 			return new Promise((resolve, reject) => {
-				io.socket.get('/game/getLobbyData', function handleResponse(res, jwres) {
+				io.socket.get('/game/lobbyData', function handleResponse(res, jwres) {
+					debugger;
 					if (jwres.statusCode === 200) {
-						context.commit('updateGame', res.game);
+						context.commit('updateGame', res);
 						return Promise.resolve(res);
 					}
+					console.log(jwres);
+					return reject(new Error('Error loading lobby data'));
 				});
 			});
 		}
