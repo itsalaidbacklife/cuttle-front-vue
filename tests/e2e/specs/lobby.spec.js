@@ -33,7 +33,7 @@ describe('Lobby - Page Content', () => {
     
 });
 
-describe('Lobby - Event Handling', () => {
+describe('Lobby - P0 Perspective', () => {
 	beforeEach(() => {
 		setup();
 	});
@@ -47,16 +47,15 @@ describe('Lobby - Event Handling', () => {
 	it('Unready button works', () => {
 		expect(true).to.eq(false);
 	});
-	it.only('Shows when opponent joins', () => {
+	it('Shows when opponent joins', () => {
 		cy.contains('[data-cy=opponent-indicator]', 'Invite');
 		cy.window().its('app.$store.state.game').then(gameData => {
 			cy.contains('[data-cy=opponent-indicator]', 'Invite');
-			
 			// Sign up new user and subscribe them to game
 			cy.signup(opponentEmail, opponentPassword);
 			cy.subscribeOtherUser(gameData.id);
-			cy.contains('[data-cy=opponent-indicator]', opponentEmail);
-
+			// Test that opponent's truncated email appears in indicator
+			cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 		});
 	});
 	it('Shows when opponent leaves', () => {
@@ -65,7 +64,30 @@ describe('Lobby - Event Handling', () => {
 	it('Shows when oppenent Readies up', () => {
 		expect(true).to.eq(false);
 	});
+	it('Shows when opponent un-readies', () => {
+		expect(true).to.eq(false);
+	});
 	it('Game starts when both players are ready', () => {
 		expect(true).to.eq(false);
 	});
 });
+
+describe('Lobby - P1 Perspective', () => {
+	beforeEach(() => {
+		cy.wipeDatabase();
+		cy.visit('/');
+		cy.signupThroughStore(validEmail, validPassword);
+		cy.createGameThroughStore('Test Game')
+		.then((gameSummary) => {
+				// Sign up new (other) user and subscribe them to game
+				cy.signup(opponentEmail, opponentPassword);
+				cy.subscribeOtherUser(gameSummary.gameId);
+				// Join game as this user and navigate to lobby
+				cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
+				cy.vueRoute(`/lobby/${gameSummary.gameId}`);
+			});
+	});
+	it('Shows opponent already in lobby for player joining second', () => {
+		expect(true).to.eq(false);
+	});
+})
