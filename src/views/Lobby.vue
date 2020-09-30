@@ -13,6 +13,8 @@
 				<v-btn
 					outlined
 					color="primary"
+					data-cy="exit-button"
+					@click="leave"
 				>
 					EXIT
 				</v-btn>
@@ -75,13 +77,22 @@ export default {
 			return this.opponentIsHere && this.$store.state.game.myPNum === 0 ? this.$store.state.game.p1Ready : this.$store.state.game.p0Ready;
 		}
 	},
+	mounted() {
+		this.$store.dispatch('requestLobbyData');
+	},
 	methods: {
 		ready() {
 			this.$store.dispatch('requestReady');
+		},
+		leave() {
+			this.$store.dispatch('requestLeaveLobby')
+				.then(() => {
+					this.$router.push('/');
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
-	},
-	mounted() {
-		this.$store.dispatch('requestLobbyData');
 	}
 }
 </script>

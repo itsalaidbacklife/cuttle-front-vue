@@ -38,7 +38,17 @@ describe('Lobby - P0 Perspective', () => {
 		setup();
 	});
 	it('Exits the Lobby', () => {
-		expect(true).to.eq(false);
+		cy.get('[data-cy=exit-button]').click();
+		// Confirm navigation back to home
+		cy.hash().should('eq', '#/');
+		// Test store state
+		cy.window().its('app.$store.state')
+		.then((state) => {
+			expect(state.game.players.length).to.eq(0);
+			expect(state.game.id).to.eq(null);
+			expect(state.game.name).to.eq(null);
+			expect(state.game.myPNum).to.eq(null);
+		});
 	});
 	it('Ready button works', () => {
 		cy.get('[data-cy=ready-button]').click();
@@ -78,7 +88,7 @@ describe('Lobby - P1 Perspective', () => {
 		cy.visit('/');
 		cy.signupThroughStore(validEmail, validPassword);
 		cy.createGameThroughStore('Test Game')
-		.then((gameSummary) => {
+			.then((gameSummary) => {
 				// Sign up new (other) user and subscribe them to game
 				cy.signup(opponentEmail, opponentPassword);
 				cy.subscribeOtherUser(gameSummary.gameId);

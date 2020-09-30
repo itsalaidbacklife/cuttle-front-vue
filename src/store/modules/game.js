@@ -1,8 +1,7 @@
 import { io } from '../../plugins/sails.js';
 var _ = require('lodash');
-
-export default {
-	state: {
+function resetState() {
+	return {
 		id: null,
 		chat: [],
 		deck: [],
@@ -16,7 +15,11 @@ export default {
 		turn: 0,
 		twos: [],
 		myPNum: null,
-	},
+	};
+}
+const initialState = resetState();
+export default {
+	state: initialState,
 	getters: {
 		opponent(state) {
 			if (state.players.length < 2) {
@@ -63,6 +66,10 @@ export default {
 		successfullyJoined(state, player) {
 			state.players.push(_.cloneDeep(player));
 		},
+		successfullyLeft(state) {
+			// Must use Object.assign to preserve reactivity
+			Object.assign(state, resetState());
+		},
 		updateReady(state, pNum) {
 			if (pNum === 0) {
 				state.p0Ready = !state.p0Ready;
@@ -89,6 +96,17 @@ export default {
 				});
 			});
 		},
+		async requestLeaveLobby(context) {
+			return new Promise((resolve, reject) => {
+				io.socket.post('/game/leaveLobby', function handleResponse(res, jwres) {
+					if (jwres.statusCode === 200) {
+						context.commit('successfullyLeft');
+						return resolve();
+					}
+					return reject(new Error('Error leaving lobby'));
+				});
+			});
+		},
 		async requestReady() {
 			return new Promise((resolve, reject) => {
 				io.socket.post('/game/ready', function handleResponse(res, jwres) {
@@ -103,7 +121,6 @@ export default {
 			console.log('requesting lobby data');
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/lobbyData', function handleResponse(res, jwres) {
-					debugger;
 					if (jwres.statusCode === 200) {
 						context.commit('updateGame', res);
 						return Promise.resolve(res);
