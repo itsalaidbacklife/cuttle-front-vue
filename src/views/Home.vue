@@ -1,6 +1,15 @@
 <template>
 	<div class="home">
 		<div class="container">
+			<v-btn
+				id="btn-logout"
+				rounded
+				color="primary"
+				data-cy="btn-logout"
+				@click="logout"
+			>
+				Logout
+			</v-btn>
 			<img
 				id="logo"
 				alt="Vue logo"
@@ -101,6 +110,18 @@ export default {
 				.catch(() => {
 					console.log("Error creating game");
 				});
+		},
+		logout(){
+			console.log("loggin out")
+			this.$store
+				.dispatch("requestLogout")
+				.then(() => {
+					this.$router.push("/login");
+				})
+				.catch((err) => {
+					if (err) console.error(err)
+					console.log("Error logging out");
+				});
 		}
 	}
 };
@@ -116,6 +137,12 @@ export default {
 
 #logo {
   margin: 0 auto;
+}
+
+#btn-logout {
+	position: absolute;
+	top: 5px;
+	right: 5px;
 }
 
 .page-title {
