@@ -6,6 +6,10 @@ function setup() {
 	cy.signupThroughStore(validEmail, validPassword);
 	cy.vueRoute("/");
 }
+function assertSuccessfulJoin(gameState) {
+	expect(gameState.id).to.not.eq(null);
+	cy.contains("h1", `Lobby for ${gameState.id}`);
+}
 
 describe("Home - Page Content", () => {
 	beforeEach(setup);
@@ -79,7 +83,7 @@ describe("Home - Game List", () => {
 		cy.window()
 			.its("app.$store.state.game")
 			.then((gameState) => {
-				expect(gameState.gameId).to.eq(null);
+				expect(gameState.id).to.eq(null);
 			});
 		cy.createGameThroughStore("Test Game");
 		cy.get("[data-cy=game-list-item]")
@@ -89,11 +93,49 @@ describe("Home - Game List", () => {
 		cy.window()
 			.its("app.$store.state.game")
 			.then((gameState) => {
-				expect(gameState.gameId).to.not.eq(null);
+				assertSuccessfulJoin(gameState);
 			});
 	});
+	it("Joins a game that already has one player", () => {
+		/**
+     * Set up:
+     * Create game, sign up one other user and subscribe them to the game
+     */
+		cy.createGameThroughStore("Test Game").then((gameData) => {
+			// Sign up new user and subscribe them to game
+			cy.signup("secondUser@aol.com", "myNewPassword");
+			cy.subscribeOtherUser(gameData.gameId);
+			// Our user then joins through UI
+			cy.get("[data-cy=game-list-item]")
+				.contains("button.v-btn", "JOIN")
+				.click();
+			// Should have redirected to lobby page and updated store
+			cy.hash().should("contain", "#/lobby");
+			cy.window()
+				.its("app.$store.state.game")
+				.then((gameState) => {
+					// expect(gameState.gameId).to.not.eq(null);
+					assertSuccessfulJoin(gameState);
+				});
+		});
+	});
 	it("Disables join when a game becomes full", () => {
-		expect(true).to.eq(false);
+		/**
+     * Set up:
+     * Create game, sign up two other users, subscribe them to the game
+     */
+		cy.createGameThroughStore("Test Game").then((gameData) => {
+			// Test that JOIN button starts enabled
+			cy.contains("button.v-btn", "JOIN").should("not.be.disabled");
+			// Sign up 2 users and subscribe them to game
+			cy.signup("secondUser@aol.com", "myNewPassword");
+			cy.subscribeOtherUser(gameData.gameId);
+			cy.signup("thirdUser@facebook.com", "anotherUserPw");
+			cy.subscribeOtherUser(gameData.gameId);
+
+			// Test that join button is now disabled
+			cy.contains("button.v-btn", "JOIN").should("be.disabled");
+		});
 	});
 });
 

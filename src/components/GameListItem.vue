@@ -15,7 +15,7 @@
 			<p data-cy="game-list-item-name">
 				{{ name }}
 			</p>
-			<p>{{ readyText }} players ready</p>
+			<p>{{ readyText }} players</p>
 		</v-col>
 		<v-col
 			cols="3"
@@ -24,6 +24,7 @@
 			<v-btn
 				color="primary"
 				rounded
+				:disabled="!status"
 				@click="subscribeToGame"
 			>
 				JOIN
@@ -51,6 +52,14 @@ export default {
 		gameId: {
 			type: Number,
 			required: true
+		},
+		status: {
+			type: Boolean,
+			required: true,
+		},
+		numPlayers: {
+			type: Number,
+			required: true,
 		}
 	},
 	computed:{
@@ -58,7 +67,7 @@ export default {
 			return this.p0ready + this.p1ready
 		},
 		readyText() {
-			return `${this.numPlayersReady} / 2`;
+			return `${this.numPlayers} / 2`;
 		},
 	},
 	methods: {

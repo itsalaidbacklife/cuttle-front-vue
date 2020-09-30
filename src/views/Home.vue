@@ -40,6 +40,8 @@
 									:p0ready="game.p0Ready ? 1 : 0"
 									:p1ready="game.p1Ready ? 1 : 0"
 									:game-id="game.id"
+									:status="game.status"
+									:num-players="game.numPlayers"
 								/>
 							</div>
 						</div>
