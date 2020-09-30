@@ -173,12 +173,12 @@ describe("Home - Create Game", () => {
 				);
 			});
 	});
-	it("Does not create game without game name", () => {
+	it.only("Does not create game without game name", () => {
 		cy.get("[data-cy=create-game-btn]").click();
 		cy.window()
 			.its("app.$store.state.game")
 			.then((gameState) => {
-				expect(gameState.gameId).to.eq(null);
+				expect(gameState.gameId).to.eq(undefined);
 			});
 	});
 });
