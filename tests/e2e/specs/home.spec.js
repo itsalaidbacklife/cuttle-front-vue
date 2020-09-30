@@ -26,7 +26,8 @@ describe("Home - Page Content", () => {
 		);
 	});
 	it("Logs user out", () => {
-		expect(true).to.eq(false);
+		cy.get("[data-cy=btn-logout]").click();
+		cy.contains("h1", "Log In");
 	});
 });
 
