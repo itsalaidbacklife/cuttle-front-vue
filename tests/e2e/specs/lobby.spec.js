@@ -25,7 +25,11 @@ describe('Lobby - Page Content', () => {
 		cy.contains('button.v-btn', 'READY');
 	});
 	it('Shows both players indicators', () => {
-		expect(true).to.eq(false);
+		cy.get('[data-cy=my-indicator]')
+			.contains(validEmail.split('@')[0])
+			.should('not.contain', '@');
+		cy.get('[data-cy=opponent-indicator]')
+			.contains('Invite');
 	});
 	it('Defaults to not-ready', () => {
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');

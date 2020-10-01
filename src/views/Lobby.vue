@@ -35,7 +35,7 @@
 		<v-row>
 			<v-col offset="1">
 				<lobby-player-indicator
-					:player-email="$store.state.auth.email"
+					:player-email="myUserName"
 					:player-ready="iAmReady"
 					data-cy="my-indicator"
 				/>
@@ -62,7 +62,8 @@ export default {
 	computed: {
 		...mapGetters([
 			'opponentName',
-			'opponentIsReady'
+			'opponentIsReady',
+			'myUserName'
 		]),
 		gameId() {
 			return this.$store.state.game.id;
