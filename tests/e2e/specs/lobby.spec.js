@@ -47,12 +47,12 @@ describe('Lobby - P0 Perspective', () => {
 		cy.hash().should('eq', '#/');
 		// Test store state
 		cy.window().its('app.$store.state')
-		.then((state) => {
-			expect(state.game.players.length).to.eq(0);
-			expect(state.game.id).to.eq(null);
-			expect(state.game.name).to.eq(null);
-			expect(state.game.myPNum).to.eq(null);
-		});
+			.then((state) => {
+				expect(state.game.players.length).to.eq(0);
+				expect(state.game.id).to.eq(null);
+				expect(state.game.name).to.eq(null);
+				expect(state.game.myPNum).to.eq(null);
+			});
 	});
 	it('Ready button works', () => {
 		cy.get('[data-cy=ready-button]').click();
