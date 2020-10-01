@@ -33,6 +33,7 @@ describe('Lobby - Page Content', () => {
 	});
 	it('Defaults to not-ready', () => {
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 	});
     
 });
