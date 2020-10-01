@@ -30,7 +30,7 @@ io.socket.on('join', function(evData) {
 	store.commit('joinGame', {
 		gameId: evData.gameId,
 		newPlayer: evData.newPlayer,
-		newStatus: evData.newStaus,
+		newStatus: evData.newStatus,
 	});
 	// If we are in game: update our game with new player
 	if (evData.gameId === store.state.game.id) {
