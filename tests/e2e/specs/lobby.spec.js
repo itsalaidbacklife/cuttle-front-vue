@@ -55,7 +55,7 @@ describe('Lobby - P0 Perspective', () => {
 				expect(state.game.myPNum).to.eq(null);
 			});
 	});
-	it.only('Ready button works', () => {
+	it('Ready button works', () => {
 		cy.get('[data-cy=ready-button]')
 		// Test: Button text defaults to 'Ready'
 		.contains('Ready')
