@@ -22,7 +22,7 @@ describe('Lobby - Page Content', () => {
 	});
 	it('Displays buttons', () => {
 		cy.contains('button.v-btn', 'EXIT');
-		cy.contains('button.v-btn', 'READY');
+		cy.contains('button.v-btn', 'Ready');
 	});
 	it('Shows both players indicators', () => {
 		cy.get('[data-cy=my-indicator]')

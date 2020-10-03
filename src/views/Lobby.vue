@@ -72,7 +72,7 @@ export default {
 			return this.$store.state.game.myPNum === 0 ? this.$store.state.game.p0Ready : this.$store.state.game.p1Ready;
 		},
 		readyButtonText() {
-			return this.iAmReady ? 'Unready' : 'Ready';
+			return this.iAmReady ? 'UNREADY' : 'READY';
 		},
 		opponentIsHere() {
 			return this.$store.state.game.players.length == 2;
