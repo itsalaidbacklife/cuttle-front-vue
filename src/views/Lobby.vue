@@ -27,7 +27,7 @@
 					data-cy="ready-button"
 					@click="ready"
 				>
-					READY
+					{{ readyButtonText }}
 				</v-btn>
 			</v-col>
 		</v-row>
@@ -71,12 +71,12 @@ export default {
 		iAmReady() {
 			return this.$store.state.game.myPNum === 0 ? this.$store.state.game.p0Ready : this.$store.state.game.p1Ready;
 		},
+		readyButtonText() {
+			return this.iAmReady ? 'Unready' : 'Ready';
+		},
 		opponentIsHere() {
 			return this.$store.state.game.players.length == 2;
 		},
-		opponentIsReady() {
-			return this.opponentIsHere && this.$store.state.game.myPNum === 0 ? this.$store.state.game.p1Ready : this.$store.state.game.p0Ready;
-		}
 	},
 	mounted() {
 		this.$store.dispatch('requestLobbyData');

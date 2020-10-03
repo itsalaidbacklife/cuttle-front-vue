@@ -55,12 +55,25 @@ describe('Lobby - P0 Perspective', () => {
 				expect(state.game.myPNum).to.eq(null);
 			});
 	});
-	it('Ready button works', () => {
-		cy.get('[data-cy=ready-button]').click();
+	it.only('Ready button works', () => {
+		cy.get('[data-cy=ready-button]')
+		// Test: Button text defaults to 'Ready'
+		.contains('Ready')
+		.should('not.contain', 'Unready')
+		.click()
+		.contains('Unready');
+		// Test: player indicator classes
 		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
+		// Test: store state
+		cy.window().its('app.$store')
+			.then((store) => {
+				expect(store.state.game.p0Ready).to.eq(true); // Player is ready
+				expect(store.getters.opponentIsReady).to.eq(null); // Opponent is missing (not ready)
+			});
 	});
 	it('Unready button works', () => {
-		expect(true).to.eq(false);
+		cy.get('[data-cy=ready-button]')
 	});
 	it('Shows when opponent joins', () => {
 		cy.contains('[data-cy=opponent-indicator]', 'Invite');
