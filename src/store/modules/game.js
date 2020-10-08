@@ -45,17 +45,17 @@ export default {
 			state.id = val;
 		},
 		updateGame(state, newGame) {
-			state.id = newGame.id;
-			state.chat = _.cloneDeep(newGame.chat);
-			state.deck = _.cloneDeep(newGame.deck);
-			state.log = _.cloneDeep(newGame.log);
-			state.name = newGame.name;
-			state.p0Ready = newGame.p0Ready;
-			state.p1Ready = newGame.p1Ready;
-			state.passes = newGame.passes;
-			state.players = _.cloneDeep(newGame.players);
-			state.scrap = _.cloneDeep(newGame.scrap);
-			state.twos = _.cloneDeep(newGame.twos);
+			if (Object.hasOwnProperty.call(newGame, 'id')) state.id = newGame.id;
+			if (Object.hasOwnProperty.call(newGame, 'chat')) state.chat = _.cloneDeep(newGame.chat);
+			if (Object.hasOwnProperty.call(newGame, 'deck')) state.deck = _.cloneDeep(newGame.deck);
+			if (Object.hasOwnProperty.call(newGame, 'log')) state.log = _.cloneDeep(newGame.log);
+			if (Object.hasOwnProperty.call(newGame, 'name')) state.name = newGame.name;
+			if (Object.hasOwnProperty.call(newGame, 'p0Ready')) state.p0Ready = newGame.p0Ready;
+			if (Object.hasOwnProperty.call(newGame, 'p1Ready')) state.p1Ready = newGame.p1Ready;
+			if (Object.hasOwnProperty.call(newGame, 'passes')) state.passes = newGame.passes;
+			if (Object.hasOwnProperty.call(newGame, 'players')) state.players = _.cloneDeep(newGame.players);
+			if (Object.hasOwnProperty.call(newGame, 'srap')) state.scrap = _.cloneDeep(newGame.scrap);
+			if (Object.hasOwnProperty.call(newGame, 'twos')) state.twos = _.cloneDeep(newGame.twos);
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
