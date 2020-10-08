@@ -18,7 +18,7 @@ describe('Lobby - Page Content', () => {
 		setup();
 	});
 	it('Displays headers', () => {
-		expect(true).to.eq(false);
+		cy.contains('h1', 'Lobby for Test Game');
 	});
 	it('Displays buttons', () => {
 		cy.contains('button.v-btn', 'EXIT');
