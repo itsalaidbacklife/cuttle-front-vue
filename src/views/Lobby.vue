@@ -2,7 +2,7 @@
 	<v-container id="lobby-wrapper">
 		<v-row>
 			<v-col offset="1">
-				<h1>Lobby for {{ gameId }}</h1>
+				<h1>Lobby for {{ gameName }}</h1>
 			</v-col>
 		</v-row>
 		<v-row>
@@ -67,6 +67,9 @@ export default {
 		]),
 		gameId() {
 			return this.$store.state.game.id;
+		},
+		gameName() {
+			return this.$store.state.game.name;
 		},
 		iAmReady() {
 			return this.$store.state.game.myPNum === 0 ? this.$store.state.game.p0Ready : this.$store.state.game.p1Ready;
