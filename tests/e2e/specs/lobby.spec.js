@@ -98,6 +98,9 @@ describe('Lobby - P0 Perspective', () => {
 	it('Game starts when both players are ready', () => {
 		expect(true).to.eq(false);
 	});
+	it('Loads lobby after page refresh', () => {
+		expect(true).to.eq(false);
+	});
 });
 
 describe('Lobby - P1 Perspective', () => {
@@ -117,5 +120,8 @@ describe('Lobby - P1 Perspective', () => {
 	});
 	it('Shows opponent already in lobby for player joining second', () => {
 		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
+	});
+	it('Loads lobby after page refresh', () => {
+		expect(true).to.eq(false);
 	});
 })
