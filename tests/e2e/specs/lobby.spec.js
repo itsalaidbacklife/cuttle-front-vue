@@ -143,7 +143,7 @@ describe('Lobby - P1 Perspective', () => {
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
-	it.only('Ready & UnReady buttons work', () => {
+	it('Ready & UnReady buttons work', () => {
 		cy.get('[data-cy=ready-button]')
 		// Test: Button text defaults to 'Ready'
 			.contains('READY')
@@ -156,17 +156,21 @@ describe('Lobby - P1 Perspective', () => {
 		cy.window().its('app.$store')
 		.then((store) => {
 				// Test: store state
-				expect(store.state.game.p0Ready).to.eq(true); // Player is ready
-				expect(store.getters.opponentIsReady).to.eq(null); // Opponent is missing (not ready)
+				expect(store.state.game.p1Ready).to.eq(true); // Player is ready
+				expect(store.getters.opponentIsReady).to.eq(false); // Opponent is not ready
 				// Click Unready button
-				cy.get('[data-cy=ready-button]').click();
+				cy.get('[data-cy=ready-button]')
+					.should('contain', 'UNREADY')
+					.click()
+					.should('not.contain', 'UNREADY')
+					.should('contain', 'READY');
 				cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 				//Return updated store state
 				return cy.wrap(store.state.game);
 			})
 			.then((updatedGameState) => {
 				//Test updated store state
-				expect(updatedGameState.p0Ready).to.eq(false); // Player not ready
+				expect(updatedGameState.p1Ready).to.eq(false); // Player not ready
 			});
 	});
 	it('Loads lobby after page refresh', () => {
