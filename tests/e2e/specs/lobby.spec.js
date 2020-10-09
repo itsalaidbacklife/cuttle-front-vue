@@ -74,7 +74,8 @@ describe('Lobby - P0 Perspective', () => {
 			});
 	});
 	it('Unready button works', () => {
-		cy.get('[data-cy=ready-button]')
+		cy.get('[data-cy=ready-button]');
+		expect(true).to.eq(false);
 	});
 	it('Shows when opponent joins', () => {
 		cy.contains('[data-cy=opponent-indicator]', 'Invite');
