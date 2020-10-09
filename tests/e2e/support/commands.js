@@ -56,6 +56,18 @@ Cypress.Commands.add('subscribeOtherUser', (id) => {
 		});
 	});
 });
+Cypress.Commands.add('readyOtherUser', (id) => {
+	return new Promise((resolve, reject) => {
+		io.socket.get('/game/ready', {
+			id,
+		}, function handleResponse(res, jwres) {
+			if (jwres.statusCode === 200) {
+				return resolve();
+			}
+			return reject(new Error('error readying up opponent'));
+		});
+	});
+});
 
 
 /**
