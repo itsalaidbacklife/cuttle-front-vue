@@ -56,7 +56,7 @@ describe('Lobby - P0 Perspective', () => {
 				expect(state.game.myPNum).to.eq(null);
 			});
 	});
-	it('Ready & UnReady buttons works', () => {
+	it('Ready & UnReady buttons work', () => {
 		cy.get('[data-cy=ready-button]')
 		// Test: Button text defaults to 'Ready'
 			.contains('READY')
