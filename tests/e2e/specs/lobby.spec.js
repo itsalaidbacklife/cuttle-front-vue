@@ -96,15 +96,17 @@ describe('Lobby - P0 Perspective', () => {
 	it('Shows when opponent leaves', () => {
 		expect(true).to.eq(false);
 	});
-	it('Shows when oppenent Readies up', function () {
+	it('Shows when oppenent Readies/Unreadies', function () {
+		// Opponent subscribes & readies up
 		cy.signup(opponentEmail, opponentPassword);
 		cy.subscribeOtherUser(this.gameSummary.gameId);
 		cy.readyOtherUser();
 		cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
-	});
-	it('Shows when opponent un-readies', () => {
-		expect(true).to.eq(false);
+		//Opponent un-readies
+		cy.readyOtherUser();
+		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
+		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
 	it('Game starts when both players are ready', () => {
 		expect(true).to.eq(false);
