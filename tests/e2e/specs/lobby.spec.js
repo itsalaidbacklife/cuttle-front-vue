@@ -79,7 +79,7 @@ describe('Lobby - P0 Perspective', () => {
 			})
 			.then((updatedGameState) => {
 				//Test updated store state
-				expect(updatedGameState.p0Ready).to.eq(false); // Player is ready
+				expect(updatedGameState.p0Ready).to.eq(false); // Player not ready
 			});
 	});
 	it('Shows when opponent joins', () => {
@@ -134,7 +134,7 @@ describe('Lobby - P1 Perspective', () => {
 	it('Shows opponent already in lobby for player joining second', () => {
 		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 	});
-	it.only('Shows when oppenent Readies/Unreadies', () => {
+	it('Shows when oppenent Readies/Unreadies', () => {
 		cy.readyOtherUser();
 		cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
@@ -142,6 +142,32 @@ describe('Lobby - P1 Perspective', () => {
 		cy.readyOtherUser();
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+	});
+	it.only('Ready & UnReady buttons work', () => {
+		cy.get('[data-cy=ready-button]')
+		// Test: Button text defaults to 'Ready'
+			.contains('READY')
+			.should('not.contain', 'UNREADY')
+			.click()
+			.contains('UNREADY');
+		// Test: player indicator classes
+		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
+		cy.window().its('app.$store')
+		.then((store) => {
+				// Test: store state
+				expect(store.state.game.p0Ready).to.eq(true); // Player is ready
+				expect(store.getters.opponentIsReady).to.eq(null); // Opponent is missing (not ready)
+				// Click Unready button
+				cy.get('[data-cy=ready-button]').click();
+				cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+				//Return updated store state
+				return cy.wrap(store.state.game);
+			})
+			.then((updatedGameState) => {
+				//Test updated store state
+				expect(updatedGameState.p0Ready).to.eq(false); // Player not ready
+			});
 	});
 	it('Loads lobby after page refresh', () => {
 		expect(true).to.eq(false);
