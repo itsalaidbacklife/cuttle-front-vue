@@ -37,7 +37,7 @@ export default {
 			if (!getters.opponent) {
 				return null;
 			}
-			return state.myPNum === 0 ? state.p1Ready : state.p1Ready;
+			return state.myPNum === 0 ? state.p1Ready : state.p0Ready;
 		}
 	},
 	mutations: {
