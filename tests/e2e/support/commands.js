@@ -68,7 +68,17 @@ Cypress.Commands.add('readyOtherUser', (id) => {
 		});
 	});
 });
-
+Cypress.Commands.add('leaveLobbyOtherUser', (id) => {
+	return new Promise((resolve, reject) => {
+		io.socket.get('/game/leaveLobby',
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode === 200) {
+					return resolve();
+				}
+				return reject(new Error('error on opponent leaving lobby'));
+		});
+	});
+});
 
 /**
  * Did not work -- reequest.body was undefined on server
