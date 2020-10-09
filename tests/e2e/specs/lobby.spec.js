@@ -11,6 +11,7 @@ function setup() {
 		.then((gameSummary) => {
 			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
+			cy.wrap(gameSummary).as('gameSummary');
 		});
 }
 describe('Lobby - Page Content', () => {
@@ -89,8 +90,12 @@ describe('Lobby - P0 Perspective', () => {
 	it('Shows when opponent leaves', () => {
 		expect(true).to.eq(false);
 	});
-	it('Shows when oppenent Readies up', () => {
-		expect(true).to.eq(false);
+	it.only('Shows when oppenent Readies up', function () {
+		cy.signup(opponentEmail, opponentPassword);
+		cy.subscribeOtherUser(this.gameSummary.gameId);
+		cy.readyOtherUser();
+		cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
 	it('Shows when opponent un-readies', () => {
 		expect(true).to.eq(false);
@@ -120,6 +125,9 @@ describe('Lobby - P1 Perspective', () => {
 	});
 	it('Shows opponent already in lobby for player joining second', () => {
 		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
+	});
+	it('Shows when oppenent Readies up', () => {
+		expect(true).to.eq(false);
 	});
 	it('Loads lobby after page refresh', () => {
 		expect(true).to.eq(false);
