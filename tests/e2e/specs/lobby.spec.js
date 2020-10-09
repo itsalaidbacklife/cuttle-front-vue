@@ -90,7 +90,7 @@ describe('Lobby - P0 Perspective', () => {
 	it('Shows when opponent leaves', () => {
 		expect(true).to.eq(false);
 	});
-	it.only('Shows when oppenent Readies up', function () {
+	it('Shows when oppenent Readies up', function () {
 		cy.signup(opponentEmail, opponentPassword);
 		cy.subscribeOtherUser(this.gameSummary.gameId);
 		cy.readyOtherUser();
