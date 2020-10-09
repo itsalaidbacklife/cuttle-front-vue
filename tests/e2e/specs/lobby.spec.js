@@ -9,7 +9,7 @@ function setup() {
 	cy.signupThroughStore(validEmail, validPassword);
 	cy.createGameThroughStore('Test Game')
 		.then((gameSummary) => {
-			cy.window().its('app.$store').as('$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
+			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
 			cy.wrap(gameSummary).as('gameSummary');
 		});
@@ -133,7 +133,26 @@ describe('Lobby - P1 Perspective', () => {
 		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 	});
 	it('Shows when oppenent Readies up', () => {
-		expect(true).to.eq(false);
+		cy.readyOtherUser();
+		cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+
+		// cy.wipeDatabase();
+		// cy.visit('/');
+		// cy.signupThroughStore(validEmail, validPassword);
+		// cy.createGameThroughStore('Test Game')
+		// 	.then((gameSummary) => {
+		// 		// Sign up new (other) user and subscribe them to game
+		// 		cy.signup(opponentEmail, opponentPassword);
+		// 		cy.subscribeOtherUser(gameSummary.gameId);
+		// 		debugger;
+		// 		// Join game as this user and navigate to lobby
+		// 		cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
+		// 		cy.vueRoute(`/lobby/${gameSummary.gameId}`);
+		// 		cy.readyOtherUser();
+		// 		cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
+		// 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+		// 	});
 	});
 	it('Loads lobby after page refresh', () => {
 		expect(true).to.eq(false);
