@@ -9,7 +9,7 @@ function setup() {
 	cy.signupThroughStore(validEmail, validPassword);
 	cy.createGameThroughStore('Test Game')
 		.then((gameSummary) => {
-			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
+			cy.window().its('app.$store').as('$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
 			cy.wrap(gameSummary).as('gameSummary');
 		});
@@ -56,7 +56,7 @@ describe('Lobby - P0 Perspective', () => {
 				expect(state.game.myPNum).to.eq(null);
 			});
 	});
-	it('Ready button works', () => {
+	it('Ready & UnReady buttons works', () => {
 		cy.get('[data-cy=ready-button]')
 		// Test: Button text defaults to 'Ready'
 			.contains('READY')
@@ -66,16 +66,21 @@ describe('Lobby - P0 Perspective', () => {
 		// Test: player indicator classes
 		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
-		// Test: store state
 		cy.window().its('app.$store')
-			.then((store) => {
+		.then((store) => {
+				// Test: store state
 				expect(store.state.game.p0Ready).to.eq(true); // Player is ready
 				expect(store.getters.opponentIsReady).to.eq(null); // Opponent is missing (not ready)
+				// Click Unready button
+				cy.get('[data-cy=ready-button]').click();
+				cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+				//Return updated store state
+				return cy.wrap(store.state.game);
+			})
+			.then((updatedGameState) => {
+				//Test updated store state
+				expect(updatedGameState.p0Ready).to.eq(false); // Player is ready
 			});
-	});
-	it('Unready button works', () => {
-		cy.get('[data-cy=ready-button]');
-		expect(true).to.eq(false);
 	});
 	it('Shows when opponent joins', () => {
 		cy.contains('[data-cy=opponent-indicator]', 'Invite');
