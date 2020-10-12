@@ -179,6 +179,9 @@ describe('Lobby - P1 Perspective', () => {
 				expect(updatedGameState.p1Ready).to.eq(false); // Player not ready
 			});
 	});
+	it('Game starts when both players are ready', () => {
+		expect(true).to.eq(false);
+	});
 	it('Loads lobby after page refresh', () => {
 		expect(true).to.eq(false);
 	});
