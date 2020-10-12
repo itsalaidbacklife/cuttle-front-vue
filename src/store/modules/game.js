@@ -77,6 +77,9 @@ export default {
 			else {
 				state.p1Ready = !state.p1Ready;
 			}
+		},
+		opponentLeft(state) {
+			state.players = state.players.map(player => player.pNum === state.myPNum);
 		}
 
 	},

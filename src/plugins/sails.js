@@ -37,3 +37,9 @@ io.socket.on('join', function(evData) {
 		store.commit('opponentJoined', evData.newPlayer);
 	}
 });
+
+io.socket.on('leftGame', function(evData) {
+	if (evData.id === store.state.game.id) {
+		store.commit('opponentLeft');
+	}
+});
