@@ -67,7 +67,7 @@ describe('Lobby - P0 Perspective', () => {
 		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.window().its('app.$store')
-		.then((store) => {
+			.then((store) => {
 				// Test: store state
 				expect(store.state.game.p0Ready).to.eq(true); // Player is ready
 				expect(store.getters.opponentIsReady).to.eq(null); // Opponent is missing (not ready)
@@ -160,7 +160,7 @@ describe('Lobby - P1 Perspective', () => {
 		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.window().its('app.$store')
-		.then((store) => {
+			.then((store) => {
 				// Test: store state
 				expect(store.state.game.p1Ready).to.eq(true); // Player is ready
 				expect(store.getters.opponentIsReady).to.eq(false); // Opponent is not ready

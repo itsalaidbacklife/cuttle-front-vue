@@ -76,7 +76,7 @@ Cypress.Commands.add('leaveLobbyOtherUser', (id) => {
 					return resolve();
 				}
 				return reject(new Error('error on opponent leaving lobby'));
-		});
+			});
 	});
 });
 
