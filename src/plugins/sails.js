@@ -26,6 +26,7 @@ io.socket.on('game', function(evData) {
 });
 
 io.socket.on('join', function(evData) {
+	console.log('Game was joined');
 	store.commit('joinGame', {
 		gameId: evData.gameId,
 		newPlayer: evData.newPlayer,
@@ -34,5 +35,11 @@ io.socket.on('join', function(evData) {
 	// If we are in game: update our game with new player
 	if (evData.gameId === store.state.game.id) {
 		store.commit('opponentJoined', evData.newPlayer);
+	}
+});
+
+io.socket.on('leftGame', function(evData) {
+	if (evData.id === store.state.game.id) {
+		store.commit('opponentLeft');
 	}
 });

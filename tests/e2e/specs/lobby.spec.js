@@ -1,5 +1,7 @@
-const validEmail = "myCustomEmail@gmail.com";
-const validPassword = "passwordLongerThanEight";
+const validEmail = 'myCustomEmail@gmail.com';
+const validPassword = 'passwordLongerThanEight';
+const opponentEmail = 'yourMortalEnemy@cia.gov';
+const opponentPassword = 'deviousTrickery';
 
 function setup() {
 	cy.wipeDatabase();
@@ -9,6 +11,7 @@ function setup() {
 		.then((gameSummary) => {
 			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
+			cy.wrap(gameSummary).as('gameSummary');
 		});
 }
 describe('Lobby - Page Content', () => {
@@ -16,45 +19,170 @@ describe('Lobby - Page Content', () => {
 		setup();
 	});
 	it('Displays headers', () => {
-		expect(true).to.eq(false);
+		cy.contains('h1', 'Lobby for Test Game');
 	});
 	it('Displays buttons', () => {
 		cy.contains('button.v-btn', 'EXIT');
 		cy.contains('button.v-btn', 'READY');
 	});
 	it('Shows both players indicators', () => {
-		expect(true).to.eq(false);
+		cy.get('[data-cy=my-indicator]')
+			.contains(validEmail.split('@')[0])
+			.should('not.contain', '@');
+		cy.get('[data-cy=opponent-indicator]')
+			.contains('Invite');
 	});
 	it('Defaults to not-ready', () => {
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 	});
     
 });
 
-describe('Lobby - Event Handling', () => {
+describe('Lobby - P0 Perspective', () => {
 	beforeEach(() => {
 		setup();
 	});
 	it('Exits the Lobby', () => {
-		expect(true).to.eq(false);
+		cy.get('[data-cy=exit-button]').click();
+		// Confirm navigation back to home
+		cy.hash().should('eq', '#/');
+		// Test store state
+		cy.window().its('app.$store.state')
+			.then((state) => {
+				expect(state.game.players.length).to.eq(0);
+				expect(state.game.id).to.eq(null);
+				expect(state.game.name).to.eq(null);
+				expect(state.game.myPNum).to.eq(null);
+			});
 	});
-	it('Ready button works', () => {
-		cy.get('[data-cy=ready-button]').click();
+	it('Ready & UnReady buttons work', () => {
+		cy.get('[data-cy=ready-button]')
+		// Test: Button text defaults to 'Ready'
+			.contains('READY')
+			.should('not.contain', 'UNREADY')
+			.click()
+			.contains('UNREADY');
+		// Test: player indicator classes
 		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
+		cy.window().its('app.$store')
+			.then((store) => {
+				// Test: store state
+				expect(store.state.game.p0Ready).to.eq(true); // Player is ready
+				expect(store.getters.opponentIsReady).to.eq(null); // Opponent is missing (not ready)
+				// Click Unready button
+				cy.get('[data-cy=ready-button]').click();
+				cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+				//Return updated store state
+				return cy.wrap(store.state.game);
+			})
+			.then((updatedGameState) => {
+				//Test updated store state
+				expect(updatedGameState.p0Ready).to.eq(false); // Player not ready
+			});
 	});
-	it('Unready button works', () => {
-		expect(true).to.eq(false);
+	it('Shows when opponent joins and leaves', () => {
+		cy.contains('[data-cy=opponent-indicator]', 'Invite');
+		cy.window().its('app.$store.state.game').then(gameData => {
+			cy.contains('[data-cy=opponent-indicator]', 'Invite');
+			// Sign up new user and subscribe them to game
+			cy.signup(opponentEmail, opponentPassword);
+			cy.subscribeOtherUser(gameData.id);
+			// Test that opponent's truncated email appears in indicator
+			cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
+
+			// Opponent leaves
+			cy.leaveLobbyOtherUser();
+			cy.contains('[data-cy=opponent-indicator]', 'Invite');
+		});
 	});
-	it('Shows when opponent joins', () => {
-		expect(true).to.eq(false);
-	});
-	it('Shows when opponent leaves', () => {
-		expect(true).to.eq(false);
-	});
-	it('Shows when oppenent Readies up', () => {
-		expect(true).to.eq(false);
+	it('Shows when oppenent Readies/Unreadies', function () {
+		// Opponent subscribes & readies up
+		cy.signup(opponentEmail, opponentPassword);
+		cy.subscribeOtherUser(this.gameSummary.gameId);
+		cy.readyOtherUser();
+		cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+		//Opponent un-readies
+		cy.readyOtherUser();
+		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
+		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
 	it('Game starts when both players are ready', () => {
 		expect(true).to.eq(false);
 	});
+	it('Loads lobby after page refresh', () => {
+		expect(true).to.eq(false);
+	});
 });
+
+describe('Lobby - P1 Perspective', () => {
+	beforeEach(() => {
+		cy.wipeDatabase();
+		cy.visit('/');
+		cy.signupThroughStore(validEmail, validPassword);
+		cy.createGameThroughStore('Test Game')
+			.then((gameSummary) => {
+				// Sign up new (other) user and subscribe them to game
+				cy.signup(opponentEmail, opponentPassword);
+				cy.subscribeOtherUser(gameSummary.gameId);
+				// Join game as this user and navigate to lobby
+				cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
+				cy.vueRoute(`/lobby/${gameSummary.gameId}`);
+			});
+	});
+	it('Shows opponent already in lobby for player joining second', () => {
+		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
+	});
+	it('Shows when oppenent Readies/Unreadies', () => {
+		cy.readyOtherUser();
+		cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+		//Opponent un-readies
+		cy.readyOtherUser();
+		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
+		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+	});
+	it('Shows when opponent leaves', () => {
+		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
+		cy.leaveLobbyOtherUser(); // Opponent leaves
+		cy.contains('[data-cy=opponent-indicator]', 'Invite');
+	});
+	it('Ready & UnReady buttons work', () => {
+		cy.get('[data-cy=ready-button]')
+		// Test: Button text defaults to 'Ready'
+			.contains('READY')
+			.should('not.contain', 'UNREADY')
+			.click()
+			.contains('UNREADY');
+		// Test: player indicator classes
+		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
+		cy.window().its('app.$store')
+			.then((store) => {
+				// Test: store state
+				expect(store.state.game.p1Ready).to.eq(true); // Player is ready
+				expect(store.getters.opponentIsReady).to.eq(false); // Opponent is not ready
+				// Click Unready button
+				cy.get('[data-cy=ready-button]')
+					.should('contain', 'UNREADY')
+					.click()
+					.should('not.contain', 'UNREADY')
+					.should('contain', 'READY');
+				cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
+				//Return updated store state
+				return cy.wrap(store.state.game);
+			})
+			.then((updatedGameState) => {
+				//Test updated store state
+				expect(updatedGameState.p1Ready).to.eq(false); // Player not ready
+			});
+	});
+	it('Game starts when both players are ready', () => {
+		expect(true).to.eq(false);
+	});
+	it('Loads lobby after page refresh', () => {
+		expect(true).to.eq(false);
+	});
+})
