@@ -56,7 +56,29 @@ Cypress.Commands.add('subscribeOtherUser', (id) => {
 		});
 	});
 });
-
+Cypress.Commands.add('readyOtherUser', (id) => {
+	return new Promise((resolve, reject) => {
+		io.socket.get('/game/ready', {
+			id,
+		}, function handleResponse(res, jwres) {
+			if (jwres.statusCode === 200) {
+				return resolve();
+			}
+			return reject(new Error('error readying up opponent'));
+		});
+	});
+});
+Cypress.Commands.add('leaveLobbyOtherUser', (id) => {
+	return new Promise((resolve, reject) => {
+		io.socket.get('/game/leaveLobby',
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode === 200) {
+					return resolve();
+				}
+				return reject(new Error('error on opponent leaving lobby'));
+			});
+	});
+});
 
 /**
  * Did not work -- reequest.body was undefined on server

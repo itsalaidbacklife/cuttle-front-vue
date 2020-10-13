@@ -2,7 +2,7 @@
 	<v-container id="lobby-wrapper">
 		<v-row>
 			<v-col offset="1">
-				<h1>Lobby for {{ gameId }}</h1>
+				<h1>Lobby for {{ gameName }}</h1>
 			</v-col>
 		</v-row>
 		<v-row>
@@ -13,6 +13,8 @@
 				<v-btn
 					outlined
 					color="primary"
+					data-cy="exit-button"
+					@click="leave"
 				>
 					EXIT
 				</v-btn>
@@ -25,7 +27,7 @@
 					data-cy="ready-button"
 					@click="ready"
 				>
-					READY
+					{{ readyButtonText }}
 				</v-btn>
 			</v-col>
 		</v-row>
@@ -33,9 +35,16 @@
 		<v-row>
 			<v-col offset="1">
 				<lobby-player-indicator
-					:player-email="$store.state.auth.email"
+					:player-email="myUserName"
 					:player-ready="iAmReady"
 					data-cy="my-indicator"
+				/>
+			</v-col>
+			<v-col offset="1">
+				<lobby-player-indicator
+					:player-email="opponentName"
+					:player-ready="opponentIsReady"
+					data-cy="opponent-indicator"
 				/>
 			</v-col>
 		</v-row>
@@ -43,6 +52,7 @@
 </template>
 <script>
 import LobbyPlayerIndicator from '../components/LobbyPlayerIndicator';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'Lobby',
@@ -50,16 +60,42 @@ export default {
 		LobbyPlayerIndicator,
 	},
 	computed: {
+		...mapGetters([
+			'opponentName',
+			'opponentIsReady',
+			'myUserName'
+		]),
 		gameId() {
 			return this.$store.state.game.id;
 		},
+		gameName() {
+			return this.$store.state.game.name;
+		},
 		iAmReady() {
 			return this.$store.state.game.myPNum === 0 ? this.$store.state.game.p0Ready : this.$store.state.game.p1Ready;
-		}
+		},
+		readyButtonText() {
+			return this.iAmReady ? 'UNREADY' : 'READY';
+		},
+		opponentIsHere() {
+			return this.$store.state.game.players.length == 2;
+		},
+	},
+	mounted() {
+		this.$store.dispatch('requestLobbyData');
 	},
 	methods: {
 		ready() {
 			this.$store.dispatch('requestReady');
+		},
+		leave() {
+			this.$store.dispatch('requestLeaveLobby')
+				.then(() => {
+					this.$router.push('/');
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 	}
 }
