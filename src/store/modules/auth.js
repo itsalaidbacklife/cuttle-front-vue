@@ -7,8 +7,8 @@ export default {
 	},
 	getters: {
 		myUserName(state) {
-			return state.email ? state.email.split('@')[0] : null;
-		}
+			return state.email ? state.email.split("@")[0] : null;
+		},
 	},
 	mutations: {
 		authSuccess(state, email) {
