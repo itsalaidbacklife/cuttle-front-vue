@@ -137,6 +137,28 @@ describe("Home - Game List", () => {
 			cy.contains("button.v-btn", "JOIN").should("be.disabled");
 		});
 	});
+
+	it.only("Re-enable join when a user leaves a full lobby", () => {
+		/**
+     * Set up:
+     * Create game, sign up two other users, subscribe them to the game, leave one user
+     */
+		cy.createGameThroughStore("Test Game").then((gameData) => {
+			// Test that JOIN button starts enabled
+			cy.contains("button.v-btn", "JOIN").should("not.be.disabled");
+			// Sign up 2 users and subscribe them to game
+			cy.signup("secondUser@aol.com", "myNewPassword");
+			cy.subscribeOtherUser(gameData.gameId);
+			cy.signup("thirdUser@facebook.com", "anotherUserPw");
+			cy.subscribeOtherUser(gameData.gameId);
+
+			// Test that join button is now disabled
+			cy.contains("button.v-btn", "JOIN").should("be.disabled");
+
+			cy.leaveLobbyOtherUser(gameData.gameId);
+			cy.contains("button.v-btn", "JOIN").should("not.be.disabled");
+		});
+	});
 });
 
 describe("Home - Create Game", () => {

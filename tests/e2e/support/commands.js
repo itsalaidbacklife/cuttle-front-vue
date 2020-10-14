@@ -96,7 +96,10 @@ Cypress.Commands.add("readyOtherUser", (id) => {
 });
 Cypress.Commands.add("leaveLobbyOtherUser", (id) => {
 	return new Promise((resolve, reject) => {
-		io.socket.get("/game/leaveLobby", function handleResponse(res, jwres) {
+		io.socket.get("/game/leaveLobby", { id }, function handleResponse(
+			_,
+			jwres
+		) {
 			if (jwres.statusCode === 200) {
 				return resolve();
 			}
