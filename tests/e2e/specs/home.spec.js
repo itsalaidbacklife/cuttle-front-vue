@@ -138,7 +138,7 @@ describe("Home - Game List", () => {
 		});
 	});
 
-	it.only("Re-enable join when a user leaves a full lobby", () => {
+	it("Re-enable join when a user leaves a full lobby", () => {
 		/**
      * Set up:
      * Create game, sign up two other users, subscribe them to the game, leave one user
