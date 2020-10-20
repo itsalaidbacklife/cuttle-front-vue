@@ -30,8 +30,6 @@ export default {
 						password: data.password,
 					},
 					function handleResponse(resData, jwres) {
-						console.log(resData); // response body
-						console.log(jwres); // Json wrapped data
 						if (jwres.statusCode === 200) {
 							context.commit("authSuccess", data.email);
 							return resolve();
@@ -52,10 +50,7 @@ export default {
 						password: data.password,
 					},
 					function handleResponse(resData, jwres) {
-						console.log(resData);
-						console.log(jwres);
 						if (jwres.statusCode === 200) {
-							console.log("auth success");
 							context.commit("authSuccess", data.email);
 							return resolve();
 						}
@@ -72,9 +67,7 @@ export default {
 					resData,
 					jwres
 				) {
-					console.log(jwres);
 					if (jwres.statusCode === 200) {
-						console.log("logout success");
 						return resolve();
 					}
 					return reject(new Error("Error logging out :("));
