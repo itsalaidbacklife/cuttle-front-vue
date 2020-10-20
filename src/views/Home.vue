@@ -103,7 +103,6 @@ export default {
 	},
 	methods: {
 		submitNewGame() {
-			console.log("submitting new game");
 			this.$store
 				.dispatch("requestCreateGame", this.newGameName)
 				.then(() => {
@@ -114,7 +113,6 @@ export default {
 				});
 		},
 		logout(){
-			console.log("loggin out")
 			this.$store
 				.dispatch("requestLogout")
 				.then(() => {
