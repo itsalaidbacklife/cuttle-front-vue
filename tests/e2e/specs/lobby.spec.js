@@ -206,7 +206,13 @@ describe('Lobby - P1 Perspective', () => {
 				expect(updatedGameState.p1Ready).to.eq(false); // Player not ready
 			});
 	});
-	it('Game starts when both players are ready', () => {
+	it('Game starts when both players are ready - opponent ready before joining', () => {
+		expect(true).to.eq(false);
+	});
+	it('Game starts when both players are ready - opponent readies first after player joins', () => {
+		expect(true).to.eq(false);
+	});
+	it('Game starts when both players are ready - player readies first', () => {
 		expect(true).to.eq(false);
 	});
 	it('Loads lobby after page refresh', () => {
