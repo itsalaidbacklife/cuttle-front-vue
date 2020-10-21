@@ -1,4 +1,5 @@
 import store from '../store/store.js';
+import router from '../router/index.js';
 let _ = require('lodash');
 
 export const io = require("sails.io.js")(require("socket.io-client"));
@@ -17,6 +18,9 @@ io.socket.on('game', function(evData) {
 		switch(evData.data.change) {
 		case 'ready':
 			store.commit('updateReady', evData.data.pNum);
+			if (store.state.game.p0Ready && store.state.game.p1Ready) {
+				router.push(`/game/${store.state.game.id}`);
+			}
 			break;
 		}
 		break;

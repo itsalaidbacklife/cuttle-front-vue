@@ -14,6 +14,9 @@ function setup() {
 			cy.wrap(gameSummary).as('gameSummary');
 		});
 }
+function assertGameStarted() {
+	cy.url().should('include', '/game');
+}
 describe('Lobby - Page Content', () => {
 	beforeEach(() => {
 		setup();
@@ -109,8 +112,23 @@ describe('Lobby - P0 Perspective', () => {
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
-	it('Game starts when both players are ready', () => {
-		expect(true).to.eq(false);
+	it('Game starts when both players are ready - opponent first', function () {
+		cy.signup(opponentEmail, opponentPassword);
+		cy.subscribeOtherUser(this.gameSummary.gameId);
+		cy.readyOtherUser().then(() => {
+			cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
+			cy.get('[data-cy=ready-button]').click();
+			assertGameStarted();
+		});
+	});
+	it.only('Game starts when both players are ready - player first', function () {
+		cy.signup(opponentEmail, opponentPassword);
+		cy.subscribeOtherUser(this.gameSummary.gameId);
+		cy.get('[data-cy=ready-button]').click();
+		cy.readyOtherUser().then(() => {
+			cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
+			assertGameStarted();
+		});
 	});
 	it('Loads lobby after page refresh', () => {
 		expect(true).to.eq(false);
