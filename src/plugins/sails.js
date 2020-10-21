@@ -18,9 +18,10 @@ io.socket.on('game', function(evData) {
 		switch(evData.data.change) {
 		case 'ready':
 			store.commit('updateReady', evData.data.pNum);
-			if (store.state.game.p0Ready && store.state.game.p1Ready) {
-				router.push(`/game/${store.state.game.id}`);
-			}
+			break;
+		case 'Initialize':
+			store.commit('updateGame', evData.data.game);
+			router.push(`/game/${store.state.game.id}`);
 			break;
 		}
 		break;

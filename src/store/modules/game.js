@@ -15,6 +15,8 @@ function resetState() {
 		turn: 0,
 		twos: [],
 		myPNum: null,
+		topCard: null,
+		secondCard: null,
 	};
 }
 const initialState = resetState();
@@ -56,6 +58,8 @@ export default {
 			if (Object.hasOwnProperty.call(newGame, 'players')) state.players = _.cloneDeep(newGame.players);
 			if (Object.hasOwnProperty.call(newGame, 'srap')) state.scrap = _.cloneDeep(newGame.scrap);
 			if (Object.hasOwnProperty.call(newGame, 'twos')) state.twos = _.cloneDeep(newGame.twos);
+			if (Object.hasOwnProperty.call(newGame, 'topCard')) state.topCard = _.cloneDeep(newGame.topCard);
+			if (Object.hasOwnProperty.call(newGame, 'secondCard')) state.secondCard = _.cloneDeep(newGame.secondCard);
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
@@ -114,7 +118,7 @@ export default {
 			return new Promise((resolve, reject) => {
 				io.socket.post('/game/ready', function handleResponse(res, jwres) {
 					if (jwres.statusCode === 200) {
-						return Promise.resolve(res);
+						return resolve(res);
 					}
 					return reject(new Error('Error readying for game'));
 				});

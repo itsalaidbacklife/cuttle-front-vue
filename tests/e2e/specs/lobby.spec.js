@@ -16,6 +16,16 @@ function setup() {
 }
 function assertGameStarted() {
 	cy.url().should('include', '/game');
+	cy.window().its('app.$store.state.game').then((game) => {
+		expect(game.players.length).to.eq(2);
+		expect(game.players[0].hand.length).to.eq(5);
+		expect(game.players[1].hand.length).to.eq(6);
+		expect(game.deck.length).to.eq(39);
+		expect(game.topCard.rank).to.be.greaterThan(0);
+		expect(game.secondCard.rank).to.be.greaterThan(0);
+		expect(game.scrap.length).to.eq(0);
+		expect(game.twos.length).to.eq(0);
+	});
 }
 describe('Lobby - Page Content', () => {
 	beforeEach(() => {
@@ -121,12 +131,11 @@ describe('Lobby - P0 Perspective', () => {
 			assertGameStarted();
 		});
 	});
-	it.only('Game starts when both players are ready - player first', function () {
+	it('Game starts when both players are ready - player first', function () {
+		cy.get('[data-cy=ready-button]').click();
 		cy.signup(opponentEmail, opponentPassword);
 		cy.subscribeOtherUser(this.gameSummary.gameId);
-		cy.get('[data-cy=ready-button]').click();
 		cy.readyOtherUser().then(() => {
-			cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
 			assertGameStarted();
 		});
 	});
