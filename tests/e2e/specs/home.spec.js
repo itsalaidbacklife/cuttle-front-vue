@@ -8,7 +8,7 @@ function setup() {
 }
 function assertSuccessfulJoin(gameState) {
 	expect(gameState.id).to.not.eq(null);
-	cy.contains("h1", `Lobby for ${gameState.id}`);
+	cy.contains("h1", `Lobby for ${gameState.name}`);
 }
 
 describe("Home - Page Content", () => {
