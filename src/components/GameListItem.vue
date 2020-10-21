@@ -12,7 +12,9 @@
 			/>
 		</v-col>
 		<v-col cols="6">
-			<p>{{ name }}</p>
+			<p data-cy="game-list-item-name">
+				{{ name }}
+			</p>
 			<p>{{ readyText }} players</p>
 		</v-col>
 		<v-col

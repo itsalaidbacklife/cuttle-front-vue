@@ -1,6 +1,15 @@
 <template>
 	<div class="home">
 		<div class="container">
+			<v-btn
+				id="btn-logout"
+				rounded
+				color="primary"
+				data-cy="btn-logout"
+				@click="logout"
+			>
+				Logout
+			</v-btn>
 			<img
 				id="logo"
 				alt="Vue logo"
@@ -16,7 +25,10 @@
 				<v-row>
 					<v-col cols="9">
 						<div id="game-list">
-							<p v-if="gameList.length === 0">
+							<p
+								v-if="gameList.length === 0"
+								data-cy="text-if-no-game"
+							>
 								No Active Games
 							</p>
 							<div
@@ -53,10 +65,12 @@
 					<v-text-field
 						v-model="newGameName"
 						outlined
+						data-cy="create-game-input"
 						@keyup.enter="submitNewGame"
 					/>
 					<v-btn
 						color="primary"
+						data-cy="create-game-btn"
 						@click="submitNewGame"
 					>
 						Submit
@@ -89,7 +103,6 @@ export default {
 	},
 	methods: {
 		submitNewGame() {
-			console.log("submitting new game");
 			this.$store
 				.dispatch("requestCreateGame", this.newGameName)
 				.then(() => {
@@ -97,6 +110,17 @@ export default {
 				})
 				.catch(() => {
 					console.log("Error creating game");
+				});
+		},
+		logout(){
+			this.$store
+				.dispatch("requestLogout")
+				.then(() => {
+					this.$router.push("/login");
+				})
+				.catch((err) => {
+					if (err) console.error(err)
+					console.log("Error logging out");
 				});
 		}
 	}
@@ -113,6 +137,12 @@ export default {
 
 #logo {
   margin: 0 auto;
+}
+
+#btn-logout {
+	position: absolute;
+	top: 5px;
+	right: 5px;
 }
 
 .page-title {

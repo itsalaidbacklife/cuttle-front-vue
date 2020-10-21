@@ -1,8 +1,8 @@
 import store from '../store/store.js';
 let _ = require('lodash');
 
-export const io = require("sails.io.js")(require("socket.io-client"));
-io.sails.url = "localhost:1337";
+export const io = require('sails.io.js')(require('socket.io-client'));
+io.sails.url = 'localhost:1337';
 io.sails.useCORSRouteToGetCookie = false;
 
 // Handles socket updates of game data
@@ -14,7 +14,7 @@ io.socket.on('game', function(evData) {
 		store.commit('addGameToList', newGame);
 		break;
 	case 'updated':
-		switch(evData.data.change) {
+		switch (evData.data.change) {
 		case 'ready':
 			store.commit('updateReady', evData.data.pNum);
 			break;
@@ -26,7 +26,6 @@ io.socket.on('game', function(evData) {
 });
 
 io.socket.on('join', function(evData) {
-	console.log('Game was joined');
 	store.commit('joinGame', {
 		gameId: evData.gameId,
 		newPlayer: evData.newPlayer,
@@ -41,5 +40,7 @@ io.socket.on('join', function(evData) {
 io.socket.on('leftGame', function(evData) {
 	if (evData.id === store.state.game.id) {
 		store.commit('opponentLeft');
+	} else {
+		store.commit('otherLeftGame', evData.id);
 	}
 });
