@@ -139,8 +139,8 @@ describe('Lobby - P0 Perspective', () => {
 			assertGameStarted();
 		});
 	});
-	it('Loads lobby after page refresh', () => {
-		expect(true).to.eq(false);
+	it.only('Loads lobby after page refresh', () => {
+		cy.reload();
 	});
 });
 
