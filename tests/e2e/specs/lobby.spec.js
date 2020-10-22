@@ -215,7 +215,9 @@ describe('Lobby - P1 Perspective', () => {
 		assertGameStarted();
 	});
 	it('Game starts when both players are ready - player readies first', () => {
-		expect(true).to.eq(false);
+		cy.get('[data-cy=ready-button]').click();
+		cy.readyOtherUser();
+		assertGameStarted();
 	});
 	it('Loads lobby after page refresh', () => {
 		expect(true).to.eq(false);
