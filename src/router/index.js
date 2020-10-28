@@ -1,28 +1,28 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import LoginSignup from "../views/LoginSignup.vue";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Home from '../views/Home.vue';
+import LoginSignup from '../views/LoginSignup.vue';
 import Lobby from '../views/Lobby.vue';
-import store from "../store/store.js";
+import store from '../store/store.js';
 
 Vue.use(VueRouter);
 
 const routes = [
 	{
-		path: "/",
-		name: "Home",
+		path: '/',
+		name: 'Home',
 		component: Home,
 		beforeEnter: (to, from, next) => {
 			if (store.state.auth.authenticated) {
 				next();
 			} else {
-				next("/login");
+				next('/login');
 			}
 		}
 	},
 	{
-		path: "/login",
-		name: "Login",
+		path: '/login',
+		name: 'Login',
 		component: LoginSignup
 
 		// route level code-splitting
@@ -31,7 +31,7 @@ const routes = [
 		// component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
 	},
 	{
-		path: "/lobby/:gameId",
+		path: '/lobby/:gameId',
 		component: Lobby
 	}
 ];

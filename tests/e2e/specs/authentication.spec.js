@@ -1,5 +1,5 @@
-const validEmail = "myCustomEmail@gmail.com";
-const validPassword = "passwordLongerThanEight";
+const validEmail = 'myCustomEmail@gmail.com';
+const validPassword = 'passwordLongerThanEight';
 
 function assertSuccessfulAuth(email) {
 	// Confirm we have navigated to home

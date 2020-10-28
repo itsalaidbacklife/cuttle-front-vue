@@ -1,4 +1,4 @@
-import { io } from "../../plugins/sails.js";
+import { io } from '../../plugins/sails.js';
 
 export default {
 	state: {
@@ -7,7 +7,7 @@ export default {
 	},
 	getters: {
 		myUserName(state) {
-			return state.email ? state.email.split("@")[0] : null;
+			return state.email ? state.email.split('@')[0] : null;
 		},
 	},
 	mutations: {
@@ -24,18 +24,18 @@ export default {
 		requestLogin(context, data) {
 			return new Promise((resolve, reject) => {
 				io.socket.post(
-					"/user/login",
+					'/user/login',
 					{
 						email: data.email,
 						password: data.password,
 					},
 					function handleResponse(resData, jwres) {
 						if (jwres.statusCode === 200) {
-							context.commit("authSuccess", data.email);
+							context.commit('authSuccess', data.email);
 							return resolve();
 						}
-						context.commit("authFailure");
-						return reject(new Error("Error logging in"));
+						context.commit('authFailure');
+						return reject(new Error('Error logging in'));
 					}
 				);
 			});
@@ -44,18 +44,18 @@ export default {
 		requestSignup(context, data) {
 			return new Promise((resolve, reject) => {
 				io.socket.put(
-					"/user/signup",
+					'/user/signup',
 					{
 						email: data.email,
 						password: data.password,
 					},
 					function handleResponse(resData, jwres) {
 						if (jwres.statusCode === 200) {
-							context.commit("authSuccess", data.email);
+							context.commit('authSuccess', data.email);
 							return resolve();
 						}
-						context.commit("authFailure");
-						return reject(new Error("Error Signing Up :("));
+						context.commit('authFailure');
+						return reject(new Error('Error Signing Up :('));
 					}
 				);
 			});
@@ -63,14 +63,14 @@ export default {
 
 		requestLogout(context) {
 			return new Promise((resolve, reject) => {
-				io.socket.get("/user/logout", {}, function handleResponse(
+				io.socket.get('/user/logout', {}, function handleResponse(
 					resData,
 					jwres
 				) {
 					if (jwres.statusCode === 200) {
 						return resolve();
 					}
-					return reject(new Error("Error logging out :("));
+					return reject(new Error('Error logging out :('));
 				});
 			});
 		},

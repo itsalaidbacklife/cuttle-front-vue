@@ -81,16 +81,16 @@
 	</div>
 </template>
 <script>
-import GameListItem from "@/components/GameListItem.vue";
+import GameListItem from '@/components/GameListItem.vue';
 export default {
-	name: "Home",
+	name: 'Home',
 	components: {
 		// HelloWorld
 		GameListItem
 	},
 	data() {
 		return {
-			newGameName: ""
+			newGameName: ''
 		};
 	},
 	computed: {
@@ -99,28 +99,28 @@ export default {
 		}
 	},
 	mounted() {
-		this.$store.dispatch("requestGameList");
+		this.$store.dispatch('requestGameList');
 	},
 	methods: {
 		submitNewGame() {
 			this.$store
-				.dispatch("requestCreateGame", this.newGameName)
+				.dispatch('requestCreateGame', this.newGameName)
 				.then(() => {
-					this.newGameName = "";
+					this.newGameName = '';
 				})
 				.catch(() => {
-					console.log("Error creating game");
+					console.log('Error creating game');
 				});
 		},
 		logout(){
 			this.$store
-				.dispatch("requestLogout")
+				.dispatch('requestLogout')
 				.then(() => {
-					this.$router.push("/login");
+					this.$router.push('/login');
 				})
 				.catch((err) => {
 					if (err) console.error(err)
-					console.log("Error logging out");
+					console.log('Error logging out');
 				});
 		}
 	}
