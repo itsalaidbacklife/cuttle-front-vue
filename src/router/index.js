@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import LoginSignup from "../views/LoginSignup.vue";
 import Lobby from '../views/Lobby.vue';
+import GameView from '../views/GameView.vue';
 import store from "../store/store.js";
 
 Vue.use(VueRouter);
@@ -33,7 +34,11 @@ const routes = [
 	{
 		path: "/lobby/:gameId",
 		component: Lobby
-	}
+	},
+	{
+		path: '/game/:gameId',
+		component: GameView,
+	},
 ];
 
 const router = new VueRouter({

@@ -14,6 +14,19 @@ function setup() {
 			cy.wrap(gameSummary).as('gameSummary');
 		});
 }
+function assertGameStarted() {
+	cy.url().should('include', '/game');
+	cy.window().its('app.$store.state.game').then((game) => {
+		expect(game.players.length).to.eq(2);
+		expect(game.players[0].hand.length).to.eq(5);
+		expect(game.players[1].hand.length).to.eq(6);
+		expect(game.deck.length).to.eq(39);
+		expect(game.topCard.rank).to.be.greaterThan(0);
+		expect(game.secondCard.rank).to.be.greaterThan(0);
+		expect(game.scrap.length).to.eq(0);
+		expect(game.twos.length).to.eq(0);
+	});
+}
 describe('Lobby - Page Content', () => {
 	beforeEach(() => {
 		setup();
@@ -109,11 +122,25 @@ describe('Lobby - P0 Perspective', () => {
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
-	it('Game starts when both players are ready', () => {
-		expect(true).to.eq(false);
+	it('Game starts when both players are ready - opponent first', function () {
+		cy.signup(opponentEmail, opponentPassword);
+		cy.subscribeOtherUser(this.gameSummary.gameId);
+		cy.readyOtherUser().then(() => {
+			cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
+			cy.get('[data-cy=ready-button]').click();
+			assertGameStarted();
+		});
 	});
-	it('Loads lobby after page refresh', () => {
-		expect(true).to.eq(false);
+	it('Game starts when both players are ready - player first', function () {
+		cy.get('[data-cy=ready-button]').click();
+		cy.signup(opponentEmail, opponentPassword);
+		cy.subscribeOtherUser(this.gameSummary.gameId);
+		cy.readyOtherUser().then(() => {
+			assertGameStarted();
+		});
+	});
+	it.only('Loads lobby after page refresh', () => {
+		cy.reload();
 	});
 });
 
@@ -124,6 +151,7 @@ describe('Lobby - P1 Perspective', () => {
 		cy.signupThroughStore(validEmail, validPassword);
 		cy.createGameThroughStore('Test Game')
 			.then((gameSummary) => {
+				cy.wrap(gameSummary).as('gameSummary');
 				// Sign up new (other) user and subscribe them to game
 				cy.signup(opponentEmail, opponentPassword);
 				cy.subscribeOtherUser(gameSummary.gameId);
@@ -179,8 +207,25 @@ describe('Lobby - P1 Perspective', () => {
 				expect(updatedGameState.p1Ready).to.eq(false); // Player not ready
 			});
 	});
-	it('Game starts when both players are ready', () => {
-		expect(true).to.eq(false);
+	it('Game starts when both players are ready - opponent ready before joining', function () {
+		cy.get('[data-cy=exit-button]').click(); // leave game so opponent can ready before player joins
+		cy.readyOtherUser();
+		// Join game again
+		cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', this.gameSummary.gameId);
+		cy.vueRoute(`/lobby/${this.gameSummary.gameId}`);
+		cy.get('[data-cy=ready-button]').click();
+		// Test that game started
+		assertGameStarted();
+	});
+	it('Game starts when both players are ready - opponent readies first after player joins', () => {
+		cy.readyOtherUser();
+		cy.get('[data-cy=ready-button]').click();
+		assertGameStarted();
+	});
+	it('Game starts when both players are ready - player readies first', () => {
+		cy.get('[data-cy=ready-button]').click();
+		cy.readyOtherUser();
+		assertGameStarted();
 	});
 	it('Loads lobby after page refresh', () => {
 		expect(true).to.eq(false);
