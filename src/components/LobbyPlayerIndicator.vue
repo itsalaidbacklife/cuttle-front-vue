@@ -9,7 +9,7 @@
 				{{ message }}
 			</h3>
 		</div>
-		<div v-if="playerReady" class="ready-overlay text-truncate">
+		<div v-if="playerReady" class="ready-overlay text-truncate mt-2">
 			READY
 		</div>
 	</div>
@@ -43,8 +43,7 @@ export default {
     justify-content: center;
     align-items: center;
 	background-color: var(--v-neutral-lighten3);
-    padding: 40px;
-	// width: 300px;
+    padding: 48px;
 	border-radius: 8px;
 }
 .player-in {
