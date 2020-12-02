@@ -3,7 +3,10 @@ import router from '../router/index.js';
 let _ = require('lodash');
 
 export const io = require('sails.io.js')(require('socket.io-client'));
-io.sails.url = 'localhost:1337';
+
+if (process.env.NODE_ENV != 'production') {
+	io.sails.url = process.env.VUE_APP_API_URL;
+}
 io.sails.useCORSRouteToGetCookie = false;
 
 // Handles socket updates of game data
