@@ -5,32 +5,6 @@
 				<h1>Lobby for {{ gameName }}</h1>
 			</v-col>
 		</v-row>
-		<v-row>
-			<v-col
-				cols="3"
-				offset="1"
-			>
-				<v-btn
-					outlined
-					color="primary"
-					data-cy="exit-button"
-					@click="leave"
-				>
-					EXIT
-				</v-btn>
-			</v-col>
-			<v-spacer />
-			<v-col cols="3">
-				<v-btn
-					contained
-					color="primary"
-					data-cy="ready-button"
-					@click="ready"
-				>
-					{{ readyButtonText }}
-				</v-btn>
-			</v-col>
-		</v-row>
 		<!-- Usernames -->
 		<v-row>
 			<v-col offset="1">
@@ -47,6 +21,34 @@
 					data-cy="opponent-indicator"
 				/>
 			</v-col>
+		</v-row>
+		<!-- Buttons -->
+		<v-row class="mt-8">
+			<v-spacer />
+			<v-col
+				cols="3"
+				offset="1"
+			>
+				<v-btn
+					outlined
+					color="primary"
+					data-cy="exit-button"
+					@click="leave"
+				>
+					EXIT
+				</v-btn>
+			</v-col>
+			<v-col cols="3">
+				<v-btn
+					contained
+					color="primary"
+					data-cy="ready-button"
+					@click="ready"
+				>
+					{{ readyButtonText }}
+				</v-btn>
+			</v-col>
+			<v-spacer />
 		</v-row>
 	</v-container>
 </template>
