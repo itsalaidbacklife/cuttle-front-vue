@@ -31,7 +31,7 @@
 											v-model="newGameName"
 											outlined
 											hide-details
-											:dense="$vuetify.breakpoint.lg ? false : true"
+											:dense="$vuetify.breakpoint.mdAndDown ? true : false"
 											data-cy="create-game-input"
 											@keyup.enter="submitNewGame"
 										/>
@@ -39,7 +39,7 @@
 									<v-col cols="4">
 										<v-btn
 											color="primary"
-											:small="$vuetify.breakpoint.lg ? false : true"
+											:small="$vuetify.breakpoint.mdAndDown ? true : false"
 											data-cy="create-game-btn"
 											@click="submitNewGame"
 										>
@@ -84,7 +84,7 @@
 							rounded
 							outlined
 							color="secondary"
-							:small="$vuetify.breakpoint.lg ? false : true"
+							:small="$vuetify.breakpoint.mdAndDown ? true : false"
 							href="https://human-ai-interaction.github.io/cuttle-bot/"
 							target="_blank"
 						>
