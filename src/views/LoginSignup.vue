@@ -12,13 +12,15 @@
 			<!-- Left side form -->
 			<v-col
 				id="email-login-form"
-				cols="5"
+				sm="9"
+				lg="5"
 			>
 				<h1>{{ buttonText }}</h1>
 				<form @submit.prevent="submitLogin">
 					<v-text-field
 						v-model="username"
 						outlined
+						:dense="$vuetify.breakpoint.lg ? false : true"
 						hint="Email"
 						data-cy="username"
 					/>
@@ -26,6 +28,7 @@
 						v-model="pw"
 						outlined
 						hint="Password"
+						:dense="$vuetify.breakpoint.lg ? false : true"
 						type="password"
 						data-cy="password"
 					/>
@@ -169,4 +172,12 @@ export default {
 	justify-content: center;
 	margin-top: 16px;;
 }
+
+@media (orientation: landscape) and (max-width: 979px){
+	#logo {
+		width: 64px;
+		height: 64px;
+		margin: -16px auto -32px;
+	}
+} 
 </style>
