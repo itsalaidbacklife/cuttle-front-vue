@@ -20,7 +20,7 @@
 					<v-text-field
 						v-model="username"
 						outlined
-						:dense="$vuetify.breakpoint.lg ? false : true"
+						:dense="$vuetify.breakpoint.mdAndDown ? true : false"
 						hint="Email"
 						data-cy="username"
 					/>
@@ -28,7 +28,7 @@
 						v-model="pw"
 						outlined
 						hint="Password"
-						:dense="$vuetify.breakpoint.lg ? false : true"
+						:dense="$vuetify.breakpoint.mdAndDown ? true : false"
 						type="password"
 						data-cy="password"
 					/>
