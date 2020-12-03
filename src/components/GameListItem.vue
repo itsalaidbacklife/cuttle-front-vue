@@ -8,7 +8,7 @@
 				:src="require('../assets/logo.svg')"
 				class="my-3"
 				contain
-				height="64"
+				:height="$vuetify.breakpoint.lg ? 64 : 48"
 			/>
 		</v-col>
 		<v-col cols="6">
@@ -25,6 +25,7 @@
 				color="primary"
 				rounded
 				:disabled="!status"
+				:small="$vuetify.breakpoint.lg ? false : true"
 				@click="subscribeToGame"
 			>
 				JOIN
@@ -99,5 +100,14 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+@media (max-width: 979px) and (orientation: landscape) {
+	.list-item {
+		margin: 5px 0;
+		p {
+			line-height: 1rem;
+		}
+	}
+
 }
 </style>
