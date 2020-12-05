@@ -194,7 +194,7 @@ h1 {
   background: #EFEFEF;
 	border: 1px solid #FD6222;
 	box-sizing: border-box;
-	border-radius: 30px;
+	border-radius: 15px;
 	min-height: 55vh;
   max-height: 80vh;
   overflow: auto;
@@ -243,7 +243,7 @@ p {
 
 	#game-list {
 		box-sizing: border-box;
-		border-radius: 15px;
+		border-radius: 10px;
 		min-height: 55vh;
 		max-height: 60vh;
 		overflow: auto;
