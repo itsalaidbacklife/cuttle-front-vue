@@ -31,6 +31,7 @@
 											v-model="newGameName"
 											outlined
 											hide-details
+											:dense="$vuetify.breakpoint.mdAndDown ? true : false"
 											data-cy="create-game-input"
 											@keyup.enter="submitNewGame"
 										/>
@@ -38,6 +39,7 @@
 									<v-col cols="4">
 										<v-btn
 											color="primary"
+											:small="$vuetify.breakpoint.mdAndDown ? true : false"
 											data-cy="create-game-btn"
 											@click="submitNewGame"
 										>
@@ -82,6 +84,7 @@
 							rounded
 							outlined
 							color="secondary"
+							:small="$vuetify.breakpoint.mdAndDown ? true : false"
 							href="https://human-ai-interaction.github.io/cuttle-bot/"
 							target="_blank"
 						>
@@ -191,7 +194,7 @@ h1 {
   background: #EFEFEF;
 	border: 1px solid #FD6222;
 	box-sizing: border-box;
-	border-radius: 30px;
+	border-radius: 15px;
 	min-height: 55vh;
   max-height: 80vh;
   overflow: auto;
@@ -216,5 +219,48 @@ h1 {
 
 p {
   margin-top: 16px;
+}
+
+@media (max-width: 979px) and (orientation: landscape) {
+	h2 {
+		font-size: 1.25rem;
+	}
+
+	#logo {
+		width: 64px;
+		height: 64px;
+	}
+
+	.container {
+		width: 95%;
+		margin: 0 auto;
+		max-height: 95vh;
+	}
+
+	#game-list-card {
+	  padding: 5px;
+	}
+
+	#game-list {
+		box-sizing: border-box;
+		border-radius: 10px;
+		min-height: 55vh;
+		max-height: 60vh;
+		overflow: auto;
+		display: flex;
+		flex-direction: column;
+		padding: 5px;
+
+		p {
+			text-align: center;
+		}
+	}
+
+	#card-content-header {
+		padding: 0;
+		display: flex;
+		align-items: center;
+	}
+
 }
 </style>

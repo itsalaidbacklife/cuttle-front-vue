@@ -3,15 +3,21 @@
 		class="list-item"
 		data-cy="game-list-item"
 	>
-		<v-col cols="3">
+		<v-col
+			sm="2"
+			lg="3"
+		>
 			<v-img
 				:src="require('../assets/logo.svg')"
 				class="my-3"
 				contain
-				height="64"
+				:height="$vuetify.breakpoint.lg ? 64 : 32"
 			/>
 		</v-col>
-		<v-col cols="6">
+		<v-col 
+			sm="7" 
+			lg="6"
+		>
 			<p data-cy="game-list-item-name">
 				{{ name }}
 			</p>
@@ -25,6 +31,7 @@
 				color="primary"
 				rounded
 				:disabled="!status"
+				:small="$vuetify.breakpoint.lg ? false : true"
 				@click="subscribeToGame"
 			>
 				JOIN
@@ -99,5 +106,15 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+@media (max-width: 979px) and (orientation: landscape) {
+	.list-item {
+		margin: 0;
+		p {
+			line-height: 1rem;
+			margin: 3px auto;
+		}
+	}
+
 }
 </style>
