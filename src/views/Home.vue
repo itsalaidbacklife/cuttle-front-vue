@@ -4,26 +4,49 @@
 			<v-btn
 				id="btn-logout"
 				rounded
+				outlined
 				color="primary"
 				data-cy="btn-logout"
 				@click="logout"
 			>
 				Logout
 			</v-btn>
-			<img
-				id="logo"
-				alt="Vue logo"
-				src="../assets/logo.png"
-			>
-			<h1 class="page-title">
-				CUTTLE
-			</h1>
+			
 			<div id="game-list-card">
-				<h2 id="home-card-title">
-					Games
-				</h2>
 				<v-row>
 					<v-col cols="9">
+						<v-row id="card-content-header">
+							<v-col cols="3">
+								<h1 id="home-card-title">
+									Games
+								</h1>
+							</v-col>
+							<v-col cols="9">
+								<v-row id="add-new-game">
+									<v-col cols="3">
+										<h2>Create Game</h2>
+									</v-col>
+									<v-col cols="5">
+										<v-text-field
+											v-model="newGameName"
+											outlined
+											hide-details
+											data-cy="create-game-input"
+											@keyup.enter="submitNewGame"
+										/>
+									</v-col>
+									<v-col cols="4">
+										<v-btn
+											color="primary"
+											data-cy="create-game-btn"
+											@click="submitNewGame"
+										>
+											Create New Game
+										</v-btn>
+									</v-col>
+								</v-row>
+							</v-col>
+						</v-row>
 						<div id="game-list">
 							<p
 								v-if="gameList.length === 0"
@@ -50,31 +73,21 @@
 						id="side-nav"
 						cols="3"
 					>
+						<img
+							id="logo"
+							alt="Vue logo"
+							src="../assets/logo.png"
+						>
 						<v-btn
 							rounded
-							color="primary"
+							outlined
+							color="secondary"
 							href="https://human-ai-interaction.github.io/cuttle-bot/"
 							target="_blank"
 						>
 							Play with AI
 						</v-btn>
 					</v-col>
-				</v-row>
-				<v-row>
-					<h2>Create Game</h2>
-					<v-text-field
-						v-model="newGameName"
-						outlined
-						data-cy="create-game-input"
-						@keyup.enter="submitNewGame"
-					/>
-					<v-btn
-						color="primary"
-						data-cy="create-game-btn"
-						@click="submitNewGame"
-					>
-						Submit
-					</v-btn>
 				</v-row>
 			</div>
 		</div>
@@ -128,11 +141,18 @@ export default {
 </script>
 <style scoped lang="scss">
 .container {
-  width: 75%;
-  margin: 10px auto;
+  width: 90%;
+  margin: 10vh auto;
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+
+h1 {
+	background: linear-gradient(268.89deg, rgba(98, 2, 238, 0.87) 73.76%, rgba(253, 98, 34, 0.87) 99.59%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
 }
 
 #logo {
@@ -152,15 +172,28 @@ export default {
 
 #game-list-card {
   border-radius: 15px;
-  padding: 45px;
-  -webkit-box-shadow: 1px 2px 6px 3px rgba(119, 119, 119, 0.24);
-  box-shadow: 1px 2px 6px 3px rgba(119, 119, 119, 0.24);
+  padding: 20px;
+}
+
+#card-content-header {
+	display: flex;
+	align-items: center;
+}
+
+#add-new-game {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 }
 
 #game-list {
-  background-color: #efefef;
-  min-height: 30vh;
-  max-height: 50vh;
+  background: #EFEFEF;
+	border: 1px solid #FD6222;
+	box-sizing: border-box;
+	border-radius: 30px;
+	min-height: 55vh;
+  max-height: 80vh;
   overflow: auto;
   display: flex;
   flex-direction: column;
