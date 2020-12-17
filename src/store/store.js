@@ -1,8 +1,8 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import auth from "./modules/auth";
-import gameList from "./modules/gameList";
-import game from "./modules/game";
+import Vue from 'vue';
+import Vuex from 'vuex';
+import auth from './modules/auth';
+import gameList from './modules/gameList';
+import game from './modules/game';
 
 Vue.use(Vuex);
 

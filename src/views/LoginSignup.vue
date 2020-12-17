@@ -60,11 +60,11 @@
 
 <script>
 export default {
-	name: "LoginSignup",
+	name: 'LoginSignup',
 	data() {
 		return {
-			username: "",
-			pw: "",
+			username: '',
+			pw: '',
 			isLoggingIn: true
 		};
 	},
@@ -74,55 +74,55 @@ export default {
 		},
 		buttonText() {
 			if (this.isLoggingIn) {
-				return "Log In";
+				return 'Log In';
 			}
-			return "Sign Up";
+			return 'Sign Up';
 		},
 		switchLabelText() {
 			if (this.isLoggingIn) {
-				return "Don't have an account?";
+				return 'Don\'t have an account?';
 			}
-			return "Already have an account?";
+			return 'Already have an account?';
 		}
 	},
 	methods: {
 		submitLogin() {
 			if (this.isLoggingIn) {
 				this.$store
-					.dispatch("requestLogin", {
+					.dispatch('requestLogin', {
 						email: this.username,
 						password: this.pw
 					})
 					.then(() => {
-						this.username = "";
-						this.pw = "";
-						this.$router.push("/");
+						this.username = '';
+						this.pw = '';
+						this.$router.push('/');
 					})
 					.catch(() => {
-						console.log("Error logging in");
+						console.log('Error logging in');
 					});
 			} else {
 				this.$store
-					.dispatch("requestSignup", {
+					.dispatch('requestSignup', {
 						email: this.username,
 						password: this.pw
 					})
 					.then(() => {
-						console.log("Success logging in");
+						console.log('Success logging in');
 						console.log(this.$store.state.auth.authenticated);
-						this.username = "";
-						this.pw = "";
-						this.$router.push("/");
+						this.username = '';
+						this.pw = '';
+						this.$router.push('/');
 					})
 					.catch(() => {
 						// Handle Error
-						console.log("Error signing up");
+						console.log('Error signing up');
 					});
 			}
 		},
 		switchMode() {
 			this.isLoggingIn = !this.isLoggingIn;
-			this.pw = "";
+			this.pw = '';
 		}
 	}
 };

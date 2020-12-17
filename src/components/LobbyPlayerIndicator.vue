@@ -9,7 +9,10 @@
 				{{ message }}
 			</h3>
 		</div>
-		<div v-if="playerReady" class="ready-overlay text-truncate mt-2">
+		<div
+			v-if="playerReady"
+			class="ready-overlay text-truncate mt-2"
+		>
 			READY
 		</div>
 	</div>

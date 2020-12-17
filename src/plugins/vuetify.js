@@ -1,5 +1,5 @@
-import Vue from "vue";
-import Vuetify from "vuetify/lib";
+import Vue from 'vue';
+import Vuetify from 'vuetify/lib';
 
 Vue.use(Vuetify);
 
@@ -8,8 +8,8 @@ export default new Vuetify({
 		options: { customProperties: true },
 		themes: {
 			light: {
-				primary: "#6202EE",
-				secondary: "#FD6222",
+				primary: '#6202EE',
+				secondary: '#FD6222',
 				accent: '#219653',
 				neutral: {
 					lighten5: '#FAFBFC',
