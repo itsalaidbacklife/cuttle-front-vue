@@ -41,19 +41,8 @@ describe('Home - Game List', () => {
 	it('Displays a game for every open game on the server', () => {
 		cy.createGameThroughStore('111');
 		cy.createGameThroughStore('33');
-		cy.request({
-			method: 'POST',
-			url: 'localhost:1337/game/getList',
-			body: {},
-		})
-			.its('body')
-			.then((body) => {
-				cy.get('[data-cy=game-list-item]').should(
-					'have.length',
-					body.games.length
-				);
-				console.log('body', body.games.length);
-			});
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 2);
 	});
 	it('Displays placeholder text when no games are available', () => {
 		cy.get('[data-cy=text-if-no-game]').should(
