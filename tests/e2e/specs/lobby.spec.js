@@ -139,7 +139,7 @@ describe('Lobby - P0 Perspective', () => {
 			assertGameStarted();
 		});
 	});
-	it.only('Loads lobby after page refresh', () => {
+	it('Loads lobby after page refresh', () => {
 		cy.reload();
 	});
 });
