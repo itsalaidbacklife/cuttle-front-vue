@@ -183,11 +183,9 @@ describe('Home - Create Game', () => {
 		cy.get('[data-cy=game-list-item]')
 			.should('have.length', 0); // No games appear
 		// Test Store
-		cy.window()
-			.its('app.$store.state')
-			.then((state) => {
-				expect(state.game.gameId).to.eq(undefined, 'Store game should not have id');
-				expect(state.gameList.games.length).to.eq(0, 'Game list should be empty in store, but is not');
-			});
+		cy.window().its('app.$store.state').then((state) => {
+			expect(state.game.gameId).to.eq(undefined, 'Store game should not have id');
+			expect(state.gameList.games.length).to.eq(0, 'Game list should be empty in store, but is not');
+		});
 	});
 });
