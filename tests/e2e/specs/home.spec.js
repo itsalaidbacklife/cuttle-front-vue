@@ -172,17 +172,22 @@ describe('Home - Create Game', () => {
 			.should('include.text', '0 / 2 players');
 		// Test store
 		cy.window().its('app.$store.state.gameList.games').then((games) => {
-			expect(games.length).to.eq(1, 'Incorrect number of games in store');
-			expect(games[0].numPlayers).to.eq(0, 'Incorrect number of players in game in store');
+			expect(games.length).to.eq(1, 'Expect exactly 1 game in store');
+			expect(games[0].numPlayers).to.eq(0, 'Expect no players in gameLists game in store, but found some');
 			expect(games[0].status).to.eq(true, 'Game in store incorrectly has status = false');
 		});
 	});
 	it('Does not create game without game name', () => {
 		cy.get('[data-cy=create-game-btn]').click();
+		// Test DOM
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 0); // No games appear
+		// Test Store
 		cy.window()
-			.its('app.$store.state.game')
-			.then((gameState) => {
-				expect(gameState.gameId).to.eq(undefined);
+			.its('app.$store.state')
+			.then((state) => {
+				expect(state.game.gameId).to.eq(undefined, 'Store game should not have id');
+				expect(state.gameList.games.length).to.eq(0, 'Game list should be empty in store, but is not');
 			});
 	});
 });
