@@ -1,14 +1,14 @@
-import { io } from "../../plugins/sails.js";
-let _ = require("lodash");
+import { io } from '../../plugins/sails.js';
+let _ = require('lodash');
 
 class GameSummary {
 	constructor(obj) {
 		this.id = obj.id ? obj.id : null;
 		this.name = obj.name ? obj.name : null;
-		this.numPlayers = Object.prototype.hasOwnProperty.call(obj, "players")
+		this.numPlayers = Object.prototype.hasOwnProperty.call(obj, 'players')
 			? obj.players.length
 			: 0;
-		this.status = Object.prototype.hasOwnProperty.call(obj, "status")
+		this.status = Object.prototype.hasOwnProperty.call(obj, 'status')
 			? obj.status
 			: false;
 	}
@@ -48,20 +48,20 @@ export default {
 	actions: {
 		requestGameList(context) {
 			return new Promise((resolve, reject) => {
-				io.socket.get("/game/getList", function handleResponse(resData, jwres) {
+				io.socket.get('/game/getList', function handleResponse(resData, jwres) {
 					if (jwres.statusCode === 200) {
 						const games = _.cloneDeep(resData.games);
-						context.commit("refreshGames", games);
+						context.commit('refreshGames', games);
 						return resolve(resData.games);
 					}
-					return reject(new Error("Could not retrieve list of games"));
+					return reject(new Error('Could not retrieve list of games'));
 				});
 			});
 		},
 		requestCreateGame(context, newGameName) {
 			return new Promise((resolve, reject) => {
 				io.socket.get(
-					"/game/create",
+					'/game/create',
 					{
 						gameName: newGameName,
 					},
@@ -69,7 +69,7 @@ export default {
 						if (jwres.statusCode === 200) {
 							return resolve(resData);
 						}
-						return reject(new Error("Error creating game"));
+						return reject(new Error('Error creating game'));
 					}
 				);
 			});

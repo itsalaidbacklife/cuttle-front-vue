@@ -42,11 +42,11 @@
 
 <script>
 export default {
-	name: "GameListItem",
+	name: 'GameListItem',
 	props: {
 		name: {
 			type: String, 
-			default: ""
+			default: ''
 		},
 		p0ready:{
 			type: Number,
