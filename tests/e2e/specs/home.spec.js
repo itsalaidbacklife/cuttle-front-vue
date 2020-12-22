@@ -1,9 +1,12 @@
-const validEmail = 'myCustomEmail@gmail.com';
-const validPassword = 'passwordLongerThanEight';
+const playerEmail = 'myCustomEmail@gmail.com';
+const playerPassword = 'passwordLongerThanEight';
+const opponentEmail = 'yourMortalEnemy@cia.gov';
+const opponentPassword = 'deviousTrickery';
+
 function setup() {
 	cy.wipeDatabase();
 	cy.visit('/');
-	cy.signupThroughStore(validEmail, validPassword);
+	cy.signupThroughStore(playerEmail, playerPassword);
 	cy.vueRoute('/');
 }
 function assertSuccessfulJoin(gameState) {
@@ -54,19 +57,13 @@ describe('Home - Game List', () => {
 	it('Adds a new game to the list when one comes in through the socket', () => {
 		cy.createGameThroughStore('111');
 		cy.createGameThroughStore('33');
-		cy.request({
-			method: 'POST',
-			url: 'localhost:1337/game/getList',
-			body: {},
-		})
-			.its('body')
-			.then((body) => {
-				cy.get('[data-cy=game-list-item]').should(
-					'have.length',
-					body.games.length
-				);
-				console.log('body', body.games.length);
-			});
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 2);
+		cy.signup(opponentEmail, opponentPassword);
+		cy.createGame('Game made by other player');
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 3)
+			.contains('Game made by other player');
 	});
 	it('Joins an open game', () => {
 		cy.window()
