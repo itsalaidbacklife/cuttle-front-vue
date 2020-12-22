@@ -16,8 +16,7 @@ describe('Home - Page Content', () => {
 	beforeEach(setup);
 
 	it('Displays headers', () => {
-		cy.contains('h1', 'CUTTLE');
-		cy.contains('h2', 'Games');
+		cy.contains('h1', 'Games');
 		cy.contains('h2', 'Create Game');
 	});
 	it('Displays logo', () => {
