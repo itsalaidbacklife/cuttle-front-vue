@@ -151,18 +151,16 @@ describe('Home - Create Game', () => {
 	beforeEach(setup);
 	it('Creates a new game by hitting enter in text field', () => {
 		cy.get('[data-cy=create-game-input]').type('test game' + '{enter}');
-		cy.request({
-			method: 'POST',
-			url: 'localhost:1337/game/getList',
-			body: {},
-		})
-			.its('body')
-			.then((body) => {
-				cy.get('[data-cy=game-list-item-name]').should(
-					'have.text',
-					' test game '
-				);
-			});
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 1)
+			.should('include.text', 'test game')
+			.should('include.text', '0 / 2 players');
+		// Test store
+		cy.window().its('app.$store.state.gameList.games').then((games) => {
+			expect(games.length).to.eq(1, 'Incorrect number of games in store');
+			expect(games[0].numPlayers).to.eq(0, 'Incorrect number of players in game in store');
+			expect(games[0].status).to.eq(true, 'Game in store incorrectly has status = false');
+		});
 	});
 
 	it('Creates a new game by hitting the submit button', () => {
