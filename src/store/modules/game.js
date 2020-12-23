@@ -83,7 +83,7 @@ export default {
 			}
 		},
 		opponentLeft(state) {
-			state.players = state.players.map(player => player.pNum === state.myPNum);
+			state.players = state.players.filter(player => player.pNum === state.myPNum);
 		}
 
 	},
