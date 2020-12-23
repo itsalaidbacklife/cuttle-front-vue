@@ -95,7 +95,7 @@ describe('Lobby - P0 Perspective', () => {
 				expect(updatedGameState.p0Ready).to.eq(false); // Player not ready
 			});
 	});
-	it('Shows when opponent joins and leaves', () => {
+	it('Shows when opponent joins, leaves, and re-joins', () => {
 		cy.contains('[data-cy=opponent-indicator]', 'Invite');
 		cy.window().its('app.$store.state.game').then(gameData => {
 			cy.contains('[data-cy=opponent-indicator]', 'Invite');
@@ -104,10 +104,12 @@ describe('Lobby - P0 Perspective', () => {
 			cy.subscribeOtherUser(gameData.id);
 			// Test that opponent's truncated email appears in indicator
 			cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
-
 			// Opponent leaves
 			cy.leaveLobbyOtherUser();
 			cy.contains('[data-cy=opponent-indicator]', 'Invite');
+			// Opponent joins again
+			cy.subscribeOtherUser(gameData.id);
+			cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 		});
 	});
 	it('Shows when oppenent Readies/Unreadies', function () {
