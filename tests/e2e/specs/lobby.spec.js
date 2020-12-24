@@ -174,10 +174,13 @@ describe('Lobby - P1 Perspective', () => {
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
-	it('Shows when opponent leaves', () => {
+	it.only('Shows when opponent leaves and rejoins', function () {
 		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 		cy.leaveLobbyOtherUser(); // Opponent leaves
 		cy.contains('[data-cy=opponent-indicator]', 'Invite');
+		// Opponent joins again
+		cy.subscribeOtherUser(this.gameSummary.gameId);
+		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 	});
 	it('Ready & UnReady buttons work', () => {
 		cy.get('[data-cy=ready-button]')
