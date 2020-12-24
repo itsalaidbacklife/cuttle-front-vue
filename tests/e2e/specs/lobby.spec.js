@@ -174,7 +174,7 @@ describe('Lobby - P1 Perspective', () => {
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
-	it.only('Shows when opponent leaves and rejoins', function () {
+	it('Shows when opponent leaves and rejoins', function () {
 		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 		cy.leaveLobbyOtherUser(); // Opponent leaves
 		cy.contains('[data-cy=opponent-indicator]', 'Invite');
