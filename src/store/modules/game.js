@@ -66,6 +66,7 @@ export default {
 		},
 		opponentJoined(state, newPlayer) {
 			state.players.push(_.cloneDeep(newPlayer));
+			state.players.sort((player, opponent) => player.pNum - opponent.pNum);
 		},
 		successfullyJoined(state, player) {
 			state.players.push(_.cloneDeep(player));
