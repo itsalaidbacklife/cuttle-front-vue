@@ -1,13 +1,26 @@
 <template>
-	<v-container id="login-container">
+	<v-container
+		id="login-container"
+		class="container"
+	>
+		<img
+			id="logo"
+			alt="Vue logo"
+			src="../assets/logo.png"
+		>
 		<v-row>
 			<!-- Left side form -->
-			<v-col cols="5">
+			<v-col
+				id="email-login-form"
+				sm="9"
+				lg="5"
+			>
 				<h1>{{ buttonText }}</h1>
 				<form @submit.prevent="submitLogin">
 					<v-text-field
 						v-model="username"
 						outlined
+						:dense="$vuetify.breakpoint.mdAndDown ? true : false"
 						hint="Email"
 						data-cy="username"
 					/>
@@ -15,6 +28,7 @@
 						v-model="pw"
 						outlined
 						hint="Password"
+						:dense="$vuetify.breakpoint.mdAndDown ? true : false"
 						type="password"
 						data-cy="password"
 					/>
@@ -40,33 +54,17 @@
 					</v-btn>
 				</div>
 			</v-col>
-
-			<!-- Middle Divider -->
-			<v-spacer />
-			<v-divider vertical />
-			<v-spacer />
-
-			<!-- Right side form -->
-			<v-col cols="5">
-				<h2>Or</h2>
-				<v-btn
-					color="primary"
-					rounded
-				>
-					Log in with Google
-				</v-btn>
-			</v-col>
 		</v-row>
 	</v-container>
 </template>
 
 <script>
 export default {
-	name: "LoginSignup",
+	name: 'LoginSignup',
 	data() {
 		return {
-			username: "",
-			pw: "",
+			username: '',
+			pw: '',
 			isLoggingIn: true
 		};
 	},
@@ -76,61 +74,87 @@ export default {
 		},
 		buttonText() {
 			if (this.isLoggingIn) {
-				return "Log In";
+				return 'Log In';
 			}
-			return "Sign Up";
+			return 'Sign Up';
 		},
 		switchLabelText() {
 			if (this.isLoggingIn) {
-				return "Don't have an account?";
+				return 'Don\'t have an account?';
 			}
-			return "Already have an account?";
+			return 'Already have an account?';
 		}
 	},
 	methods: {
 		submitLogin() {
 			if (this.isLoggingIn) {
 				this.$store
-					.dispatch("requestLogin", {
+					.dispatch('requestLogin', {
 						email: this.username,
 						password: this.pw
 					})
 					.then(() => {
-						this.username = "";
-						this.pw = "";
-						this.$router.push("/");
+						this.username = '';
+						this.pw = '';
+						this.$router.push('/');
 					})
 					.catch(() => {
-						console.log("Error logging in");
+						console.log('Error logging in');
 					});
 			} else {
 				this.$store
-					.dispatch("requestSignup", {
+					.dispatch('requestSignup', {
 						email: this.username,
 						password: this.pw
 					})
 					.then(() => {
-						console.log("Success logging in");
+						console.log('Success logging in');
 						console.log(this.$store.state.auth.authenticated);
-						this.username = "";
-						this.pw = "";
-						this.$router.push("/");
+						this.username = '';
+						this.pw = '';
+						this.$router.push('/');
 					})
 					.catch(() => {
 						// Handle Error
-						console.log("Error signing up");
+						console.log('Error signing up');
 					});
 			}
 		},
 		switchMode() {
 			this.isLoggingIn = !this.isLoggingIn;
-			this.pw = "";
+			this.pw = '';
 		}
 	}
 };
 </script>
 
 <style scoped lang="scss">
+.container {
+  width: 75%;
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#logo {
+  margin: 0 auto;
+}
+
+
+#email-login-form {
+	margin: 10px auto;
+
+	h1 {
+		background: linear-gradient(268.89deg, rgba(98, 2, 238, 0.87) 73.76%, rgba(253, 98, 34, 0.87) 99.59%);
+		background-clip: text;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+}
+
+
+
 #login-container button.v-btn {
   padding: 0 32px 0;
 }
@@ -148,4 +172,12 @@ export default {
 	justify-content: center;
 	margin-top: 16px;;
 }
+
+@media (orientation: landscape) and (max-width: 979px){
+	#logo {
+		width: 64px;
+		height: 64px;
+		margin: -16px auto -32px;
+	}
+} 
 </style>
