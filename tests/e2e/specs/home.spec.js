@@ -1,9 +1,12 @@
-const validEmail = 'myCustomEmail@gmail.com';
-const validPassword = 'passwordLongerThanEight';
+const playerEmail = 'myCustomEmail@gmail.com';
+const playerPassword = 'passwordLongerThanEight';
+const opponentEmail = 'yourMortalEnemy@cia.gov';
+const opponentPassword = 'deviousTrickery';
+
 function setup() {
 	cy.wipeDatabase();
 	cy.visit('/');
-	cy.signupThroughStore(validEmail, validPassword);
+	cy.signupThroughStore(playerEmail, playerPassword);
 	cy.vueRoute('/');
 }
 function assertSuccessfulJoin(gameState) {
@@ -16,12 +19,11 @@ describe('Home - Page Content', () => {
 	beforeEach(setup);
 
 	it('Displays headers', () => {
-		cy.contains('h1', 'CUTTLE');
-		cy.contains('h2', 'Games');
+		cy.contains('h1', 'Games');
 		cy.contains('h2', 'Create Game');
 	});
-	it('Displays logo', () => {
-		expect(true).to.eq(false);
+	it('[Missing Feature] Displays logo', () => {
+		expect(true).to.eq(false, 'Empty Test');
 	});
 	it('Play AI button links to CuttleBot', () => {
 		cy.contains('a', 'Play with AI').should(
@@ -42,19 +44,8 @@ describe('Home - Game List', () => {
 	it('Displays a game for every open game on the server', () => {
 		cy.createGameThroughStore('111');
 		cy.createGameThroughStore('33');
-		cy.request({
-			method: 'POST',
-			url: 'localhost:1337/game/getList',
-			body: {},
-		})
-			.its('body')
-			.then((body) => {
-				cy.get('[data-cy=game-list-item]').should(
-					'have.length',
-					body.games.length
-				);
-				console.log('body', body.games.length);
-			});
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 2);
 	});
 	it('Displays placeholder text when no games are available', () => {
 		cy.get('[data-cy=text-if-no-game]').should(
@@ -66,19 +57,13 @@ describe('Home - Game List', () => {
 	it('Adds a new game to the list when one comes in through the socket', () => {
 		cy.createGameThroughStore('111');
 		cy.createGameThroughStore('33');
-		cy.request({
-			method: 'POST',
-			url: 'localhost:1337/game/getList',
-			body: {},
-		})
-			.its('body')
-			.then((body) => {
-				cy.get('[data-cy=game-list-item]').should(
-					'have.length',
-					body.games.length
-				);
-				console.log('body', body.games.length);
-			});
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 2);
+		cy.signup(opponentEmail, opponentPassword);
+		cy.createGame('Game made by other player');
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 3)
+			.contains('Game made by other player');
 	});
 	it('Joins an open game', () => {
 		cy.window()
@@ -166,42 +151,42 @@ describe('Home - Create Game', () => {
 	beforeEach(setup);
 	it('Creates a new game by hitting enter in text field', () => {
 		cy.get('[data-cy=create-game-input]').type('test game' + '{enter}');
-		cy.request({
-			method: 'POST',
-			url: 'localhost:1337/game/getList',
-			body: {},
-		})
-			.its('body')
-			.then((body) => {
-				cy.get('[data-cy=game-list-item-name]').should(
-					'have.text',
-					' test game '
-				);
-			});
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 1)
+			.should('include.text', 'test game')
+			.should('include.text', '0 / 2 players');
+		// Test store
+		cy.window().its('app.$store.state.gameList.games').then((games) => {
+			expect(games.length).to.eq(1, 'Expect exactly 1 game in store');
+			expect(games[0].numPlayers).to.eq(0, 'Expect 0 players in game in store');
+			expect(games[0].status).to.eq(true, 'Expect game to have status true');
+		});
 	});
 
 	it('Creates a new game by hitting the submit button', () => {
 		cy.get('[data-cy=create-game-input]').type('test game');
 		cy.get('[data-cy=create-game-btn]').click();
-		cy.request({
-			method: 'POST',
-			url: 'localhost:1337/game/getList',
-			body: {},
-		})
-			.its('body')
-			.then((body) => {
-				cy.get('[data-cy=game-list-item-name]').should(
-					'have.text',
-					' test game '
-				);
-			});
+		//Test DOM
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 1)
+			.should('include.text', 'test game')
+			.should('include.text', '0 / 2 players');
+		// Test store
+		cy.window().its('app.$store.state.gameList.games').then((games) => {
+			expect(games.length).to.eq(1, 'Expect exactly 1 game in store');
+			expect(games[0].numPlayers).to.eq(0, 'Expect no players in gameLists game in store, but found some');
+			expect(games[0].status).to.eq(true, 'Expect game to have status true');
+		});
 	});
 	it('Does not create game without game name', () => {
 		cy.get('[data-cy=create-game-btn]').click();
-		cy.window()
-			.its('app.$store.state.game')
-			.then((gameState) => {
-				expect(gameState.gameId).to.eq(undefined);
-			});
+		// Test DOM
+		cy.get('[data-cy=game-list-item]')
+			.should('have.length', 0); // No games appear
+		// Test Store
+		cy.window().its('app.$store.state').then((state) => {
+			expect(state.game.gameId).to.eq(undefined, 'Store game should not have id');
+			expect(state.gameList.games.length).to.eq(0, 'Game list should be empty in store, but is not');
+		});
 	});
 });

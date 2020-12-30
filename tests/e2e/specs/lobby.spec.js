@@ -139,8 +139,9 @@ describe('Lobby - P0 Perspective', () => {
 			assertGameStarted();
 		});
 	});
-	it.only('Loads lobby after page refresh', () => {
+	it('[Missing Feature] Loads lobby after page refresh', () => {
 		cy.reload();
+		expect(true).to.eq(false, 'Empty Test');
 	});
 });
 
@@ -227,7 +228,7 @@ describe('Lobby - P1 Perspective', () => {
 		cy.readyOtherUser();
 		assertGameStarted();
 	});
-	it('Loads lobby after page refresh', () => {
-		expect(true).to.eq(false);
+	it('[Feature Missing] Loads lobby after page refresh', () => {
+		expect(true).to.eq(false, 'Empty Test');
 	});
 })
