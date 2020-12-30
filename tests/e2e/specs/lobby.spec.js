@@ -95,7 +95,7 @@ describe('Lobby - P0 Perspective', () => {
 				expect(updatedGameState.p0Ready).to.eq(false); // Player not ready
 			});
 	});
-	it('Shows when opponent joins and leaves', () => {
+	it('Shows when opponent joins, leaves, and re-joins', () => {
 		cy.contains('[data-cy=opponent-indicator]', 'Invite');
 		cy.window().its('app.$store.state.game').then(gameData => {
 			cy.contains('[data-cy=opponent-indicator]', 'Invite');
@@ -104,10 +104,12 @@ describe('Lobby - P0 Perspective', () => {
 			cy.subscribeOtherUser(gameData.id);
 			// Test that opponent's truncated email appears in indicator
 			cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
-
 			// Opponent leaves
 			cy.leaveLobbyOtherUser();
 			cy.contains('[data-cy=opponent-indicator]', 'Invite');
+			// Opponent joins again
+			cy.subscribeOtherUser(gameData.id);
+			cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 		});
 	});
 	it('Shows when oppenent Readies/Unreadies', function () {
@@ -173,10 +175,13 @@ describe('Lobby - P1 Perspective', () => {
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
-	it('Shows when opponent leaves', () => {
+	it('Shows when opponent leaves and rejoins', function () {
 		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 		cy.leaveLobbyOtherUser(); // Opponent leaves
 		cy.contains('[data-cy=opponent-indicator]', 'Invite');
+		// Opponent joins again
+		cy.subscribeOtherUser(this.gameSummary.gameId);
+		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 	});
 	it('Ready & UnReady buttons work', () => {
 		cy.get('[data-cy=ready-button]')
