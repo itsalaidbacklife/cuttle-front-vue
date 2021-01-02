@@ -2,6 +2,7 @@
 	<div
 		class="player-indicator"
 		:class="{'ready': playerReady, 'player-in': playerEmail != null}"
+		:style="{'padding': playerPadding}"
 		elevation="1"
 	>
 		<div class="avatar text-truncate">
@@ -11,7 +12,8 @@
 		</div>
 		<div
 			v-if="playerReady"
-			class="ready-overlay text-truncate mt-2"
+			class="ready-overlay text-truncate"
+			:style="{'font-size': readyFontSize, 'padding-bottom': readyPadding}"
 		>
 			READY
 		</div>
@@ -34,6 +36,15 @@ export default {
 	computed: {
 		message() {
 			return this.playerEmail || 'Invite'
+		},
+		playerPadding() {
+			return this.$vuetify.breakpoint.mdAndUp ? '48px' : '32px';
+		},
+		readyFontSize() {
+			return this.$vuetify.breakpoint.mdAndUp ? '1.5em' : '1.15em';
+		},
+		readyPadding() {
+			return this.$vuetify.breakpoint.mdAndUp ? '8px' : '4px';
 		}
 	}
 }
@@ -46,7 +57,6 @@ export default {
     justify-content: center;
     align-items: center;
 	background-color: var(--v-neutral-lighten3);
-    padding: 48px;
 	border-radius: 8px;
 }
 .player-in {
@@ -55,14 +65,15 @@ export default {
 .avatar {
 	display: inline-block;
 	position: relative;
-	width: 200px;
-	height: 200px;
+	width: 100px;
+	height: 100px;
 	border-radius: 50%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	border: 4px dashed var(--v-accent-darken1);
-	background-color: var(--v-neutral-base)
+	background-color: var(--v-neutral-base);
+	z-index: 1;
 }
 .ready .avatar {
     border: 4px solid var(--v-accent-base);
@@ -72,13 +83,12 @@ export default {
 	position: absolute;
 	justify-content: center;
 	align-items: flex-end;
-	padding-bottom: 16px;
 	padding-top: 16px;
 	height: 100%;
 	width: 100%;
-	// background-color: rgba(0, 0, 0, .3);
+	background-color: rgba(0, 0, 0, .3);
 	color: #ffffff;
 	border-radius: 8px;
-	font-size: 1.5rem;
+	box-sizing: border-box;
 }
 </style>
