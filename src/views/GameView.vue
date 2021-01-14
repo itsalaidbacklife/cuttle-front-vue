@@ -3,9 +3,17 @@
 		<!-- Opponent Hand -->
 		<div 
 			id="opponent-hand"
-			class="d-flex justify-center align-center px-2 pb-2 mx-auto" 
+			class="d-flex flex-column justify-start align-center px-2 pb-2 mx-auto" 
 		>
-			Opponent Hand
+			<div 
+				id="opponent-hand-cards"
+				class="d-flex justify-center align-start"
+			>
+				Opponent Hand
+			</div>
+			<div id="opponent-score">
+				{{ opponentPointTotal }}
+			</div>
 		</div>
 		<!-- Field -->
 		<div
@@ -17,9 +25,18 @@
 		<!-- Player Hand -->
 		<div
 			id="player-hand"
-			class="d-flex justify-center align-center px-2 pt-2 mx-auto"
+			class="d-flex flex-column justify-end align-center px-2 pt-2 mx-auto"
 		>
-			Player Hand
+			<div id="player-score">
+				{{ playerPointTotal }}
+			</div>
+
+			<div
+				id="player-hand-cards"
+				class="d-flex justify-center align-start"
+			> 
+				Player Hand
+			</div>
 		</div>
 	</div>
 </template>
@@ -34,11 +51,11 @@ export default {
 		opponent() {
 			return this.$store.getters.opponent;
 		},
-		playPointTotal() {
-			return this.player.points.reduce((total, card)=> total + card.rank, 0);
+		playerPointTotal() {
+			return this.player.points.reduce((total, card)=> total + card.rank, 0) || 0;
 		},
 		opponentPointTotal() {
-			return this.opponent.points.reduce((total, card)=> total + card.rank, 0);
+			return this.opponent.points.reduce((total, card)=> total + card.rank, 0) || 0;
 		},
 	}
 }
@@ -55,6 +72,18 @@ export default {
 #opponent-hand {
 	width: 50%;
 	height: 20vh;
+	
+}
+
+#opponent-hand-cards {
+	width: 100%;
+	height: 80%;
+	background: rgba(0, 0, 0, 0.46);
+}
+
+#player-hand-cards {
+	width: 100%;
+	height: 80%;
 	background: rgba(0, 0, 0, 0.46);
 }
 
@@ -66,7 +95,6 @@ export default {
 #player-hand {
 	width: 50%;
 	height: 20vh;
-	background: rgba(0, 0, 0, 0.14);
 }
 
 
