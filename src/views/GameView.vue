@@ -1,17 +1,26 @@
 <template>
 	<div id="game-view-wrapper">
 		<!-- Opponent Hand -->
-		<v-row>
-			<v-col>
-				<v-btn color="warning">
-					Exit
-				</v-btn>
-			</v-col>
-		</v-row>
+		<div 
+			id="opponent-hand"
+			class="d-flex justify-center align-center px-2 pb-2 mx-auto" 
+		>
+			Opponent Hand
+		</div>
 		<!-- Field -->
-		<v-row />
+		<div
+			id="field"
+			class="d-flex justify-center align-center p-2 mx-auto"
+		>
+			Field
+		</div>
 		<!-- Player Hand -->
-		<v-row />
+		<div
+			id="player-hand"
+			class="d-flex justify-center align-center px-2 pt-2 mx-auto"
+		>
+			Player Hand
+		</div>
 	</div>
 </template>
 
@@ -23,8 +32,28 @@ export default {
 
 <style lang="scss" scoped>
 #game-view-wrapper {
+	color: #FFF;
 	width: 100%;
 	height: 100%;
 	background: linear-gradient(180deg, #6202EE 14.61%, #FD6222 100%), #C4C4C4;
 }
+
+#opponent-hand {
+	width: 50%;
+	height: 20vh;
+	background: rgba(0, 0, 0, 0.46);
+}
+
+#field {
+	width: 100%;
+	height: 60vh
+}
+
+#player-hand {
+	width: 50%;
+	height: 20vh;
+	background: rgba(0, 0, 0, 0.14);
+}
+
+
 </style>
