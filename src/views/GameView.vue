@@ -1,5 +1,5 @@
 <template>
-	<v-container id="game-view-wrapper">
+	<div id="game-view-wrapper">
 		<!-- Opponent Hand -->
 		<v-row>
 			<v-col>
@@ -12,7 +12,7 @@
 		<v-row />
 		<!-- Player Hand -->
 		<v-row />
-	</v-container>
+	</div>
 </template>
 
 <script>
@@ -22,5 +22,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+#game-view-wrapper {
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(180deg, #6202EE 14.61%, #FD6222 100%), #C4C4C4;
+}
 </style>
