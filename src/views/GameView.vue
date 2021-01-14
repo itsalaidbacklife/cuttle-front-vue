@@ -27,6 +27,20 @@
 <script>
 export default {
 	name: 'GameView',
+	computed: {
+		player() {
+			return this.$store.state.game.players[this.$store.state.game.myPNum];
+		},
+		opponent() {
+			return this.$store.getters.opponent;
+		},
+		playPointTotal() {
+			return this.player.points.reduce((total, card)=> total + card.rank, 0);
+		},
+		opponentPointTotal() {
+			return this.opponent.points.reduce((total, card)=> total + card.rank, 0);
+		},
+	}
 }
 </script>
 
