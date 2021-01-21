@@ -108,6 +108,8 @@ Cypress.Commands.add('leaveLobbyOtherUser', (id) => {
 	});
 });
 
+// TODO: add a command for subscribe the player to the game
+
 /**
  * Did not work -- reequest.body was undefined on server
  */
