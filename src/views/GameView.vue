@@ -9,7 +9,11 @@
 				id="opponent-hand-cards"
 				class="d-flex justify-center align-start"
 			>
-				Opponent Hand
+				<div
+					v-for="card in opponent.hand"
+					:key="card.id"
+					class="opponent-card mx-2"
+				/>
 			</div>
 			<div id="opponent-score">
 				{{ opponentPointTotal }}
@@ -70,15 +74,23 @@ export default {
 }
 
 #opponent-hand {
-	width: 50%;
+	min-width: 50%;
 	height: 20vh;
-	
 }
 
 #opponent-hand-cards {
-	width: 100%;
+	// width: 100%;
 	height: 80%;
 	background: rgba(0, 0, 0, 0.46);
+
+	& .opponent-card {
+		height: 90%;
+		width: 10vw;
+		display: inline-block;
+		position: relative;
+		background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
+		transform: rotate(180deg);
+	}
 }
 
 #player-hand-cards {
@@ -96,6 +108,8 @@ export default {
 	width: 50%;
 	height: 20vh;
 }
+
+
 
 
 </style>
