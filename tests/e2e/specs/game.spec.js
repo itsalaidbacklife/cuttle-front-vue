@@ -16,7 +16,7 @@ function setup() {
 			cy.get('[data-cy=ready-button]').click();
 			cy.signup(opponentEmail, opponentPassword);
 			cy.subscribeOtherUser(gameSummary.gameId);
-			cy.readyOtherUser()
+			cy.readyOtherUser();
 		});
     
 }
