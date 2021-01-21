@@ -37,17 +37,27 @@
 
 			<div
 				id="player-hand-cards"
-				class="d-flex justify-center align-start"
+				class="d-flex justify-center align-end"
 			> 
-				Player Hand
+				<card 
+					v-for="card in player.hand"
+					:key="card.id"
+					:suit="card.suit"
+					:rank="card.rank"
+				/>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import Card from '@/components/GameView/Card.vue';
+
 export default {
 	name: 'GameView',
+	components: {
+		Card,
+	},
 	computed: {
 		player() {
 			return this.$store.state.game.players[this.$store.state.game.myPNum];
