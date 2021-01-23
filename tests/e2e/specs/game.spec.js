@@ -7,14 +7,14 @@ const opponentPassword = 'deviousTrickery';
 function setup() {
 	cy.wipeDatabase();
 	cy.visit('/');
-	cy.signupThroughStore(validEmail, validPassword);
+	cy.signupPlayer(validEmail, validPassword);
 	cy.createGameThroughStore('Test Game')
 		.then((gameSummary) => {
 			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
 			cy.wrap(gameSummary).as('gameSummary');
 			cy.get('[data-cy=ready-button]').click();
-			cy.signup(opponentEmail, opponentPassword);
+			cy.signupOpponent(opponentEmail, opponentPassword);
 			cy.subscribeOtherUser(gameSummary.gameId);
 			cy.readyOtherUser();
 		});

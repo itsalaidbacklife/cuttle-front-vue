@@ -8,7 +8,7 @@ io.sails.useCORSRouteToGetCookie = false;
 Cypress.Commands.add('wipeDatabase', () => {
 	cy.request('localhost:1337/test/wipeDatabase');
 });
-Cypress.Commands.add('signup', (email, password) => {
+Cypress.Commands.add('signupOpponent', (email, password) => {
 	return new Promise((resolve, reject) => {
 		io.socket.get(
 			'localhost:1337/user/signup',
@@ -25,12 +25,12 @@ Cypress.Commands.add('signup', (email, password) => {
 		);
 	});
 });
-Cypress.Commands.add('signupThroughStore', (email, password) => {
+Cypress.Commands.add('signupPlayer', (email, password) => {
 	cy.window()
 		.its('app.$store')
 		.invoke('dispatch', 'requestSignup', { email, password });
 });
-Cypress.Commands.add('loginThroughStore', (email, password) => {
+Cypress.Commands.add('loginPlayer', (email, password) => {
 	cy.window()
 		.its('app.$store')
 		.invoke('dispatch', 'requestLogin', { email, password });

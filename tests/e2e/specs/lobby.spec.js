@@ -6,7 +6,7 @@ const opponentPassword = 'deviousTrickery';
 function setup() {
 	cy.wipeDatabase();
 	cy.visit('/');
-	cy.signupThroughStore(validEmail, validPassword);
+	cy.signupPlayer(validEmail, validPassword);
 	cy.createGameThroughStore('Test Game')
 		.then((gameSummary) => {
 			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
@@ -100,7 +100,7 @@ describe('Lobby - P0 Perspective', () => {
 		cy.window().its('app.$store.state.game').then(gameData => {
 			cy.contains('[data-cy=opponent-indicator]', 'Invite');
 			// Sign up new user and subscribe them to game
-			cy.signup(opponentEmail, opponentPassword);
+			cy.signupOpponent(opponentEmail, opponentPassword);
 			cy.subscribeOtherUser(gameData.id);
 			// Test that opponent's truncated email appears in indicator
 			cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
@@ -114,7 +114,7 @@ describe('Lobby - P0 Perspective', () => {
 	});
 	it('Shows when oppenent Readies/Unreadies', function () {
 		// Opponent subscribes & readies up
-		cy.signup(opponentEmail, opponentPassword);
+		cy.signupOpponent(opponentEmail, opponentPassword);
 		cy.subscribeOtherUser(this.gameSummary.gameId);
 		cy.readyOtherUser();
 		cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
@@ -125,7 +125,7 @@ describe('Lobby - P0 Perspective', () => {
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 	});
 	it('Game starts when both players are ready - opponent first', function () {
-		cy.signup(opponentEmail, opponentPassword);
+		cy.signupOpponent(opponentEmail, opponentPassword);
 		cy.subscribeOtherUser(this.gameSummary.gameId);
 		cy.readyOtherUser().then(() => {
 			cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
@@ -135,7 +135,7 @@ describe('Lobby - P0 Perspective', () => {
 	});
 	it('Game starts when both players are ready - player first', function () {
 		cy.get('[data-cy=ready-button]').click();
-		cy.signup(opponentEmail, opponentPassword);
+		cy.signupOpponent(opponentEmail, opponentPassword);
 		cy.subscribeOtherUser(this.gameSummary.gameId);
 		cy.readyOtherUser().then(() => {
 			assertGameStarted();
@@ -151,12 +151,12 @@ describe('Lobby - P1 Perspective', () => {
 	beforeEach(() => {
 		cy.wipeDatabase();
 		cy.visit('/');
-		cy.signupThroughStore(validEmail, validPassword);
+		cy.signupPlayer(validEmail, validPassword);
 		cy.createGameThroughStore('Test Game')
 			.then((gameSummary) => {
 				cy.wrap(gameSummary).as('gameSummary');
 				// Sign up new (other) user and subscribe them to game
-				cy.signup(opponentEmail, opponentPassword);
+				cy.signupOpponent(opponentEmail, opponentPassword);
 				cy.subscribeOtherUser(gameSummary.gameId);
 				// Join game as this user and navigate to lobby
 				cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);

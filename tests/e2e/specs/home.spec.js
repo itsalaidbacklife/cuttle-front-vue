@@ -6,7 +6,7 @@ const opponentPassword = 'deviousTrickery';
 function setup() {
 	cy.wipeDatabase();
 	cy.visit('/');
-	cy.signupThroughStore(playerEmail, playerPassword);
+	cy.signupPlayer(playerEmail, playerPassword);
 	cy.vueRoute('/');
 }
 function assertSuccessfulJoin(gameState) {
@@ -59,7 +59,7 @@ describe('Home - Game List', () => {
 		cy.createGameThroughStore('33');
 		cy.get('[data-cy=game-list-item]')
 			.should('have.length', 2);
-		cy.signup(opponentEmail, opponentPassword);
+		cy.signupOpponent(opponentEmail, opponentPassword);
 		cy.createGame('Game made by other player');
 		cy.get('[data-cy=game-list-item]')
 			.should('have.length', 3)
@@ -89,7 +89,7 @@ describe('Home - Game List', () => {
      */
 		cy.createGameThroughStore('Test Game').then((gameData) => {
 			// Sign up new user and subscribe them to game
-			cy.signup('secondUser@aol.com', 'myNewPassword');
+			cy.signupOpponent('secondUser@aol.com', 'myNewPassword');
 			cy.subscribeOtherUser(gameData.gameId);
 			// Our user then joins through UI
 			cy.get('[data-cy=game-list-item]')
@@ -114,9 +114,9 @@ describe('Home - Game List', () => {
 			// Test that JOIN button starts enabled
 			cy.contains('button.v-btn', 'JOIN').should('not.be.disabled');
 			// Sign up 2 users and subscribe them to game
-			cy.signup('secondUser@aol.com', 'myNewPassword');
+			cy.signupOpponent('secondUser@aol.com', 'myNewPassword');
 			cy.subscribeOtherUser(gameData.gameId);
-			cy.signup('thirdUser@facebook.com', 'anotherUserPw');
+			cy.signupOpponent('thirdUser@facebook.com', 'anotherUserPw');
 			cy.subscribeOtherUser(gameData.gameId);
 
 			// Test that join button is now disabled
@@ -133,9 +133,9 @@ describe('Home - Game List', () => {
 			// Test that JOIN button starts enabled
 			cy.contains('button.v-btn', 'JOIN').should('not.be.disabled');
 			// Sign up 2 users and subscribe them to game
-			cy.signup('secondUser@aol.com', 'myNewPassword');
+			cy.signupOpponent('secondUser@aol.com', 'myNewPassword');
 			cy.subscribeOtherUser(gameData.gameId);
-			cy.signup('thirdUser@facebook.com', 'anotherUserPw');
+			cy.signupOpponent('thirdUser@facebook.com', 'anotherUserPw');
 			cy.subscribeOtherUser(gameData.gameId);
 
 			// Test that join button is now disabled
