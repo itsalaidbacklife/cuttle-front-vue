@@ -35,12 +35,7 @@ Cypress.Commands.add('loginPlayer', (email, password) => {
 		.its('app.$store')
 		.invoke('dispatch', 'requestLogin', { email, password });
 });
-Cypress.Commands.add('vueRoute', (route) => {
-	cy.window()
-		.its('app.$router')
-		.invoke('push', route);
-});
-Cypress.Commands.add('createGame', (name) => {
+Cypress.Commands.add('createGameOpponent', (name) => {
 	return new Promise((resolve, reject) => {
 		io.socket.post(
 			'/game/create',
@@ -56,7 +51,7 @@ Cypress.Commands.add('createGame', (name) => {
 		);
 	});
 });
-Cypress.Commands.add('createGameThroughStore', (name) => {
+Cypress.Commands.add('createGamePlayer', (name) => {
 	return cy
 		.window()
 		.its('app.$store')
@@ -107,8 +102,11 @@ Cypress.Commands.add('leaveLobbyOtherUser', (id) => {
 		});
 	});
 });
-
-// TODO: add a command for subscribe the player to the game
+Cypress.Commands.add('vueRoute', (route) => {
+	cy.window()
+		.its('app.$router')
+		.invoke('push', route);
+});
 
 /**
  * Did not work -- reequest.body was undefined on server

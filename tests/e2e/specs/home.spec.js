@@ -42,8 +42,8 @@ describe('Home - Game List', () => {
 	beforeEach(setup);
 
 	it('Displays a game for every open game on the server', () => {
-		cy.createGameThroughStore('111');
-		cy.createGameThroughStore('33');
+		cy.createGamePlayer('111');
+		cy.createGamePlayer('33');
 		cy.get('[data-cy=game-list-item]')
 			.should('have.length', 2);
 	});
@@ -55,12 +55,12 @@ describe('Home - Game List', () => {
 		cy.contains('p', 'No Active Games');
 	});
 	it('Adds a new game to the list when one comes in through the socket', () => {
-		cy.createGameThroughStore('111');
-		cy.createGameThroughStore('33');
+		cy.createGamePlayer('111');
+		cy.createGamePlayer('33');
 		cy.get('[data-cy=game-list-item]')
 			.should('have.length', 2);
 		cy.signupOpponent(opponentEmail, opponentPassword);
-		cy.createGame('Game made by other player');
+		cy.createGameOpponent('Game made by other player');
 		cy.get('[data-cy=game-list-item]')
 			.should('have.length', 3)
 			.contains('Game made by other player');
@@ -71,7 +71,7 @@ describe('Home - Game List', () => {
 			.then((gameState) => {
 				expect(gameState.id).to.eq(null);
 			});
-		cy.createGameThroughStore('Test Game');
+		cy.createGamePlayer('Test Game');
 		cy.get('[data-cy=game-list-item]')
 			.contains('button.v-btn', 'JOIN')
 			.click();
@@ -87,7 +87,7 @@ describe('Home - Game List', () => {
      * Set up:
      * Create game, sign up one other user and subscribe them to the game
      */
-		cy.createGameThroughStore('Test Game').then((gameData) => {
+		cy.createGamePlayer('Test Game').then((gameData) => {
 			// Sign up new user and subscribe them to game
 			cy.signupOpponent('secondUser@aol.com', 'myNewPassword');
 			cy.subscribeOtherUser(gameData.gameId);
@@ -110,7 +110,7 @@ describe('Home - Game List', () => {
      * Set up:
      * Create game, sign up two other users, subscribe them to the game
      */
-		cy.createGameThroughStore('Test Game').then((gameData) => {
+		cy.createGamePlayer('Test Game').then((gameData) => {
 			// Test that JOIN button starts enabled
 			cy.contains('button.v-btn', 'JOIN').should('not.be.disabled');
 			// Sign up 2 users and subscribe them to game
@@ -129,7 +129,7 @@ describe('Home - Game List', () => {
      * Set up:
      * Create game, sign up two other users, subscribe them to the game, leave one user
      */
-		cy.createGameThroughStore('Test Game').then((gameData) => {
+		cy.createGamePlayer('Test Game').then((gameData) => {
 			// Test that JOIN button starts enabled
 			cy.contains('button.v-btn', 'JOIN').should('not.be.disabled');
 			// Sign up 2 users and subscribe them to game

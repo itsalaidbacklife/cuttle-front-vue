@@ -7,7 +7,7 @@ function setup() {
 	cy.wipeDatabase();
 	cy.visit('/');
 	cy.signupPlayer(validEmail, validPassword);
-	cy.createGameThroughStore('Test Game')
+	cy.createGamePlayer('Test Game')
 		.then((gameSummary) => {
 			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
@@ -152,7 +152,7 @@ describe('Lobby - P1 Perspective', () => {
 		cy.wipeDatabase();
 		cy.visit('/');
 		cy.signupPlayer(validEmail, validPassword);
-		cy.createGameThroughStore('Test Game')
+		cy.createGamePlayer('Test Game')
 			.then((gameSummary) => {
 				cy.wrap(gameSummary).as('gameSummary');
 				// Sign up new (other) user and subscribe them to game
