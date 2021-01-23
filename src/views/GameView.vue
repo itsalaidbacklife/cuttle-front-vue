@@ -15,9 +15,10 @@
 					class="opponent-card mx-2"
 				/>
 			</div>
-			<div id="opponent-score">
-				POINTS: {{ opponentPointTotal }} TARGET: {{ opponentPointsToWin }}
-			</div>
+			<h3 id="opponent-score" class="mt-2">
+				<span>POINTS: {{ opponentPointTotal }}</span>
+				<span class="ml-4">TARGET: {{ opponentPointsToWin }}</span>
+			</h3>
 		</div>
 		<!-- Field -->
 		<div
@@ -31,9 +32,10 @@
 			id="player-hand"
 			class="d-flex flex-column justify-end align-center px-2 pt-2 mx-auto"
 		>
-			<div id="player-score">
-				POINTS: {{ playerPointTotal }} TARGET: {{ playerPointsToWin }}
-			</div>
+			<h3 id="player-score" class="mb-2">
+				<span>POINTS: {{ playerPointTotal }}</span>
+				<span class="ml-4">TARGET: {{ playerPointsToWin }}</span>
+			</h3>
 
 			<div
 				id="player-hand-cards"
