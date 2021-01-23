@@ -117,8 +117,8 @@ export default {
 				console.log(`Error: calculating pointsToWin and found invalid kingcount: ${kingCount}`);
 				return 21;
 			}
-		}
-	}
+		},
+	},
 }
 </script>
 
