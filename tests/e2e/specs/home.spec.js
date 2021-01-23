@@ -22,7 +22,7 @@ describe('Home - Page Content', () => {
 		cy.contains('h1', 'Games');
 		cy.contains('h2', 'Create Game');
 	});
-	it('[Missing Feature] Displays logo', () => {
+	it.skip('[Missing Feature] Displays logo', () => {
 		expect(true).to.eq(false, 'Empty Test');
 	});
 	it('Play AI button links to CuttleBot', () => {
