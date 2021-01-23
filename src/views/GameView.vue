@@ -94,7 +94,6 @@ export default {
 		 * @param player is the player object
 		 */
 		kingCount(player) {
-			console.log(`Kincount for player ${player.pNum}`);
 			return player.runes.reduce((kingCount, card) => kingCount + card.rank === 13 ? 1 : 0, 0);
 		},
 		/**
@@ -103,7 +102,6 @@ export default {
 		 * @param kingCount: int number of kings (expected 0-4)
 		 */
 		pointsToWin(kingCount) {
-			console.log('kingCount');
 			switch(kingCount) {
 			case 0:
 				return 21;
