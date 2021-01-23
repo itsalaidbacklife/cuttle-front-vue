@@ -57,7 +57,7 @@ Cypress.Commands.add('createGamePlayer', (name) => {
 		.its('app.$store')
 		.invoke('dispatch', 'requestCreateGame', name);
 });
-Cypress.Commands.add('subscribeOtherUser', (id) => {
+Cypress.Commands.add('subscribeOpponent', (id) => {
 	return new Promise((resolve, reject) => {
 		io.socket.get(
 			'/game/subscribe',
@@ -73,7 +73,7 @@ Cypress.Commands.add('subscribeOtherUser', (id) => {
 		);
 	});
 });
-Cypress.Commands.add('readyOtherUser', (id) => {
+Cypress.Commands.add('readyOpponent', (id) => {
 	return new Promise((resolve, reject) => {
 		io.socket.get(
 			'/game/ready',
@@ -89,7 +89,7 @@ Cypress.Commands.add('readyOtherUser', (id) => {
 		);
 	});
 });
-Cypress.Commands.add('leaveLobbyOtherUser', (id) => {
+Cypress.Commands.add('leaveLobbyOpponent', (id) => {
 	return new Promise((resolve, reject) => {
 		io.socket.get('/game/leaveLobby', { id }, function handleResponse(
 			_,
