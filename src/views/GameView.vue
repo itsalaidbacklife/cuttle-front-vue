@@ -16,7 +16,7 @@
 				/>
 			</div>
 			<div id="opponent-score">
-				{{ opponentPointTotal }}
+				POINTS: {{ opponentPointTotal }} TARGET: {{ opponentPointsToWin }}
 			</div>
 		</div>
 		<!-- Field -->
@@ -32,7 +32,7 @@
 			class="d-flex flex-column justify-end align-center px-2 pt-2 mx-auto"
 		>
 			<div id="player-score">
-				{{ playerPointTotal }}
+				POINTS: {{ playerPointTotal }} TARGET: {{ playerPointsToWin }}
 			</div>
 
 			<div
@@ -52,25 +52,72 @@
 
 <script>
 import Card from '@/components/GameView/Card.vue';
-
 export default {
 	name: 'GameView',
 	components: {
 		Card,
 	},
 	computed: {
+		////////////////////
+		// Player Objects //
+		////////////////////
 		player() {
 			return this.$store.state.game.players[this.$store.state.game.myPNum];
 		},
 		opponent() {
 			return this.$store.getters.opponent;
 		},
+		//////////////////
+		// Point Totals //
+		//////////////////
 		playerPointTotal() {
 			return this.player.points.reduce((total, card)=> total + card.rank, 0) || 0;
 		},
 		opponentPointTotal() {
 			return this.opponent.points.reduce((total, card)=> total + card.rank, 0) || 0;
 		},
+		///////////////////
+		// Points to Win //
+		///////////////////
+		playerPointsToWin() {
+			return this.pointsToWin(this.kingCount(this.player));
+		},
+		opponentPointsToWin() {
+			return this.pointsToWin(this.kingCount(this.opponent));
+		},
+	},
+	methods: {
+		/**
+		 * Returns number of kings a given player has
+		 * @param player is the player object
+		 */
+		kingCount(player) {
+			console.log(`Kincount for player ${player.pNum}`);
+			return player.runes.reduce((kingCount, card) => kingCount + card.rank === 13 ? 1 : 0, 0);
+		},
+		/**
+		 * Returns the number of points to win
+		 * based on the number of kings a player has
+		 * @param kingCount: int number of kings (expected 0-4)
+		 */
+		pointsToWin(kingCount) {
+			console.log('kingCount');
+			switch(kingCount) {
+			case 0:
+				return 21;
+			case 1:
+				return 14;
+			case 2:
+				return 10;
+			case 3:
+				return 7;
+			case 4:
+				return 5;
+			default:
+				console.log(`Error: calculating pointsToWin and found invalid kingcount: ${kingCount}`);
+				return 21;
+			}
+		}
 	}
 }
 </script>
