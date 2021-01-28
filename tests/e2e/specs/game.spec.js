@@ -26,7 +26,7 @@ describe('Game - Page Content', () => {
 		setup();
 	})
 
-	it.skip('Displays headers', () => {
+	it('Displays headers', () => {
 		expect(true).to.eq(false, 'Empty Test');
 	})
 })
