@@ -8,7 +8,7 @@ io.sails.useCORSRouteToGetCookie = false;
 Cypress.Commands.add('wipeDatabase', () => {
 	cy.request('localhost:1337/test/wipeDatabase');
 });
-Cypress.Commands.add('signup', (email, password) => {
+Cypress.Commands.add('signupOpponent', (email, password) => {
 	return new Promise((resolve, reject) => {
 		io.socket.get(
 			'localhost:1337/user/signup',
@@ -25,22 +25,17 @@ Cypress.Commands.add('signup', (email, password) => {
 		);
 	});
 });
-Cypress.Commands.add('signupThroughStore', (email, password) => {
+Cypress.Commands.add('signupPlayer', (email, password) => {
 	cy.window()
 		.its('app.$store')
 		.invoke('dispatch', 'requestSignup', { email, password });
 });
-Cypress.Commands.add('loginThroughStore', (email, password) => {
+Cypress.Commands.add('loginPlayer', (email, password) => {
 	cy.window()
 		.its('app.$store')
 		.invoke('dispatch', 'requestLogin', { email, password });
 });
-Cypress.Commands.add('vueRoute', (route) => {
-	cy.window()
-		.its('app.$router')
-		.invoke('push', route);
-});
-Cypress.Commands.add('createGame', (name) => {
+Cypress.Commands.add('createGameOpponent', (name) => {
 	return new Promise((resolve, reject) => {
 		io.socket.post(
 			'/game/create',
@@ -56,13 +51,13 @@ Cypress.Commands.add('createGame', (name) => {
 		);
 	});
 });
-Cypress.Commands.add('createGameThroughStore', (name) => {
+Cypress.Commands.add('createGamePlayer', (name) => {
 	return cy
 		.window()
 		.its('app.$store')
 		.invoke('dispatch', 'requestCreateGame', name);
 });
-Cypress.Commands.add('subscribeOtherUser', (id) => {
+Cypress.Commands.add('subscribeOpponent', (id) => {
 	return new Promise((resolve, reject) => {
 		io.socket.get(
 			'/game/subscribe',
@@ -78,7 +73,7 @@ Cypress.Commands.add('subscribeOtherUser', (id) => {
 		);
 	});
 });
-Cypress.Commands.add('readyOtherUser', (id) => {
+Cypress.Commands.add('readyOpponent', (id) => {
 	return new Promise((resolve, reject) => {
 		io.socket.get(
 			'/game/ready',
@@ -94,7 +89,7 @@ Cypress.Commands.add('readyOtherUser', (id) => {
 		);
 	});
 });
-Cypress.Commands.add('leaveLobbyOtherUser', (id) => {
+Cypress.Commands.add('leaveLobbyOpponent', (id) => {
 	return new Promise((resolve, reject) => {
 		io.socket.get('/game/leaveLobby', { id }, function handleResponse(
 			_,
@@ -107,8 +102,11 @@ Cypress.Commands.add('leaveLobbyOtherUser', (id) => {
 		});
 	});
 });
-
-// TODO: add a command for subscribe the player to the game
+Cypress.Commands.add('vueRoute', (route) => {
+	cy.window()
+		.its('app.$router')
+		.invoke('push', route);
+});
 
 /**
  * Did not work -- reequest.body was undefined on server

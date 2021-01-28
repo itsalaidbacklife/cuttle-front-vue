@@ -7,16 +7,16 @@ const opponentPassword = 'deviousTrickery';
 function setup() {
 	cy.wipeDatabase();
 	cy.visit('/');
-	cy.signupThroughStore(validEmail, validPassword);
-	cy.createGameThroughStore('Test Game')
+	cy.signupPlayer(validEmail, validPassword);
+	cy.createGamePlayer('Test Game')
 		.then((gameSummary) => {
 			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
 			cy.wrap(gameSummary).as('gameSummary');
 			cy.get('[data-cy=ready-button]').click();
-			cy.signup(opponentEmail, opponentPassword);
-			cy.subscribeOtherUser(gameSummary.gameId);
-			cy.readyOtherUser();
+			cy.signupOpponent(opponentEmail, opponentPassword);
+			cy.subscribeOpponent(gameSummary.gameId);
+			cy.readyOpponent();
 		});
     
 }
@@ -26,7 +26,7 @@ describe('Game - Page Content', () => {
 		setup();
 	})
 
-	it.only('Displays headers', () => {
+	it('Displays headers', () => {
 		expect(true).to.eq(false, 'Empty Test');
 	})
 })
