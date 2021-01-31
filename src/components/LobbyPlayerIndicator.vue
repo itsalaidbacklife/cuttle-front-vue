@@ -38,7 +38,7 @@ export default {
 			return this.playerEmail || 'Invite'
 		},
 		playerPadding() {
-			return this.$vuetify.breakpoint.mdAndUp ? '48px' : '32px';
+			return this.$vuetify.breakpoint.mdAndUp ? '72px' : '32px';
 		},
 		readyFontSize() {
 			return this.$vuetify.breakpoint.mdAndUp ? '1.5em' : '1.15em';
@@ -65,8 +65,8 @@ export default {
 .avatar {
 	display: inline-block;
 	position: relative;
-	width: 100px;
-	height: 100px;
+	width: 124px;
+	height: 124px;
 	border-radius: 50%;
 	display: flex;
 	justify-content: center;
