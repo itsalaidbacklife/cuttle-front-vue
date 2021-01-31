@@ -158,12 +158,12 @@ export default {
 
 #field {
 	width: 100%;
-	height: 60vh
+	height: 50vh
 }
 
 #player-hand {
 	min-width: 50%;
-	height: 20vh;
+	height: 30vh;
 	& #player-hand-cards {
 		height: 80%;
 		background: rgba(0, 0, 0, 0.46);

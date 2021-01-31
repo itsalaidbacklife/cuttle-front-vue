@@ -2,7 +2,6 @@
 	<div class="mx-4 player-card">
 		<img
 			:src="require(`../../assets/cards/card_${suit}_${rank}.png`)"
-      class="mt-8"
 		>
 	</div>
 </template>
@@ -24,9 +23,12 @@ export default {
 </script>
 <style scoped lang="scss">
 .player-card {
+  position: relative;
   width: 10vh;
-  height: 150%;
+  height: 100%;
   & img {
+    position: absolute;
+    bottom: 0;
 	  width: 100%;
   }
 }
