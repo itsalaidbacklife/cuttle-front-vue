@@ -15,7 +15,10 @@
 					class="opponent-card mx-2"
 				/>
 			</div>
-			<h3 id="opponent-score" class="mt-2">
+			<h3
+				id="opponent-score"
+				class="mt-2"
+			>
 				<span>POINTS: {{ opponentPointTotal }}</span>
 				<span class="ml-4">TARGET: {{ opponentPointsToWin }}</span>
 			</h3>
@@ -32,14 +35,17 @@
 			id="player-hand"
 			class="d-flex flex-column justify-end align-center px-2 pt-2 mx-auto"
 		>
-			<h3 id="player-score" class="mb-2">
+			<h3
+				id="player-score"
+				class="mb-2"
+			>
 				<span>POINTS: {{ playerPointTotal }}</span>
 				<span class="ml-4">TARGET: {{ playerPointsToWin }}</span>
 			</h3>
 
 			<div
 				id="player-hand-cards"
-				class="d-flex justify-center align-end"
+				class="d-flex justify-center align-start"
 			> 
 				<card 
 					v-for="card in player.hand"
@@ -136,7 +142,6 @@ export default {
 }
 
 #opponent-hand-cards {
-	// width: 100%;
 	height: 80%;
 	background: rgba(0, 0, 0, 0.46);
 
@@ -150,11 +155,6 @@ export default {
 	}
 }
 
-#player-hand-cards {
-	width: 100%;
-	height: 80%;
-	background: rgba(0, 0, 0, 0.46);
-}
 
 #field {
 	width: 100%;
@@ -162,11 +162,12 @@ export default {
 }
 
 #player-hand {
-	width: 50%;
+	min-width: 50%;
 	height: 20vh;
+	& #player-hand-cards {
+		height: 80%;
+		background: rgba(0, 0, 0, 0.46);
+		overflow-y: hidden;
+	}
 }
-
-
-
-
 </style>
