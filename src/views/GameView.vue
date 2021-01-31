@@ -15,7 +15,10 @@
 					class="opponent-card mx-2"
 				/>
 			</div>
-			<h3 id="opponent-score" class="mt-2">
+			<h3
+				id="opponent-score"
+				class="mt-2"
+			>
 				<span>POINTS: {{ opponentPointTotal }}</span>
 				<span class="ml-4">TARGET: {{ opponentPointsToWin }}</span>
 			</h3>
@@ -26,13 +29,19 @@
 			class="d-flex justify-center align-center p-2 mx-auto"
 		>
 			Field
+			<v-btn @click="drawCard">
+				Draw Card
+			</v-btn>
 		</div>
 		<!-- Player Hand -->
 		<div
 			id="player-hand"
 			class="d-flex flex-column justify-end align-center px-2 pt-2 mx-auto"
 		>
-			<h3 id="player-score" class="mb-2">
+			<h3
+				id="player-score"
+				class="mb-2"
+			>
 				<span>POINTS: {{ playerPointTotal }}</span>
 				<span class="ml-4">TARGET: {{ playerPointsToWin }}</span>
 			</h3>
@@ -49,6 +58,12 @@
 				/>
 			</div>
 		</div>
+		<v-snackbar v-model="showSnack" :color="snackColor" content-class="d-flex justify-space-between">
+			{{snackMessage}}
+			<v-button icon>
+				<v-icon @click="clearSnackBar">mdi-close</v-icon>
+			</v-button>
+		</v-snackbar>
 	</div>
 </template>
 
@@ -58,6 +73,13 @@ export default {
 	name: 'GameView',
 	components: {
 		Card,
+	},
+	data() {
+		return {
+			showSnack: false,
+			snackMessage: '',
+			snackColor: 'error',
+		}
 	},
 	computed: {
 		////////////////////
@@ -89,6 +111,10 @@ export default {
 		},
 	},
 	methods: {
+		clearSnackBar() {
+			this.snackMessage = '';
+			this.showSnack = false;
+		},
 		/**
 		 * Returns number of kings a given player has
 		 * @param player is the player object
@@ -117,6 +143,20 @@ export default {
 				console.log(`Error: calculating pointsToWin and found invalid kingcount: ${kingCount}`);
 				return 21;
 			}
+		},
+		//////////////////
+		// Player Moves //
+		//////////////////
+		/**
+		 * Request to draw card
+		 */
+		drawCard() {
+			this.$store.dispatch('requestDrawCard')
+				.catch((err) => {
+					this.snackMessage = err;
+					this.snackColor = 'error';
+					this.showSnack = true;
+				});
 		},
 	},
 }
