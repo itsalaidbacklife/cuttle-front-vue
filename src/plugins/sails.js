@@ -26,6 +26,9 @@ io.socket.on('game', function(evData) {
 			store.commit('updateGame', evData.data.game);
 			router.push(`/game/${store.state.game.id}`);
 			break;
+		case 'draw':
+			store.commit('updateGame', evData.data.game);
+			break;
 		}
 		break;
 	default:
