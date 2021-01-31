@@ -24,11 +24,10 @@ export default {
 <style scoped lang="scss">
 .player-card {
   position: relative;
-  width: 10vh;
-  height: 100%;
+  width: 15vh;
+
   & img {
-    position: absolute;
-    bottom: 0;
+    margin-top: 16px;
 	  width: 100%;
   }
 }
