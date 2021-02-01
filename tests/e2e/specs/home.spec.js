@@ -20,7 +20,7 @@ describe('Home - Page Content', () => {
 
 	it('Displays headers', () => {
 		cy.contains('h1', 'Games');
-		cy.contains('h2', 'Create Game');
+		cy.contains('label', 'Game Name');
 	});
 	it('[Missing Feature] Displays logo', () => {
 		expect(true).to.eq(false, 'Empty Test');
