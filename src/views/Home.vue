@@ -15,7 +15,7 @@
 			<div id="game-list-card">
 				<v-row>
 					<v-col cols="9">
-						<v-row id="card-content-header">
+						<v-row id="card-content-header" class="mb-4">
 							<v-col cols="3">
 								<h1 id="home-card-title">
 									Games
@@ -23,29 +23,24 @@
 							</v-col>
 							<v-col cols="9">
 								<v-row id="add-new-game">
-									<v-col cols="3">
-										<h2>Create Game</h2>
-									</v-col>
-									<v-col cols="5">
-										<v-text-field
-											v-model="newGameName"
-											outlined
-											hide-details
-											:dense="$vuetify.breakpoint.mdAndDown ? true : false"
-											data-cy="create-game-input"
-											@keyup.enter="submitNewGame"
-										/>
-									</v-col>
-									<v-col cols="4">
-										<v-btn
-											color="primary"
-											:small="$vuetify.breakpoint.mdAndDown ? true : false"
-											data-cy="create-game-btn"
-											@click="submitNewGame"
-										>
-											Create New Game
-										</v-btn>
-									</v-col>
+									<v-text-field
+										v-model="newGameName"
+										outlined
+										label="Game Name"
+										hide-details
+										class="mr-4"
+										:dense="$vuetify.breakpoint.mdAndDown ? true : false"
+										data-cy="create-game-input"
+										@keyup.enter="submitNewGame"
+									/>
+									<v-btn
+										color="primary"
+										:small="$vuetify.breakpoint.mdAndDown ? true : false"
+										data-cy="create-game-btn"
+										@click="submitNewGame"
+									>
+										Create New Game
+									</v-btn>
 								</v-row>
 							</v-col>
 						</v-row>
