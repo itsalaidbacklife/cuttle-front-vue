@@ -25,7 +25,36 @@
 			id="field"
 			class="d-flex justify-center align-center p-2 mx-auto"
 		>
-			Field
+			<div id="field-left">
+				<div id="deck">
+					deck
+				</div>
+				<div id="scrap">
+					scrap
+				</div>
+			</div>
+			<div id="field-center">
+				<div id="opponent-field">
+					<div class="field-points">
+						points
+					</div>
+					<div class="field-effects">
+						effects
+					</div>
+				</div>
+				<v-divider light />
+				<div id="player-field">
+					<div class="field-points">
+						points
+					</div>
+					<div class="field-effects">
+						effects
+					</div>
+				</div>
+			</div>
+			<div id="field-right">
+				History
+			</div>
 		</div>
 		<!-- Player Hand -->
 		<div
@@ -149,16 +178,60 @@ export default {
 		transform: rotate(180deg);
 	}
 }
+#field{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 60vh;
+}
+#field-left {
+	flex-grow: 1;
+	#deck,#scrap{
+		height: 29vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+#field-center{
+	flex-grow: 4;
+}
+#field-right{
+	flex-grow: 1;
+}
+#field-left,#field-center {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+#opponent-field,#player-field{
+	width: 100%;
+	height: 29vh;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+.field-points {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	width: 50%
+}
+.field-effects {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	width: 50%
+}
 
 #player-hand-cards {
 	width: 100%;
 	height: 80%;
 	background: rgba(0, 0, 0, 0.46);
-}
-
-#field {
-	width: 100%;
-	height: 60vh
 }
 
 #player-hand {
