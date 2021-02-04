@@ -79,7 +79,9 @@
 				</div>
 			</div>
 			<div id="field-right">
-				History
+				<div id="history">
+					History
+				</div>
 			</div>
 		</div>
 		<!-- Player Hand -->
@@ -244,7 +246,7 @@ export default {
 		transform: rotate(180deg);
 	}
 }
-#field{
+#field {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
@@ -263,11 +265,22 @@ export default {
 		align-items: center;
 	}
 }
-#field-center{
+#field-center {
 	flex-grow: 6;
 }
-#field-right{
-	flex-grow: 1;
+#field-right {
+	flex-grow: 2;
+	height: 100%;
+
+	#history {
+		margin: 0 auto;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border: 1px solid #FFF;
+		width: 80%;
+		height: 80%;
+	}
 }
 #field-left,#field-center {
 	display: flex;
@@ -275,7 +288,7 @@ export default {
 	justify-content: center;
 	align-items: center;
 }
-#opponent-field,#player-field{
+#opponent-field,#player-field {
 	width: 100%;
 	height: 29vh;
 	display: flex;
@@ -308,8 +321,4 @@ export default {
 	width: 50%;
 	height: 20vh;
 }
-
-
-
-
 </style>
