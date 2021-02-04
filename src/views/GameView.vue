@@ -253,6 +253,10 @@ export default {
 #field-left {
 	flex-grow: 1;
 	#deck,#scrap{
+		width: 80%;
+		height: 80%;
+		margin: 10px;
+		border: 1px solid #FFF;
 		height: 29vh;
 		display: flex;
 		justify-content: center;
@@ -260,7 +264,7 @@ export default {
 	}
 }
 #field-center{
-	flex-grow: 4;
+	flex-grow: 6;
 }
 #field-right{
 	flex-grow: 1;
