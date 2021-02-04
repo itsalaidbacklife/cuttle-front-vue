@@ -33,10 +33,12 @@
 					id="deck"
 					@click="drawCard"
 				>
-					deck
+					<p>Deck</p>
+					<p>({{ deck.length }})</p>
 				</div>
 				<div id="scrap">
-					scrap
+					<p>Scrap</p>
+					<p>({{ scrap.length }})</p>
 				</div>
 			</div>
 			<div id="field-center">
@@ -166,6 +168,15 @@ export default {
 		opponentPointsToWin() {
 			return this.pointsToWin(this.kingCount(this.opponent));
 		},
+		////////////////////
+		// Deck and Scrap //
+		////////////////////
+		deck() {
+			return this.$store.state.game.deck
+		},
+		scrap() {
+			return this.$store.state.game.scrap
+		},
 	},
 	methods: {
 		clearSnackBar() {
@@ -254,12 +265,14 @@ export default {
 #field-left {
 	flex-grow: 1;
 	#deck,#scrap{
+		cursor: pointer;
 		width: 80%;
 		height: 80%;
 		margin: 10px;
 		border: 1px solid #FFF;
 		height: 29vh;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
