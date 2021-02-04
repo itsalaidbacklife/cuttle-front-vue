@@ -39,19 +39,39 @@
 			<div id="field-center">
 				<div id="opponent-field">
 					<div class="field-points">
-						points
+						<card 
+							v-for="card in opponent.points"
+							:key="card.id"
+							:suit="card.suit"
+							:rank="card.rank"
+						/>
 					</div>
 					<div class="field-effects">
-						effects
+						<card 
+							v-for="card in opponent.runes"
+							:key="card.id"
+							:suit="card.suit"
+							:rank="card.rank"
+						/>
 					</div>
 				</div>
 				<v-divider light />
 				<div id="player-field">
 					<div class="field-points">
-						points
+						<card 
+							v-for="card in player.points"
+							:key="card.id"
+							:suit="card.suit"
+							:rank="card.rank"
+						/>
 					</div>
 					<div class="field-effects">
-						effects
+						<card 
+							v-for="card in opponent.runes"
+							:key="card.id"
+							:suit="card.suit"
+							:rank="card.rank"
+						/>
 					</div>
 				</div>
 			</div>
