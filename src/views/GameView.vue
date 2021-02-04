@@ -29,7 +29,10 @@
 			class="d-flex justify-center align-center p-2 mx-auto"
 		>
 			<div id="field-left">
-				<div id="deck">
+				<div
+					id="deck"
+					@click="drawCard"
+				>
 					deck
 				</div>
 				<div id="scrap">
@@ -104,6 +107,18 @@
 				/>
 			</div>
 		</div>
+		<v-snackbar
+			v-model="showSnack"
+			:color="snackColor"
+			content-class="d-flex justify-space-between"
+		>
+			{{ snackMessage }}
+			<v-button icon>
+				<v-icon @click="clearSnackBar">
+					mdi-close
+				</v-icon>
+			</v-button>
+		</v-snackbar>
 	</div>
 </template>
 
@@ -113,6 +128,13 @@ export default {
 	name: 'GameView',
 	components: {
 		Card,
+	},
+	data() {
+		return {
+			showSnack: false,
+			snackMessage: '',
+			snackColor: 'error',
+		}
 	},
 	computed: {
 		////////////////////
@@ -144,6 +166,10 @@ export default {
 		},
 	},
 	methods: {
+		clearSnackBar() {
+			this.snackMessage = '';
+			this.showSnack = false;
+		},
 		/**
 		 * Returns number of kings a given player has
 		 * @param player is the player object
@@ -172,6 +198,20 @@ export default {
 				console.log(`Error: calculating pointsToWin and found invalid kingcount: ${kingCount}`);
 				return 21;
 			}
+		},
+		//////////////////
+		// Player Moves //
+		//////////////////
+		/**
+		 * Request to draw card
+		 */
+		drawCard() {
+			this.$store.dispatch('requestDrawCard')
+				.catch((err) => {
+					this.snackMessage = err;
+					this.snackColor = 'error';
+					this.showSnack = true;
+				});
 		},
 	},
 }

@@ -137,6 +137,19 @@ export default {
 					return reject(new Error('Error loading lobby data'));
 				});
 			});
-		}
+		},
+		async requestDrawCard(context) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/draw', function handleResponse(res, jwres) {
+					if (jwres.statusCode === 200) {
+						// Success (nothing to do)
+					}
+					else {
+						// Failure
+						return reject(jwres.body.message);
+					}
+				});
+			});
+		},
 	}
 }
