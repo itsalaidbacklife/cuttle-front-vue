@@ -99,7 +99,7 @@
 
 			<div
 				id="player-hand-cards"
-				class="d-flex justify-center align-end"
+				class="d-flex justify-center align-start"
 			> 
 				<card 
 					v-for="card in player.hand"
@@ -233,7 +233,6 @@ export default {
 }
 
 #opponent-hand-cards {
-	// width: 100%;
 	height: 80%;
 	background: rgba(0, 0, 0, 0.46);
 
@@ -250,7 +249,7 @@ export default {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
-	height: 60vh;
+	height: 50vh;
 }
 #field-left {
 	flex-grow: 1;
@@ -279,7 +278,7 @@ export default {
 		align-items: center;
 		border: 1px solid #FFF;
 		width: 80%;
-		height: 80%;
+		height: 100%;
 	}
 }
 #field-left,#field-center {
@@ -318,7 +317,12 @@ export default {
 }
 
 #player-hand {
-	width: 50%;
-	height: 20vh;
+	min-width: 50%;
+	height: 30vh;
+	& #player-hand-cards {
+		height: 80%;
+		background: rgba(0, 0, 0, 0.46);
+		overflow-y: hidden;
+	}
 }
 </style>

@@ -1,6 +1,8 @@
 <template>
-	<div class="mx-2 player-card">
-		<v-img :src="require(`../../assets/cards/card_${suit}_${rank}.png`)" />
+	<div class="mx-4 player-card">
+		<img
+			:src="require(`../../assets/cards/card_${suit}_${rank}.png`)"
+		>
 	</div>
 </template>
 
@@ -21,7 +23,12 @@ export default {
 </script>
 <style scoped lang="scss">
 .player-card {
-  width: 10vh;
-  height: 90%;
+  position: relative;
+  width: 15vh;
+
+  & img {
+    margin-top: 16px;
+	  width: 100%;
+  }
 }
 </style>
