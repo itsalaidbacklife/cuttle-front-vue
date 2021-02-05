@@ -81,8 +81,21 @@
 				</div>
 			</div>
 			<div id="field-right">
-				<div id="history">
+				<div 
+					v-if="selectedCard === null"
+					id="history"
+				>
 					History
+				</div>
+				<div 
+					v-if="selectedCard !== null"
+					id="card-preview"	
+				>
+					<card 
+						:suit="selectedCard.suit"
+						:rank="selectedCard.rank"
+					/>
+					<p>{{ selectedCard.ruleText }}</p>
 				</div>
 			</div>
 		</div>
@@ -184,6 +197,7 @@ export default {
 		// Interactions //
 		//////////////////
 		selectedCard() {
+			if(this.selectionIndex !== null) console.log(this.player.hand[this.selectionIndex])
 			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
 		}
 	},
@@ -279,8 +293,8 @@ export default {
 	height: 50vh;
 }
 #field-left {
-	flex-grow: 1;
-	#deck,#scrap{
+	width: 20%;
+	#deck, #scrap{
 		cursor: pointer;
 		width: 80%;
 		height: 80%;
@@ -294,19 +308,22 @@ export default {
 	}
 }
 #field-center {
-	flex-grow: 6;
+	width: 60%;
 }
 #field-right {
-	flex-grow: 2;
 	height: 100%;
+	width: 20%;
 
-	#history {
+	#history, #card-preview {
 		margin: 0 auto;
+		padding: 5px;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		border: 1px solid #FFF;
 		width: 80%;
+		max-width: 80%;
 		height: 100%;
 	}
 }
