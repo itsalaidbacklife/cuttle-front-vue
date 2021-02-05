@@ -104,10 +104,12 @@
 				class="d-flex justify-center align-start"
 			> 
 				<card 
-					v-for="card in player.hand"
+					v-for="(card, index) in player.hand"
 					:key="card.id"
 					:suit="card.suit"
 					:rank="card.rank"
+					:is-selected="selectedCard && card.id === selectedCard.id"
+					@click="selectCard(index)"
 				/>
 			</div>
 		</div>
@@ -138,6 +140,7 @@ export default {
 			showSnack: false,
 			snackMessage: '',
 			snackColor: 'error',
+			selectionIndex: null // when select a card set this value
 		}
 	},
 	computed: {
@@ -172,11 +175,17 @@ export default {
 		// Deck and Scrap //
 		////////////////////
 		deck() {
-			return this.$store.state.game.deck
+			return this.$store.state.game.deck;
 		},
 		scrap() {
-			return this.$store.state.game.scrap
+			return this.$store.state.game.scrap;
 		},
+		//////////////////
+		// Interactions //
+		//////////////////
+		selectedCard() {
+			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
+		}
 	},
 	methods: {
 		clearSnackBar() {
@@ -226,6 +235,13 @@ export default {
 					this.showSnack = true;
 				});
 		},
+		selectCard(index) {
+			if (index === this.selectionIndex){
+				this.selectionIndex = null
+			} else {
+				this.selectionIndex = index;
+			}
+		}
 	},
 }
 </script>
