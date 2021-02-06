@@ -145,10 +145,10 @@ export default {
 						// Success (nothing to do)
 						return resolve();
 					}
-					else {
-						// Failure
-						return reject(jwres.body.message);
-					}
+					
+					// Failure
+					return reject(jwres.body.message);
+					
 				});
 			});
 		},
@@ -169,6 +169,25 @@ export default {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/runes', {
 					cardId,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
+		/**
+		 * 
+		 * @param cardData @example {cardId: number, targetId: number}
+		 */
+		async requestScuttle(context, cardData) {
+			const { cardId, targetId } = cardData;
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/scuttle', {
+					cardId,
+					targetId,
+					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);

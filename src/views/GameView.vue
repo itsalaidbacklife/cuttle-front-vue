@@ -45,11 +45,12 @@
 				<div id="opponent-field">
 					<div class="field-points">
 						<card 
-							v-for="card in opponent.points"
+							v-for="(card, index) in opponent.points"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
 							:is-valid-target="validMoves.includes(card.id)"
+							@click="targetOpponentPointCard(index)"
 						/>
 					</div>
 					<div class="field-effects">
@@ -347,6 +348,39 @@ export default {
 						this.clearSelection();
 					});
 				break;
+			default:
+				return;
+			}
+		}, // End playToField()
+		targetOpponentPointCard(targetIndex) {
+			if (!this.selectedCard) return;
+
+			switch (this.selectedCard.rank) {
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 10:
+				this.$store.dispatch('requestScuttle', {
+					cardId: this.selectedCard.id,
+					targetId: this.opponent.points[targetIndex].id,
+				})
+					.then(this.clearSelection())
+					.catch((err) => {
+						this.snackMessage = err;
+						this.snackColor = 'error';
+						this.showSnack = true;
+						this.clearSelection();
+					});
+				return;
+			case 11:
+				return;
+			case 9:
+				return;
 			default:
 				return;
 			}
