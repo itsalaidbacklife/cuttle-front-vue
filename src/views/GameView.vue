@@ -336,6 +336,14 @@ export default {
 				break;
 			case 12:
 			case 13:
+				this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
+					.then(this.clearSelection())
+					.catch((err) => {
+						this.snackMessage = err;
+						this.snackColor = 'error';
+						this.showSnack = true;
+						this.clearSelection();
+					});
 				break;
 			default:
 				return;

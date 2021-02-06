@@ -28,6 +28,7 @@ io.socket.on('game', function(evData) {
 			break;
 		case 'draw':
 		case 'points':
+		case 'runes':
 			store.commit('updateGame', evData.data.game);
 			break;
 		}

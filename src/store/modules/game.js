@@ -143,6 +143,7 @@ export default {
 				io.socket.get('/game/draw', function handleResponse(res, jwres) {
 					if (jwres.statusCode === 200) {
 						// Success (nothing to do)
+						return resolve();
 					}
 					else {
 						// Failure
@@ -160,6 +161,19 @@ export default {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
 					}
+					return resolve();
+				});
+			});
+		},
+		async requestPlayFaceCard(context, cardId) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/runes', {
+					cardId,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
 				});
 			});
 		},
