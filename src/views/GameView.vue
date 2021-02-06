@@ -347,8 +347,10 @@ export default {
 }
 #field-left {
 	width: 20%;
-	#deck, #scrap{
+	& #deck {
 		cursor: pointer;
+	}
+	& #deck, & #scrap{
 		width: 80%;
 		height: 80%;
 		margin: 10px;
