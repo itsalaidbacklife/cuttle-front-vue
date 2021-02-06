@@ -49,6 +49,7 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:is-valid-target="validMoves.includes(card.id)"
 						/>
 					</div>
 					<div class="field-effects">
@@ -120,12 +121,13 @@
 				id="player-hand-cards"
 				class="d-flex justify-center align-start"
 			> 
-				<card 
+				<card
 					v-for="(card, index) in player.hand"
 					:key="card.id"
 					:suit="card.suit"
 					:rank="card.rank"
 					:is-selected="selectedCard && card.id === selectedCard.id"
+					class="mt-8"
 					@click="selectCard(index)"
 				/>
 			</div>
