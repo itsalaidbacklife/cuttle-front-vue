@@ -302,7 +302,8 @@ export default {
 			} else {
 				this.selectionIndex = index;
 			}
-		}
+		},
+
 	},
 }
 </script>
@@ -317,6 +318,7 @@ export default {
 
 .valid-move {
 	background-color: rgba(11, 241, 109, 0.4);
+	cursor: pointer;
 }
 
 #opponent-hand {
