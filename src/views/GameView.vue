@@ -211,7 +211,7 @@ export default {
 				})
 				.map((validTarget) => validTarget.id);			
 		},
-		validTargets() {
+		validMoves() {
 			const res = [];
 			if (!this.selectedCard) {
 				return res;
