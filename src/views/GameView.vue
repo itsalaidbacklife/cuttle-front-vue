@@ -199,6 +199,46 @@ export default {
 		selectedCard() {
 			if(this.selectionIndex !== null) console.log(this.player.hand[this.selectionIndex])
 			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
+		},
+		validScuttleIds() {
+			if (!this.selectedCard) return [];
+			return this.opponent.points
+				.filter((potentialTarget) => {
+					return this.selectedCard.rank > potentialTarget.rank || 
+						(
+							this.selectedCard.rank === potentialTarget.rank && 
+							this.selectedCard.suit > potentialTarget.suit
+						);
+				})
+				.map((validTarget) => validTarget.id);			
+		},
+		validTargets() {
+			const res = [];
+			if (!this.selectedCard) {
+				return res;
+			}
+			switch (this.selectedCard.rank) {
+			case 1:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+				break;
+			case 8:
+			case 10:
+				break;
+			case 9:
+				break;
+			case 2:
+				break;
+			case 11:
+				break;
+			case 12:
+			case 13:
+				break;
+			}
+			return res;
 		}
 	},
 	methods: {
