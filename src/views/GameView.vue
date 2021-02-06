@@ -133,7 +133,7 @@
 		<v-snackbar
 			v-model="showSnack"
 			:color="snackColor"
-			content-class="d-flex justify-space-between"
+			content-class="d-flex justify-space-between align-center"
 		>
 			{{ snackMessage }}
 			<v-btn icon>
