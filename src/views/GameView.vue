@@ -61,7 +61,11 @@
 					</div>
 				</div>
 				<v-divider light />
-				<div id="player-field" :class="{'valid-move': validMoves.includes('field')}">
+				<div
+					id="player-field"
+					:class="{'valid-move': validMoves.includes('field')}"
+					@click="playToField"
+				>
 					<div class="field-points">
 						<card 
 							v-for="card in player.points"
@@ -290,10 +294,12 @@ export default {
 		 */
 		drawCard() {
 			this.$store.dispatch('requestDrawCard')
+				.then(this.clearSelection())
 				.catch((err) => {
 					this.snackMessage = err;
 					this.snackColor = 'error';
 					this.showSnack = true;
+					this.clearSelection();
 				});
 		},
 		selectCard(index) {
@@ -303,7 +309,38 @@ export default {
 				this.selectionIndex = index;
 			}
 		},
+		clearSelection() {
+			this.selectionIndex = null;
+		},
+		playToField() {
+			if (!this.selectedCard) return;
 
+			switch (this.selectedCard.rank) {
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 9:
+			case 10:
+				this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
+					.then(this.clearSelection())
+					.catch((err) => {
+						this.snackMessage = err;
+						this.snackColor = 'error';
+						this.showSnack = true;
+						this.clearSelection();
+					});
+				break;
+			case 12:
+			case 13:
+				break;
+			default:
+				return;
+			}
+		},
 	},
 }
 </script>
@@ -329,7 +366,6 @@ export default {
 #opponent-hand-cards {
 	height: 80%;
 	background: rgba(0, 0, 0, 0.46);
-
 	& .opponent-card {
 		height: 90%;
 		width: 10vw;

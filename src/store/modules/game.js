@@ -151,5 +151,17 @@ export default {
 				});
 			});
 		},
+		async requestPlayPoints(context, cardId) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/points', {
+					cardId,
+				},
+				function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+				});
+			});
+		},
 	}
 }
