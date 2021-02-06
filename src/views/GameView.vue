@@ -355,6 +355,9 @@ export default {
 			case 13:
 				this.playFaceCard();
 				return;
+			case 8:
+				// Ask whether to play as points or face card
+				return;
 			default:
 				return;
 			}
@@ -377,6 +380,7 @@ export default {
 			case 11:
 				return;
 			case 9:
+				// Determine whether to scuttle or play as one-off
 				return;
 			default:
 				return;
