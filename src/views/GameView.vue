@@ -260,6 +260,22 @@ export default {
 			this.snackMessage = '';
 			this.showSnack = false;
 		},
+		handleError(err) {
+			this.snackMessage = err;
+			this.snackColor = 'error';
+			this.showSnack = true;
+			this.clearSelection();
+		},
+		clearSelection() {
+			this.selectionIndex = null;
+		},
+		selectCard(index) {
+			if (index === this.selectionIndex){
+				this.clearSelection();
+			} else {
+				this.selectionIndex = index;
+			}
+		},
 		/**
 		 * Returns number of kings a given player has
 		 * @param player is the player object
@@ -292,9 +308,6 @@ export default {
 		//////////////////
 		// Player Moves //
 		//////////////////
-		/**
-		 * Request to draw card
-		 */
 		drawCard() {
 			this.$store.dispatch('requestDrawCard')
 				.then(this.clearSelection())
@@ -305,15 +318,23 @@ export default {
 					this.clearSelection();
 				});
 		},
-		selectCard(index) {
-			if (index === this.selectionIndex){
-				this.selectionIndex = null
-			} else {
-				this.selectionIndex = index;
-			}
+		playPoints() {
+			this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
+				.then(this.clearSelection())
+				.catch(this.handleError);
 		},
-		clearSelection() {
-			this.selectionIndex = null;
+		playFaceCard() {
+			this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
+				.then(this.clearSelection())
+				.catch(this.handleError);
+		},
+		scuttle(targetIndex) {
+			this.$store.dispatch('requestScuttle', {
+				cardId: this.selectedCard.id,
+				targetId: this.opponent.points[targetIndex].id,
+			})
+				.then(this.clearSelection())
+				.catch(this.handleError);
 		},
 		playToField() {
 			if (!this.selectedCard) return;
@@ -328,26 +349,12 @@ export default {
 			case 7:
 			case 9:
 			case 10:
-				this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
-					.then(this.clearSelection())
-					.catch((err) => {
-						this.snackMessage = err;
-						this.snackColor = 'error';
-						this.showSnack = true;
-						this.clearSelection();
-					});
-				break;
+				this.playPoints();
+				return;
 			case 12:
 			case 13:
-				this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
-					.then(this.clearSelection())
-					.catch((err) => {
-						this.snackMessage = err;
-						this.snackColor = 'error';
-						this.showSnack = true;
-						this.clearSelection();
-					});
-				break;
+				this.playFaceCard();
+				return;
 			default:
 				return;
 			}
@@ -365,17 +372,7 @@ export default {
 			case 7:
 			case 8:
 			case 10:
-				this.$store.dispatch('requestScuttle', {
-					cardId: this.selectedCard.id,
-					targetId: this.opponent.points[targetIndex].id,
-				})
-					.then(this.clearSelection())
-					.catch((err) => {
-						this.snackMessage = err;
-						this.snackColor = 'error';
-						this.showSnack = true;
-						this.clearSelection();
-					});
+				this.scuttle(targetIndex);
 				return;
 			case 11:
 				return;
