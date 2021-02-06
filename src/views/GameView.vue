@@ -136,11 +136,11 @@
 			content-class="d-flex justify-space-between"
 		>
 			{{ snackMessage }}
-			<v-button icon>
+			<v-btn icon>
 				<v-icon @click="clearSnackBar">
 					mdi-close
 				</v-icon>
-			</v-button>
+			</v-btn>
 		</v-snackbar>
 	</div>
 </template>
