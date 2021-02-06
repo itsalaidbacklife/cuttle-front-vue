@@ -7,8 +7,7 @@
 		<div
 			v-if="isValidTarget"
 			class="selection-overlay"
-		>
-		</div>
+		/>
 		<img
 			:src="require(`../../assets/cards/card_${suit}_${rank}.png`)"
 		>
