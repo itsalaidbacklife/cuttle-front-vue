@@ -63,5 +63,6 @@ export default {
 	height: 100%;
 	z-index: 1;
 	background-color: rgba(11, 241, 109, 0.4);
+	cursor: pointer;
 }
 </style>
