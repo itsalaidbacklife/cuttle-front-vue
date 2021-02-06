@@ -197,7 +197,6 @@ export default {
 		// Interactions //
 		//////////////////
 		selectedCard() {
-			if(this.selectionIndex !== null) console.log(this.player.hand[this.selectionIndex])
 			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
 		},
 		validScuttleIds() {
