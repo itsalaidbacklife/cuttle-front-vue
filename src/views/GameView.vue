@@ -399,7 +399,8 @@ export default {
 }
 
 .valid-move {
-	background-color: rgba(11, 241, 109, 0.4);
+	background-color: var(--v-accent-lighten1);
+	opacity: .6;
 	cursor: pointer;
 }
 

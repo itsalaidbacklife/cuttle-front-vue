@@ -6,7 +6,7 @@
 	>
 		<div
 			v-if="isValidTarget"
-			class="selection-overlay"
+			class="target-overlay"
 		/>
 		<img
 			:src="require(`../../assets/cards/card_${suit}_${rank}.png`)"
@@ -51,17 +51,18 @@ export default {
 .selected {
 	transform: scale(1.1);
 	img {
-		border: 3px solid rgb(235, 255, 147);
+		border: 3px solid var(--v-accent-lighten1);
 		border-radius: 5px;
 	}
 }
-.selection-overlay {
+.target-overlay {
 	display: block;
 	position: absolute;
 	width: 100%;
 	height: 100%;
 	z-index: 1;
-	background-color: rgba(11, 241, 109, 0.4);
+	background-color: var(--v-accent-lighten1);
+	opacity: .6;
 	cursor: pointer;
 }
 </style>
