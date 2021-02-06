@@ -76,7 +76,7 @@
 					</div>
 					<div class="field-effects">
 						<card 
-							v-for="card in opponent.runes"
+							v-for="card in player.runes"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
