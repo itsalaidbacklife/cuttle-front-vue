@@ -61,7 +61,7 @@
 					</div>
 				</div>
 				<v-divider light />
-				<div id="player-field">
+				<div id="player-field" :class="{'valid-move': validMoves.includes('field')}">
 					<div class="field-points">
 						<card 
 							v-for="card in player.points"
@@ -212,10 +212,9 @@ export default {
 				.map((validTarget) => validTarget.id);			
 		},
 		validMoves() {
-			const res = [];
-			if (!this.selectedCard) {
-				return res;
-			}
+			let res = [];
+			if (!this.selectedCard) return res;
+
 			switch (this.selectedCard.rank) {
 			case 1:
 			case 3:
@@ -223,18 +222,27 @@ export default {
 			case 5:
 			case 6:
 			case 7:
+				res.push('field');
+				res = [...res, ...this.validScuttleIds];
 				break;
 			case 8:
 			case 10:
+				res.push('field');
+				res = [...res, ...this.validScuttleIds];
 				break;
 			case 9:
+				res.push('field');
+				res = [...res, ...this.validScuttleIds];
 				break;
 			case 2:
+				res.push('field');
+				res = [...res, ...this.validScuttleIds];
 				break;
 			case 11:
 				break;
 			case 12:
 			case 13:
+				res.push('field');
 				break;
 			}
 			return res;
@@ -305,6 +313,10 @@ export default {
 	width: 100%;
 	height: 100%;
 	background: linear-gradient(180deg, #6202EE 14.61%, #FD6222 100%), #C4C4C4;
+}
+
+.valid-move {
+	background-color: rgba(11, 241, 109, 0.4);
 }
 
 #opponent-hand {
