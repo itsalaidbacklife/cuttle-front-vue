@@ -26,10 +26,7 @@ describe('Game - Page Content', () => {
 		setup();
 	});
 
-	it.skip('Displays headers', () => {
-		expect(true).to.eq(false, 'Empty Test');
-	});
-	it('Loads fixture', () => {
+	it('Plays Points', () => {
 		
 		cy.loadGameFixture(
 			{
@@ -42,7 +39,20 @@ describe('Game - Page Content', () => {
 			}
 		)
 			.then(() => {
-				expect(true).to.eq(true, 'Empty Test');
+				// Test initial score
+				cy.get('#player-score')
+					.should('contain', 'POINTS: 10')
+					.should('contain', 'TARGET: 14');
+				// Play points	
+				cy.get('[data-cy=1-3]').click(); // ace of spades
+				cy.get('#player-field')
+					.should('have.class', 'valid-move')
+					.click()
+					.should('not.have.class', 'valid-move');
+				// Test updated score
+				cy.get('#player-score')
+					.should('contain', 'POINTS: 11')
+					.should('contain', 'TARGET: 14');
 			});
 	})
 })
