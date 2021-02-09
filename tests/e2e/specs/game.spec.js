@@ -24,9 +24,25 @@ function setup() {
 describe('Game - Page Content', () => {
 	beforeEach(() => {
 		setup();
-	})
+	});
 
-	it('Displays headers', () => {
+	it.skip('Displays headers', () => {
 		expect(true).to.eq(false, 'Empty Test');
+	});
+	it('Loads fixture', () => {
+		
+		cy.loadGameFixture(
+			{
+				p0Hand: [{suit: 3, rank: 1}, {suit: 0, rank: 1}],
+				p0Points: [{suit: 3, rank: 10}],
+				p0FaceCards: [{suit: 3, rank: 13}],
+				p1Hand: [{suit: 2, rank: 1}, {suit: 1, rank: 1}],
+				p1Points: [{suit: 2, rank: 10}],
+				p1FaceCards: [{suit: 2, rank: 13}],
+			}
+		)
+			.then(() => {
+				expect(true).to.eq(true, 'Empty Test');
+			});
 	})
 })
