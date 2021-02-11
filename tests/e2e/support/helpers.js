@@ -46,11 +46,30 @@ export function cardListsMatch(list1, list2) {
     }
 	return true;
 }
+/**
+ * @returns whether store's game state matches fixture specification
+ * @param fixture
+ * {
+ * 	 p0Hand: {suit: number, rank: number}[],
+ *   p0Points: {suit: number, rank: number}[],
+ *   p0FaceCards: {suit: number, rank: number}[],
+ *   p1Hand: {suit: number, rank: number}[],
+ *   p1Points: {suit: number, rank: number}[],
+ *   p1FaceCards: {suit: number, rank: number}[],
+ * }
+ */
 export function assertGameState(fixture) {
 	cy
 		.window()
 		.its('app.$store.state.game')
 		.then((game) => {
-			expect(cardListsMatch(game.players[0].hand, fixture.p0Hand)).to.eq(true, 'P0 Hand should match fixture');
+            // Player 0
+            expect(cardListsMatch(game.players[0].hand, fixture.p0Hand)).to.eq(true, 'P0 Hand should match fixture');
+            expect(cardListsMatch(game.players[0].points, fixture.p0Points)).to.eq(true, 'P0 Points should match fixture');
+            expect(cardListsMatch(game.players[0].runes, fixture.p0FaceCards)).to.eq(true, 'P0 Face Cards should match fixture');
+            // Player 1
+            expect(cardListsMatch(game.players[1].hand, fixture.p1Hand)).to.eq(true, 'P1 Hand should match fixture');
+            expect(cardListsMatch(game.players[1].points, fixture.p1Points)).to.eq(true, 'P1 Points should match fixture');
+            expect(cardListsMatch(game.players[1].runes, fixture.p1FaceCards)).to.eq(true, 'P1 Face Cards should match fixture');
 		});
 }
