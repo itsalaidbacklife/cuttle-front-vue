@@ -110,7 +110,7 @@ Cypress.Commands.add('vueRoute', (route) => {
 
 import { getCardIds } from './helpers';
 /**
- * @param gameSetup
+ * @param fixture
  * {
  * 	 p0Hand: {suit: number, rank: number}[],
  *   p0Points: {suit: number, rank: number}[],
@@ -120,17 +120,17 @@ import { getCardIds } from './helpers';
  *   p1FaceCards: {suit: number, rank: number}[],
  * }
  */
-Cypress.Commands.add('loadGameFixture', (gameSetup) => {
+Cypress.Commands.add('loadGameFixture', (fixture) => {
 	return cy
 		.window()
 		.its('app.$store.state.game')
 		.then((game) => {
-			const p0HandCardIds = getCardIds(game, gameSetup.p0Hand);
-			const p0PointCardIds = getCardIds(game, gameSetup.p0Points);
-			const p0FaceCardIds = getCardIds(game, gameSetup.p0FaceCards);
-			const p1HandCardIds = getCardIds(game, gameSetup.p1Hand);
-			const p1PointCardIds = getCardIds(game, gameSetup.p1Points);
-			const p1FaceCardIds = getCardIds(game, gameSetup.p1FaceCards);
+			const p0HandCardIds = getCardIds(game, fixture.p0Hand);
+			const p0PointCardIds = getCardIds(game, fixture.p0Points);
+			const p0FaceCardIds = getCardIds(game, fixture.p0FaceCards);
+			const p1HandCardIds = getCardIds(game, fixture.p1Hand);
+			const p1PointCardIds = getCardIds(game, fixture.p1Points);
+			const p1FaceCardIds = getCardIds(game, fixture.p1FaceCards);
 			io.socket.get('/game/loadFixture', {
 				p0Id: game.players[0].id,
 				p1Id: game.players[1].id,
