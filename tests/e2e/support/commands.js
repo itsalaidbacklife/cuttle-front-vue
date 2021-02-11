@@ -108,7 +108,7 @@ Cypress.Commands.add('vueRoute', (route) => {
 		.invoke('push', route);
 });
 
-
+import { getCardIds } from './helpers';
 /**
  * @param gameSetup
  * {
@@ -149,34 +149,8 @@ Cypress.Commands.add('loadGameFixture', (gameSetup) => {
 		});
 });
 
-function cardsMatch(card1, card2) {
-	return card1.rank === card2.rank && card1.suit === card2.suit;
-}
-/**
- * @param game: game obj from $store
- * @param suitAndRankList: {suit: number, rank: number}[]
- * @returns lit of ids of specified cards
- */
-function getCardIds(game, suitAndRankList) {
-	return suitAndRankList.map((card) => {
-		if (cardsMatch(card, game.topCard)) return game.topCard.id;
-		if (cardsMatch(card, game.secondCard)) return game.secondCard.id;
 
-		const foundInScrap = game.scrap.find((scrapCard) => cardsMatch(card, scrapCard));
-		if (foundInScrap) return foundInScrap.id;
-		
-		const foundInP0Hand = game.players[0].hand.find((handCard) => cardsMatch(card, handCard));
-		if (foundInP0Hand) return foundInP0Hand.id;
 
-		const foundInP1Hand = game.players[1].hand.find((handCard) => cardsMatch(card, handCard));
-		if (foundInP1Hand) return foundInP1Hand.id;
-
-		const foundInDeck = game.deck.find((deckCard) => cardsMatch(card, deckCard));
-		if (foundInDeck) return foundInDeck.id;
-		
-		throw new Error(`Could not find desired card ${card.rank} of ${card.suit} in deck, scrap, or either player's hand`);
-	});
-}
 /**
  * Did not work -- reequest.body was undefined on server
  */
