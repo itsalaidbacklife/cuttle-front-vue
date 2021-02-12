@@ -1,3 +1,4 @@
+import { getCardIds, hasValidSuitAndRank, cardsMatch } from './helpers';
 /**
  * Require & configure socket connection to server
  */
@@ -102,13 +103,38 @@ Cypress.Commands.add('leaveLobbyOpponent', (id) => {
 		});
 	});
 });
+/**
+ * @param card {suit: number, rank: number}
+ */
+Cypress.Commands.add('playPointsOpponent', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot play opponent points: Invalid card input');
+	}
+	return cy.window().its('app.$store.getters.opponent')
+		.then((opponent) => {
+			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
+			if (!foundCard) {
+				throw new Error(`Error playing opponents points: could not find ${card.rank} of ${card.suit} in opponent hand`)
+			}
+			const cardId = foundCard.id;
+			io.socket.get('/game/points', {
+				cardId
+			},
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode !== 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+	});
+});
 Cypress.Commands.add('vueRoute', (route) => {
 	cy.window()
 		.its('app.$router')
 		.invoke('push', route);
 });
 
-import { getCardIds } from './helpers';
+
 /**
  * @param fixture
  * {
