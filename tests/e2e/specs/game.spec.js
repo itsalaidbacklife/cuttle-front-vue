@@ -43,10 +43,6 @@ describe('Game - Basic Moves', () => {
 				p1FaceCards: [{suit: 2, rank: 13}],
 			}
 		)
-		// Test initial score
-		cy.get('#player-score')
-			.should('contain', 'POINTS: 10')
-			.should('contain', 'TARGET: 14');
 		// Play points (ace of spades)
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
 		cy.get('#player-field')
@@ -57,7 +53,7 @@ describe('Game - Basic Moves', () => {
 		cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
 		cy.get('#player-field')
 			.click();
-		// Error snackbar says its not your turn
+		// Test that Error snackbar says its not your turn
 		cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
 			.should('be.visible')
 			.should('have.class', 'error')
