@@ -29,6 +29,7 @@ describe('Game - Basic Moves', () => {
 	});
 
 	it('Plays Points', () => {
+		// Asserting 5 cards in players hand confirms game has loaded
 		cy.get('#player-hand-cards div')
 			.should('have.length', 5);
 		
