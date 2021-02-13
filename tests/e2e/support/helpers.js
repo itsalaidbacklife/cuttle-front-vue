@@ -165,12 +165,43 @@ function assertDomMatchesFixture(pNum, fixture) {
     else {
         throw new Error(`Cannot check whether DOM matches fixture for invalid pNum ${pNum}`);
     }
+    // Test scores
     cy.get(`#${p0Role}-score`)
         .should('contain', `POINTS: ${expectedP0Points}`)
         .should('contain', `TARGET: ${expectedP0PointsToWin}`);
     cy.get(`#${p1Role}-score`)
         .should('contain', `POINTS: ${expectedP1Points}`)
         .should('contain', `TARGET: ${expectedP1PointsToWin}`);
+    
+    // Test Point Cards
+    fixture.p0Points.forEach((card) => {
+        cy.get(`[data-${p0Role}-point-card=${card.rank}-${card.suit}]`);
+    });
+    fixture.p1Points.forEach((card) => {
+        cy.get(`[data-${p1Role}-point-card=${card.rank}-${card.suit}]`);
+    });
+    // Test Face Cards
+    fixture.p0FaceCards.forEach((card) => {
+        cy.get(`[data-${p0Role}-face-card=${card.rank}-${card.suit}]`);
+    });
+    fixture.p1FaceCards.forEach((card) => {
+        cy.get(`[data-${p1Role}-face-card=${card.rank}-${card.suit}]`);
+    });
+    // Test Hands
+    if (pNum === 0) {
+        fixture.p0Hand.forEach((card) => {
+            cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
+        });
+        cy.get('[data-opponent-hand-card]')
+            .should('have.length', fixture.p1Hand.length);
+    }
+    else if (pNum === 1) {
+        fixture.p1Hand.forEach((card) => {
+            cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
+        });
+        cy.get('[data-opponent-hand-card]')
+            .should('have.length', fixture.p0Hand.length);
+    }
 }
 
 /**
