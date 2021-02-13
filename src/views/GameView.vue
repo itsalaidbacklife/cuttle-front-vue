@@ -143,6 +143,7 @@
 			v-model="showSnack"
 			:color="snackColor"
 			content-class="d-flex justify-space-between align-center"
+			data-cy="game-snackbar"
 		>
 			{{ snackMessage }}
 			<v-btn icon>
