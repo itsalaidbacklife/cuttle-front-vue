@@ -19,8 +19,7 @@ function setup() {
 			cy.signupOpponent(opponentEmail, opponentPassword);
 			cy.subscribeOpponent(gameSummary.gameId);
 			cy.readyOpponent();
-		});
-    
+		});    
 }
 
 describe('Game - Basic Moves', () => {
@@ -28,21 +27,37 @@ describe('Game - Basic Moves', () => {
 		setup();
 	});
 
+	it('Draws from deck', () => {
+		// Asserting 5 cards in players hand confirms game has loaded
+		cy.get('#player-hand-cards div')
+			.should('have.length', 5);
+		// Draw card
+		cy.get('#deck').click();
+		// Player now have 6 cards in hand
+		cy.get('#player-hand-cards div')
+			.should('have.length', 6);
+		// Attempt to play out of turn
+		cy.get('#deck').click();
+		// Test that Error snackbar says its not your turn
+		cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
+			.should('be.visible')
+			.should('have.class', 'error')
+			.should('contain', "It's not your turn");
+	});
+
 	it('Plays Points', () => {
 		// Asserting 5 cards in players hand confirms game has loaded
 		cy.get('#player-hand-cards div')
 			.should('have.length', 5);
 		
-		cy.loadGameFixture(
-			{
-				p0Hand: [{suit: 3, rank: 1}, {suit: 0, rank: 1}],
-				p0Points: [{suit: 3, rank: 10}],
-				p0FaceCards: [{suit: 3, rank: 13}],
-				p1Hand: [{suit: 2, rank: 1}, {suit: 1, rank: 1}],
-				p1Points: [{suit: 2, rank: 10}],
-				p1FaceCards: [{suit: 2, rank: 13}],
-			}
-		)
+		cy.loadGameFixture({
+			p0Hand: [{suit: 3, rank: 1}, {suit: 0, rank: 1}],
+			p0Points: [{suit: 3, rank: 10}],
+			p0FaceCards: [{suit: 3, rank: 13}],
+			p1Hand: [{suit: 2, rank: 1}, {suit: 1, rank: 1}],
+			p1Points: [{suit: 2, rank: 10}],
+			p1FaceCards: [{suit: 2, rank: 13}],
+		});
 		// Play points (ace of spades)
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
 		cy.get('#player-field')
