@@ -53,6 +53,15 @@ describe('Game - Basic Moves', () => {
 					.should('have.class', 'valid-move')
 					.click()
 					.should('not.have.class', 'valid-move');
+				// Attempt to play out of turn
+				cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
+				cy.get('#player-field')
+					.click();
+				// Error snackbar says its not your turn
+				cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
+					.should('be.visible')
+					.should('have.class', 'error')
+					.should('contain', "It's not your turn");
 
 				assertGameState(
 					0,
