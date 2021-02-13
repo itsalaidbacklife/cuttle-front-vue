@@ -114,8 +114,67 @@ export function cardListsMatch(list1, list2) {
 	return true;
 }
 /**
- * @returns whether store's game state matches fixture specification
- * @param fixture
+ * @returns sum of ranks of list of card
+ * @param cards: {suit: number, rank: number}[]
+ */
+function sumRanks(cards) {
+    return cards.reduce((sum, nextCard) => sum + nextCard.rank, 0);
+}
+/**
+ * @returns count of kings in list
+ * @param cards: {suit: number, rank: number}[]
+ */
+function countKings(cards) {
+    return cards.reduce((kingCount, nextCard) => nextCard.rank === 13 ? kingCount + 1 : kingCount, 0);
+}
+/**
+ * 
+ * @param kingCount: number
+ */
+function pointsToWin(kingCount) {
+    switch (kingCount) {
+        case 0:
+            return 21;
+        case 1:
+            return 14;
+        case 2:
+            return 10;
+        case 3:
+            return 7;
+        case 4:
+            return 5;
+        default:
+            throw new Error(`Cannot count points to win for invalid kingcount: ${kingCount}`);
+    }
+}
+function assertDomMatchesFixture(pNum, fixture) {
+    const expectedP0Points = sumRanks(fixture.p0Points);
+    const expectedP0PointsToWin = pointsToWin(countKings(fixture.p0FaceCards));
+    const expectedP1Points = sumRanks(fixture.p1Points);
+    const expectedP1PointsToWin = pointsToWin(countKings(fixture.p1FaceCards));
+    let p0Role;
+    let p1Role;
+    if (pNum === 0) {
+        p0Role = 'player';
+        p1Role = 'opponent';
+    }
+    else if (pNum === 1) {
+        p0Role = 'opponent';
+        p1Role = 'player';
+    }
+    else {
+        throw new Error(`Cannot check whether DOM matches fixture for invalid pNum ${pNum}`);
+    }
+    cy.get(`#${p0Role}-score`)
+        .should('contain', `POINTS: ${expectedP0Points}`)
+        .should('contain', `TARGET: ${expectedP0PointsToWin}`);
+    cy.get(`#${p1Role}-score`)
+        .should('contain', `POINTS: ${expectedP1Points}`)
+        .should('contain', `TARGET: ${expectedP1PointsToWin}`);
+}
+
+/**
+ * @param fixture:
  * {
  * 	 p0Hand: {suit: number, rank: number}[],
  *   p0Points: {suit: number, rank: number}[],
@@ -125,18 +184,34 @@ export function cardListsMatch(list1, list2) {
  *   p1FaceCards: {suit: number, rank: number}[],
  * }
  */
-export function assertGameState(fixture) {
+function assertStoreMatchesFixture(fixture) {
 	cy
 		.window()
 		.its('app.$store.state.game')
 		.then((game) => {
             // Player 0
-            expect(cardListsMatch(game.players[0].hand, fixture.p0Hand)).to.eq(true, 'P0 Hand should match fixture');
-            expect(cardListsMatch(game.players[0].points, fixture.p0Points)).to.eq(true, 'P0 Points should match fixture');
-            expect(cardListsMatch(game.players[0].runes, fixture.p0FaceCards)).to.eq(true, 'P0 Face Cards should match fixture');
+            expect(cardListsMatch(game.players[0].hand, fixture.p0Hand)).to.eq(true, `P0 Hand should match fixture, but actual: ${printCardList(game.players[0].hand)} did not match ficture: ${printCardList(fixture.p0Hand)}`);
+            expect(cardListsMatch(game.players[0].points, fixture.p0Points)).to.eq(true, `P0 Points should match fixture, but actual: ${printCardList(game.players[0].points)} did not match ficture: ${printCardList(fixture.p0Points)}`);
+            expect(cardListsMatch(game.players[0].runes, fixture.p0FaceCards)).to.eq(true, `P0 Face Cards should match fixture, but actual: ${printCardList(game.players[0].runes)} did not match ficture: ${printCardList(fixture.p0FaceCards)}`);
             // Player 1
-            expect(cardListsMatch(game.players[1].hand, fixture.p1Hand)).to.eq(true, `P1 Hand should match fixture -- actual: ${printCardList(game.players[1].hand)} did not match ficture: ${printCardList(fixture.p1Hand)}`);
-            expect(cardListsMatch(game.players[1].points, fixture.p1Points)).to.eq(true, 'P1 Points should match fixture');
-            expect(cardListsMatch(game.players[1].runes, fixture.p1FaceCards)).to.eq(true, 'P1 Face Cards should match fixture');
+            expect(cardListsMatch(game.players[1].hand, fixture.p1Hand)).to.eq(true, `P1 Hand should match fixture, but actual: ${printCardList(game.players[1].hand)} did not match ficture: ${printCardList(fixture.p1Hand)}`);
+            expect(cardListsMatch(game.players[1].points, fixture.p1Points)).to.eq(true, `P1 Points should match fixture, but actual: ${printCardList(game.players[1].points)} did not match ficture: ${printCardList(fixture.p1Points)}`);
+            expect(cardListsMatch(game.players[1].runes, fixture.p1FaceCards)).to.eq(true, `P1 Face Cards should match fixture, but actual: ${printCardList(game.players[1].runes)} did not match ficture: ${printCardList(fixture.p1FaceCards)}`);
 		});
+}
+/**
+ * @param fixture:
+ * {
+ * 	 p0Hand: {suit: number, rank: number}[],
+ *   p0Points: {suit: number, rank: number}[],
+ *   p0FaceCards: {suit: number, rank: number}[],
+ *   p1Hand: {suit: number, rank: number}[],
+ *   p1Points: {suit: number, rank: number}[],
+ *   p1FaceCards: {suit: number, rank: number}[],
+ * }
+ * @param pNum: int [0, 1]
+ */
+export function assertGameState(pNum, fixture) {
+    assertDomMatchesFixture(pNum, fixture);
+    assertStoreMatchesFixture(fixture);
 }

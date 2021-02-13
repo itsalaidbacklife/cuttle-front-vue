@@ -23,12 +23,14 @@ function setup() {
     
 }
 
-describe('Game - Page Content', () => {
+describe('Game - Basic Moves', () => {
 	beforeEach(() => {
 		setup();
 	});
 
 	it('Plays Points', () => {
+		cy.get('#player-hand-cards div')
+			.should('have.length', 5);
 		
 		cy.loadGameFixture(
 			{
@@ -41,9 +43,6 @@ describe('Game - Page Content', () => {
 			}
 		)
 			.then(() => {
-				/////////
-				// DOM //
-				/////////
 				// Test initial score
 				cy.get('#player-score')
 					.should('contain', 'POINTS: 10')
@@ -54,13 +53,9 @@ describe('Game - Page Content', () => {
 					.should('have.class', 'valid-move')
 					.click()
 					.should('not.have.class', 'valid-move');
-				// Test updated score
-				cy.get('#player-score')
-					.should('contain', 'POINTS: 11')
-					.should('contain', 'TARGET: 14');
 
-				// Test store state
 				assertGameState(
+					0,
 					{
 						// ace of spades moved from p0Hand to p0Points
 						p0Hand: [{suit: 0, rank: 1}],
@@ -68,6 +63,22 @@ describe('Game - Page Content', () => {
 						p0FaceCards: [{suit: 3, rank: 13}],
 						p1Hand: [{suit: 2, rank: 1}, {suit: 1, rank: 1}],
 						p1Points: [{suit: 2, rank: 10}],
+						p1FaceCards: [{suit: 2, rank: 13}],
+					}
+				);
+
+				// Opponent plays the ace of diamonds
+				cy.playPointsOpponent({rank: 1, suit: 1});
+
+				assertGameState(
+					0,
+					{
+						// ace of diamonds moved from p1Hand to p1Points
+						p0Hand: [{suit: 0, rank: 1}],
+						p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
+						p0FaceCards: [{suit: 3, rank: 13}],
+						p1Hand: [{suit: 2, rank: 1}],
+						p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
 						p1FaceCards: [{suit: 2, rank: 13}],
 					}
 				);
