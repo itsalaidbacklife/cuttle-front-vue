@@ -48,7 +48,7 @@ describe('Game - Basic Moves', () => {
 					.should('contain', 'POINTS: 10')
 					.should('contain', 'TARGET: 14');
 				// Play points (ace of spades)
-				cy.get('[data-cy=1-3]').click(); // ace of spades
+				cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
 				cy.get('#player-field')
 					.should('have.class', 'valid-move')
 					.click()

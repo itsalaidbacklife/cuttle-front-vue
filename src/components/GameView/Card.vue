@@ -2,7 +2,6 @@
 	<div 
 		class="mx-4 player-card" 
 		:class="{'selected': isSelected}"
-		:data-cy="`${rank}-${suit}`"
 		@click="$emit('click')"
 	>
 		<div
