@@ -6,7 +6,7 @@ const opponentEmail = 'yourMortalEnemy@cia.gov';
 const opponentPassword = 'deviousTrickery';
 
 
-function setup() {
+function setupAsP0() {
 	cy.wipeDatabase();
 	cy.visit('/');
 	cy.signupPlayer(validEmail, validPassword);
@@ -19,23 +19,44 @@ function setup() {
 			cy.signupOpponent(opponentEmail, opponentPassword);
 			cy.subscribeOpponent(gameSummary.gameId);
 			cy.readyOpponent();
-		});    
+		});
 }
 
-describe('Game - Basic Moves', () => {
+function setupAsP1() {
+	cy.wipeDatabase();
+	cy.visit('/');
+	cy.signupPlayer(validEmail, validPassword);
+	cy.createGamePlayer('Test Game')
+		.then((gameSummary) => {
+			cy.signupOpponent(opponentEmail, opponentPassword);
+			cy.subscribeOpponent(gameSummary.gameId);
+			cy.readyOpponent();
+			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
+			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
+			cy.wrap(gameSummary).as('gameSummary');
+			cy.get('[data-cy=ready-button]').click();
+		});
+}
+
+describe('Game Basic Moves - P1 Perspective', () => {
 	beforeEach(() => {
-		setup();
+		setupAsP1();
 	});
 
-	it('Draws from deck', () => {
-		// Asserting 5 cards in players hand confirms game has loaded
-		cy.get('#player-hand-cards div')
-			.should('have.length', 5);
-		// Draw card
-		cy.get('#deck').click();
-		// Player now have 6 cards in hand
+	it.only('Draws from deck', () => {
+		// Asserting 6 cards in players hand confirms game has loaded
 		cy.get('#player-hand-cards div')
 			.should('have.length', 6);
+		// Opponent draws card
+		cy.drawCardOpponent();
+		// Opponent now has 6 cards in hand
+		cy.get('#opponent-hand-cards div')
+			.should('have.length', 6);
+		// Player draws card
+		cy.get('#deck').click();
+		// Player now have 7 cards in hand
+		cy.get('#player-hand-cards div')
+			.should('have.length', 7);
 		// Attempt to play out of turn
 		cy.get('#deck').click();
 		// Test that Error snackbar says its not your turn
@@ -43,6 +64,40 @@ describe('Game - Basic Moves', () => {
 			.should('be.visible')
 			.should('have.class', 'error')
 			.should('contain', "It's not your turn");
+		// Opponent draws 2nd time
+		cy.drawCardOpponent();
+		// Opponent now has 7 cards in hand
+		cy.get('#opponent-hand-cards div')
+			.should('have.length', 7);
+		// Player draws 2nd time
+		cy.get('#deck').click();
+		// Player now has 8 cards in hand
+		cy.get('#player-hand-cards div')
+			.should('have.length', 8);
+		// Opponent draws 3rd time (8 cards)
+		cy.drawCardOpponent();
+		// Opponent now has 8 cards in hand
+		cy.get('#opponent-hand-cards div')
+			.should('have.length', 8);
+		// Player attempts to draw with full hand
+		cy.get('#deck').click();
+		// Test that Error snackbar for hand limit
+		cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
+			.should('be.visible')
+			.should('have.class', 'error')
+			.should('contain', 'You are at the hand limit; you cannot draw.');
+		// Player still has 8 cards in hand
+		cy.get('#player-hand-cards div')
+			.should('have.length', 8);
+		// Opponent still has 8 cards in hand
+		cy.get('#opponent-hand-cards div')
+			.should('have.length', 8);
+	});
+});
+
+describe('Game Basic Moves - P0 Perspective', () => {
+	beforeEach(() => {
+		setupAsP0();
 	});
 
 	it('Plays Points', () => {
