@@ -103,6 +103,16 @@ Cypress.Commands.add('leaveLobbyOpponent', (id) => {
 		});
 	});
 });
+Cypress.Commands.add('drawCardOpponent', () => {
+	return new Promise((resolve, reject) => {
+		io.socket.get('/game/draw', function handleResponse(res, jwres) {
+			if (jwres.statusCode === 200) {
+				return resolve();
+			}
+			return reject(new Error('error requesting opponent draw card'));
+		});
+	});
+});
 /**
  * @param card {suit: number, rank: number}
  */
