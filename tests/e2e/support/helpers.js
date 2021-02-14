@@ -202,6 +202,11 @@ function assertDomMatchesFixture(pNum, fixture) {
         cy.get('[data-opponent-hand-card]')
             .should('have.length', fixture.p0Hand.length);
     }
+    // Test scrap (if provided)
+    if (fixture.scrap) {
+        cy.get('#scrap')
+            .contains(`(${fixture.scrap.length})`);
+    }
 }
 
 /**
@@ -228,6 +233,10 @@ function assertStoreMatchesFixture(fixture) {
             expect(cardListsMatch(game.players[1].hand, fixture.p1Hand)).to.eq(true, `P1 Hand should match fixture, but actual: ${printCardList(game.players[1].hand)} did not match ficture: ${printCardList(fixture.p1Hand)}`);
             expect(cardListsMatch(game.players[1].points, fixture.p1Points)).to.eq(true, `P1 Points should match fixture, but actual: ${printCardList(game.players[1].points)} did not match ficture: ${printCardList(fixture.p1Points)}`);
             expect(cardListsMatch(game.players[1].runes, fixture.p1FaceCards)).to.eq(true, `P1 Face Cards should match fixture, but actual: ${printCardList(game.players[1].runes)} did not match ficture: ${printCardList(fixture.p1FaceCards)}`);
+            // Scrap (if specified)
+            if (fixture.scrap) {
+                expect(cardListsMatch(game.scrap, fixture.scrap)).to.eq(true, `Scrap should match fixture, but actual ${printCardList(game.scrap)} did not match fixture: ${printCardList(fixture.scrap)}`);
+            }
 		});
 }
 /**
