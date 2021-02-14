@@ -19,6 +19,9 @@ function setupAsP0() {
 			cy.signupOpponent(opponentEmail, opponentPassword);
 			cy.subscribeOpponent(gameSummary.gameId);
 			cy.readyOpponent();
+			// Asserting 5 cards in players hand confirms game has loaded
+			cy.get('#player-hand-cards div')
+				.should('have.length', 5);
 		});
 }
 
@@ -35,6 +38,9 @@ function setupAsP1() {
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
 			cy.wrap(gameSummary).as('gameSummary');
 			cy.get('[data-cy=ready-button]').click();
+			// Asserting 6 cards in players hand confirms game has loaded
+			cy.get('#player-hand-cards div')
+				.should('have.length', 6);
 		});
 }
 
@@ -44,9 +50,6 @@ describe('Game Basic Moves - P1 Perspective', () => {
 	});
 
 	it('Draws from deck', () => {
-		// Asserting 6 cards in players hand confirms game has loaded
-		cy.get('#player-hand-cards div')
-			.should('have.length', 6);
 		// Opponent draws card
 		cy.drawCardOpponent();
 		// Opponent now has 6 cards in hand
@@ -93,6 +96,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		cy.get('#opponent-hand-cards div')
 			.should('have.length', 8);
 	});
+
 });
 
 describe('Game Basic Moves - P0 Perspective', () => {
@@ -100,11 +104,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		setupAsP0();
 	});
 
-	it('Plays Points', () => {
-		// Asserting 5 cards in players hand confirms game has loaded
-		cy.get('#player-hand-cards div')
-			.should('have.length', 5);
-		
+	it('Plays Points', () => {		
 		cy.loadGameFixture({
 			p0Hand: [{suit: 3, rank: 1}, {suit: 0, rank: 1}],
 			p0Points: [{suit: 3, rank: 10}],
