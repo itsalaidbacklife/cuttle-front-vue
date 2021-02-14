@@ -157,5 +157,31 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				p1FaceCards: [{suit: 2, rank: 13}],
 			}
 		);
-	})
+	});
+
+	it.only('Scuttles as P0', () => {
+		cy.loadGameFixture({
+			p0Hand: [{suit: 3, rank: 1}, {suit: 0, rank: 7}],
+			p0Points: [{suit: 2, rank: 10}],
+			p0FaceCards: [{suit: 3, rank: 13}],
+			p1Hand: [{suit: 3, rank: 10}, {suit: 1, rank: 1}],
+			p1Points: [{suit: 2, rank: 6}],
+			p1FaceCards: [{suit: 2, rank: 12}],
+		});
+		// Player scuttles 6 of diamonds with 7 of clubs
+		cy.get('[data-player-hand-card=7-0]').click(); // 7 of clubs
+		cy.get('[data-opponent-point-card]').click(); // 6 of diamonds
+		assertGameState(
+			0,
+			{
+				p0Hand: [{suit: 3, rank: 1}],
+				p0Points: [{suit: 2, rank: 10}],
+				p0FaceCards: [{suit: 3, rank: 13}],
+				p1Hand: [{suit: 3, rank: 10}, {suit: 1, rank: 1}],
+				p1Points: [],
+				p1FaceCards: [{suit: 2, rank: 12}],
+				scrap: [{suit: 0, rank: 7}, {suit: 2, rank: 6}],
+			}
+		);
+	});
 })
