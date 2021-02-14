@@ -43,7 +43,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		setupAsP1();
 	});
 
-	it.only('Draws from deck', () => {
+	it('Draws from deck', () => {
 		// Asserting 6 cards in players hand confirms game has loaded
 		cy.get('#player-hand-cards div')
 			.should('have.length', 6);
