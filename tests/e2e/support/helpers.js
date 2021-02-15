@@ -147,6 +147,16 @@ function pointsToWin(kingCount) {
             throw new Error(`Cannot count points to win for invalid kingcount: ${kingCount}`);
     }
 }
+export function assertSnackbarError(message) {
+    cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
+        .should('be.visible')
+        .should('have.class', 'error')
+        .should('contain', message)
+        .get('[data-cy=close-snackbar]')
+            .click();
+
+}
+
 function assertDomMatchesFixture(pNum, fixture) {
     const expectedP0Points = sumRanks(fixture.p0Points);
     const expectedP0PointsToWin = pointsToWin(countKings(fixture.p0FaceCards));
