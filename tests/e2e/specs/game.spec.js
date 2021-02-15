@@ -159,7 +159,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it.only('Scuttles as P0', () => {
+	it('Scuttles as P0', () => {
 		cy.loadGameFixture({
 			p0Hand: [{suit: 3, rank: 1}, {suit: 0, rank: 7}],
 			p0Points: [{suit: 2, rank: 10}],
@@ -181,6 +181,20 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				p1Points: [],
 				p1FaceCards: [{suit: 2, rank: 12}],
 				scrap: [{suit: 0, rank: 7}, {suit: 2, rank: 6}],
+			}
+		);
+		// Opponent scuttles 10 of hearts with 10 of spades
+		cy.scuttleOpponent({rank: 10, suit: 3}, {rank: 10, suit: 2});
+		assertGameState(
+			0,
+			{
+				p0Hand: [{suit: 3, rank: 1}],
+				p0Points: [],
+				p0FaceCards: [{suit: 3, rank: 13}],
+				p1Hand: [{suit: 1, rank: 1}],
+				p1Points: [],
+				p1FaceCards: [{suit: 2, rank: 12}],
+				scrap: [{suit: 0, rank: 7}, {suit: 2, rank: 6}, {suit: 2, rank: 10}, {suit: 3, rank: 10}],
 			}
 		);
 	});
