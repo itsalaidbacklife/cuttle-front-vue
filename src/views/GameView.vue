@@ -13,6 +13,7 @@
 					v-for="card in opponent.hand"
 					:key="card.id"
 					class="opponent-card mx-2"
+					data-opponent-hand-card
 				/>
 			</div>
 			<h3
@@ -50,6 +51,7 @@
 							:suit="card.suit"
 							:rank="card.rank"
 							:is-valid-target="validMoves.includes(card.id)"
+							:data-opponent-point-card="`${card.rank}-${card.suit}`"
 							@click="targetOpponentPointCard(index)"
 						/>
 					</div>
@@ -59,6 +61,7 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:data-opponent-face-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
 				</div>
@@ -74,6 +77,7 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:data-player-point-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
 					<div class="field-effects">
@@ -82,6 +86,7 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:data-player-face-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
 				</div>
@@ -129,6 +134,7 @@
 					:rank="card.rank"
 					:is-selected="selectedCard && card.id === selectedCard.id"
 					class="mt-8"
+					:data-player-hand-card="`${card.rank}-${card.suit}`"
 					@click="selectCard(index)"
 				/>
 			</div>
@@ -137,10 +143,11 @@
 			v-model="showSnack"
 			:color="snackColor"
 			content-class="d-flex justify-space-between align-center"
+			data-cy="game-snackbar"
 		>
 			{{ snackMessage }}
 			<v-btn icon>
-				<v-icon @click="clearSnackBar">
+				<v-icon data-cy="close-snackbar" @click="clearSnackBar">
 					mdi-close
 				</v-icon>
 			</v-btn>

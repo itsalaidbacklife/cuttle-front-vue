@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
 import GameListItem from '@/components/GameListItem.vue';
 
 Vue.use(Vuetify);
@@ -8,7 +8,8 @@ Vue.use(Vuetify);
 const app = document.createElement('div');
 app.setAttribute('data-app', true);
 document.body.appendChild(app);
-
+const localVue = createLocalVue();
+let vuetify;
 let wrapper;
 const validProps = {
 	name: 'Test Game',
@@ -19,7 +20,9 @@ const validProps = {
 	numPlayers: 0,
 };
 describe('Prop config', () => {
+	vuetify = new Vuetify();
 	wrapper = shallowMount(GameListItem, {
+		vuetify,
 		propsData: validProps
 	});
 	const {name, p0ready, p1ready} = wrapper.vm.$options.props;
