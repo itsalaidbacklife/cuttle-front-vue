@@ -1,3 +1,4 @@
+import { getCardIds, hasValidSuitAndRank, cardsMatch } from './helpers';
 /**
  * Require & configure socket connection to server
  */
@@ -102,6 +103,75 @@ Cypress.Commands.add('leaveLobbyOpponent', (id) => {
 		});
 	});
 });
+Cypress.Commands.add('drawCardOpponent', () => {
+	return new Promise((resolve, reject) => {
+		io.socket.get('/game/draw', function handleResponse(res, jwres) {
+			if (jwres.statusCode === 200) {
+				return resolve();
+			}
+			return reject(new Error('error requesting opponent draw card'));
+		});
+	});
+});
+/**
+ * @param card {suit: number, rank: number}
+ */
+Cypress.Commands.add('playPointsOpponent', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot play opponent points: Invalid card input');
+	}
+	return cy.window().its('app.$store.getters.opponent')
+		.then((opponent) => {
+			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
+			if (!foundCard) {
+				throw new Error(`Error playing opponents points: could not find ${card.rank} of ${card.suit} in opponent hand`)
+			}
+			const cardId = foundCard.id;
+			io.socket.get('/game/points', {
+				cardId
+			},
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode !== 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+	});
+});
+/**
+ * @param card {suit: number, rank: number}
+ * @param target {suit: number, rank: number}
+ */
+Cypress.Commands.add('scuttleOpponent', (card, target) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot scuttle as opponent: Invalid card input');
+	}
+	return cy
+		.window()
+		.its('app.$store.state.game')
+		.then((game) => {
+			const player = game.players[game.myPNum];
+			const opponent = game.players[(game.myPNum + 1) % 2];
+			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
+			const foundTarget = player.points.find((pointCard) => cardsMatch(target, pointCard));
+			if (!foundCard) {
+				throw new Error(`Error scuttling as opponent: could not find ${card.rank} of ${card.suit} in opponent hand`);
+			}
+			if (!foundTarget) {
+				throw new Error(`Error scuttling as opponent: could not find ${target.rank} of ${target.suit} in player's points`);
+			}
+			io.socket.get('/game/scuttle', {
+				opId: player.id,
+				cardId: foundCard.id,
+				targetId: foundTarget.id,
+			}, function handleResponse(res, jwres) {
+				if (!jwres.statusCode === 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
 Cypress.Commands.add('vueRoute', (route) => {
 	cy.window()
 		.its('app.$router')
@@ -110,7 +180,7 @@ Cypress.Commands.add('vueRoute', (route) => {
 
 
 /**
- * @param gameSetup
+ * @param fixture
  * {
  * 	 p0Hand: {suit: number, rank: number}[],
  *   p0Points: {suit: number, rank: number}[],
@@ -120,17 +190,17 @@ Cypress.Commands.add('vueRoute', (route) => {
  *   p1FaceCards: {suit: number, rank: number}[],
  * }
  */
-Cypress.Commands.add('loadGameFixture', (gameSetup) => {
+Cypress.Commands.add('loadGameFixture', (fixture) => {
 	return cy
 		.window()
 		.its('app.$store.state.game')
 		.then((game) => {
-			const p0HandCardIds = getCardIds(game, gameSetup.p0Hand);
-			const p0PointCardIds = getCardIds(game, gameSetup.p0Points);
-			const p0FaceCardIds = getCardIds(game, gameSetup.p0FaceCards);
-			const p1HandCardIds = getCardIds(game, gameSetup.p1Hand);
-			const p1PointCardIds = getCardIds(game, gameSetup.p1Points);
-			const p1FaceCardIds = getCardIds(game, gameSetup.p1FaceCards);
+			const p0HandCardIds = getCardIds(game, fixture.p0Hand);
+			const p0PointCardIds = getCardIds(game, fixture.p0Points);
+			const p0FaceCardIds = getCardIds(game, fixture.p0FaceCards);
+			const p1HandCardIds = getCardIds(game, fixture.p1Hand);
+			const p1PointCardIds = getCardIds(game, fixture.p1Points);
+			const p1FaceCardIds = getCardIds(game, fixture.p1FaceCards);
 			io.socket.get('/game/loadFixture', {
 				p0Id: game.players[0].id,
 				p1Id: game.players[1].id,
@@ -149,34 +219,8 @@ Cypress.Commands.add('loadGameFixture', (gameSetup) => {
 		});
 });
 
-function cardsMatch(card1, card2) {
-	return card1.rank === card2.rank && card1.suit === card2.suit;
-}
-/**
- * @param game: game obj from $store
- * @param suitAndRankList: {suit: number, rank: number}[]
- * @returns lit of ids of specified cards
- */
-function getCardIds(game, suitAndRankList) {
-	return suitAndRankList.map((card) => {
-		if (cardsMatch(card, game.topCard)) return game.topCard.id;
-		if (cardsMatch(card, game.secondCard)) return game.secondCard.id;
 
-		const foundInScrap = game.scrap.find((scrapCard) => cardsMatch(card, scrapCard));
-		if (foundInScrap) return foundInScrap.id;
-		
-		const foundInP0Hand = game.players[0].hand.find((handCard) => cardsMatch(card, handCard));
-		if (foundInP0Hand) return foundInP0Hand.id;
 
-		const foundInP1Hand = game.players[1].hand.find((handCard) => cardsMatch(card, handCard));
-		if (foundInP1Hand) return foundInP1Hand.id;
-
-		const foundInDeck = game.deck.find((deckCard) => cardsMatch(card, deckCard));
-		if (foundInDeck) return foundInDeck.id;
-		
-		throw new Error(`Could not find desired card ${card.rank} of ${card.suit} in deck, scrap, or either player's hand`);
-	});
-}
 /**
  * Did not work -- reequest.body was undefined on server
  */
