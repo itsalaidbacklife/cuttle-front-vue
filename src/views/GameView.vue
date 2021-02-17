@@ -120,7 +120,12 @@
 				class="mb-2"
 			>
 				<span>POINTS: {{ playerPointTotal }}</span>
-				<span class="ml-4">TARGET: {{ playerPointsToWin }}</span>
+				<span 
+					class="ml-4"
+					data-cy="player-points-to-win"
+				>
+					TARGET: {{ playerPointsToWin }}
+				</span>
 			</h3>
 
 			<div
