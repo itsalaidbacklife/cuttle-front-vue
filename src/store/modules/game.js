@@ -50,6 +50,7 @@ export default {
 			if (Object.hasOwnProperty.call(newGame, 'id')) state.id = newGame.id;
 			if (Object.hasOwnProperty.call(newGame, 'chat')) state.chat = _.cloneDeep(newGame.chat);
 			if (Object.hasOwnProperty.call(newGame, 'deck')) state.deck = _.cloneDeep(newGame.deck);
+			if (Object.hasOwnProperty.call(newGame, 'scrap')) state.scrap = _.cloneDeep(newGame.scrap);
 			if (Object.hasOwnProperty.call(newGame, 'log')) state.log = _.cloneDeep(newGame.log);
 			if (Object.hasOwnProperty.call(newGame, 'name')) state.name = newGame.name;
 			if (Object.hasOwnProperty.call(newGame, 'p0Ready')) state.p0Ready = newGame.p0Ready;
@@ -137,6 +138,64 @@ export default {
 					return reject(new Error('Error loading lobby data'));
 				});
 			});
-		}
+		},
+		async requestDrawCard(context) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/draw', function handleResponse(res, jwres) {
+					if (jwres.statusCode === 200) {
+						// Success (nothing to do)
+						return resolve();
+					}
+					
+					// Failure
+					return reject(jwres.body.message);
+					
+				});
+			});
+		},
+		async requestPlayPoints(context, cardId) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/points', {
+					cardId,
+				},
+				function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
+		async requestPlayFaceCard(context, cardId) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/runes', {
+					cardId,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
+		/**
+		 * 
+		 * @param cardData @example {cardId: number, targetId: number}
+		 */
+		async requestScuttle(context, cardData) {
+			const { cardId, targetId } = cardData;
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/scuttle', {
+					cardId,
+					targetId,
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
 	}
 }

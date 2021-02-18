@@ -27,7 +27,7 @@ describe('Logging In', () => {
 	beforeEach(() => {
 		cy.wipeDatabase();
 		cy.visit('#/login');
-		cy.signup(validEmail, validPassword);
+		cy.signupOpponent(validEmail, validPassword);
 	});
 
 	/**
@@ -119,7 +119,7 @@ describe('Signing Up', () => {
 		assertFailedAuth();
 	});
 	it('Rejects signup if username already exists', () => {
-		cy.signup(validEmail, validPassword);
+		cy.signupOpponent(validEmail, validPassword);
 		cy.get('[data-cy=username]').type(validEmail);
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
