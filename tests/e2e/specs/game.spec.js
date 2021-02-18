@@ -208,7 +208,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			p0Hand: [{suit: 3, rank: 13}, {suit: 0, rank: 13}],
 			p0Points: [{suit: 2, rank: 10}],
 			p0FaceCards: [],
-			p1Hand: [ {suit: 2, rank: 6}],
+			p1Hand: [{suit: 2, rank: 6}],
 			p1Points: [{suit: 1, rank: 1}],
 			p1FaceCards: [],
 		});
