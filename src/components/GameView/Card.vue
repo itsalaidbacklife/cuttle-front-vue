@@ -4,6 +4,10 @@
 		:class="{'selected': isSelected}"
 		@click="$emit('click')"
 	>
+		<div
+			v-if="isValidTarget"
+			class="target-overlay"
+		/>
 		<img
 			:src="require(`../../assets/cards/card_${suit}_${rank}.png`)"
 		>
@@ -16,17 +20,21 @@ export default {
 	props: {
 		suit: {
 			type: Number,
-			required: true
+			required: true,
 		},
 		rank: {
 			type: Number,
-			required: true
+			required: true,
 		},
 		isSelected:{
 			type: Boolean,
-			default: false
+			default: false,
 		},
-	}
+		isValidTarget: {
+			type: Boolean,
+			default: false,
+		},
+	},
 }
 </script>
 <style scoped lang="scss">
@@ -35,16 +43,26 @@ export default {
   width: 15vh;
 
   & img {
-    margin-top: 16px;
-	  width: 100%;
+	width: 100%;
+	display: block;
+	position: relative;
   }
 }
 .selected {
 	transform: scale(1.1);
 	img {
-		border: 3px solid rgb(235, 255, 147);
+		border: 3px solid var(--v-accent-lighten1);
 		border-radius: 5px;
 	}
-	
+}
+.target-overlay {
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: var(--v-accent-lighten1);
+	opacity: .6;
+	cursor: pointer;
 }
 </style>

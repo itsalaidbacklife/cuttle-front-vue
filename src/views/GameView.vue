@@ -13,6 +13,7 @@
 					v-for="card in opponent.hand"
 					:key="card.id"
 					class="opponent-card mx-2"
+					data-opponent-hand-card
 				/>
 			</div>
 			<h3
@@ -45,10 +46,13 @@
 				<div id="opponent-field">
 					<div class="field-points">
 						<card 
-							v-for="card in opponent.points"
+							v-for="(card, index) in opponent.points"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:is-valid-target="validMoves.includes(card.id)"
+							:data-opponent-point-card="`${card.rank}-${card.suit}`"
+							@click="targetOpponentPointCard(index)"
 						/>
 					</div>
 					<div class="field-effects">
@@ -57,25 +61,32 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:data-opponent-face-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
 				</div>
 				<v-divider light />
-				<div id="player-field">
+				<div
+					id="player-field"
+					:class="{'valid-move': validMoves.includes('field')}"
+					@click="playToField"
+				>
 					<div class="field-points">
 						<card 
 							v-for="card in player.points"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:data-player-point-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
 					<div class="field-effects">
 						<card 
-							v-for="card in opponent.runes"
+							v-for="card in player.runes"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:data-player-face-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
 				</div>
@@ -116,12 +127,14 @@
 				id="player-hand-cards"
 				class="d-flex justify-center align-start"
 			> 
-				<card 
+				<card
 					v-for="(card, index) in player.hand"
 					:key="card.id"
 					:suit="card.suit"
 					:rank="card.rank"
 					:is-selected="selectedCard && card.id === selectedCard.id"
+					class="mt-8"
+					:data-player-hand-card="`${card.rank}-${card.suit}`"
 					@click="selectCard(index)"
 				/>
 			</div>
@@ -129,14 +142,18 @@
 		<v-snackbar
 			v-model="showSnack"
 			:color="snackColor"
-			content-class="d-flex justify-space-between"
+			content-class="d-flex justify-space-between align-center"
+			data-cy="game-snackbar"
 		>
 			{{ snackMessage }}
-			<v-button icon>
-				<v-icon @click="clearSnackBar">
+			<v-btn icon>
+				<v-icon
+					data-cy="close-snackbar"
+					@click="clearSnackBar"
+				>
 					mdi-close
 				</v-icon>
-			</v-button>
+			</v-btn>
 		</v-snackbar>
 	</div>
 </template>
@@ -197,14 +214,77 @@ export default {
 		// Interactions //
 		//////////////////
 		selectedCard() {
-			if(this.selectionIndex !== null) console.log(this.player.hand[this.selectionIndex])
 			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
+		},
+		validScuttleIds() {
+			if (!this.selectedCard) return [];
+			return this.opponent.points
+				.filter((potentialTarget) => {
+					return this.selectedCard.rank > potentialTarget.rank || 
+						(
+							this.selectedCard.rank === potentialTarget.rank && 
+							this.selectedCard.suit > potentialTarget.suit
+						);
+				})
+				.map((validTarget) => validTarget.id);			
+		},
+		validMoves() {
+			let res = [];
+			if (!this.selectedCard) return res;
+
+			switch (this.selectedCard.rank) {
+			case 1:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+				res.push('field');
+				res = [...res, ...this.validScuttleIds];
+				break;
+			case 8:
+			case 10:
+				res.push('field');
+				res = [...res, ...this.validScuttleIds];
+				break;
+			case 9:
+				res.push('field');
+				res = [...res, ...this.validScuttleIds];
+				break;
+			case 2:
+				res.push('field');
+				res = [...res, ...this.validScuttleIds];
+				break;
+			case 11:
+				break;
+			case 12:
+			case 13:
+				res.push('field');
+				break;
+			}
+			return res;
 		}
 	},
 	methods: {
 		clearSnackBar() {
 			this.snackMessage = '';
 			this.showSnack = false;
+		},
+		handleError(err) {
+			this.snackMessage = err;
+			this.snackColor = 'error';
+			this.showSnack = true;
+			this.clearSelection();
+		},
+		clearSelection() {
+			this.selectionIndex = null;
+		},
+		selectCard(index) {
+			if (index === this.selectionIndex){
+				this.clearSelection();
+			} else {
+				this.selectionIndex = index;
+			}
 		},
 		/**
 		 * Returns number of kings a given player has
@@ -238,24 +318,84 @@ export default {
 		//////////////////
 		// Player Moves //
 		//////////////////
-		/**
-		 * Request to draw card
-		 */
 		drawCard() {
 			this.$store.dispatch('requestDrawCard')
+				.then(this.clearSelection())
 				.catch((err) => {
 					this.snackMessage = err;
 					this.snackColor = 'error';
 					this.showSnack = true;
+					this.clearSelection();
 				});
 		},
-		selectCard(index) {
-			if (index === this.selectionIndex){
-				this.selectionIndex = null
-			} else {
-				this.selectionIndex = index;
+		playPoints() {
+			this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
+				.then(this.clearSelection())
+				.catch(this.handleError);
+		},
+		playFaceCard() {
+			this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
+				.then(this.clearSelection())
+				.catch(this.handleError);
+		},
+		scuttle(targetIndex) {
+			this.$store.dispatch('requestScuttle', {
+				cardId: this.selectedCard.id,
+				targetId: this.opponent.points[targetIndex].id,
+			})
+				.then(this.clearSelection())
+				.catch(this.handleError);
+		},
+		playToField() {
+			if (!this.selectedCard) return;
+
+			switch (this.selectedCard.rank) {
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 9:
+			case 10:
+				this.playPoints();
+				return;
+			case 12:
+			case 13:
+				this.playFaceCard();
+				return;
+			case 8:
+				// Ask whether to play as points or face card
+				return;
+			default:
+				return;
 			}
-		}
+		}, // End playToField()
+		targetOpponentPointCard(targetIndex) {
+			if (!this.selectedCard) return;
+
+			switch (this.selectedCard.rank) {
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 10:
+				this.scuttle(targetIndex);
+				return;
+			case 11:
+				return;
+			case 9:
+				// Determine whether to scuttle or play as one-off
+				return;
+			default:
+				return;
+			}
+		},
 	},
 }
 </script>
@@ -268,6 +408,12 @@ export default {
 	background: linear-gradient(180deg, #6202EE 14.61%, #FD6222 100%), #C4C4C4;
 }
 
+.valid-move {
+	background-color: var(--v-accent-lighten1);
+	opacity: .6;
+	cursor: pointer;
+}
+
 #opponent-hand {
 	min-width: 50%;
 	height: 20vh;
@@ -276,7 +422,6 @@ export default {
 #opponent-hand-cards {
 	height: 80%;
 	background: rgba(0, 0, 0, 0.46);
-
 	& .opponent-card {
 		height: 90%;
 		width: 10vw;
@@ -294,8 +439,10 @@ export default {
 }
 #field-left {
 	width: 20%;
-	#deck, #scrap{
+	& #deck {
 		cursor: pointer;
+	}
+	& #deck, & #scrap{
 		width: 80%;
 		height: 80%;
 		margin: 10px;
