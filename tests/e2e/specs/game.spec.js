@@ -269,4 +269,33 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			}
 		);
 	});
+	
+	it('Plays Queens', () => {
+		cy.loadGameFixture({
+			p0Hand: [{suit: 3, rank: 12}, {suit: 0, rank: 13}],
+			p0Points: [{suit: 2, rank: 10}],
+			p0FaceCards: [],
+			p1Hand: [{suit: 2, rank: 6}],
+			p1Points: [{suit: 1, rank: 1}],
+			p1FaceCards: [],
+		});
+		// Player plays queen
+		cy.get('[data-player-hand-card=12-3]', { timeout: 10000 }).click(); // queen of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [{suit: 0, rank: 13}],
+				p0Points: [{suit: 2, rank: 10}],
+				p0FaceCards: [{suit: 3, rank: 12}],
+				p1Hand: [{suit: 2, rank: 6}],
+				p1Points: [{suit: 1, rank: 1}],
+				p1FaceCards: [],
+				scrap: [],
+			}
+		);
+	});
 })
