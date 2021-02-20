@@ -217,18 +217,22 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		cy.get('#scrap')
 			.should('have.class', 'valid-move')
 			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
 		// Opponent does not counter (resolves stack)
 		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('not.be.visible');
 		assertGameState(
 			0,
 			{
-				p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 5}],
+				p0Hand: [{suit: 3, rank: 4}],
 				p0Points: [],
 				p0FaceCards: [{suit: 3, rank: 13}],
 				p1Hand: [{suit: 2, rank: 1}],
 				p1Points: [],
 				p1FaceCards: [{suit: 2, rank: 13}],
-				scrap: [{suit: 3, rank: 10}, {suit: 3, rank: 1}, {suit: 2, rank: 10}, {suit: 1, rank: 1}],
+				scrap: [{suit: 3, rank: 10}, {suit: 3, rank: 1}, {suit: 2, rank: 10}, {suit: 1, rank: 1}, {suit: 0, rank: 1}, ],
 			}
 		);
 	});
