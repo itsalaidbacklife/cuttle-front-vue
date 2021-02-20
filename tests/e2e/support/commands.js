@@ -172,6 +172,22 @@ Cypress.Commands.add('scuttleOpponent', (card, target) => {
 			});
 		});
 });
+Cypress.Commands.add('resolveOpponent', () => {
+	return cy
+		.window()
+		.its('app.$store.state.game')
+		.then((game) => {
+			const opId = game.players[(game.myPNum + 1) % 2].id;
+			io.socket.get('/game/resolve', {
+				opId,
+			}, function handleResponse(res, jwres) {
+				if (!jwres.statusCode === 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
 Cypress.Commands.add('vueRoute', (route) => {
 	cy.window()
 		.its('app.$router')
