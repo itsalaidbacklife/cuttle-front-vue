@@ -33,6 +33,10 @@ io.socket.on('game', function(evData) {
 		case 'loadFixture':
 			store.commit('updateGame', evData.data.game);
 			break;
+		case 'resolve':
+			store.commit('updateGame', evData.data.game);
+			store.commit('setWaitingForOpponent', false);
+			break;
 		}
 		break;
 	default:
