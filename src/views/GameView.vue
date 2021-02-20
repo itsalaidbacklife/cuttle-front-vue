@@ -37,7 +37,11 @@
 					<p>Deck</p>
 					<p>({{ deck.length }})</p>
 				</div>
-				<div id="scrap" :class="{'valid-move': validMoves.includes('scrap')}">
+				<div
+					id="scrap"
+					:class="{'valid-move': validMoves.includes('scrap')}"
+					@click="playOneOff"
+				>
 					<p>Scrap</p>
 					<p>({{ scrap.length }})</p>
 				</div>
@@ -155,6 +159,15 @@
 				</v-icon>
 			</v-btn>
 		</v-snackbar>
+		<v-overlay
+			id="waiting-for-opponent-scrim"
+			v-model="waitingForOpponent"
+			opacity=".6"
+		>
+			<h1>
+				Waiting for Opponent
+			</h1>
+		</v-overlay>
 	</div>
 </template>
 
@@ -170,7 +183,7 @@ export default {
 			showSnack: false,
 			snackMessage: '',
 			snackColor: 'error',
-			selectionIndex: null // when select a card set this value
+			selectionIndex: null, // when select a card set this value
 		}
 	},
 	computed: {
@@ -215,6 +228,9 @@ export default {
 		//////////////////
 		selectedCard() {
 			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
+		},
+		waitingForOpponent() {
+			return this.$store.state.game.waitingForOpponent;
 		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
@@ -396,6 +412,13 @@ export default {
 			default:
 				return;
 			}
+		},
+		playOneOff() {
+			if (!this.selectedCard) return;
+
+			this.$store.dispatch('requestPlayOneOff', this.selectedCard.id)
+				.then(this.clearSelection)
+				.catch(this.handleError);
 		},
 	},
 }

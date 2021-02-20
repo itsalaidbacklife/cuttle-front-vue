@@ -17,6 +17,7 @@ function resetState() {
 		myPNum: null,
 		topCard: null,
 		secondCard: null,
+		waitingForOpponent: false,
 	};
 }
 const initialState = resetState();
@@ -86,8 +87,10 @@ export default {
 		},
 		opponentLeft(state) {
 			state.players = state.players.filter(player => player.pNum === state.myPNum);
-		}
-
+		},
+		setWaitingForOpponent(state, val) {
+			state.waitingForOpponent = val;
+		},
 	},
 	actions: {
 		async requestSubscribe(context, id) {
@@ -197,5 +200,19 @@ export default {
 				});
 			});
 		},
+		async requestPlayOneOff(context, cardId) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/untargetedOneOff', {
+					cardId,
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponent', true);
+					return resolve();
+				});
+			});
+		}
 	}
 }
