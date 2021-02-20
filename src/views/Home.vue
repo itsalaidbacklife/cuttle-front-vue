@@ -15,7 +15,10 @@
 			<div id="game-list-card">
 				<v-row>
 					<v-col cols="9">
-						<v-row id="card-content-header" class="mb-4">
+						<v-row
+							id="card-content-header"
+							class="mb-4"
+						>
 							<v-col cols="3">
 								<h1 id="home-card-title">
 									Games
