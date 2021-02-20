@@ -37,7 +37,7 @@
 					<p>Deck</p>
 					<p>({{ deck.length }})</p>
 				</div>
-				<div id="scrap">
+				<div id="scrap" :class="{'valid-move': validMoves.includes('scrap')}">
 					<p>Scrap</p>
 					<p>({{ scrap.length }})</p>
 				</div>
@@ -240,6 +240,7 @@ export default {
 			case 6:
 			case 7:
 				res.push('field');
+				res.push('scrap');
 				res = [...res, ...this.validScuttleIds];
 				break;
 			case 8:
