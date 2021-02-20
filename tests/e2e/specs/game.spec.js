@@ -202,4 +202,34 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			}
 		);
 	});
+
+	it.only('Plays an Ace to destroy all point cards', () => {
+		cy.loadGameFixture({
+			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
+			p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
+			p0FaceCards: [{suit: 3, rank: 13}],
+			p1Hand: [{suit: 2, rank: 1}],
+			p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
+			p1FaceCards: [{suit: 2, rank: 13}],
+		});
+		// Player plays ace
+		cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		assertGameState(
+			0,
+			{
+				p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 5}],
+				p0Points: [],
+				p0FaceCards: [{suit: 3, rank: 13}],
+				p1Hand: [{suit: 2, rank: 1}],
+				p1Points: [],
+				p1FaceCards: [{suit: 2, rank: 13}],
+				scrap: [{suit: 3, rank: 10}, {suit: 3, rank: 1}, {suit: 2, rank: 10}, {suit: 1, rank: 1}],
+			}
+		);
+	});
 })
