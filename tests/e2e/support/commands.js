@@ -177,7 +177,7 @@ Cypress.Commands.add('resolveOpponent', () => {
 		.window()
 		.its('app.$store.state.game')
 		.then((game) => {
-			const opId = game.players[(game.myPNum + 1) % 2].id;
+			const opId = game.players[game.myPNum].id;
 			io.socket.get('/game/resolve', {
 				opId,
 			}, function handleResponse(res, jwres) {
