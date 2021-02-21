@@ -17,7 +17,9 @@ function resetState() {
 		myPNum: null,
 		topCard: null,
 		secondCard: null,
+		oneOff: null,
 		waitingForOpponent: false,
+		myTurnToCounter: false,
 	};
 }
 const initialState = resetState();
@@ -62,6 +64,7 @@ export default {
 			if (Object.hasOwnProperty.call(newGame, 'twos')) state.twos = _.cloneDeep(newGame.twos);
 			if (Object.hasOwnProperty.call(newGame, 'topCard')) state.topCard = _.cloneDeep(newGame.topCard);
 			if (Object.hasOwnProperty.call(newGame, 'secondCard')) state.secondCard = _.cloneDeep(newGame.secondCard);
+			if (Object.hasOwnProperty.call(newGame, 'oneOff')) state.topCard = _.cloneDeep(newGame.oneOff);
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
@@ -90,6 +93,9 @@ export default {
 		},
 		setWaitingForOpponent(state, val) {
 			state.waitingForOpponent = val;
+		},
+		setMyTurnToCounter(state, val) {
+			state.myTurnToCounter = val;
 		},
 	},
 	actions: {
