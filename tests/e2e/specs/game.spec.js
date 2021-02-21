@@ -203,7 +203,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it.only('Plays an Ace to destroy all point cards', () => {
+	it('Plays an Ace to destroy all point cards', () => {
 		cy.loadGameFixture({
 			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
 			p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
