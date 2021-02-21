@@ -93,7 +93,38 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		cy.get('#opponent-hand-cards div')
 			.should('have.length', 8);
 	});
-
+	it.only('Displays the cannot counter modal and resolves stack when opponent plays a one-off', () => {
+		cy.loadGameFixture({
+			// Opponent is P0
+			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
+			p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
+			p0FaceCards: [{suit: 3, rank: 13}],
+			// Player is P1
+			p1Hand: [{suit: 2, rank: 1}],
+			p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
+			p1FaceCards: [{suit: 2, rank: 13}],
+		});
+		// Confirm fixture has loaded
+		cy.get('#player-hand-cards div')
+			.should('have.length', 1);
+		cy.playOneOffOpponent({rank: 1, suit: 0});
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=resolve]')
+			.click();
+		assertGameState(
+			1,
+			{
+				p0Hand: [{suit: 3, rank: 4}],
+				p0Points: [],
+				p0FaceCards: [{suit: 3, rank: 13}],
+				p1Hand: [{suit: 2, rank: 1}],
+				p1Points: [],
+				p1FaceCards: [{suit: 2, rank: 13}],
+				scrap: [{suit: 3, rank: 10}, {suit: 3, rank: 1}, {suit: 2, rank: 10}, {suit: 1, rank: 1}, {suit: 0, rank: 1}, ],
+			}
+		);
+	});
 });
 
 describe('Game Basic Moves - P0 Perspective', () => {
