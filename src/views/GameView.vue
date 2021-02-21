@@ -168,15 +168,22 @@
 				Waiting for Opponent
 			</h1>
 		</v-overlay>
+		<cannot-counter-dialog
+			v-model="myTurnToCounter"
+			:one-off="game.oneOff"
+		/>
 	</div>
 </template>
 
 <script>
 import Card from '@/components/GameView/Card.vue';
+import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
+
 export default {
 	name: 'GameView',
 	components: {
 		Card,
+		CannotCounterDialog,
 	},
 	data() {
 		return {
@@ -214,9 +221,12 @@ export default {
 		opponentPointsToWin() {
 			return this.pointsToWin(this.kingCount(this.opponent));
 		},
-		////////////////////
-		// Deck and Scrap //
-		////////////////////
+		//////////////////////////
+		// Game, Deck and Scrap //
+		//////////////////////////
+		game() {
+			return this.$store.state.game;
+		},
 		deck() {
 			return this.$store.state.game.deck;
 		},
@@ -231,6 +241,9 @@ export default {
 		},
 		waitingForOpponent() {
 			return this.$store.state.game.waitingForOpponent;
+		},
+		myTurnToCounter() {
+			return this.$store.state.game.myTurnToCounter;
 		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
