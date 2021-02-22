@@ -171,6 +171,7 @@
 		<cannot-counter-dialog
 			v-model="myTurnToCounter"
 			:one-off="game.oneOff"
+			@resolve="resolve"
 		/>
 	</div>
 </template>
@@ -432,6 +433,11 @@ export default {
 			this.$store.dispatch('requestPlayOneOff', this.selectedCard.id)
 				.then(this.clearSelection)
 				.catch(this.handleError);
+		},
+		resolve() {
+			this.$store.dispatch('requestResolve')
+				.then(this.clearSelection)
+				.catch(this.handleError);	
 		},
 	},
 }
