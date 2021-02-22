@@ -169,7 +169,7 @@
 			</h1>
 		</v-overlay>
 		<cannot-counter-dialog
-			v-model="myTurnToCounter"
+			v-model="showCannotCounterDialog"
 			:one-off="game.oneOff"
 			@resolve="resolve"
 		/>
@@ -246,6 +246,12 @@ export default {
 		myTurnToCounter() {
 			return this.$store.state.game.myTurnToCounter;
 		},
+		hasTwoInHand() {
+			return this.player.hand.reduce((foundTwo, nextCard) => foundTwo || nextCard.rank === 2, false);
+		},
+		showCannotCounterDialog() {
+			return this.myTurnToCounter && !this.hasTwoInHand;
+		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
 			return this.opponent.points
@@ -294,7 +300,7 @@ export default {
 				break;
 			}
 			return res;
-		}
+		},
 	},
 	methods: {
 		clearSnackBar() {
