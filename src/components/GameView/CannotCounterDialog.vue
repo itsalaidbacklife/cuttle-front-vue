@@ -1,12 +1,14 @@
 <template>
 	<v-dialog
 		v-model="show"
+		persistent
+		max-width="750"
 	>
 		<v-card id="cannot-counter-dialog" v-if="oneOff">
 			<v-card-title>Cannot Counter</v-card-title>
 			<v-card-text>
 				Your opponent has played the {{ oneOff.name }} as a one-off.
-				<div class="d-flex justify-center align-center my-4">
+				<div class="d-flex justify-center align-center my-8">
 					<card
 						:suit="oneOff.suit"
 						:rank="oneOff.rank"
@@ -19,6 +21,7 @@
 				<v-btn
 					data-cy="resolve"
 					color="primary"
+					depressed
 				>
 					Resolve
 				</v-btn>
