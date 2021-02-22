@@ -2,14 +2,18 @@
 	<v-dialog
 		v-model="show"
 	>
-		<v-card id="cannot-counter-dialog">
+		<v-card id="cannot-counter-dialog" v-if="oneOff">
 			<v-card-title>Cannot Counter</v-card-title>
 			<v-card-text>
-				<!-- Your opponent has played the {{ oneOff.name }} as a one-off. You cannot counter, because you do not have a two.
-				<card
-					:suit="oneOff.suit"
-					:rank="oneOff.rank"
-				/> -->
+				Your opponent has played the {{ oneOff.name }} as a one-off.
+				<div class="d-flex justify-center align-center my-4">
+					<card
+						:suit="oneOff.suit"
+						:rank="oneOff.rank"
+					/>
+					<p class="ml-8">{{oneOff.ruleText}}</p>
+				</div>
+				You cannot Counter, because you do not have a two.
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end">
 				<v-btn
@@ -29,7 +33,7 @@ import Card from '@/components/GameView/Card.vue';
 export default {
 	name: 'CannotCounterDialog',
 	components: {
-		// Card,
+		Card,
 	},
 	props: {
 		value: {
