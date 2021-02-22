@@ -4,7 +4,10 @@
 		persistent
 		max-width="750"
 	>
-		<v-card id="cannot-counter-dialog" v-if="oneOff">
+		<v-card
+			v-if="oneOff"
+			id="cannot-counter-dialog"
+		>
 			<v-card-title>Cannot Counter</v-card-title>
 			<v-card-text>
 				Your opponent has played the {{ oneOff.name }} as a one-off.
@@ -13,7 +16,9 @@
 						:suit="oneOff.suit"
 						:rank="oneOff.rank"
 					/>
-					<p class="ml-8">{{oneOff.ruleText}}</p>
+					<p class="ml-8">
+						{{ oneOff.ruleText }}
+					</p>
 				</div>
 				You cannot Counter, because you do not have a two.
 			</v-card-text>
