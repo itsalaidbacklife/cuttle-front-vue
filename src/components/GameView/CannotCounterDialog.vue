@@ -22,6 +22,7 @@
 					data-cy="resolve"
 					color="primary"
 					depressed
+					@click="$emit('resolve')"
 				>
 					Resolve
 				</v-btn>
