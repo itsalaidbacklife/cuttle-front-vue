@@ -64,7 +64,7 @@ export default {
 			if (Object.hasOwnProperty.call(newGame, 'twos')) state.twos = _.cloneDeep(newGame.twos);
 			if (Object.hasOwnProperty.call(newGame, 'topCard')) state.topCard = _.cloneDeep(newGame.topCard);
 			if (Object.hasOwnProperty.call(newGame, 'secondCard')) state.secondCard = _.cloneDeep(newGame.secondCard);
-			if (Object.hasOwnProperty.call(newGame, 'oneOff')) state.topCard = _.cloneDeep(newGame.oneOff);
+			if (Object.hasOwnProperty.call(newGame, 'oneOff')) state.oneOff = _.cloneDeep(newGame.oneOff);
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
