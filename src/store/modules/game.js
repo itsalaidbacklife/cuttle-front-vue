@@ -1,4 +1,5 @@
 import { io } from '../../plugins/sails.js';
+
 var _ = require('lodash');
 function resetState() {
 	return {
@@ -136,14 +137,12 @@ export default {
 			});
 		},
 		async requestLobbyData(context) {
-			console.log('requesting lobby data');
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/lobbyData', function handleResponse(res, jwres) {
 					if (jwres.statusCode === 200) {
 						context.commit('updateGame', res);
 						return Promise.resolve(res);
 					}
-					console.log(jwres);
 					return reject(new Error('Error loading lobby data'));
 				});
 			});
@@ -219,6 +218,20 @@ export default {
 					return resolve();
 				});
 			});
-		}
+		},
+		async requestResolve(context) {
+			context.commit('setMyTurnToCounter', false);
+			
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/resolve', {
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
 	}
 }
