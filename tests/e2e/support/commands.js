@@ -163,6 +163,7 @@ Cypress.Commands.add('playFaceCardOpponent', (card) => {
 				return jwres;
 			});
 		});
+});
 /**
  * @param card {suit: number, rank: number}
  * @param target {suit: number, rank: number}
