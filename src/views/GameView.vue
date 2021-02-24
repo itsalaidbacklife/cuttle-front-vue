@@ -152,7 +152,10 @@
 		>
 			{{ snackMessage }}
 			<v-btn icon>
-				<v-icon data-cy="close-snackbar" @click="clearSnackBar">
+				<v-icon
+					data-cy="close-snackbar"
+					@click="clearSnackBar"
+				>
 					mdi-close
 				</v-icon>
 			</v-btn>

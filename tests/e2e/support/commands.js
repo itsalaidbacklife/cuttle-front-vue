@@ -136,7 +136,7 @@ Cypress.Commands.add('playPointsOpponent', (card) => {
 				}
 				return jwres;
 			});
-	});
+		});
 });
 
 /**

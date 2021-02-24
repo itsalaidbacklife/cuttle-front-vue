@@ -63,7 +63,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Attempt to play out of turn
 		cy.get('#deck').click();
 		// Test that Error snackbar says its not your turn
-		assertSnackbarError("It's not your turn");
+		assertSnackbarError('It\'s not your turn');
 		// Opponent draws 2nd time
 		cy.drawCardOpponent();
 		// Opponent now has 7 cards in hand
@@ -120,7 +120,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		cy.get('#player-field')
 			.click();
 		// Test that Error snackbar says its not your turn
-		assertSnackbarError("It's not your turn");
+		assertSnackbarError('It\'s not your turn');
 
 		assertGameState(
 			0,
@@ -164,7 +164,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		// Player attempts illegal scuttle
 		cy.get('[data-player-hand-card=1-3]').click(); // 7 of clubs
 		cy.get('[data-opponent-point-card=6-2]').click(); // 6 of hearts
-		assertSnackbarError("You can only scuttle an opponent's point card with a higher rank point card, or the same rank with a higher suit");;
+		assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit');;
 
 		// Player scuttles 6 of diamonds with 7 of clubs
 		cy.get('[data-player-hand-card=7-0]').click(); // 7 of clubs
@@ -185,7 +185,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
 		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
 		// Test that Error snackbar says its not your turn
-		assertSnackbarError("It's not your turn");
+		assertSnackbarError('It\'s not your turn');
 		// Opponent scuttles 10 of hearts with 10 of spades
 		cy.scuttleOpponent({rank: 10, suit: 3}, {rank: 10, suit: 2});
 		assertGameState(
