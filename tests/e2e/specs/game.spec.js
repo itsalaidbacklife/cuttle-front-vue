@@ -100,7 +100,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		setupAsP0();
 	});
 
-	it('Plays Points', () => {		
+	it('Plays Points', () => {
 		cy.loadGameFixture({
 			p0Hand: [{suit: 3, rank: 1}, {suit: 0, rank: 1}],
 			p0Points: [{suit: 3, rank: 10}],
