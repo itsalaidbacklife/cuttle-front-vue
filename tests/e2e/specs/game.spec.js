@@ -279,7 +279,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			p1FaceCards: [],
 		});
 		// Player plays queen
-		cy.get('[data-player-hand-card=12-3]', { timeout: 10000 }).click(); // queen of clubs
+		cy.get('[data-player-hand-card=12-3]').click(); // queen of clubs
 		cy.get('#player-field')
 			.should('have.class', 'valid-move')
 			.click();
@@ -321,13 +321,11 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 
 		// Player plays another king
-		cy.get('[data-player-hand-card=13-0]', { timeout: 10000 }).click(); // king of spades
+		cy.get('[data-player-hand-card=13-0]').click(); // king of spades
 		cy.get('#player-field')
 			.should('have.class', 'valid-move')
 			.click();
 
-
-		
 		//opponent plays queen
 		cy.playFaceCardOpponent({rank: 12, suit: 3})
 
