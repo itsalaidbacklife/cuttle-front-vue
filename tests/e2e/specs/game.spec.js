@@ -298,7 +298,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it.only('Plays Queens Opponent', () => {
+	it('Plays Queens Opponent', () => {
 		cy.loadGameFixture({
 			p0Hand: [{suit: 0, rank: 13}],
 			p0Points: [{suit: 2, rank: 10}],
