@@ -93,7 +93,6 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		cy.get('#opponent-hand-cards div')
 			.should('have.length', 8);
 	});
-
 });
 
 describe('Game Basic Moves - P0 Perspective', () => {
@@ -199,6 +198,147 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				p1Points: [{suit: 1, rank: 1}],
 				p1FaceCards: [{suit: 2, rank: 12}],
 				scrap: [{suit: 0, rank: 7}, {suit: 2, rank: 6}, {suit: 2, rank: 10}, {suit: 3, rank: 10}],
+			}
+		);
+	});
+
+	it('Plays Kings', () => {
+		cy.loadGameFixture({
+			p0Hand: [{suit: 3, rank: 13}, {suit: 0, rank: 13}],
+			p0Points: [{suit: 2, rank: 10}],
+			p0FaceCards: [],
+			p1Hand: [{suit: 2, rank: 6}],
+			p1Points: [{suit: 1, rank: 1}],
+			p1FaceCards: [],
+		});
+		// Player plays king
+		cy.get('[data-player-hand-card=13-0]', { timeout: 10000 }).click(); // king of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [{suit: 3, rank: 13}],
+				p0Points: [{suit: 2, rank: 10}],
+				p0FaceCards: [{suit: 0, rank: 13}],
+				p1Hand: [{suit: 2, rank: 6}],
+				p1Points: [{suit: 1, rank: 1}],
+				p1FaceCards: [],
+				scrap: [],
+			}
+		);
+
+		//opponent plays 6 of hearts
+		cy.playPointsOpponent({rank: 6, suit: 2})
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [{suit: 3, rank: 13}],
+				p0Points: [{suit: 2, rank: 10}],
+				p0FaceCards: [{suit: 0, rank: 13}],
+				p1Hand: [],
+				p1Points: [{suit: 1, rank: 1}, {suit: 2, rank: 6}],
+				p1FaceCards: [],
+				scrap: [],
+			}
+		);
+
+		// Player plays another king
+		cy.get('[data-player-hand-card=13-3]', { timeout: 10000 }).click(); // king of spades
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		
+		// player has two kings on the field. target score should change to 10
+		cy.get('[data-cy=player-points-to-win]').should('contain', ' 10 ');
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [],
+				p0Points: [{suit: 2, rank: 10}],
+				p0FaceCards: [{suit: 0, rank: 13}, {suit: 3, rank: 13}],
+				p1Hand: [],
+				p1Points: [{suit: 1, rank: 1}, {suit: 2, rank: 6} ],
+				p1FaceCards: [],
+				scrap: [],
+			}
+		);
+	});
+	
+	it('Plays Queens', () => {
+		cy.loadGameFixture({
+			p0Hand: [{suit: 3, rank: 12}, {suit: 0, rank: 13}],
+			p0Points: [{suit: 2, rank: 10}],
+			p0FaceCards: [],
+			p1Hand: [{suit: 2, rank: 6}],
+			p1Points: [{suit: 1, rank: 1}],
+			p1FaceCards: [],
+		});
+		// Player plays queen
+		cy.get('[data-player-hand-card=12-3]').click(); // queen of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [{suit: 0, rank: 13}],
+				p0Points: [{suit: 2, rank: 10}],
+				p0FaceCards: [{suit: 3, rank: 12}],
+				p1Hand: [{suit: 2, rank: 6}],
+				p1Points: [{suit: 1, rank: 1}],
+				p1FaceCards: [],
+				scrap: [],
+			}
+		);
+	});
+
+	it('Plays Queens Opponent', () => {
+		cy.loadGameFixture({
+			p0Hand: [{suit: 0, rank: 13}],
+			p0Points: [{suit: 2, rank: 10}],
+			p0FaceCards: [],
+			p1Hand: [{suit: 3, rank: 12}, {suit: 2, rank: 6}],
+			p1Points: [{suit: 1, rank: 1}],
+			p1FaceCards: [],
+		});
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [{suit: 0, rank: 13}],
+				p0Points: [{suit: 2, rank: 10}],
+				p0FaceCards: [],
+				p1Hand: [{suit: 3, rank: 12}, {suit: 2, rank: 6}],
+				p1Points: [{suit: 1, rank: 1}],
+				p1FaceCards: [],
+			}
+		);
+
+		// Player plays another king
+		cy.get('[data-player-hand-card=13-0]').click(); // king of spades
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+
+		//opponent plays queen
+		cy.playFaceCardOpponent({rank: 12, suit: 3})
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [],
+				p0Points: [{suit: 2, rank: 10}],
+				p0FaceCards: [{suit: 0, rank: 13}],
+				p1Hand: [{suit: 2, rank: 6}],
+				p1Points: [{suit: 1, rank: 1}],
+				p1FaceCards: [{suit: 3, rank: 12}],
+				scrap: [],
 			}
 		);
 	});

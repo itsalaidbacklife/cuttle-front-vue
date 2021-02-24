@@ -138,6 +138,32 @@ Cypress.Commands.add('playPointsOpponent', (card) => {
 			});
 		});
 });
+
+/**
+ * @param card {suit: number, rank: number}
+ */
+Cypress.Commands.add('playFaceCardOpponent', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot play opponent runes: Invalid card input');
+	}
+	return cy.window().its('app.$store.getters.opponent')
+		.then((opponent) => {
+			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
+			if (!foundCard) {
+				throw new Error(`Error playing opponents runes: could not find ${card.rank} of ${card.suit} in opponent hand`)
+			}
+			const cardId = foundCard.id;
+			io.socket.get('/game/runes', {
+				cardId
+			},
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode !== 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
 /**
  * @param card {suit: number, rank: number}
  * @param target {suit: number, rank: number}
