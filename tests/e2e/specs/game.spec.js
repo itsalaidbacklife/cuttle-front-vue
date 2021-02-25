@@ -126,7 +126,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		);
 	});
 
-	it('Gives option to counter player has a two; declining resolves stack', () => {
+	it('Gives option to counter if player has a two; declining resolves stack', () => {
 		cy.loadGameFixture({
 			// Opponent is P0
 			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
