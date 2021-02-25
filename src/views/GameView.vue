@@ -168,6 +168,11 @@
 				Waiting for Opponent
 			</h1>
 		</v-overlay>
+		<counter-dialog
+			v-model="showCounterDialog"
+			:one-off="game.oneOff"
+			@resolve="resolve"
+		/>
 		<cannot-counter-dialog
 			v-model="showCannotCounterDialog"
 			:one-off="game.oneOff"
@@ -179,12 +184,14 @@
 <script>
 import Card from '@/components/GameView/Card.vue';
 import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
+import CounterDialog from '@/components/GameView/CounterDialog.vue';
 
 export default {
 	name: 'GameView',
 	components: {
 		Card,
 		CannotCounterDialog,
+		CounterDialog,
 	},
 	data() {
 		return {
@@ -251,6 +258,9 @@ export default {
 		},
 		showCannotCounterDialog() {
 			return this.myTurnToCounter && !this.hasTwoInHand;
+		},
+		showCounterDialog() {
+			return this.myTurnToCounter && this.hasTwoInHand;
 		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
