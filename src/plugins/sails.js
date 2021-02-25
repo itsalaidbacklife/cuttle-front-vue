@@ -39,7 +39,7 @@ io.socket.on('game', function(evData) {
 			break;
 		case 'oneOff':
 			store.commit('updateGame', evData.data.game);
-			if (evData.pNum !== store.state.game.myPNum) {
+			if (evData.data.pNum !== store.state.game.myPNum) {
 				store.commit('setMyTurnToCounter', true);
 			}
 			break;
