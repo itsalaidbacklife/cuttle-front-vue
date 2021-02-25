@@ -93,7 +93,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		cy.get('#opponent-hand-cards div')
 			.should('have.length', 8);
 	});
-	it.only('Displays the cannot counter modal and resolves stack when opponent plays a one-off', () => {
+	it('Displays the cannot counter modal and resolves stack when opponent plays a one-off', () => {
 		cy.loadGameFixture({
 			// Opponent is P0
 			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
@@ -267,4 +267,4 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			}
 		);
 	});
-})
+});
