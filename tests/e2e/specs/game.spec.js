@@ -162,7 +162,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		);
 	});
 
-	it.only('Counters one-off with a two', () => {
+	it('Counters one-off with a two', () => {
 		cy.loadGameFixture({
 			// Opponent is P0
 			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
