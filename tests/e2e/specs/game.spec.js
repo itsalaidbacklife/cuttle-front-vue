@@ -271,12 +271,12 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 	it('Scuttles as P0', () => {
 		cy.loadGameFixture({
-			p0Hand: [{suit: 3, rank: 1}, {suit: 0, rank: 7}],
-			p0Points: [{suit: 2, rank: 10}],
-			p0FaceCards: [{suit: 3, rank: 13}],
-			p1Hand: [{suit: 3, rank: 10}],
-			p1Points: [{suit: 2, rank: 6}, {suit: 1, rank: 1}],
-			p1FaceCards: [{suit: 2, rank: 12}],
+			p0Hand: [Card.ACE_OF_SPADES, Card.SEVEN_OF_CLUBS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			p1Hand: [Card.TEN_OF_SPADES],
+			p1Points: [Card.SIX_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.QUEEN_OF_HEARTS],
 		});
 		// Player attempts illegal scuttle
 		cy.get('[data-player-hand-card=1-3]').click(); // 7 of clubs
@@ -289,13 +289,13 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		assertGameState(
 			0,
 			{
-				p0Hand: [{suit: 3, rank: 1}],
-				p0Points: [{suit: 2, rank: 10}],
-				p0FaceCards: [{suit: 3, rank: 13}],
-				p1Hand: [{suit: 3, rank: 10}],
-				p1Points: [{suit: 1, rank: 1}],
-				p1FaceCards: [{suit: 2, rank: 12}],
-				scrap: [{suit: 0, rank: 7}, {suit: 2, rank: 6}],
+				p0Hand: [Card.ACE_OF_SPADES],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.TEN_OF_SPADES],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.QUEEN_OF_HEARTS],
+				scrap: [Card.SEVEN_OF_CLUBS, Card.SIX_OF_HEARTS],
 			}
 		);
 		// Attempt to scuttle out of turn
@@ -304,17 +304,17 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		// Test that Error snackbar says its not your turn
 		assertSnackbarError('It\'s not your turn');
 		// Opponent scuttles 10 of hearts with 10 of spades
-		cy.scuttleOpponent({rank: 10, suit: 3}, {rank: 10, suit: 2});
+		cy.scuttleOpponent(Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS);
 		assertGameState(
 			0,
 			{
-				p0Hand: [{suit: 3, rank: 1}],
+				p0Hand: [Card.ACE_OF_SPADES],
 				p0Points: [],
-				p0FaceCards: [{suit: 3, rank: 13}],
+				p0FaceCards: [Card.KING_OF_SPADES],
 				p1Hand: [],
-				p1Points: [{suit: 1, rank: 1}],
-				p1FaceCards: [{suit: 2, rank: 12}],
-				scrap: [{suit: 0, rank: 7}, {suit: 2, rank: 6}, {suit: 2, rank: 10}, {suit: 3, rank: 10}],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.QUEEN_OF_HEARTS],
+				scrap: [Card.SEVEN_OF_CLUBS, Card.SIX_OF_HEARTS, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES],
 			}
 		);
 	});
