@@ -1,4 +1,4 @@
-import { assertGameState, assertSnackbarError } from '../support/helpers';
+import { assertGameState, assertSnackbarError, Card } from '../support/helpers';
 
 const validEmail = 'myCustomEmail@gmail.com';
 const validPassword = 'passwordLongerThanEight';
@@ -96,18 +96,18 @@ describe('Game Basic Moves - P1 Perspective', () => {
 	it('Displays the cannot counter modal and resolves stack when opponent plays a one-off', () => {
 		cy.loadGameFixture({
 			// Opponent is P0
-			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
-			p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
-			p0FaceCards: [{suit: 3, rank: 13}],
+			p0Hand: [Card.aceOfClubs, Card.fourOfSpades],
+			p0Points: [Card.tenOfSpades, Card.aceOfSpades],
+			p0FaceCards: [Card.kingOfSpades],
 			// Player is P1
-			p1Hand: [{suit: 2, rank: 1}],
-			p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
-			p1FaceCards: [{suit: 2, rank: 13}],
+			p1Hand: [Card.aceOfHearts],
+			p1Points: [Card.tenOfHearts, Card.aceOfDiamonds],
+			p1FaceCards: [Card.kingOfHearts],
 		});
 		// Confirm fixture has loaded
 		cy.get('#player-hand-cards div')
 			.should('have.length', 1);
-		cy.playOneOffOpponent({rank: 1, suit: 0});
+		cy.playOneOffOpponent(Card.aceOfClubs);
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.get('[data-cy=resolve]')
@@ -115,13 +115,13 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		assertGameState(
 			1,
 			{
-				p0Hand: [{suit: 3, rank: 4}],
+				p0Hand: [Card.fourOfSpades],
 				p0Points: [],
-				p0FaceCards: [{suit: 3, rank: 13}],
-				p1Hand: [{suit: 2, rank: 1}],
+				p0FaceCards: [Card.kingOfSpades],
+				p1Hand: [Card.aceOfHearts],
 				p1Points: [],
-				p1FaceCards: [{suit: 2, rank: 13}],
-				scrap: [{suit: 3, rank: 10}, {suit: 3, rank: 1}, {suit: 2, rank: 10}, {suit: 1, rank: 1}, {suit: 0, rank: 1}, ],
+				p1FaceCards: [Card.kingOfHearts],
+				scrap: [Card.tenOfSpades, Card.aceOfSpades, Card.tenOfHearts, Card.aceOfDiamonds, Card.aceOfClubs],
 			}
 		);
 	});
@@ -129,13 +129,13 @@ describe('Game Basic Moves - P1 Perspective', () => {
 	it('Gives option to counter if player has a two; declining resolves stack', () => {
 		cy.loadGameFixture({
 			// Opponent is P0
-			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
-			p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
-			p0FaceCards: [{suit: 3, rank: 13}],
+			p0Hand: [Card.aceOfClubs, Card.fourOfSpades],
+			p0Points: [Card.tenOfSpades, Card.aceOfSpades],
+			p0FaceCards: [Card.kingOfSpades],
 			// Player is P1
-			p1Hand: [{suit: 2, rank: 1}, {suit: 3, rank: 2}],
-			p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
-			p1FaceCards: [{suit: 2, rank: 13}],
+			p1Hand: [Card.aceOfHearts, Card.twoOfSpades],
+			p1Points: [Card.tenOfHearts, Card.aceOfDiamonds],
+			p1FaceCards: [Card.kingOfHearts],
 		});
 		// Confirm fixture has loaded
 		cy.get('#player-hand-cards div')
@@ -151,13 +151,13 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		assertGameState(
 			1,
 			{
-				p0Hand: [{suit: 3, rank: 4}],
+				p0Hand: [Card.fourOfSpades],
 				p0Points: [],
-				p0FaceCards: [{suit: 3, rank: 13}],
-				p1Hand: [{suit: 2, rank: 1}, {suit: 3, rank: 2}],
+				p0FaceCards: [Card.kingOfSpades],
+				p1Hand: [Card.aceOfHearts, Card.twoOfSpades],
 				p1Points: [],
-				p1FaceCards: [{suit: 2, rank: 13}],
-				scrap: [{suit: 3, rank: 10}, {suit: 3, rank: 1}, {suit: 2, rank: 10}, {suit: 1, rank: 1}, {suit: 0, rank: 1}, ],
+				p1FaceCards: [Card.kingOfHearts],
+				scrap: [Card.tenOfSpades, Card.aceOfSpades, Card.tenOfHearts, Card.aceOfDiamonds, Card.aceOfClubs],
 			}
 		);
 	});
