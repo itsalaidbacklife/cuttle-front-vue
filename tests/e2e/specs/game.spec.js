@@ -96,32 +96,34 @@ describe('Game Basic Moves - P1 Perspective', () => {
 	it('Displays the cannot counter modal and resolves stack when opponent plays a one-off', () => {
 		cy.loadGameFixture({
 			// Opponent is P0
-			p0Hand: [Card.aceOfClubs, Card.fourOfSpades],
-			p0Points: [Card.tenOfSpades, Card.aceOfSpades],
-			p0FaceCards: [Card.kingOfSpades],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
 			// Player is P1
-			p1Hand: [Card.aceOfHearts],
-			p1Points: [Card.tenOfHearts, Card.aceOfDiamonds],
-			p1FaceCards: [Card.kingOfHearts],
+			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Confirm fixture has loaded
 		cy.get('#player-hand-cards div')
 			.should('have.length', 1);
-		cy.playOneOffOpponent(Card.aceOfClubs);
+		// Opponent plays ace of clubs
+		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.get('[data-cy=resolve]')
 			.click();
+
 		assertGameState(
 			1,
 			{
-				p0Hand: [Card.fourOfSpades],
+				p0Hand: [Card.FOUR_OF_SPADES],
 				p0Points: [],
-				p0FaceCards: [Card.kingOfSpades],
-				p1Hand: [Card.aceOfHearts],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.ACE_OF_HEARTS],
 				p1Points: [],
-				p1FaceCards: [Card.kingOfHearts],
-				scrap: [Card.tenOfSpades, Card.aceOfSpades, Card.tenOfHearts, Card.aceOfDiamonds, Card.aceOfClubs],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
 			}
 		);
 	});
@@ -129,13 +131,13 @@ describe('Game Basic Moves - P1 Perspective', () => {
 	it('Gives option to counter if player has a two; declining resolves stack', () => {
 		cy.loadGameFixture({
 			// Opponent is P0
-			p0Hand: [Card.aceOfClubs, Card.fourOfSpades],
-			p0Points: [Card.tenOfSpades, Card.aceOfSpades],
-			p0FaceCards: [Card.kingOfSpades],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
 			// Player is P1
-			p1Hand: [Card.aceOfHearts, Card.twoOfSpades],
-			p1Points: [Card.tenOfHearts, Card.aceOfDiamonds],
-			p1FaceCards: [Card.kingOfHearts],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Confirm fixture has loaded
 		cy.get('#player-hand-cards div')
@@ -151,13 +153,13 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		assertGameState(
 			1,
 			{
-				p0Hand: [Card.fourOfSpades],
+				p0Hand: [Card.FOUR_OF_SPADES],
 				p0Points: [],
-				p0FaceCards: [Card.kingOfSpades],
-				p1Hand: [Card.aceOfHearts, Card.twoOfSpades],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
 				p1Points: [],
-				p1FaceCards: [Card.kingOfHearts],
-				scrap: [Card.tenOfSpades, Card.aceOfSpades, Card.tenOfHearts, Card.aceOfDiamonds, Card.aceOfClubs],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
 			}
 		);
 	});
@@ -165,19 +167,19 @@ describe('Game Basic Moves - P1 Perspective', () => {
 	it('Counters one-off with a two', () => {
 		cy.loadGameFixture({
 			// Opponent is P0
-			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
-			p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
-			p0FaceCards: [{suit: 3, rank: 13}],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
 			// Player is P1
-			p1Hand: [{suit: 2, rank: 1}, {suit: 3, rank: 2}],
-			p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
-			p1FaceCards: [{suit: 2, rank: 13}],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Confirm fixture has loaded
 		cy.get('#player-hand-cards div')
 			.should('have.length', 2);
 		// Opponent plays ace of clubs as one-off
-		cy.playOneOffOpponent({rank: 1, suit: 0});
+		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
 			.should('not.be.visible');
 		// Player counters
@@ -197,14 +199,14 @@ describe('Game Basic Moves - P1 Perspective', () => {
 			1,
 			{
 				// Opponent is P0
-				p0Hand: [{suit: 3, rank: 4}],
-				p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
-				p0FaceCards: [{suit: 3, rank: 13}],
+				p0Hand: [Card.FOUR_OF_SPADES],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [Card.KING_OF_SPADES],
 				// Player is P1
-				p1Hand: [{suit: 2, rank: 1}],
-				p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
-				p1FaceCards: [{suit: 2, rank: 13}],
-				scrap: [{suit: 3, rank: 2}, {suit: 0, rank: 1}],
+				p1Hand: [Card.ACE_OF_HEARTS],
+				p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.TWO_OF_SPADES, Card.ACE_OF_CLUBS],
 			}
 		);
 	});
@@ -217,12 +219,12 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 	it('Plays Points', () => {
 		cy.loadGameFixture({
-			p0Hand: [{suit: 3, rank: 1}, {suit: 0, rank: 1}],
-			p0Points: [{suit: 3, rank: 10}],
-			p0FaceCards: [{suit: 3, rank: 13}],
-			p1Hand: [{suit: 2, rank: 1}, {suit: 1, rank: 1}],
-			p1Points: [{suit: 2, rank: 10}],
-			p1FaceCards: [{suit: 2, rank: 13}],
+			p0Hand: [Card.ACE_OF_SPADES, Card.ACE_OF_CLUBS],
+			p0Points: [Card.TEN_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Play points (ace of spades)
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
@@ -241,28 +243,28 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			0,
 			{
 				// ace of spades moved from p0Hand to p0Points
-				p0Hand: [{suit: 0, rank: 1}],
-				p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
-				p0FaceCards: [{suit: 3, rank: 13}],
-				p1Hand: [{suit: 2, rank: 1}, {suit: 1, rank: 1}],
-				p1Points: [{suit: 2, rank: 10}],
-				p1FaceCards: [{suit: 2, rank: 13}],
+				p0Hand: [Card.ACE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1Points: [Card.TEN_OF_HEARTS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
 			}
 		);
 
 		// Opponent plays the ace of diamonds
-		cy.playPointsOpponent({rank: 1, suit: 1});
+		cy.playPointsOpponent(Card.ACE_OF_DIAMONDS);
 
 		assertGameState(
 			0,
 			{
 				// ace of diamonds moved from p1Hand to p1Points
-				p0Hand: [{suit: 0, rank: 1}],
-				p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
-				p0FaceCards: [{suit: 3, rank: 13}],
-				p1Hand: [{suit: 2, rank: 1}],
-				p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
-				p1FaceCards: [{suit: 2, rank: 13}],
+				p0Hand: [Card.ACE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.ACE_OF_HEARTS],
+				p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
 			}
 		);
 	});
