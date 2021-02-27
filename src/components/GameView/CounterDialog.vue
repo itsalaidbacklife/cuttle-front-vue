@@ -5,7 +5,7 @@
 		max-width="750"
 	>
 		<v-card
-			v-if="oneOff"
+			v-if="oneOff && !choseToCounter"
 			id="counter-dialog"
 		>
 			<v-card-title>Chance to Counter</v-card-title>
@@ -35,9 +35,36 @@
 					data-cy="counter"
 					color="primary"
 					depressed
-					@click="$emit('counter')"
+					@click="choseToCounter = true"
 				>
 					Counter
+				</v-btn>
+			</v-card-actions>
+		</v-card>
+		<!-- Choose which two to use to counter -->
+		<v-card
+			v-if="oneOff && choseToCounter"
+			id="choose-two-dialog"
+		>
+			<v-card-title>Choose Two</v-card-title>
+			<v-card-text>
+				<p>
+					Which Two would you like to counter with? (Click the card)
+				</p>
+				<div id="twos-in-hand" class="d-flex justify-center">
+					<card
+						v-for="two in twosInHand"
+						:key="two.id"
+						:suit="two.suit"
+						:rank="two.rank"
+						:data-counter-dialog-card="`${two.rank}-${two.suit}`"
+						@click="counter(two)"
+					/>
+				</div>
+			</v-card-text>
+			<v-card-actions>
+				<v-btn text>
+					Cancel
 				</v-btn>
 			</v-card-actions>
 		</v-card>
@@ -59,6 +86,15 @@ export default {
 		},
 		oneOff: {
 			required: true,
+		},
+		// list of card objects for available twos
+		twosInHand: {
+			required: true,
+		},
+	},
+	data() {
+		return {
+			choseToCounter: false,
 		}
 	},
 	computed: {
@@ -69,6 +105,11 @@ export default {
 			set(val) {
 				this.$emit('input', val);
 			}
+		}
+	},
+	methods: {
+		counter(two) {
+			this.$emit('counter', two.id);
 		}
 	}
 }

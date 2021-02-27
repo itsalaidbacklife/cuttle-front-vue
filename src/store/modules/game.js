@@ -233,5 +233,21 @@ export default {
 				});
 			});
 		},
+		async requestCounter(context, twoId) {
+			context.commit('setMyTurnToCounter', false);
+			
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/counter', {
+					cardId: twoId,
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponent', true);
+					return resolve();
+				});
+			});
+		}
 	}
 }

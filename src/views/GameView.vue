@@ -171,7 +171,9 @@
 		<counter-dialog
 			v-model="showCounterDialog"
 			:one-off="game.oneOff"
+			:twos-in-hand="twosInHand"
 			@resolve="resolve"
+			@counter="counter($event)"
 		/>
 		<cannot-counter-dialog
 			v-model="showCannotCounterDialog"
@@ -253,8 +255,11 @@ export default {
 		myTurnToCounter() {
 			return this.$store.state.game.myTurnToCounter;
 		},
+		twosInHand() {
+			return this.player.hand.filter((card) => card.rank === 2);
+		},
 		hasTwoInHand() {
-			return this.player.hand.reduce((foundTwo, nextCard) => foundTwo || nextCard.rank === 2, false);
+			return this.twosInHand.length > 0;
 		},
 		showCannotCounterDialog() {
 			return this.myTurnToCounter && !this.hasTwoInHand;
@@ -453,7 +458,12 @@ export default {
 		resolve() {
 			this.$store.dispatch('requestResolve')
 				.then(this.clearSelection)
-				.catch(this.handleError);	
+				.catch(this.handleError);
+		},
+		counter(twoId) {
+			this.$store.dispatch('requestCounter', twoId)
+				.then(this.clearSelection)
+				.catch(this.handleError);
 		},
 	},
 }
