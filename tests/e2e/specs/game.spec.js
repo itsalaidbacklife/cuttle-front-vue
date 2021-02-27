@@ -161,6 +161,53 @@ describe('Game Basic Moves - P1 Perspective', () => {
 			}
 		);
 	});
+
+	it.only('Counters one-off with a two', () => {
+		cy.loadGameFixture({
+			// Opponent is P0
+			p0Hand: [{suit: 0, rank: 1}, {suit: 3, rank: 4}],
+			p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
+			p0FaceCards: [{suit: 3, rank: 13}],
+			// Player is P1
+			p1Hand: [{suit: 2, rank: 1}, {suit: 3, rank: 2}],
+			p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
+			p1FaceCards: [{suit: 2, rank: 13}],
+		});
+		// Confirm fixture has loaded
+		cy.get('#player-hand-cards div')
+			.should('have.length', 2);
+		// Opponent plays ace of clubs as one-off
+		cy.playOneOffOpponent({rank: 1, suit: 0});
+		cy.get('#cannot-counter-dialog')
+			.should('not.be.visible');
+		// Player counters
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=counter]')
+			.click();
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-3]')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent resolves
+		cy.resolveOpponent();
+		assertGameState(
+			1,
+			{
+				// Opponent is P0
+				p0Hand: [{suit: 3, rank: 4}],
+				p0Points: [{suit: 3, rank: 10}, {suit: 3, rank: 1}],
+				p0FaceCards: [{suit: 3, rank: 13}],
+				// Player is P1
+				p1Hand: [{suit: 2, rank: 1}],
+				p1Points: [{suit: 2, rank: 10}, {suit: 1, rank: 1}],
+				p1FaceCards: [{suit: 2, rank: 13}],
+				scrap: [{suit: 3, rank: 2}, {suit: 0, rank: 1}],
+			}
+		);
+	});
 });
 
 describe('Game Basic Moves - P0 Perspective', () => {
