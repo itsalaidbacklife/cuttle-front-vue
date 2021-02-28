@@ -105,8 +105,9 @@ describe('Game Basic Moves - P1 Perspective', () => {
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Confirm fixture has loaded
-		cy.get('#player-hand-cards div')
-			.should('have.length', 1);
+		cy.get('#player-hand-cards div').should('have.length', 1);
+		cy.log('Fixture loaded');
+
 		// Opponent plays ace of clubs
 		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
@@ -140,8 +141,9 @@ describe('Game Basic Moves - P1 Perspective', () => {
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Confirm fixture has loaded
-		cy.get('#player-hand-cards div')
-			.should('have.length', 2);
+		cy.get('#player-hand-cards div').should('have.length', 2);
+		cy.log('Fixture loaded');
+
 		cy.playOneOffOpponent({rank: 1, suit: 0});
 		cy.get('#cannot-counter-dialog')
 			.should('not.be.visible');
@@ -176,8 +178,9 @@ describe('Game Basic Moves - P1 Perspective', () => {
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Confirm fixture has loaded
-		cy.get('#player-hand-cards div')
-			.should('have.length', 2);
+		cy.get('#player-hand-cards div').should('have.length', 2);
+		cy.log('Fixture loaded');
+
 		// Opponent plays ace of clubs as one-off
 		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
@@ -218,6 +221,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	});
 
 	it('Plays Points', () => {
+		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.ACE_OF_CLUBS],
 			p0Points: [Card.TEN_OF_SPADES],
@@ -226,6 +230,9 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			p1Points: [Card.TEN_OF_HEARTS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
 		// Play points (ace of spades)
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
 		cy.get('#player-field')
@@ -270,6 +277,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	});
 
 	it('Scuttles as P0', () => {
+		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.TEN_OF_HEARTS],
@@ -278,6 +286,9 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			p1Points: [Card.SIX_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [Card.QUEEN_OF_HEARTS],
 		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Fixture loaded');
+
 		// Player attempts illegal scuttle
 		cy.get('[data-player-hand-card=1-3]').click(); // 7 of clubs
 		cy.get('[data-opponent-point-card=6-2]').click(); // 6 of hearts
@@ -320,6 +331,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	});
 
 	it('Plays an Ace to destroy all point cards', () => {
+		// Setup
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
 			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
@@ -328,6 +340,9 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
 		// Player plays ace
 		cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
 		cy.get('#scrap')
@@ -354,6 +369,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	});
 
 	it('Plays Kings', () => {
+		// Setup
 		cy.loadGameFixture({
 			p0Hand: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS],
 			p0Points: [Card.TEN_OF_HEARTS],
@@ -364,6 +380,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		});
 		// Check that fixture has loaded
 		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
 
 		// Player plays king
 		cy.get('[data-player-hand-card=13-0]').click(); // king of clubs
@@ -391,7 +408,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
-		//opponent plays king of diamonds
+		// Opponent plays king of diamonds
 		cy.playFaceCardOpponent(Card.KING_OF_DIAMONDS)
 
 		assertGameState(
@@ -428,6 +445,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	});
 	
 	it('Plays Queens', () => {
+		// Setup
 		cy.loadGameFixture({
 			p0Hand: [Card.QUEEN_OF_SPADES, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
 			p0Points: [Card.TEN_OF_HEARTS],
@@ -436,8 +454,8 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			p1Points: [Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [],
 		});
-		//Check that fixture has loaded
 		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.log('Loaded fixture');
 
 		// Player plays queen
 		cy.get('[data-player-hand-card=12-3]').click(); // queen of clubs
