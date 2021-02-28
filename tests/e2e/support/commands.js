@@ -226,6 +226,35 @@ Cypress.Commands.add('playOneOffOpponent', (card) => {
 			});
 		});
 });
+/**
+ * @param card {suit: number, rank: number}
+ */
+Cypress.Commands.add('counterOpponent', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot play counter as opponent: Invalid card input');
+	}
+	return cy.window().its('app.$store.state.game')
+	.then((game) => {
+			const opponent = game.players[(game.myPNum + 1) % 2];
+			const playerId = game.players[game.myPNum].id
+			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
+			if (!foundCard) {
+				throw new Error(`Error countering as opponent: could not find ${card.rank} of ${card.suit} in opponent hand`)
+			}
+			const cardId = foundCard.id;
+			io.socket.get('/game/counter', {
+				cardId,
+				opId: playerId,
+			},
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode !== 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
+
 Cypress.Commands.add('resolveOpponent', () => {
 	return cy
 		.window()
