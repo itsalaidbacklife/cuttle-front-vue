@@ -63,7 +63,7 @@
 				</div>
 			</v-card-text>
 			<v-card-actions>
-				<v-btn text>
+				<v-btn text color="primary" data-cy="resolve" @click="$emit('resolve')">
 					Cancel
 				</v-btn>
 			</v-card-actions>
