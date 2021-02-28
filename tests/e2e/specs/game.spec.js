@@ -422,74 +422,52 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	
 	it('Plays Queens', () => {
 		cy.loadGameFixture({
-			p0Hand: [Card.QUEEN_OF_SPADES, Card.KING_OF_CLUBS],
+			p0Hand: [Card.QUEEN_OF_SPADES, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
 			p0Points: [Card.TEN_OF_HEARTS],
 			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
 			p1Points: [Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [],
 		});
+		//Check that fixture has loaded
+		cy.get('[data-player-hand-card]').should('have.length', 3);
+
 		// Player plays queen
 		cy.get('[data-player-hand-card=12-3]').click(); // queen of clubs
 		cy.get('#player-field')
 			.should('have.class', 'valid-move')
 			.click();
-
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.KING_OF_CLUBS],
+				p0Hand: [Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.QUEEN_OF_SPADES],
-				p1Hand: [Card.SIX_OF_HEARTS],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [],
 				scrap: [],
 			}
 		);
-	});
 
-	it('Plays Queens Opponent', () => {
-		cy.loadGameFixture({
-			p0Hand: [Card.KING_OF_CLUBS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.QUEEN_OF_SPADES, Card.SIX_OF_HEARTS],
-			p1Points: [Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [],
-		});
-
-		cy.get('[data-player-hand-card]')
-			.should('have.length', 1);
-		// Player plays another king
-		cy.get('[data-player-hand-card=13-0]').click(); // king of clubs
+		// Attempt to play queen out of turn
+		cy.get('[data-player-hand-card=12-1]').click(); // queen of clubs
 		cy.get('#player-field')
 			.should('have.class', 'valid-move')
 			.click();
+		assertSnackbarError('It\'s not your turn');
 
+		//opponent plays queen of hearts
+		cy.playFaceCardOpponent(Card.QUEEN_OF_HEARTS);
 		assertGameState(
 			0,
 			{
-				p0Hand: [],
+				p0Hand: [Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_HEARTS],
-				p0FaceCards: [Card.KING_OF_CLUBS],
-				p1Hand: [Card.QUEEN_OF_SPADES, Card.SIX_OF_HEARTS],
-				p1Points: [Card.ACE_OF_DIAMONDS],
-				p1FaceCards: [],
-			}
-		);
-		//opponent plays queen of spades
-		cy.playFaceCardOpponent(Card.QUEEN_OF_SPADES)
-
-		assertGameState(
-			0,
-			{
-				p0Hand: [],
-				p0Points: [Card.TEN_OF_HEARTS],
-				p0FaceCards: [Card.KING_OF_CLUBS],
+				p0FaceCards: [Card.QUEEN_OF_SPADES],
 				p1Hand: [Card.SIX_OF_HEARTS],
 				p1Points: [Card.ACE_OF_DIAMONDS],
-				p1FaceCards: [Card.QUEEN_OF_SPADES],
+				p1FaceCards: [Card.QUEEN_OF_HEARTS],
 				scrap: [],
 			}
 		);
