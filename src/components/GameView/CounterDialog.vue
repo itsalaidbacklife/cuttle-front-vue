@@ -24,10 +24,10 @@
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end">
 				<v-btn
-					data-cy="resolve"
+					data-cy="decline-counter-resolve"
 					color="primary"
 					depressed
-					@click="$emit('resolve')"
+					@click="resolve"
 				>
 					Resolve
 				</v-btn>
@@ -63,7 +63,7 @@
 				</div>
 			</v-card-text>
 			<v-card-actions>
-				<v-btn text color="primary" data-cy="cancel-counter" @click="$emit('resolve')">
+				<v-btn text color="primary" data-cy="cancel-counter" @click="resolve">
 					Cancel
 				</v-btn>
 			</v-card-actions>
@@ -111,6 +111,10 @@ export default {
 		counter(two) {
 			this.$emit('counter', two.id);
 			this.choseToCounter = false;
+		},
+		resolve() {
+			this.choseToCounter = false;
+			this.$emit('resolve');
 		}
 	}
 }

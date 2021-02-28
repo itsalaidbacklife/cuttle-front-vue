@@ -403,7 +403,7 @@ describe('Countering One-Offs', () => {
 		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
-			.get('[data-cy=resolve]')
+			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 
 		assertGameState(
@@ -488,7 +488,7 @@ describe('Countering One-Offs', () => {
 			.should('not.be.visible');
 		cy.get('#counter-dialog')
 			.should('be.visible')
-			.get('[data-cy=resolve]')
+			.get('[data-cy=decline-counter-resolve]')
 			.click();
 		
 		assertGameState(
@@ -589,7 +589,7 @@ describe('Countering One-Offs', () => {
 		// Player cannot counter back
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
-			.get('[data-cy=resolve]')
+			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 		
 		assertGameState(
@@ -616,7 +616,7 @@ describe('Countering One-Offs', () => {
 		);
 	});
 
-	it.only('Triple counters successfully', ()=> {
+	it('Triple counters successfully', ()=> {
 		cy.loadGameFixture({
 			// Opponent is P0
 			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS],
