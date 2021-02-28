@@ -384,6 +384,13 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			}
 		);
 
+		// Attempt to play king out of turn
+		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+		
 		//opponent plays 6 of hearts
 		cy.playPointsOpponent(Card.SIX_OF_HEARTS)
 
