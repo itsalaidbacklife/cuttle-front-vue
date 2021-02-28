@@ -262,6 +262,7 @@ function assertStoreMatchesFixture(fixture) {
  * @param pNum: int [0, 1]
  */
 export function assertGameState(pNum, fixture) {
+	cy.log('Asserting game state:', fixture);
 	assertDomMatchesFixture(pNum, fixture);
 	assertStoreMatchesFixture(fixture);
 }
