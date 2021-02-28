@@ -616,8 +616,71 @@ describe('Countering One-Offs', () => {
 		);
 	});
 
-	it.skip('Triple counters successfully', ()=> {
+	it.only('Triple counters successfully', ()=> {
+		cy.loadGameFixture({
+			// Opponent is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			// Player is P1
+			p1Hand: [Card.TWO_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
 
+		// Opponent plays ace of clubs as one-off
+		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
+		cy.get('#cannot-counter-dialog')
+			.should('not.be.visible');
+
+		// Player counters (1st counter)
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=counter]')
+			.click();
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-2]')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent counters back (2nd counter)
+		cy.counterOpponent(Card.TWO_OF_CLUBS);
+		// Player counters again (3rd counter)
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=counter]')
+			.click();
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-3]')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent resolves
+		cy.resolveOpponent();
+
+		assertGameState(
+			1,
+			{
+				// Opponent is P0
+				p0Hand: [],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				// Player is P1
+				p1Hand: [],
+				p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [
+					Card.ACE_OF_CLUBS,
+					Card.TWO_OF_HEARTS,
+					Card.TWO_OF_CLUBS,
+					Card.TWO_OF_SPADES,
+				]
+			}
+		);
 	});
 
 	it.skip('Quadrouple counters successfully', ()=> {
