@@ -353,7 +353,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it('Plays Kings', () => {
+	it.only('Plays Kings', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS],
 			p0Points: [Card.TEN_OF_HEARTS],
@@ -362,6 +362,9 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			p1Points: [Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [],
 		});
+		// Check that fixture has loaded
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+
 		// Player plays king
 		cy.get('[data-player-hand-card=13-0]').click(); // king of clubs
 		cy.get('#player-field')
@@ -402,9 +405,6 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		cy.get('#player-field')
 			.should('have.class', 'valid-move')
 			.click();
-		
-		// player has two kings on the field. target score should change to 10
-		cy.get('[data-cy=player-points-to-win]').should('contain', ' 10 ');
 
 		assertGameState(
 			0,
