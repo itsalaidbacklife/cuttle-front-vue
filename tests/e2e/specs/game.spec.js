@@ -44,177 +44,6 @@ function setupAsP1() {
 		});
 }
 
-describe('Game Basic Moves - P1 Perspective', () => {
-	beforeEach(() => {
-		setupAsP1();
-	});
-
-	it('Draws from deck', () => {
-		// Opponent draws card
-		cy.drawCardOpponent();
-		// Opponent now has 6 cards in hand
-		cy.get('#opponent-hand-cards div')
-			.should('have.length', 6);
-		// Player draws card
-		cy.get('#deck').click();
-		// Player now have 7 cards in hand
-		cy.get('#player-hand-cards div')
-			.should('have.length', 7);
-		// Attempt to play out of turn
-		cy.get('#deck').click();
-		// Test that Error snackbar says its not your turn
-		assertSnackbarError('It\'s not your turn');
-		// Opponent draws 2nd time
-		cy.drawCardOpponent();
-		// Opponent now has 7 cards in hand
-		cy.get('#opponent-hand-cards div')
-			.should('have.length', 7);
-		// Player draws 2nd time
-		cy.get('#deck').click();
-		// Player now has 8 cards in hand
-		cy.get('#player-hand-cards div')
-			.should('have.length', 8);
-		// Opponent draws 3rd time (8 cards)
-		cy.drawCardOpponent();
-		// Opponent now has 8 cards in hand
-		cy.get('#opponent-hand-cards div')
-			.should('have.length', 8);
-		// Player attempts to draw with full hand
-		cy.get('#deck').click();
-		// Test that Error snackbar for hand limit
-		cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
-			.should('be.visible')
-			.should('have.class', 'error')
-			.should('contain', 'You are at the hand limit; you cannot draw.');
-		// Player still has 8 cards in hand
-		cy.get('#player-hand-cards div')
-			.should('have.length', 8);
-		// Opponent still has 8 cards in hand
-		cy.get('#opponent-hand-cards div')
-			.should('have.length', 8);
-	});
-	it('Displays the cannot counter modal and resolves stack when opponent plays a one-off', () => {
-		cy.loadGameFixture({
-			// Opponent is P0
-			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
-			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
-			p0FaceCards: [Card.KING_OF_SPADES],
-			// Player is P1
-			p1Hand: [Card.ACE_OF_HEARTS],
-			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [Card.KING_OF_HEARTS],
-		});
-		// Confirm fixture has loaded
-		cy.get('#player-hand-cards div').should('have.length', 1);
-		cy.log('Fixture loaded');
-
-		// Opponent plays ace of clubs
-		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
-		cy.get('#cannot-counter-dialog')
-			.should('be.visible')
-			.get('[data-cy=resolve]')
-			.click();
-
-		assertGameState(
-			1,
-			{
-				p0Hand: [Card.FOUR_OF_SPADES],
-				p0Points: [],
-				p0FaceCards: [Card.KING_OF_SPADES],
-				p1Hand: [Card.ACE_OF_HEARTS],
-				p1Points: [],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
-			}
-		);
-	});
-
-	it('Gives option to counter if player has a two; declining resolves stack', () => {
-		cy.loadGameFixture({
-			// Opponent is P0
-			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
-			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
-			p0FaceCards: [Card.KING_OF_SPADES],
-			// Player is P1
-			p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
-			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [Card.KING_OF_HEARTS],
-		});
-		// Confirm fixture has loaded
-		cy.get('#player-hand-cards div').should('have.length', 2);
-		cy.log('Fixture loaded');
-
-		cy.playOneOffOpponent({rank: 1, suit: 0});
-		cy.get('#cannot-counter-dialog')
-			.should('not.be.visible');
-		cy.get('#counter-dialog')
-			.should('be.visible')
-			.get('[data-cy=resolve]')
-			.click();
-		
-		assertGameState(
-			1,
-			{
-				p0Hand: [Card.FOUR_OF_SPADES],
-				p0Points: [],
-				p0FaceCards: [Card.KING_OF_SPADES],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
-				p1Points: [],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
-			}
-		);
-	});
-
-	it('Counters one-off with a two', () => {
-		cy.loadGameFixture({
-			// Opponent is P0
-			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
-			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
-			p0FaceCards: [Card.KING_OF_SPADES],
-			// Player is P1
-			p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
-			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [Card.KING_OF_HEARTS],
-		});
-		// Confirm fixture has loaded
-		cy.get('#player-hand-cards div').should('have.length', 2);
-		cy.log('Fixture loaded');
-
-		// Opponent plays ace of clubs as one-off
-		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
-		cy.get('#cannot-counter-dialog')
-			.should('not.be.visible');
-		// Player counters
-		cy.get('#counter-dialog')
-			.should('be.visible')
-			.get('[data-cy=counter]')
-			.click();
-		cy.get('#choose-two-dialog')
-			.should('be.visible')
-			.get('[data-counter-dialog-card=2-3]')
-			.click();
-		cy.get('#waiting-for-opponent-scrim')
-			.should('be.visible');
-		// Opponent resolves
-		cy.resolveOpponent();
-		assertGameState(
-			1,
-			{
-				// Opponent is P0
-				p0Hand: [Card.FOUR_OF_SPADES],
-				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
-				p0FaceCards: [Card.KING_OF_SPADES],
-				// Player is P1
-				p1Hand: [Card.ACE_OF_HEARTS],
-				p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.TWO_OF_SPADES, Card.ACE_OF_CLUBS],
-			}
-		);
-	});
-});
-
 describe('Game Basic Moves - P0 Perspective', () => {
 	beforeEach(() => {
 		setupAsP0();
@@ -482,7 +311,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
-		//opponent plays queen of hearts
+		// Opponent plays queen of hearts
 		cy.playFaceCardOpponent(Card.QUEEN_OF_HEARTS);
 		assertGameState(
 			0,
@@ -494,6 +323,224 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [Card.QUEEN_OF_HEARTS],
 				scrap: [],
+			}
+		);
+	});
+});
+
+describe('Game Basic Moves - P1 Perspective', () => {
+	beforeEach(() => {
+		setupAsP1();
+	});
+
+	it('Draws from deck', () => {
+		// Opponent draws card
+		cy.drawCardOpponent();
+		// Opponent now has 6 cards in hand
+		cy.get('#opponent-hand-cards div')
+			.should('have.length', 6);
+		// Player draws card
+		cy.get('#deck').click();
+		// Player now have 7 cards in hand
+		cy.get('#player-hand-cards div')
+			.should('have.length', 7);
+		// Attempt to play out of turn
+		cy.get('#deck').click();
+		// Test that Error snackbar says its not your turn
+		assertSnackbarError('It\'s not your turn');
+		// Opponent draws 2nd time
+		cy.drawCardOpponent();
+		// Opponent now has 7 cards in hand
+		cy.get('#opponent-hand-cards div')
+			.should('have.length', 7);
+		// Player draws 2nd time
+		cy.get('#deck').click();
+		// Player now has 8 cards in hand
+		cy.get('#player-hand-cards div')
+			.should('have.length', 8);
+		// Opponent draws 3rd time (8 cards)
+		cy.drawCardOpponent();
+		// Opponent now has 8 cards in hand
+		cy.get('#opponent-hand-cards div')
+			.should('have.length', 8);
+		// Player attempts to draw with full hand
+		cy.get('#deck').click();
+		// Test that Error snackbar for hand limit
+		cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
+			.should('be.visible')
+			.should('have.class', 'error')
+			.should('contain', 'You are at the hand limit; you cannot draw.');
+		// Player still has 8 cards in hand
+		cy.get('#player-hand-cards div')
+			.should('have.length', 8);
+		// Opponent still has 8 cards in hand
+		cy.get('#opponent-hand-cards div')
+			.should('have.length', 8);
+	});
+
+	it('Displays the cannot counter modal and resolves stack when opponent plays a one-off', () => {
+		cy.loadGameFixture({
+			// Opponent is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			// Player is P1
+			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		// Confirm fixture has loaded
+		cy.get('#player-hand-cards div').should('have.length', 1);
+		cy.log('Fixture loaded');
+
+		// Opponent plays ace of clubs
+		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=resolve]')
+			.click();
+
+		assertGameState(
+			1,
+			{
+				p0Hand: [Card.FOUR_OF_SPADES],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.ACE_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
+			}
+		);
+	});
+
+	it('Gives option to counter if player has a two; declining resolves stack', () => {
+		cy.loadGameFixture({
+			// Opponent is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			// Player is P1
+			p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		// Confirm fixture has loaded
+		cy.get('#player-hand-cards div').should('have.length', 2);
+		cy.log('Fixture loaded');
+
+		cy.playOneOffOpponent({rank: 1, suit: 0});
+		cy.get('#cannot-counter-dialog')
+			.should('not.be.visible');
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=resolve]')
+			.click();
+		
+		assertGameState(
+			1,
+			{
+				p0Hand: [Card.FOUR_OF_SPADES],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
+			}
+		);
+	});
+
+	it('Cancels decision to counter with Cancel button', ()=> {
+		// Setup
+		cy.loadGameFixture({
+			// Opponent is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			// Player is P1
+			p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('#player-hand-cards div').should('have.length', 2);
+		cy.log('Fixture loaded');
+
+		// Opponent plays ace of clubs as one-off
+		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
+		cy.get('#cannot-counter-dialog')
+			.should('not.be.visible');
+
+		// Player counters
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=counter]')
+			.click();
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-cy=resolve]')
+			.click();
+
+		assertGameState(
+			1,
+			{
+				// Opponent is P0
+				p0Hand: [Card.FOUR_OF_SPADES],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				// Player is P1
+				p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.ACE_OF_CLUBS, Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			}
+		);
+	});
+
+	it('Counters one-off with a two', () => {
+		cy.loadGameFixture({
+			// Opponent is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			// Player is P1
+			p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		// Confirm fixture has loaded
+		cy.get('#player-hand-cards div').should('have.length', 2);
+		cy.log('Fixture loaded');
+
+		// Opponent plays ace of clubs as one-off
+		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
+		cy.get('#cannot-counter-dialog')
+			.should('not.be.visible');
+		// Player counters
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=counter]')
+			.click();
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-3]')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent resolves
+		cy.resolveOpponent();
+		assertGameState(
+			1,
+			{
+				// Opponent is P0
+				p0Hand: [Card.FOUR_OF_SPADES],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				// Player is P1
+				p1Hand: [Card.ACE_OF_HEARTS],
+				p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.TWO_OF_SPADES, Card.ACE_OF_CLUBS],
 			}
 		);
 	});
