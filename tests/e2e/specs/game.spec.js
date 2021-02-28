@@ -358,7 +358,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			p0Hand: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS],
 			p0Points: [Card.TEN_OF_HEARTS],
 			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.KING_OF_DIAMONDS],
 			p1Points: [Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [],
 		});
@@ -377,7 +377,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				p0Hand: [Card.KING_OF_SPADES],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.KING_OF_CLUBS],
-				p1Hand: [Card.SIX_OF_HEARTS],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.KING_OF_DIAMONDS],
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [],
 				scrap: [],
@@ -390,9 +390,9 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			.should('have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
-		
-		//opponent plays 6 of hearts
-		cy.playPointsOpponent(Card.SIX_OF_HEARTS)
+
+		//opponent plays king of diamonds
+		cy.playFaceCardOpponent(Card.KING_OF_DIAMONDS)
 
 		assertGameState(
 			0,
@@ -400,9 +400,9 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				p0Hand: [Card.KING_OF_SPADES],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.KING_OF_CLUBS],
-				p1Hand: [],
-				p1Points: [Card.ACE_OF_DIAMONDS, Card.SIX_OF_HEARTS],
-				p1FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.KING_OF_DIAMONDS],
 				scrap: [],
 			}
 		);
@@ -419,9 +419,9 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				p0Hand: [],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.KING_OF_CLUBS, Card.KING_OF_SPADES],
-				p1Hand: [],
-				p1Points: [Card.ACE_OF_DIAMONDS, Card.SIX_OF_HEARTS],
-				p1FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.KING_OF_DIAMONDS],
 				scrap: [],
 			}
 		);
