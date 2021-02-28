@@ -550,4 +550,16 @@ describe('Countering One-Offs', () => {
 			}
 		);
 	});
+
+	it.skip('Double counters successfully', ()=> {
+
+	});
+
+	it.skip('Triple counters successfully', ()=> {
+
+	});
+
+	it.skip('Quadrouple counters successfully', ()=> {
+
+	});
 });
