@@ -51,7 +51,10 @@
 				<p>
 					Which Two would you like to counter with? (Click the card)
 				</p>
-				<div id="twos-in-hand" class="d-flex justify-center">
+				<div
+					id="twos-in-hand"
+					class="d-flex justify-center"
+				>
 					<card
 						v-for="two in twosInHand"
 						:key="two.id"
@@ -63,7 +66,12 @@
 				</div>
 			</v-card-text>
 			<v-card-actions>
-				<v-btn text color="primary" data-cy="cancel-counter" @click="resolve">
+				<v-btn
+					text
+					color="primary"
+					data-cy="cancel-counter"
+					@click="resolve"
+				>
 					Cancel
 				</v-btn>
 			</v-card-actions>

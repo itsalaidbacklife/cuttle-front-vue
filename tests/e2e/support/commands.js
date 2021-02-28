@@ -234,7 +234,7 @@ Cypress.Commands.add('counterOpponent', (card) => {
 		throw new Error('Cannot play counter as opponent: Invalid card input');
 	}
 	return cy.window().its('app.$store.state.game')
-	.then((game) => {
+		.then((game) => {
 			const opponent = game.players[(game.myPNum + 1) % 2];
 			const playerId = game.players[game.myPNum].id
 			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
