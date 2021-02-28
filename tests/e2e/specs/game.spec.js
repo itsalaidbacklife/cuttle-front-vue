@@ -683,7 +683,7 @@ describe('Countering One-Offs', () => {
 		);
 	});
 
-	it.only('Quadrouple counters successfully', ()=> {
+	it('Quadrouple counters successfully', ()=> {
 		cy.loadGameFixture({
 			// Opponent is P0
 			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS],
