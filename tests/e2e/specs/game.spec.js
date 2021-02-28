@@ -353,7 +353,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it.only('Plays Kings', () => {
+	it('Plays Kings', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS],
 			p0Points: [Card.TEN_OF_HEARTS],
