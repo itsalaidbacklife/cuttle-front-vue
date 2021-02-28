@@ -26,7 +26,7 @@
 				<v-btn
 					data-cy="decline-counter-resolve"
 					color="primary"
-					depressed
+					outlined
 					@click="resolve"
 				>
 					Resolve
