@@ -110,6 +110,7 @@ export default {
 	methods: {
 		counter(two) {
 			this.$emit('counter', two.id);
+			this.choseToCounter = false;
 		}
 	}
 }
