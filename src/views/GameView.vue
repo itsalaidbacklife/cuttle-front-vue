@@ -209,11 +209,23 @@ export default {
 		}
 	},
 	computed: {
+		//////////////////////////
+		// Game, Deck and Scrap //
+		//////////////////////////
+		game() {
+			return this.$store.state.game;
+		},
+		deck() {
+			return this.game.deck;
+		},
+		scrap() {
+			return this.game.scrap;
+		},
 		////////////////////
 		// Player Objects //
 		////////////////////
 		player() {
-			return this.$store.state.game.players[this.$store.state.game.myPNum];
+			return this.game.players[this.$store.state.game.myPNum];
 		},
 		opponent() {
 			return this.$store.getters.opponent;
@@ -236,18 +248,6 @@ export default {
 		opponentPointsToWin() {
 			return this.pointsToWin(this.kingCount(this.opponent));
 		},
-		//////////////////////////
-		// Game, Deck and Scrap //
-		//////////////////////////
-		game() {
-			return this.$store.state.game;
-		},
-		deck() {
-			return this.$store.state.game.deck;
-		},
-		scrap() {
-			return this.$store.state.game.scrap;
-		},
 		//////////////////
 		// Interactions //
 		//////////////////
@@ -255,10 +255,10 @@ export default {
 			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
 		},
 		waitingForOpponent() {
-			return this.$store.state.game.waitingForOpponent;
+			return this.game.waitingForOpponent;
 		},
 		myTurnToCounter() {
-			return this.$store.state.game.myTurnToCounter;
+			return this.game.myTurnToCounter;
 		},
 		twosInHand() {
 			return this.player.hand.filter((card) => card.rank === 2);
