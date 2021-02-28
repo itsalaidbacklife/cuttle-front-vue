@@ -683,7 +683,7 @@ describe('Countering One-Offs', () => {
 		);
 	});
 
-	it.skip('Quadrouple counters successfully', ()=> {
+	it.only('Quadrouple counters successfully', ()=> {
 		cy.loadGameFixture({
 			// Opponent is P0
 			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS],
@@ -696,5 +696,65 @@ describe('Countering One-Offs', () => {
 		});
 		cy.get('[data-player-hand-card]').should('have.length', 2);
 		cy.log('Loaded fixture');
+		// Opponent plays ace of clubs as one-off
+		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
+		cy.get('#cannot-counter-dialog')
+			.should('not.be.visible');
+
+		// Player counters (1st counter)
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=counter]')
+			.click();
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-2]')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent counters back (2nd counter)
+		cy.counterOpponent(Card.TWO_OF_CLUBS);
+		// Player counters again (3rd counter)
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=counter]')
+			.click();
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-3]')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent plays 4th and final counter
+		cy.counterOpponent(Card.TWO_OF_DIAMONDS);
+		// Player cannot counter back
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+		assertGameState(
+			1,
+			{
+				// Opponent is P0
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				// Player is P1
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [
+					Card.ACE_OF_CLUBS,
+					Card.TWO_OF_HEARTS,
+					Card.TWO_OF_CLUBS,
+					Card.TWO_OF_SPADES,
+					Card.TWO_OF_DIAMONDS,
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.TEN_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS
+				],
+			}
+		);
 	});
 });
