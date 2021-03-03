@@ -34,6 +34,9 @@ describe('Lobby - Page Content', () => {
 	it('Displays headers', () => {
 		cy.contains('h1', 'Lobby for Test Game');
 	});
+	it('Displays logo', () => {
+		cy.get('#logo')
+	});
 	it('Displays buttons', () => {
 		cy.contains('button.v-btn', 'EXIT');
 		cy.contains('button.v-btn', 'READY');

@@ -157,7 +157,9 @@ h1 {
 }
 
 #logo {
-  margin: 0 auto;
+	height: auto;
+	width: 80%;
+  margin: 20px auto;
 }
 
 #btn-logout {

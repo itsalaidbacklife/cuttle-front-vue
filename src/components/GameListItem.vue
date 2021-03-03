@@ -1,43 +1,46 @@
 <template>
-	<v-row
-		class="list-item"
-		data-cy="game-list-item"
-	>
-		<v-col
-			sm="2"
-			lg="3"
+	<div>
+		<v-row
+			class="list-item"
+			data-cy="game-list-item"
 		>
-			<v-img
-				:src="require('../assets/logo.svg')"
-				class="my-3"
-				contain
-				:height="$vuetify.breakpoint.lg ? 64 : 32"
-			/>
-		</v-col>
-		<v-col 
-			sm="7" 
-			lg="6"
-		>
-			<p data-cy="game-list-item-name">
-				{{ name }}
-			</p>
-			<p>{{ readyText }} players</p>
-		</v-col>
-		<v-col
-			cols="3"
-			class="list-item-button"
-		>
-			<v-btn
-				color="primary"
-				rounded
-				:disabled="!status"
-				:small="$vuetify.breakpoint.lg ? false : true"
-				@click="subscribeToGame"
+			<v-col
+				sm="2"
+				lg="3"
 			>
-				JOIN
-			</v-btn>
-		</v-col>
-	</v-row>
+				<v-img
+					:src="require('../assets/logo_head.svg')"
+					class="my-1"
+					contain
+					:height="$vuetify.breakpoint.smAndUp ? 64 : 32"
+				/>
+			</v-col>
+			<v-col 
+				sm="7" 
+				lg="6"
+			>
+				<p class="game-name" data-cy="game-list-item-name">
+					{{ name }}
+				</p>
+				<p>{{ readyText }} players</p>
+			</v-col>
+			<v-col
+				cols="3"
+				class="list-item-button"
+			>
+				<v-btn
+					color="primary"
+					rounded
+					:disabled="!status"
+					:small="$vuetify.breakpoint.lg ? false : true"
+					@click="subscribeToGame"
+				>
+					JOIN
+				</v-btn>
+			</v-col>
+		</v-row>
+		<v-divider class="mb-4"></v-divider>
+	</div>
 </template>
 
 <script>
@@ -101,6 +104,9 @@ export default {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	& .game-name {
+		font-weight: 600;
+	}
 }
 .list-item-button {
 	display: flex;
@@ -110,10 +116,11 @@ export default {
 @media (max-width: 979px) and (orientation: landscape) {
 	.list-item {
 		margin: 0;
-		p {
+		& p {
 			line-height: 1rem;
 			margin: 3px auto;
 		}
+
 	}
 
 }
