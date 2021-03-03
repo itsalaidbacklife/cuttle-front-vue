@@ -22,8 +22,8 @@ describe('Home - Page Content', () => {
 		cy.contains('h1', 'Games');
 		cy.contains('label', 'Game Name');
 	});
-	it.skip('[Missing Feature] Displays logo', () => {
-		expect(true).to.eq(false, 'Empty Test');
+	it('Displays logo', () => {
+		cy.get('#logo')
 	});
 	it('Play AI button links to CuttleBot', () => {
 		cy.contains('a', 'Play with AI').should(
