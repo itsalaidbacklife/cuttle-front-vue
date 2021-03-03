@@ -11,7 +11,7 @@
 				:src="require('../assets/logo_head.svg')"
 				class="my-1"
 				contain
-				:height="$vuetify.breakpoint.md ? 64 : 32"
+				:height="$vuetify.breakpoint.smAndUp ? 64 : 32"
 			/>
 		</v-col>
 		<v-col 
