@@ -8,10 +8,10 @@
 			lg="3"
 		>
 			<v-img
-				:src="require('../assets/logo.svg')"
-				class="my-3"
+				:src="require('../assets/logo_head.svg')"
+				class="my-1"
 				contain
-				:height="$vuetify.breakpoint.lg ? 64 : 32"
+				:height="$vuetify.breakpoint.md ? 64 : 32"
 			/>
 		</v-col>
 		<v-col 
