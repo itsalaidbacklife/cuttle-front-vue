@@ -23,6 +23,18 @@ function assertFailedAuth() {
 		});
 }
 
+describe('Auth - Page Content', () => {
+	beforeEach(() => {
+		cy.wipeDatabase();
+		cy.visit('#/login');
+		cy.signupOpponent(validEmail, validPassword);
+	});
+
+	it('Displays logo', () => {
+		cy.get('#logo')
+	});
+})
+
 describe('Logging In', () => {
 	beforeEach(() => {
 		cy.wipeDatabase();

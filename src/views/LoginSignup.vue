@@ -5,7 +5,7 @@
 	>
 		<img
 			id="logo"
-			alt="Vue logo"
+			alt="Cuttle logo"
 			src="../assets/logo.png"
 		>
 		<v-row>
@@ -138,6 +138,7 @@ export default {
 }
 
 #logo {
+	height: 20vh;
   margin: 0 auto;
 }
 
