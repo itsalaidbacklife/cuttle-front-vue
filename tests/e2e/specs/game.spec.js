@@ -238,7 +238,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		assertSnackbarError('It\'s not your turn');
 
 		// Opponent plays king of diamonds
-		cy.playFaceCardOpponent(Card.KING_OF_DIAMONDS)
+		cy.playFaceCardOpponent(Card.KING_OF_DIAMONDS);
 
 		assertGameState(
 			0,
