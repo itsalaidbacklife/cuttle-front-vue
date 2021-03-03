@@ -1,7 +1,20 @@
 <template>
 	<v-container id="lobby-wrapper">
 		<v-row>
-			<v-col offset="1">
+			<v-col 
+				md="1" 
+				class="my-auto"
+			>
+				<img
+					id="logo"
+					alt="Cuttle logo"
+					src="../assets/logo.png"
+				>
+			</v-col>
+			<v-col  
+				md="8"
+				class="my-auto"
+			>
 				<h1>Lobby for {{ gameName }}</h1>
 			</v-col>
 		</v-row>
@@ -102,3 +115,10 @@ export default {
 	}
 }
 </script>
+
+<style scoped lang="scss">
+#logo {
+	height: 10vh;
+	margin: 0 auto;
+}
+</style>
