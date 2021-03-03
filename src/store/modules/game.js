@@ -1,4 +1,5 @@
 import { io } from '../../plugins/sails.js';
+
 var _ = require('lodash');
 function resetState() {
 	return {
@@ -17,6 +18,9 @@ function resetState() {
 		myPNum: null,
 		topCard: null,
 		secondCard: null,
+		oneOff: null,
+		waitingForOpponent: false,
+		myTurnToCounter: false,
 	};
 }
 const initialState = resetState();
@@ -61,6 +65,7 @@ export default {
 			if (Object.hasOwnProperty.call(newGame, 'twos')) state.twos = _.cloneDeep(newGame.twos);
 			if (Object.hasOwnProperty.call(newGame, 'topCard')) state.topCard = _.cloneDeep(newGame.topCard);
 			if (Object.hasOwnProperty.call(newGame, 'secondCard')) state.secondCard = _.cloneDeep(newGame.secondCard);
+			if (Object.hasOwnProperty.call(newGame, 'oneOff')) state.oneOff = _.cloneDeep(newGame.oneOff);
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
@@ -86,8 +91,13 @@ export default {
 		},
 		opponentLeft(state) {
 			state.players = state.players.filter(player => player.pNum === state.myPNum);
-		}
-
+		},
+		setWaitingForOpponent(state, val) {
+			state.waitingForOpponent = val;
+		},
+		setMyTurnToCounter(state, val) {
+			state.myTurnToCounter = val;
+		},
 	},
 	actions: {
 		async requestSubscribe(context, id) {
@@ -127,14 +137,12 @@ export default {
 			});
 		},
 		async requestLobbyData(context) {
-			console.log('requesting lobby data');
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/lobbyData', function handleResponse(res, jwres) {
 					if (jwres.statusCode === 200) {
 						context.commit('updateGame', res);
 						return Promise.resolve(res);
 					}
-					console.log(jwres);
 					return reject(new Error('Error loading lobby data'));
 				});
 			});
@@ -197,5 +205,49 @@ export default {
 				});
 			});
 		},
+		async requestPlayOneOff(context, cardId) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/untargetedOneOff', {
+					cardId,
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponent', true);
+					return resolve();
+				});
+			});
+		},
+		async requestResolve(context) {
+			context.commit('setMyTurnToCounter', false);
+			
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/resolve', {
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
+		async requestCounter(context, twoId) {
+			context.commit('setMyTurnToCounter', false);
+			
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/counter', {
+					cardId: twoId,
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponent', true);
+					return resolve();
+				});
+			});
+		}
 	}
 }

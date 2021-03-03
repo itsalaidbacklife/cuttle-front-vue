@@ -33,8 +33,19 @@ io.socket.on('game', function(evData) {
 		case 'loadFixture':
 			store.commit('updateGame', evData.data.game);
 			break;
+		case 'resolve':
+			store.commit('updateGame', evData.data.game);
+			store.commit('setWaitingForOpponent', false);
+			break;
+		case 'oneOff':
+		case 'counter':
+			store.commit('updateGame', evData.data.game);
+			if (evData.data.pNum !== store.state.game.myPNum) {
+				store.commit('setWaitingForOpponent', false);
+				store.commit('setMyTurnToCounter', true);
+			}
+			break;
 		}
-		break;
 	default:
 		break;
 	}

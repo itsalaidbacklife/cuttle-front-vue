@@ -37,7 +37,11 @@
 					<p>Deck</p>
 					<p>({{ deck.length }})</p>
 				</div>
-				<div id="scrap">
+				<div
+					id="scrap"
+					:class="{'valid-move': validMoves.includes('scrap')}"
+					@click="playOneOff"
+				>
 					<p>Scrap</p>
 					<p>({{ scrap.length }})</p>
 				</div>
@@ -160,30 +164,68 @@
 				</v-icon>
 			</v-btn>
 		</v-snackbar>
+		<v-overlay
+			id="waiting-for-opponent-scrim"
+			v-model="waitingForOpponent"
+			opacity=".6"
+		>
+			<h1>
+				Waiting for Opponent
+			</h1>
+		</v-overlay>
+		<counter-dialog
+			v-model="showCounterDialog"
+			:one-off="game.oneOff"
+			:twos-in-hand="twosInHand"
+			@resolve="resolve"
+			@counter="counter($event)"
+		/>
+		<cannot-counter-dialog
+			v-model="showCannotCounterDialog"
+			:one-off="game.oneOff"
+			@resolve="resolve"
+		/>
 	</div>
 </template>
 
 <script>
 import Card from '@/components/GameView/Card.vue';
+import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
+import CounterDialog from '@/components/GameView/CounterDialog.vue';
+
 export default {
 	name: 'GameView',
 	components: {
 		Card,
+		CannotCounterDialog,
+		CounterDialog,
 	},
 	data() {
 		return {
 			showSnack: false,
 			snackMessage: '',
 			snackColor: 'error',
-			selectionIndex: null // when select a card set this value
+			selectionIndex: null, // when select a card set this value
 		}
 	},
 	computed: {
+		//////////////////////////
+		// Game, Deck and Scrap //
+		//////////////////////////
+		game() {
+			return this.$store.state.game;
+		},
+		deck() {
+			return this.game.deck;
+		},
+		scrap() {
+			return this.game.scrap;
+		},
 		////////////////////
 		// Player Objects //
 		////////////////////
 		player() {
-			return this.$store.state.game.players[this.$store.state.game.myPNum];
+			return this.game.players[this.$store.state.game.myPNum];
 		},
 		opponent() {
 			return this.$store.getters.opponent;
@@ -206,20 +248,29 @@ export default {
 		opponentPointsToWin() {
 			return this.pointsToWin(this.kingCount(this.opponent));
 		},
-		////////////////////
-		// Deck and Scrap //
-		////////////////////
-		deck() {
-			return this.$store.state.game.deck;
-		},
-		scrap() {
-			return this.$store.state.game.scrap;
-		},
 		//////////////////
 		// Interactions //
 		//////////////////
 		selectedCard() {
 			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
+		},
+		waitingForOpponent() {
+			return this.game.waitingForOpponent;
+		},
+		myTurnToCounter() {
+			return this.game.myTurnToCounter;
+		},
+		twosInHand() {
+			return this.player.hand.filter((card) => card.rank === 2);
+		},
+		hasTwoInHand() {
+			return this.twosInHand.length > 0;
+		},
+		showCannotCounterDialog() {
+			return this.myTurnToCounter && !this.hasTwoInHand;
+		},
+		showCounterDialog() {
+			return this.myTurnToCounter && this.hasTwoInHand;
 		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
@@ -245,6 +296,7 @@ export default {
 			case 6:
 			case 7:
 				res.push('field');
+				res.push('scrap');
 				res = [...res, ...this.validScuttleIds];
 				break;
 			case 8:
@@ -268,7 +320,7 @@ export default {
 				break;
 			}
 			return res;
-		}
+		},
 	},
 	methods: {
 		clearSnackBar() {
@@ -400,6 +452,23 @@ export default {
 			default:
 				return;
 			}
+		},
+		playOneOff() {
+			if (!this.selectedCard) return;
+
+			this.$store.dispatch('requestPlayOneOff', this.selectedCard.id)
+				.then(this.clearSelection)
+				.catch(this.handleError);
+		},
+		resolve() {
+			this.$store.dispatch('requestResolve')
+				.then(this.clearSelection)
+				.catch(this.handleError);
+		},
+		counter(twoId) {
+			this.$store.dispatch('requestCounter', twoId)
+				.then(this.clearSelection)
+				.catch(this.handleError);
 		},
 	},
 }
