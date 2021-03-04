@@ -385,7 +385,54 @@ describe('Untargeted One-Offs', () => {
 		);
 	});
 	
-it('Plays a six to destroy all face cards', () => {
+	it('Plays a five to draw two cards', () => {
+		// Setup
+		cy.loadGameFixture({
+			// Player is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FIVE_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			// Opponent is P1
+			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+			// Deck
+			topCard: Card.THREE_OF_CLUBS,
+			secondCard: Card.EIGHT_OF_HEARTS,
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+		// Player plays five
+		cy.get('[data-player-hand-card=5-3]').click(); // five of spades
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('not.be.visible');
+
+		// Assert game state
+		assertGameState(
+			0,
+			{
+				// Player is P0
+				p0Hand: [Card.ACE_OF_CLUBS, Card.THREE_OF_CLUBS, Card.EIGHT_OF_HEARTS],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				// Opponent is P1
+				p1Hand: [Card.ACE_OF_HEARTS],
+				p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.FIVE_OF_SPADES],
+			}
+		);
+
+	});
+
+	it('Plays a six to destroy all face cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			//Player is P0
