@@ -159,44 +159,6 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it('Plays an Ace to destroy all point cards', () => {
-		// Setup
-		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
-			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
-			p0FaceCards: [Card.KING_OF_SPADES],
-			p1Hand: [Card.ACE_OF_HEARTS],
-			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [Card.KING_OF_HEARTS],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
-		cy.log('Loaded fixture');
-
-		// Player plays ace
-		cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click();
-		cy.get('#waiting-for-opponent-scrim')
-			.should('be.visible');
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-scrim')
-			.should('not.be.visible');
-		assertGameState(
-			0,
-			{
-				p0Hand: [Card.FOUR_OF_SPADES],
-				p0Points: [],
-				p0FaceCards: [Card.KING_OF_SPADES],
-				p1Hand: [Card.ACE_OF_HEARTS],
-				p1Points: [],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
-			}
-		);
-	});
-
 	it('Plays Kings', () => {
 		// Setup
 		cy.loadGameFixture({
@@ -379,6 +341,98 @@ describe('Game Basic Moves - P1 Perspective', () => {
 	});
 });
 
+
+describe('Untargeted One-Offs', () => {
+	beforeEach(() => {
+		setupAsP0();
+	});
+
+	it('Plays an Ace to destroy all point cards', () => {
+		// Setup
+		cy.loadGameFixture({
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Player plays ace
+		cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('not.be.visible');
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.FOUR_OF_SPADES],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.ACE_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
+			}
+		);
+	});
+	
+it('Plays a six to destroy all face cards', () => {
+		// Setup
+		cy.loadGameFixture({
+			//Player is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS],
+			// Opponent is P1
+			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS, Card.QUEEN_OF_DIAMONDS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Player plays six
+		cy.get('[data-player-hand-card=6-3]').click(); // six of spades
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('not.be.visible');
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.ACE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [],
+				// Opponent is P1
+				p1Hand: [Card.ACE_OF_HEARTS],
+				p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+				scrap:[
+					Card.SIX_OF_SPADES,
+					Card.KING_OF_CLUBS,
+					Card.KING_OF_DIAMONDS,
+					Card.KING_OF_HEARTS,
+					Card.KING_OF_SPADES,
+					Card.QUEEN_OF_DIAMONDS,
+				]
+			}
+		);
+	});
+});
 describe('Countering One-Offs', () => {
 	beforeEach(() => {
 		setupAsP1();
