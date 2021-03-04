@@ -350,14 +350,14 @@ describe('Untargeted One-Offs', () => {
 	it('Plays an Ace to destroy all point cards', () => {
 		// Setup
 		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS],
 			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
 			p0FaceCards: [Card.KING_OF_SPADES],
 			p1Hand: [Card.ACE_OF_HEARTS],
-			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1Points: [Card.TEN_OF_HEARTS, Card.TWO_OF_DIAMONDS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Loaded fixture');
 
 		// Player plays ace
@@ -374,22 +374,28 @@ describe('Untargeted One-Offs', () => {
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.FOUR_OF_SPADES],
+				p0Hand: [Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS],
 				p0Points: [],
 				p0FaceCards: [Card.KING_OF_SPADES],
 				p1Hand: [Card.ACE_OF_HEARTS],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
+				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TWO_OF_DIAMONDS, Card.ACE_OF_CLUBS],
 			}
 		);
+		// Attempt to plays ace out of turn
+		cy.get('[data-player-hand-card=1-1]').click(); // ace of diamonds
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
 	});
 	
 	it('Plays a five to draw two cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			// Player is P0
-			p0Hand: [Card.ACE_OF_CLUBS, Card.FIVE_OF_SPADES],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.FIVE_OF_SPADES, Card.FIVE_OF_HEARTS],
 			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
 			p0FaceCards: [Card.KING_OF_SPADES],
 			// Opponent is P1
@@ -400,7 +406,7 @@ describe('Untargeted One-Offs', () => {
 			topCard: Card.THREE_OF_CLUBS,
 			secondCard: Card.EIGHT_OF_HEARTS,
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Loaded fixture');
 		// Player plays five
 		cy.get('[data-player-hand-card=5-3]').click(); // five of spades
@@ -419,7 +425,7 @@ describe('Untargeted One-Offs', () => {
 			0,
 			{
 				// Player is P0
-				p0Hand: [Card.ACE_OF_CLUBS, Card.THREE_OF_CLUBS, Card.EIGHT_OF_HEARTS],
+				p0Hand: [Card.ACE_OF_CLUBS, Card.FIVE_OF_HEARTS, Card.THREE_OF_CLUBS, Card.EIGHT_OF_HEARTS],
 				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
 				p0FaceCards: [Card.KING_OF_SPADES],
 				// Opponent is P1
@@ -429,14 +435,19 @@ describe('Untargeted One-Offs', () => {
 				scrap: [Card.FIVE_OF_SPADES],
 			}
 		);
-
+		// Attempt to plays five out of turn
+		cy.get('[data-player-hand-card=5-2]').click(); // five of hearts
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
 	});
 
 	it('Plays a six to destroy all face cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			//Player is P0
-			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES, Card.SIX_OF_DIAMONDS],
 			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
 			p0FaceCards: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS],
 			// Opponent is P1
@@ -444,7 +455,7 @@ describe('Untargeted One-Offs', () => {
 			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [Card.KING_OF_HEARTS, Card.QUEEN_OF_DIAMONDS],
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Loaded fixture');
 
 		// Player plays six
@@ -461,7 +472,7 @@ describe('Untargeted One-Offs', () => {
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.ACE_OF_CLUBS],
+				p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
 				p0FaceCards: [],
 				// Opponent is P1
@@ -478,6 +489,12 @@ describe('Untargeted One-Offs', () => {
 				]
 			}
 		);
+		// Attempt to plays six out of turn
+		cy.get('[data-player-hand-card=6-1]').click(); // six of diamonds
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
 	});
 });
 describe('Countering One-Offs', () => {
