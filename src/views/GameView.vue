@@ -185,6 +185,13 @@
 			:one-off="game.oneOff"
 			@resolve="resolve"
 		/>
+		<eight-overlay
+			v-if="selectedCard"
+			v-model="showEightOverlay"
+			:card="selectedCard"
+			@points="playPoints"
+			@glasses="playFaceCard"
+		/>
 	</div>
 </template>
 
@@ -192,6 +199,7 @@
 import Card from '@/components/GameView/Card.vue';
 import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
 import CounterDialog from '@/components/GameView/CounterDialog.vue';
+import EightOverlay from '@/components/GameView/EightOverlay.vue';
 
 export default {
 	name: 'GameView',
@@ -199,6 +207,7 @@ export default {
 		Card,
 		CannotCounterDialog,
 		CounterDialog,
+		EightOverlay,
 	},
 	data() {
 		return {
@@ -206,6 +215,7 @@ export default {
 			snackMessage: '',
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
+			showEightOverlay: false,
 		}
 	},
 	computed: {
@@ -253,6 +263,9 @@ export default {
 		//////////////////
 		selectedCard() {
 			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
+		},
+		isPlayersTurn() {
+			return this.game.turn % 2 === this.game.myPNum
 		},
 		waitingForOpponent() {
 			return this.game.waitingForOpponent;
@@ -333,6 +346,9 @@ export default {
 			this.showSnack = true;
 			this.clearSelection();
 		},
+		clearOverlays() {
+			this.showEightOverlay = false;
+		},
 		clearSelection() {
 			this.selectionIndex = null;
 		},
@@ -386,11 +402,13 @@ export default {
 				});
 		},
 		playPoints() {
+			this.clearOverlays();
 			this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
 				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
 		playFaceCard() {
+			this.clearOverlays();
 			this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
 				.then(this.clearSelection())
 				.catch(this.handleError);
@@ -424,6 +442,12 @@ export default {
 				return;
 			case 8:
 				// Ask whether to play as points or face card
+				if (this.isPlayersTurn) {
+					this.showEightOverlay = true;
+				}
+				else {
+					this.handleError('It\'s not your turn!');
+				}
 				return;
 			default:
 				return;
