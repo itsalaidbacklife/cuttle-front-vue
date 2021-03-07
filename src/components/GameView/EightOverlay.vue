@@ -52,6 +52,13 @@ export default {
 		},
 		card: {
 			required: true,
+			// Card must be an 8
+			validator: (card) => {
+				return Object.hasOwnProperty.call(card, 'suit') && 
+				Object.hasOwnProperty.call(card, 'rank') &&
+				card.rank === 8 &&
+				[0, 1, 2, 3].includes(card.suit);
+			}
 		},
 	},
 	computed: {
