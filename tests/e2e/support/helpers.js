@@ -182,7 +182,9 @@ function assertDomMatchesFixture(pNum, fixture) {
 	cy.get(`#${p1Role}-score`)
 		.should('contain', `POINTS: ${expectedP1Points}`)
 		.should('contain', `TARGET: ${expectedP1PointsToWin}`);
-    
+
+	let playerHasGlasses = false;
+	
 	// Test Point Cards
 	fixture.p0Points.forEach((card) => {
 		cy.get(`[data-${p0Role}-point-card=${card.rank}-${card.suit}]`);
@@ -193,9 +195,15 @@ function assertDomMatchesFixture(pNum, fixture) {
 	// Test Face Cards
 	fixture.p0FaceCards.forEach((card) => {
 		cy.get(`[data-${p0Role}-face-card=${card.rank}-${card.suit}]`);
+		if (pNum === 0 && card.rank === 8) {
+			playerHasGlasses = true;
+		}
 	});
 	fixture.p1FaceCards.forEach((card) => {
 		cy.get(`[data-${p1Role}-face-card=${card.rank}-${card.suit}]`);
+		if (pNum === 1 && card.rank === 8) {
+			playerHasGlasses = true;
+		}
 	});
 	// Test Hands
 	if (pNum === 0) {
@@ -204,6 +212,11 @@ function assertDomMatchesFixture(pNum, fixture) {
 		});
 		cy.get('[data-opponent-hand-card]')
 			.should('have.length', fixture.p1Hand.length);
+		if (playerHasGlasses){
+			fixture.p1Hand.forEach((card) => {
+				cy.get(`[data-opponent-hand-card=${card.rank}-${card.suit}]`);
+			});
+		}
 	}
 	else if (pNum === 1) {
 		fixture.p1Hand.forEach((card) => {
@@ -211,6 +224,11 @@ function assertDomMatchesFixture(pNum, fixture) {
 		});
 		cy.get('[data-opponent-hand-card]')
 			.should('have.length', fixture.p0Hand.length);
+		if (playerHasGlasses){
+			fixture.p0Hand.forEach((card) => {
+				cy.get(`[data-opponent-hand-card=${card.rank}-${card.suit}]`);
+			});
+		}
 	}
 	// Test scrap (if provided)
 	if (fixture.scrap) {
