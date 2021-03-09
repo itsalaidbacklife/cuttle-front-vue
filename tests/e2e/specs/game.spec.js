@@ -337,12 +337,12 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Opponent draws card
 		cy.drawCardOpponent();
 		// Opponent now has 6 cards in hand
-		cy.get('#opponent-hand-cards div')
+		cy.get('.opponent-card-back')
 			.should('have.length', 6);
 		// Player draws card
 		cy.get('#deck').click();
 		// Player now have 7 cards in hand
-		cy.get('#player-hand-cards div')
+		cy.get('[data-player-hand-card]')
 			.should('have.length', 7);
 		// Attempt to play out of turn
 		cy.get('#deck').click();
@@ -351,17 +351,17 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Opponent draws 2nd time
 		cy.drawCardOpponent();
 		// Opponent now has 7 cards in hand
-		cy.get('#opponent-hand-cards div')
+		cy.get('.opponent-card-back')
 			.should('have.length', 7);
 		// Player draws 2nd time
 		cy.get('#deck').click();
 		// Player now has 8 cards in hand
-		cy.get('#player-hand-cards div')
+		cy.get('[data-player-hand-card]')
 			.should('have.length', 8);
 		// Opponent draws 3rd time (8 cards)
 		cy.drawCardOpponent();
 		// Opponent now has 8 cards in hand
-		cy.get('#opponent-hand-cards div')
+		cy.get('.opponent-card-back')
 			.should('have.length', 8);
 		// Player attempts to draw with full hand
 		cy.get('#deck').click();
@@ -371,10 +371,10 @@ describe('Game Basic Moves - P1 Perspective', () => {
 			.should('have.class', 'error')
 			.should('contain', 'You are at the hand limit; you cannot draw.');
 		// Player still has 8 cards in hand
-		cy.get('#player-hand-cards div')
+		cy.get('[data-player-hand-card]')
 			.should('have.length', 8);
 		// Opponent still has 8 cards in hand
-		cy.get('#opponent-hand-cards div')
+		cy.get('.opponent-card-back')
 			.should('have.length', 8);
 	});
 });
