@@ -326,51 +326,6 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			}
 		);
 	});
-	
-	it.only('Plays eights for points', () => {
-		// Setup
-		cy.loadGameFixture({
-			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 4);
-		cy.log('Loaded fixture');
-
-		// Player plays eight
-		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-		// Choose to play for points
-		cy.get('#eight-overlay')
-			.should('be.visible')
-			.get('[data-cy=eight-for-points]')
-			.click();
-		
-		assertGameState(
-			0,
-			{
-				p0Hand: [Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
-				p0Points: [Card.TEN_OF_HEARTS, Card.EIGHT_OF_SPADES],
-				p0FaceCards: [],
-				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-				p1Points: [Card.ACE_OF_DIAMONDS],
-				p1FaceCards: [],
-			}
-		);
-		
-		// Attempt to play eight out of turn
-		// Player plays eight
-		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
-	});
 });
 
 describe('Game Basic Moves - P1 Perspective', () => {
@@ -421,6 +376,101 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Opponent still has 8 cards in hand
 		cy.get('#opponent-hand-cards div')
 			.should('have.length', 8);
+	});
+});
+
+describe('Playing 8s', () => {
+	beforeEach(() => {
+		setupAsP0();
+	});
+
+	it('Plays eights for points', () => {
+		// Setup
+		cy.loadGameFixture({
+			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 4);
+		cy.log('Loaded fixture');
+
+		// Player plays eight
+		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		// Choose to play for points
+		cy.get('#eight-overlay')
+			.should('be.visible')
+			.get('[data-cy=eight-for-points]')
+			.click();
+		
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_HEARTS, Card.EIGHT_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+			}
+		);
+		
+		// Attempt to play eight out of turn
+		// Player plays eight
+		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+	});
+	it('Plays eights for glasses', () => {
+		// Setup
+		cy.loadGameFixture({
+			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 4);
+		cy.log('Loaded fixture');
+
+		// Player plays eight
+		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		// Choose to play as glasses
+		cy.get('#eight-overlay')
+			.should('be.visible')
+			.get('[data-cy=eight-as-glasses]')
+			.click();
+		
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [Card.EIGHT_OF_SPADES],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+			}
+		);
+		
+		// Attempt to play eight out of turn
+		// Player plays eight
+		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
 	});
 });
 
