@@ -374,6 +374,7 @@ export default {
 		},
 		clearOverlays() {
 			this.showEightOverlay = false;
+			this.clearSelection();
 		},
 		clearSelection() {
 			this.selectionIndex = null;

@@ -4,6 +4,17 @@
 		v-model="showOverlay"
 		opacity=".6"
 	>
+		<div id="close-wrapper" class="d-flex justify-end">
+			<v-btn
+				icon
+				data-cy="cancel-eight"
+				@click="$emit('cancel')"
+			>
+				<v-icon x-large>
+					mdi-close
+				</v-icon>
+			</v-btn>
+		</div>
 		<div
 			id="options-wrapper"
 			class="d-flex justify-space-around"
@@ -105,6 +116,10 @@ export default {
 			& #glasses-img {
 				max-width: 200px;
 			}
+		}
+
+		& #close-wrapper {
+			width: 85%;
 		}
 	}
 }
