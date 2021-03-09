@@ -10,11 +10,30 @@
 				class="d-flex justify-center align-start"
 			>
 				<div
-					v-for="card in opponent.hand"
-					:key="card.id"
-					class="opponent-card mx-2"
-					data-opponent-hand-card
-				/>
+					v-if="hasGlassesEight"
+					id="opponent-hand-glasses"
+					class="opponent-hand-wrapper"
+				>
+					<card
+						v-for="card in opponent.hand"
+						:key="card.id"
+						:suit="card.suit"
+						:rank="card.rank"
+						:data-opponent-hand-card="`${card.rank}-${card.suit}`"
+						class="opponent-hand-card-revealed"
+					/>
+				</div>
+				<div
+					v-else
+					class="opponent-hand-wrapper"
+				>
+					<div
+						v-for="card in opponent.hand"
+						:key="card.id"
+						class="opponent-card-back mx-2"
+						data-opponent-hand-card
+					/>
+				</div>
 			</div>
 			<h3
 				id="opponent-score"
@@ -85,11 +104,12 @@
 						/>
 					</div>
 					<div class="field-effects">
-						<card 
+						<card
 							v-for="card in player.runes"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:is-glasses="card.rank === 8"
 							:data-player-face-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
@@ -191,6 +211,7 @@
 			:card="selectedCard"
 			@points="playPoints"
 			@glasses="playFaceCard"
+			@cancel="clearOverlays"
 		/>
 	</div>
 </template>
@@ -207,7 +228,7 @@ export default {
 		Card,
 		CannotCounterDialog,
 		CounterDialog,
-		EightOverlay,
+		EightOverlay
 	},
 	data() {
 		return {
@@ -278,6 +299,11 @@ export default {
 		},
 		hasTwoInHand() {
 			return this.twosInHand.length > 0;
+		},
+		hasGlassesEight() {
+			return this.player.runes
+				.filter((card) => card.rank === 8)
+				.length > 0;
 		},
 		showCannotCounterDialog() {
 			return this.myTurnToCounter && !this.hasTwoInHand;
@@ -520,14 +546,29 @@ export default {
 #opponent-hand-cards {
 	height: 80%;
 	background: rgba(0, 0, 0, 0.46);
-	& .opponent-card {
-		height: 90%;
-		width: 10vw;
-		display: inline-block;
-		position: relative;
-		background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
-		transform: rotate(180deg);
+
+	& #opponent-hand-glasses {
+		margin-top: -48px;
+		.opponent-hand-card-revealed {
+			transform: scale(.8);
+		}
 	}
+
+	& .opponent-hand-wrapper {
+		display: flex;
+		position: relative;
+		height: 100%;
+
+		& .opponent-card-back {
+			height: 90%;
+			width: 10vw;
+			display: inline-block;
+			position: relative;
+			background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
+			transform: rotate(180deg);
+		}
+	}
+
 }
 #field {
 	display: flex;
