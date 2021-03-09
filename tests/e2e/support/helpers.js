@@ -194,15 +194,17 @@ function assertDomMatchesFixture(pNum, fixture) {
 	});
 	// Test Face Cards
 	fixture.p0FaceCards.forEach((card) => {
-		cy.get(`[data-${p0Role}-face-card=${card.rank}-${card.suit}]`);
+		cy.get(`[data-${p0Role}-face-card=${card.rank}-${card.suit}]`).as('card');
 		if (pNum === 0 && card.rank === 8) {
 			playerHasGlasses = true;
+			cy.get('@card').should('have.class', 'glasses');
 		}
 	});
 	fixture.p1FaceCards.forEach((card) => {
-		cy.get(`[data-${p1Role}-face-card=${card.rank}-${card.suit}]`);
+		cy.get(`[data-${p1Role}-face-card=${card.rank}-${card.suit}]`).as('card');
 		if (pNum === 1 && card.rank === 8) {
 			playerHasGlasses = true;
+			cy.get('@card').should('have.class', 'glasses');
 		}
 	});
 	// Test Hands
