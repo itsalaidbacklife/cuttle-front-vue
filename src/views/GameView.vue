@@ -84,6 +84,7 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:is-glasses="card.rank === 8"
 							:data-opponent-face-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
