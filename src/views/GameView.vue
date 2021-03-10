@@ -61,11 +61,13 @@
 					</div>
 					<div class="field-effects">
 						<card 
-							v-for="card in opponent.runes"
+							v-for="(card, index) in opponent.runes"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:is-valid-target="validMoves.includes(card.id)"
 							:data-opponent-face-card="`${card.rank}-${card.suit}`"
+							@click="targetOpponentFaceCard(index)"
 						/>
 					</div>
 				</div>
@@ -310,6 +312,11 @@ export default {
 				break;
 			case 2:
 				res.push('field');
+				const validFaceCards = this.opponent.runes.filter(
+					(potentialTarget) => potentialTarget.rank > 10 || potentialTarget.rank === 8
+				).map((validTarget) => validTarget.id);
+				console.log(validFaceCards)
+				res.push(...validFaceCards)
 				res = [...res, ...this.validScuttleIds];
 				break;
 			case 11:
@@ -403,6 +410,15 @@ export default {
 				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
+		playTargetedOneOff(targetIndex) {
+			this.$store.dispatch('requestPlayTargetedOneOff', {
+				cardId: this.selectedCard.id,
+				targetId: this.opponent.runes[targetIndex].id,
+				targetType: 'two'
+			})
+				.then(this.clearSelection())
+				.catch(this.handleError);
+		},
 		playToField() {
 			if (!this.selectedCard) return;
 
@@ -448,6 +464,17 @@ export default {
 				return;
 			case 9:
 				// Determine whether to scuttle or play as one-off
+				return;
+			default:
+				return;
+			}
+		},
+		targetOpponentFaceCard(targetIndex) {
+			if (!this.selectedCard) return;
+
+			switch(this.selectedCard.rank) {
+			case 2:
+				this.playTargetedOneOff(targetIndex)
 				return;
 			default:
 				return;

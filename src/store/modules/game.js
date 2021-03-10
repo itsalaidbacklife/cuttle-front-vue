@@ -219,6 +219,22 @@ export default {
 				});
 			});
 		},
+		async requestPlayTargetedOneOff(context, {cardId, targetId, targetType}) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/targetedOneOff', {
+					cardId,
+					targetId,
+					targetType,
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponent', true);
+					return resolve();
+				});
+			});
+		},
 		async requestResolve(context) {
 			context.commit('setMyTurnToCounter', false);
 			
