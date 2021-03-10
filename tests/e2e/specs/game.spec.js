@@ -779,10 +779,9 @@ describe('Play Two as One Off', () => {
 
 		// Play two as one off (ace of spades)
 		cy.get('[data-player-hand-card=2-0]').click(); // two of clubs
-		cy.get('#opponent-field')
 			
 		cy.get('[data-opponent-face-card=13-2]')
-			.click() // target king of hearts
+			.click(); // target king of hearts
 
 		// opponent resolve
 		cy.get('#waiting-for-opponent-scrim')
@@ -790,7 +789,7 @@ describe('Play Two as One Off', () => {
 		// Opponent does not counter (resolves stack)
 		cy.resolveOpponent();
 		cy.get('#waiting-for-opponent-scrim')
-			.should('not.be.visible')
+			.should('not.be.visible');
 
 		assertGameState(0,
 			{
@@ -800,6 +799,7 @@ describe('Play Two as One Off', () => {
 				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 				p1Points: [Card.TEN_OF_HEARTS],
 				p1FaceCards: [],
+				scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_HEARTS]
 			});
 
 	});
