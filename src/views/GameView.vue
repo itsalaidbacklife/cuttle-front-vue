@@ -315,7 +315,6 @@ export default {
 				const validFaceCards = this.opponent.runes.filter(
 					(potentialTarget) => potentialTarget.rank > 10 || potentialTarget.rank === 8
 				).map((validTarget) => validTarget.id);
-				console.log(validFaceCards)
 				res.push(...validFaceCards)
 				res = [...res, ...this.validScuttleIds];
 				break;
@@ -411,10 +410,12 @@ export default {
 				.catch(this.handleError);
 		},
 		playTargetedOneOff(targetIndex) {
+			const target = this.opponent.runes[targetIndex];
+			const targetType = target.rank === 11 ? 'jack' : 'rune';
 			this.$store.dispatch('requestPlayTargetedOneOff', {
 				cardId: this.selectedCard.id,
-				targetId: this.opponent.runes[targetIndex].id,
-				targetType: 'two'
+				targetId: target.id,
+				targetType,
 			})
 				.then(this.clearSelection())
 				.catch(this.handleError);
@@ -474,7 +475,7 @@ export default {
 
 			switch(this.selectedCard.rank) {
 			case 2:
-				this.playTargetedOneOff(targetIndex)
+				this.playTargetedOneOff(targetIndex);
 				return;
 			default:
 				return;
