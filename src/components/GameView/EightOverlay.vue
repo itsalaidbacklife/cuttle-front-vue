@@ -4,7 +4,10 @@
 		v-model="showOverlay"
 		opacity=".6"
 	>
-		<div id="close-wrapper" class="d-flex justify-end">
+		<div
+			id="close-wrapper"
+			class="d-flex justify-end"
+		>
 			<v-btn
 				icon
 				data-cy="cancel-eight"
