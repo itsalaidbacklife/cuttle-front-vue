@@ -206,7 +206,7 @@
 			@resolve="resolve"
 		/>
 		<eight-overlay
-			v-if="selectedCard"
+			v-if="selectedCard && selectedCard.rank === 8"
 			v-model="showEightOverlay"
 			:card="selectedCard"
 			@points="playPoints"
@@ -374,7 +374,6 @@ export default {
 		},
 		clearOverlays() {
 			this.showEightOverlay = false;
-			this.clearSelection();
 		},
 		clearSelection() {
 			this.selectionIndex = null;
