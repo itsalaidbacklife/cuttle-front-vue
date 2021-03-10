@@ -10,11 +10,30 @@
 				class="d-flex justify-center align-start"
 			>
 				<div
-					v-for="card in opponent.hand"
-					:key="card.id"
-					class="opponent-card mx-2"
-					data-opponent-hand-card
-				/>
+					v-if="hasGlassesEight"
+					id="opponent-hand-glasses"
+					class="opponent-hand-wrapper"
+				>
+					<card
+						v-for="card in opponent.hand"
+						:key="card.id"
+						:suit="card.suit"
+						:rank="card.rank"
+						:data-opponent-hand-card="`${card.rank}-${card.suit}`"
+						class="opponent-hand-card-revealed"
+					/>
+				</div>
+				<div
+					v-else
+					class="opponent-hand-wrapper"
+				>
+					<div
+						v-for="card in opponent.hand"
+						:key="card.id"
+						class="opponent-card-back mx-2"
+						data-opponent-hand-card
+					/>
+				</div>
 			</div>
 			<h3
 				id="opponent-score"
@@ -65,6 +84,7 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:is-glasses="card.rank === 8"
 							:data-opponent-face-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
@@ -85,11 +105,12 @@
 						/>
 					</div>
 					<div class="field-effects">
-						<card 
+						<card
 							v-for="card in player.runes"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:is-glasses="card.rank === 8"
 							:data-player-face-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
@@ -185,6 +206,14 @@
 			:one-off="game.oneOff"
 			@resolve="resolve"
 		/>
+		<eight-overlay
+			v-if="selectedCard && selectedCard.rank === 8"
+			v-model="showEightOverlay"
+			:card="selectedCard"
+			@points="playPoints"
+			@glasses="playFaceCard"
+			@cancel="clearOverlays"
+		/>
 	</div>
 </template>
 
@@ -192,6 +221,7 @@
 import Card from '@/components/GameView/Card.vue';
 import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
 import CounterDialog from '@/components/GameView/CounterDialog.vue';
+import EightOverlay from '@/components/GameView/EightOverlay.vue';
 
 export default {
 	name: 'GameView',
@@ -199,6 +229,7 @@ export default {
 		Card,
 		CannotCounterDialog,
 		CounterDialog,
+		EightOverlay
 	},
 	data() {
 		return {
@@ -206,6 +237,7 @@ export default {
 			snackMessage: '',
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
+			showEightOverlay: false,
 		}
 	},
 	computed: {
@@ -254,6 +286,9 @@ export default {
 		selectedCard() {
 			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
 		},
+		isPlayersTurn() {
+			return this.game.turn % 2 === this.game.myPNum
+		},
 		waitingForOpponent() {
 			return this.game.waitingForOpponent;
 		},
@@ -265,6 +300,11 @@ export default {
 		},
 		hasTwoInHand() {
 			return this.twosInHand.length > 0;
+		},
+		hasGlassesEight() {
+			return this.player.runes
+				.filter((card) => card.rank === 8)
+				.length > 0;
 		},
 		showCannotCounterDialog() {
 			return this.myTurnToCounter && !this.hasTwoInHand;
@@ -333,6 +373,9 @@ export default {
 			this.showSnack = true;
 			this.clearSelection();
 		},
+		clearOverlays() {
+			this.showEightOverlay = false;
+		},
 		clearSelection() {
 			this.selectionIndex = null;
 		},
@@ -386,11 +429,13 @@ export default {
 				});
 		},
 		playPoints() {
+			this.clearOverlays();
 			this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
 				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
 		playFaceCard() {
+			this.clearOverlays();
 			this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
 				.then(this.clearSelection())
 				.catch(this.handleError);
@@ -424,6 +469,12 @@ export default {
 				return;
 			case 8:
 				// Ask whether to play as points or face card
+				if (this.isPlayersTurn) {
+					this.showEightOverlay = true;
+				}
+				else {
+					this.handleError('It\'s not your turn!');
+				}
 				return;
 			default:
 				return;
@@ -496,14 +547,29 @@ export default {
 #opponent-hand-cards {
 	height: 80%;
 	background: rgba(0, 0, 0, 0.46);
-	& .opponent-card {
-		height: 90%;
-		width: 10vw;
-		display: inline-block;
-		position: relative;
-		background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
-		transform: rotate(180deg);
+
+	& #opponent-hand-glasses {
+		margin-top: -48px;
+		.opponent-hand-card-revealed {
+			transform: scale(.8);
+		}
 	}
+
+	& .opponent-hand-wrapper {
+		display: flex;
+		position: relative;
+		height: 100%;
+
+		& .opponent-card-back {
+			height: 90%;
+			width: 10vw;
+			display: inline-block;
+			position: relative;
+			background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
+			transform: rotate(180deg);
+		}
+	}
+
 }
 #field {
 	display: flex;

@@ -330,7 +330,7 @@ Cypress.Commands.add('loadGameFixture', (fixture) => {
 						return Promise.reject(jwres.error);
 					}
 					return Promise.resolve(jwres);
-			});
+				});
 		});
 });
 

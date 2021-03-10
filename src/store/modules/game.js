@@ -52,6 +52,7 @@ export default {
 		},
 		updateGame(state, newGame) {
 			if (Object.hasOwnProperty.call(newGame, 'id')) state.id = newGame.id;
+			if (Object.hasOwnProperty.call(newGame, 'turn')) state.turn = newGame.turn;
 			if (Object.hasOwnProperty.call(newGame, 'chat')) state.chat = _.cloneDeep(newGame.chat);
 			if (Object.hasOwnProperty.call(newGame, 'deck')) state.deck = _.cloneDeep(newGame.deck);
 			if (Object.hasOwnProperty.call(newGame, 'scrap')) state.scrap = _.cloneDeep(newGame.scrap);

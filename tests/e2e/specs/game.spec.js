@@ -267,7 +267,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 
 		// Attempt to play queen out of turn
-		cy.get('[data-player-hand-card=12-1]').click(); // queen of clubs
+		cy.get('[data-player-hand-card=12-1]').click(); // queen of diamonds
 		cy.get('#player-field')
 			.should('have.class', 'valid-move')
 			.click();
@@ -299,12 +299,12 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Opponent draws card
 		cy.drawCardOpponent();
 		// Opponent now has 6 cards in hand
-		cy.get('#opponent-hand-cards div')
+		cy.get('.opponent-card-back')
 			.should('have.length', 6);
 		// Player draws card
 		cy.get('#deck').click();
 		// Player now have 7 cards in hand
-		cy.get('#player-hand-cards div')
+		cy.get('[data-player-hand-card]')
 			.should('have.length', 7);
 		// Attempt to play out of turn
 		cy.get('#deck').click();
@@ -313,17 +313,17 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Opponent draws 2nd time
 		cy.drawCardOpponent();
 		// Opponent now has 7 cards in hand
-		cy.get('#opponent-hand-cards div')
+		cy.get('.opponent-card-back')
 			.should('have.length', 7);
 		// Player draws 2nd time
 		cy.get('#deck').click();
 		// Player now has 8 cards in hand
-		cy.get('#player-hand-cards div')
+		cy.get('[data-player-hand-card]')
 			.should('have.length', 8);
 		// Opponent draws 3rd time (8 cards)
 		cy.drawCardOpponent();
 		// Opponent now has 8 cards in hand
-		cy.get('#opponent-hand-cards div')
+		cy.get('.opponent-card-back')
 			.should('have.length', 8);
 		// Player attempts to draw with full hand
 		cy.get('#deck').click();
@@ -333,20 +333,168 @@ describe('Game Basic Moves - P1 Perspective', () => {
 			.should('have.class', 'error')
 			.should('contain', 'You are at the hand limit; you cannot draw.');
 		// Player still has 8 cards in hand
-		cy.get('#player-hand-cards div')
+		cy.get('[data-player-hand-card]')
 			.should('have.length', 8);
 		// Opponent still has 8 cards in hand
-		cy.get('#opponent-hand-cards div')
+		cy.get('.opponent-card-back')
 			.should('have.length', 8);
 	});
 });
 
+describe('Playing 8s', () => {
 
-describe('Untargeted One-Offs', () => {
 	beforeEach(() => {
 		setupAsP0();
 	});
 
+	it('Plays eights for points', () => {
+		// Setup
+		cy.loadGameFixture({
+			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 4);
+		cy.log('Loaded fixture');
+
+		// Player plays eight
+		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		// Choose to play for points
+		cy.get('#eight-overlay')
+			.should('be.visible')
+			.get('[data-cy=eight-for-points]')
+			.click();
+		
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_HEARTS, Card.EIGHT_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+			}
+		);
+		
+		// Attempt to play eight out of turn
+		// Player plays eight
+		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+	}); // End play 8 for points
+
+	it('Plays eights for glasses', () => {
+		// Setup
+		cy.loadGameFixture({
+			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.EIGHT_OF_CLUBS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 4);
+		cy.log('Loaded fixture');
+
+		// Player plays eight
+		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		// Choose to play as glasses
+		cy.get('#eight-overlay')
+			.should('be.visible')
+			.get('[data-cy=eight-as-glasses]')
+			.click();
+		
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [Card.EIGHT_OF_SPADES],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.EIGHT_OF_CLUBS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+			}
+		);
+		
+		// Attempt to play eight out of turn
+		// Player plays eight
+		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+
+		// Opponent plays glasses eight
+		cy.playFaceCardOpponent(Card.EIGHT_OF_CLUBS);
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [Card.EIGHT_OF_SPADES],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.EIGHT_OF_CLUBS],
+			}
+		);
+	}); // End play glasses 8
+
+	it('Cancels playing an 8 with close icon', () => {
+		// Setup
+		cy.loadGameFixture({
+			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 4);
+		cy.log('Loaded fixture');
+
+		// Player plays eight
+		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		// Cancel decision to play eight
+		cy.get('#eight-overlay')
+			.should('be.visible')
+			.get('[data-cy=cancel-eight]')
+			.click();
+
+		// Overlay clears
+		cy.get('#eight-overlay')
+			.should('not.be.visible');
+		// State is unchanged
+		assertGameState(0, {
+			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+	}); // End cancel playing an 8
+});
+
+describe('Untargeted One-Offs', () => {
+	
+	beforeEach(() => {
+		setupAsP0();
+	});
 	it('Plays an Ace to destroy all point cards', () => {
 		// Setup
 		cy.loadGameFixture({
@@ -389,8 +537,8 @@ describe('Untargeted One-Offs', () => {
 			.should('have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
-	});
-	
+	}); // End ace one-off
+
 	it('Plays a five to draw two cards', () => {
 		// Setup
 		cy.loadGameFixture({
@@ -441,7 +589,7 @@ describe('Untargeted One-Offs', () => {
 			.should('have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
-	});
+	}); // End five one-off
 
 	it('Plays a six to destroy all face cards', () => {
 		// Setup
@@ -495,8 +643,10 @@ describe('Untargeted One-Offs', () => {
 			.should('have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
-	});
-});
+	}); // End 6 one-off
+
+}); // End untargeted one-off describe
+
 describe('Countering One-Offs', () => {
 	beforeEach(() => {
 		setupAsP1();

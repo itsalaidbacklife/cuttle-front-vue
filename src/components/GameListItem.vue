@@ -19,7 +19,10 @@
 				sm="7" 
 				lg="6"
 			>
-				<p class="game-name" data-cy="game-list-item-name">
+				<p
+					class="game-name"
+					data-cy="game-list-item-name"
+				>
 					{{ name }}
 				</p>
 				<p>{{ readyText }} players</p>
@@ -39,7 +42,7 @@
 				</v-btn>
 			</v-col>
 		</v-row>
-		<v-divider class="mb-4"></v-divider>
+		<v-divider class="mb-4" />
 	</div>
 </template>
 
