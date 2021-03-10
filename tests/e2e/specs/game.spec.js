@@ -434,7 +434,7 @@ describe('Playing 8s', () => {
 			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
 			p0Points: [Card.TEN_OF_HEARTS],
 			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.EIGHT_OF_CLUBS],
 			p1Points: [Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [],
 		});
@@ -458,7 +458,7 @@ describe('Playing 8s', () => {
 				p0Hand: [Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.EIGHT_OF_SPADES],
-				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.EIGHT_OF_CLUBS],
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [],
 			}
@@ -471,6 +471,20 @@ describe('Playing 8s', () => {
 			.should('have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
+
+		// Opponent plays glasses eight
+		cy.playFaceCardOpponent(Card.EIGHT_OF_CLUBS);
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [Card.EIGHT_OF_SPADES],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [Card.EIGHT_OF_CLUBS],
+			}
+		);
 	});
 
 	it('Cancels playing an 8 with close icon', () => {
