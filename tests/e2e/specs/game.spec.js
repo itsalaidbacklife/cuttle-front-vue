@@ -526,7 +526,38 @@ describe.only('Playing 9s', () => {
 	}); // End 9 scuttle
 
 	it('Plays a nine on a higher point card to return it to owners hand', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.NINE_OF_CLUBS, Card.NINE_OF_HEARTS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Points: [Card.NINE_OF_SPADES],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
 
+		// Player plays nine (as one-off)
+		cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts	
+		cy.get('[data-opponent-point-card=9-3]').click(); // nine of spades
+
+		// Wait for opponent to resolve
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		cy.resolveOpponent();
+		
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.NINE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.NINE_OF_SPADES, Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_HEARTS],
+			}
+		);
 	});
 
 	it('Plays a nine to return a face card to its owners hand', () => {
