@@ -536,6 +536,9 @@ export default {
 					(this.selectedCard.rank === targetCard.rank && this.selectedCard.suit > targetCard.suit)
 				) {
 					this.scuttle(targetIndex);
+				// Play nine as one-off if unable to scuttle
+				} else {
+					// Play targeted one-off
 				}
 				return;
 			default:
