@@ -488,7 +488,55 @@ describe('Playing 8s', () => {
 			p1FaceCards: [],
 		});
 	}); // End cancel playing an 8
-});
+}); // End eights describe
+
+describe.only('Playing 9s', () => {
+	beforeEach(() => {
+		setupAsP0();
+	});
+
+	it('Plays a nine on a lower point card to scuttle it', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Player plays nine
+		cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
+		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.NINE_OF_HEARTS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_SPADES, Card.ACE_OF_DIAMONDS],
+			}
+		);
+	}); // End 9 scuttle
+
+	it('Plays a nine on a higher point card to return it to owners hand', () => {
+
+	});
+
+	it('Plays a nine to return a face card to its owners hand', () => {
+
+	}); // End 9 on face card
+
+	it.skip('Plays a 9 on a jack to steal back point card', () => {
+
+	}); // End 9 on jack
+}); // End 9s describe
 
 describe('Untargeted One-Offs', () => {
 	
