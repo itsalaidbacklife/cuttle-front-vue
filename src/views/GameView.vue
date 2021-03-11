@@ -529,6 +529,14 @@ export default {
 				return;
 			case 9:
 				// Determine whether to scuttle or play as one-off
+				const targetCard = this.opponent.points[targetIndex];
+				// Scuttle if nine is bigger than target
+				if (
+					this.selectedCard.rank > targetCard.rank || 
+					(this.selectedCard.rank === targetCard.rank && this.selectedCard.suit > targetCard.suit)
+				) {
+					this.scuttle(targetIndex);
+				}
 				return;
 			default:
 				return;
