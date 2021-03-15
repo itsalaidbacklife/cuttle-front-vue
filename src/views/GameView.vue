@@ -359,6 +359,9 @@ export default {
 				res = [...res, ...this.validScuttleIds];
 				break;
 			case 11:
+				// checks number of queens in opponent field
+				const queenCount = this.opponent.runes.filter(faceCard => faceCard.rank === 12).length
+				res = queenCount === 0 ? this.opponent.points.map(validTarget => validTarget.id) : []
 				break;
 			case 12:
 			case 13:
@@ -465,6 +468,16 @@ export default {
 				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
+		playJack(targetIndex) {
+			const target = this.opponent.points[targetIndex];
+			console.log(this.selectedCard.id)
+			this.$store.dispatch('requestPlayJack', {
+				cardId: this.selectedCard.id,
+				targetId: target.id,
+			})
+				.then(this.clearSelection())
+				.catch(this.handleError);
+		},
 		playToField() {
 			if (!this.selectedCard) return;
 
@@ -513,6 +526,7 @@ export default {
 				this.scuttle(targetIndex);
 				return;
 			case 11:
+				this.playJack(targetIndex)
 				return;
 			case 9:
 				// Determine whether to scuttle or play as one-off
