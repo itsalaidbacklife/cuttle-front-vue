@@ -1072,3 +1072,37 @@ describe('Play Two as One Off', () => {
 
 	});
 });
+
+describe('Play Jacks', () => {
+	beforeEach(() => {
+		setupAsP0();
+	});
+
+	it.only('Plays Jack', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS],
+			p0Points: [Card.TEN_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Play jack 
+		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
+
+		cy.get('[data-opponent-point-card=10-2]')
+			.click(); // target ten of hearts
+
+		// opponent resolve
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-scrim')
+			.should('not.be.visible');
+	});
+});
