@@ -236,6 +236,21 @@ export default {
 				});
 			});
 		},
+		async requestPlayJack(context, {cardId, targetId}) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/jack', {
+					cardId,
+					targetId,
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponent', true);
+					return resolve();
+				});
+			});
+		},
 		async requestResolve(context) {
 			context.commit('setMyTurnToCounter', false);
 			
