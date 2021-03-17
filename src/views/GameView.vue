@@ -359,9 +359,7 @@ export default {
 				res = [...res, ...this.validScuttleIds];
 				break;
 			case 11:
-				// checks number of queens in opponent field
-				const queenCount = this.opponent.runes.filter(faceCard => faceCard.rank === 12).length
-				res = queenCount === 0 ? this.opponent.points.map(validTarget => validTarget.id) : []
+				res = this.opponent.points.map(validTarget => validTarget.id) 
 				break;
 			case 12:
 			case 13:
