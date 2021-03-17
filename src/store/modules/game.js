@@ -246,7 +246,6 @@ export default {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
 					}
-					context.commit('setWaitingForOpponent', true);
 					return resolve();
 				});
 			});
