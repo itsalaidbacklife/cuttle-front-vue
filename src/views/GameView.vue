@@ -470,7 +470,6 @@ export default {
 		},
 		playJack(targetIndex) {
 			const target = this.opponent.points[targetIndex];
-			console.log(this.selectedCard.id)
 			this.$store.dispatch('requestPlayJack', {
 				cardId: this.selectedCard.id,
 				targetId: target.id,
