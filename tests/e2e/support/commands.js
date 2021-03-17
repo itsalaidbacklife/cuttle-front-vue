@@ -287,6 +287,8 @@ Cypress.Commands.add('vueRoute', (route) => {
  *   p1Hand: {suit: number, rank: number}[],
  *   p1Points: {suit: number, rank: number}[],
  *   p1FaceCards: {suit: number, rank: number}[],
+ *   topCard?: {suit: number, rank: number} (optional)
+ *   secondCard?: {suit: number, rank: number} (optional)
  * }
  */
 Cypress.Commands.add('loadGameFixture', (fixture) => {
@@ -300,7 +302,9 @@ Cypress.Commands.add('loadGameFixture', (fixture) => {
 			const p1HandCardIds = getCardIds(game, fixture.p1Hand);
 			const p1PointCardIds = getCardIds(game, fixture.p1Points);
 			const p1FaceCardIds = getCardIds(game, fixture.p1FaceCards);
-			io.socket.get('/game/loadFixture', {
+
+			// build request body
+			let reqBody = {
 				p0Id: game.players[0].id,
 				p1Id: game.players[1].id,
 				p0HandCardIds,
@@ -309,12 +313,24 @@ Cypress.Commands.add('loadGameFixture', (fixture) => {
 				p1PointCardIds,
 				p0FaceCardIds,
 				p1FaceCardIds,
-			}, function handleResponse(res, jwres) {
-				if (!jwres.statusCode === 200) {
-					return Promise.reject(jwres.error);
-				}
-				return Promise.resolve(jwres);
-			});
+			}
+			// Get top card & second cards if specified
+			if (fixture.topCard) {
+				const topCardId = getCardIds(game, [fixture.topCard])[0];
+				reqBody.topCardId = topCardId;
+			}
+			if (fixture.secondCard) {
+				const secondCardId = getCardIds(game, [fixture.secondCard])[0];
+				reqBody.secondCardId = secondCardId;
+			}
+			io.socket.get('/game/loadFixture',
+				reqBody,
+				function handleResponse(res, jwres) {
+					if (!jwres.statusCode === 200) {
+						return Promise.reject(jwres.error);
+					}
+					return Promise.resolve(jwres);
+				});
 		});
 });
 
