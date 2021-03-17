@@ -457,9 +457,19 @@ export default {
 				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
-		playTargetedOneOff(targetIndex) {
-			const target = this.opponent.runes[targetIndex];
-			const targetType = target.rank === 11 ? 'jack' : 'rune';
+		playTargetedOneOff(targetIndex, targetType) {
+			let target;
+			switch (targetType) {
+			case 'runes':
+				target = this.opponent.runes[targetIndex];
+				break;
+			case 'point':
+				target = this.opponent.points[targetIndex];
+				break;
+			case 'jack':
+				break;
+			}
+			const selCard = this.selectedCard;
 			this.$store.dispatch('requestPlayTargetedOneOff', {
 				cardId: this.selectedCard.id,
 				targetId: target.id,
@@ -538,7 +548,7 @@ export default {
 					this.scuttle(targetIndex);
 				// Play nine as one-off if unable to scuttle
 				} else {
-					// Play targeted one-off
+					this.playTargetedOneOff(targetIndex, 'point');
 				}
 				return;
 			default:
@@ -550,8 +560,10 @@ export default {
 
 			switch(this.selectedCard.rank) {
 			case 2:
-				this.playTargetedOneOff(targetIndex);
+				this.playTargetedOneOff(targetIndex, 'rune');
 				return;
+			case 9:
+				this.playTargetedOneOff(targetIndex, 'rune');
 			default:
 				return;
 			}
