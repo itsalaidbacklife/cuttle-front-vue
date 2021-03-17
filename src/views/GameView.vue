@@ -73,6 +73,7 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:jacks="card.attachments"
 							:is-valid-target="validMoves.includes(card.id)"
 							:data-opponent-point-card="`${card.rank}-${card.suit}`"
 							@click="targetOpponentPointCard(index)"
@@ -98,11 +99,12 @@
 					@click="playToField"
 				>
 					<div class="field-points">
-						<card 
+						<card
 							v-for="card in player.points"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:jacks="card.attachments"
 							:data-player-point-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
