@@ -490,7 +490,7 @@ describe('Playing 8s', () => {
 	}); // End cancel playing an 8
 }); // End eights describe
 
-describe.only('Playing 9s', () => {
+describe('Playing 9s', () => {
 	beforeEach(() => {
 		setupAsP0();
 	});
