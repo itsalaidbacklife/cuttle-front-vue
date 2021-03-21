@@ -224,7 +224,7 @@
 			:nine="selectedCard"
 			:target="nineTarget"
 			@scuttle="scuttle(nineTargetIndex)"
-			@one-off="playTargetedOneOff"
+			@one-off="playTargetedOneOff(nineTargetIndex, targetType)"
 			@cancel="clearOverlays"
 		/>
 	</div>
