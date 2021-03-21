@@ -511,6 +511,11 @@ describe('Playing 9s', () => {
 		cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
 		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
 
+		cy.get('#nine-overlay')
+			.should('be.visible')
+			.get('[data-cy=nine-scuttle]')
+			.click();
+		
 		assertGameState(
 			0,
 			{
@@ -525,7 +530,7 @@ describe('Playing 9s', () => {
 		);
 	}); // End 9 scuttle
 
-	it('Plays a nine on a higher point card to return it to owners hand', () => {
+	it.only('Plays a nine on a higher point card to return it to owners hand', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.NINE_OF_CLUBS, Card.NINE_OF_HEARTS],
 			p0Points: [Card.TEN_OF_HEARTS],
@@ -540,6 +545,11 @@ describe('Playing 9s', () => {
 		// Player plays nine (as one-off)
 		cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts	
 		cy.get('[data-opponent-point-card=9-3]').click(); // nine of spades
+
+		cy.get('#nine-overlay')
+			.should('be.visible')
+			.get('[data-cy=nine-one-off]')
+			.click();
 
 		// Wait for opponent to resolve
 		cy.get('#waiting-for-opponent-scrim')
