@@ -218,6 +218,15 @@
 			@glasses="playFaceCard"
 			@cancel="clearOverlays"
 		/>
+		<nine-overlay
+			v-if="showNineOverlay"
+			v-model="showNineOverlay"
+			:nine="selectedCard"
+			:target="nineTarget"
+			@scuttle="scuttle(nineTargetIndex)"
+			@one-off="playTargetedOneOff"
+			@cancel="clearOverlays"
+		/>
 	</div>
 </template>
 
@@ -226,6 +235,7 @@ import Card from '@/components/GameView/Card.vue';
 import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
 import CounterDialog from '@/components/GameView/CounterDialog.vue';
 import EightOverlay from '@/components/GameView/EightOverlay.vue';
+import NineOverlay from '../components/GameView/NineOverlay.vue';
 
 export default {
 	name: 'GameView',
@@ -233,7 +243,8 @@ export default {
 		Card,
 		CannotCounterDialog,
 		CounterDialog,
-		EightOverlay
+		EightOverlay,
+		NineOverlay,
 	},
 	data() {
 		return {
@@ -242,6 +253,9 @@ export default {
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
 			showEightOverlay: false,
+			showNineOverlay: false,
+			nineTargetIndex: null,
+			targetType: null,
 		}
 	},
 	computed: {
@@ -370,6 +384,16 @@ export default {
 			}
 			return res;
 		},
+		nineTarget() {
+			switch(this.targetType) {
+			case 'point':
+				return this.nineTargetIndex !== null ? this.opponent.points[this.nineTargetIndex] : null;
+			case 'rune':
+				this.nineTargetIndex !== null ? this.opponent.runes[this.nineTargetIndex] : null;
+			default:
+				return null;
+			}
+		},
 	},
 	methods: {
 		clearSnackBar() {
@@ -384,9 +408,13 @@ export default {
 		},
 		clearOverlays() {
 			this.showEightOverlay = false;
+			this.showNineOverlay = false;
+			this.nineTargetIndex = null;
+			this.targetType = null;
 		},
 		clearSelection() {
 			this.selectionIndex = null;
+			this.clearOverlays();
 		},
 		selectCard(index) {
 			if (index === this.selectionIndex){
@@ -538,17 +566,9 @@ export default {
 				return;
 			case 9:
 				// Determine whether to scuttle or play as one-off
-				const targetCard = this.opponent.points[targetIndex];
-				// Scuttle if nine is bigger than target
-				if (
-					this.selectedCard.rank > targetCard.rank || 
-					(this.selectedCard.rank === targetCard.rank && this.selectedCard.suit > targetCard.suit)
-				) {
-					this.scuttle(targetIndex);
-				// Play nine as one-off if unable to scuttle
-				} else {
-					this.playTargetedOneOff(targetIndex, 'point');
-				}
+				this.nineTargetIndex = targetIndex;
+				this.showNineOverlay = true;
+				this.targetType = 'point';
 				return;
 			default:
 				return;
