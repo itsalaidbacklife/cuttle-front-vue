@@ -1124,7 +1124,7 @@ describe('Play Two as One Off', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 2);
 		cy.log('Loaded fixture');
 
-		// Play two as one off (ace of spades)
+		// Play two as one off (two of clubs)
 		cy.get('[data-player-hand-card=2-0]').click(); // two of clubs
 			
 		cy.get('[data-opponent-face-card=13-2]')

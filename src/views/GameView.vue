@@ -286,7 +286,7 @@ export default {
 		// Interactions //
 		//////////////////
 		selectedCard() {
-			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex]: null;
+			return this.selectionIndex !== null ? this.player.hand[this.selectionIndex] : null;
 		},
 		isPlayersTurn() {
 			return this.game.turn % 2 === this.game.myPNum
@@ -559,17 +559,17 @@ export default {
 			if (!this.selectedCard) return;
 
 			this.$store.dispatch('requestPlayOneOff', this.selectedCard.id)
-				.then(this.clearSelection)
+				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
 		resolve() {
 			this.$store.dispatch('requestResolve')
-				.then(this.clearSelection)
+				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
 		counter(twoId) {
 			this.$store.dispatch('requestCounter', twoId)
-				.then(this.clearSelection)
+				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
 	},
