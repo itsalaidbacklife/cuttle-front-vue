@@ -460,7 +460,7 @@ export default {
 		playTargetedOneOff(targetIndex, targetType) {
 			let target;
 			switch (targetType) {
-			case 'runes':
+			case 'rune':
 				target = this.opponent.runes[targetIndex];
 				break;
 			case 'point':
@@ -469,7 +469,6 @@ export default {
 			case 'jack':
 				break;
 			}
-			const selCard = this.selectedCard;
 			this.$store.dispatch('requestPlayTargetedOneOff', {
 				cardId: this.selectedCard.id,
 				targetId: target.id,
