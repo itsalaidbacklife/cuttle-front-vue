@@ -214,7 +214,7 @@
 			:card="selectedCard"
 			@points="playPoints"
 			@glasses="playFaceCard"
-			@cancel="clearOverlays"
+			@cancel="clearSelection"
 		/>
 		<nine-overlay
 			v-if="showNineOverlay"
@@ -223,7 +223,7 @@
 			:target="nineTarget"
 			@scuttle="scuttle(nineTargetIndex)"
 			@one-off="playTargetedOneOff(nineTargetIndex, targetType)"
-			@cancel="clearOverlays"
+			@cancel="clearSelection"
 		/>
 	</div>
 </template>
