@@ -587,6 +587,15 @@ describe('Playing 9s', () => {
 		cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts	
 		cy.get('[data-opponent-point-card=9-3]').click(); // nine of spades
 
+		// Attempt illegal scuttle
+		cy.log('Attempting illegal scuttle');
+		cy.get('#nine-cannot-scuttle').should('be.visible');
+		cy.get('#nine-overlay')
+			.should('be.visible')
+			.get('[data-cy=nine-scuttle]')
+			.click();
+
+		cy.log('Choosing to play nine as one-off');
 		// Chooses to play as one-off
 		cy.get('#nine-overlay')
 			.should('be.visible')
