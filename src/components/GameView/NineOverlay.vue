@@ -27,7 +27,7 @@
 			<div
 				data-cy="nine-scuttle"
 				class="d-flex flex-column align-center option"
-				@click="$emit('scuttle')"
+				@click="scuttle"
 			>
 				<h3>SCUTTLE</h3>
 				<card
@@ -41,6 +41,9 @@
 					mdi-delete
 				</v-icon>
 				<p>Scrap/Destroy Target</p>
+				<div id="nine-cannot-scuttle" v-if="!canScuttle" class="d-flex justify-center align-center pa-8">
+					<p>Cannot Scuttle a larger point card</p>
+				</div>
 			</div>
 
 			<div
@@ -118,6 +121,13 @@ export default {
 			);
 		},
 	},
+	methods: {
+		scuttle() {
+			if (this.canScuttle) {
+				this.$emit('scuttle');
+			}
+		}
+	}
 }
 </script>
 
@@ -132,8 +142,19 @@ export default {
 			width: 100%;
 
 			& .option {
+				position: relative;
 				cursor: pointer;
 			}
+		}
+
+		#nine-cannot-scuttle {
+			display: block;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			color: #ffffff;
+			background-color: rgba(0, 0, 0, .6);
+			font-weight: 600;
 		}
 
 		& #close-wrapper {
