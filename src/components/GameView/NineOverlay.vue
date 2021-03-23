@@ -11,7 +11,7 @@
 		>
 			<v-btn
 				icon
-				data-cy="cancel-eight"
+				data-cy="cancel-nine"
 				@click="$emit('cancel')"
 			>
 				<v-icon x-large>
