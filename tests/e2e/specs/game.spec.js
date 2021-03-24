@@ -1078,17 +1078,17 @@ describe('Play Jacks', () => {
 		setupAsP0();
 	});
 
-	it.only('Plays Jack', () => {
+	it('Player and Opponent plays Jacks on different card', () => {
 		// Set Up
 		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS],
+			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES],
 			p0Points: [Card.TEN_OF_SPADES],
-			p0FaceCards: [Card.KING_OF_SPADES],
-			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
 			p1Points: [Card.TEN_OF_HEARTS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Loaded fixture');
 
 		// Play jack 
@@ -1099,11 +1099,34 @@ describe('Play Jacks', () => {
 
 		assertGameState(0,
 			{
-				p0Hand: [Card.ACE_OF_SPADES],
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
 				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
-				p0FaceCards: [Card.KING_OF_SPADES],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
 				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+		
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		// Attempt to play king out of turn
+		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+
+		
+		// opponent plays Jack
+		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_SPADES)
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1Points: [Card.TEN_OF_SPADES],
 				p1FaceCards: [Card.KING_OF_HEARTS],
 				scrap: []
 			});
