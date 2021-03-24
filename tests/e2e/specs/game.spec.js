@@ -951,7 +951,7 @@ describe('Countering One-Offs', () => {
 		);
 	});
 
-	it('Quadrouple counters successfully', ()=> {
+	it('Quadruple counters successfully', ()=> {
 		cy.loadGameFixture({
 			// Opponent is P0
 			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS],
@@ -1070,5 +1070,286 @@ describe('Play Two as One Off', () => {
 				scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_HEARTS]
 			});
 
+	});
+});
+
+describe('Play Jacks', () => {
+	beforeEach(() => {
+		setupAsP0();
+	});
+
+	it('Player and Opponent plays Jacks on different cards', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.log('Loaded fixture');
+
+		// Play jack 
+		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
+
+		cy.get('[data-opponent-point-card=10-2]')
+			.click(); // target ten of hearts
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
+				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+		
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		// Attempt to play king out of turn
+		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+
+		
+		// opponent plays Jack
+		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_SPADES)
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1Points: [Card.TEN_OF_SPADES],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+	});
+
+	it('Double Jacks - Player and Opponent plays Jacks on the same card', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.log('Loaded fixture');
+
+		// Play jack 
+		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
+
+		cy.get('[data-opponent-point-card=10-2]')
+			.click(); // target ten of hearts
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
+				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+		
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		// Attempt to play king out of turn
+		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+
+		
+		// opponent plays Jack
+		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1Points: [Card.TEN_OF_HEARTS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+	});
+
+
+	it('Triple jacks successfully', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
+			p0Points: [Card.TEN_OF_SPADES],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 4);
+		cy.log('Loaded fixture');
+
+		// Play jack 
+		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
+
+		cy.get('[data-opponent-point-card=10-2]')
+			.click(); // target ten of hearts
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
+				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+		
+		cy.get('[data-player-hand-card]').should('have.length', 3);
+		// Attempt to play king out of turn
+		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+
+		
+		// opponent plays 2nd Jack
+		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1Points: [Card.TEN_OF_HEARTS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+
+		// Player plays 3rd jack 
+		cy.get('[data-player-hand-card=11-2]').click(); // jack of clubs
+
+		cy.get('[data-opponent-point-card=10-2]')
+			.click(); // target ten of hearts
+		
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
+				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+			
+	});
+
+	it('Quadruple jacks successfully', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
+			p0Points: [Card.TEN_OF_SPADES],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 4);
+		cy.log('Loaded fixture');
+
+		// Play jack 
+		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
+
+		cy.get('[data-opponent-point-card=10-2]')
+			.click(); // target ten of hearts
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
+				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+		
+		cy.get('[data-player-hand-card]').should('have.length', 3);
+		// Attempt to play king out of turn
+		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+
+		
+		// opponent plays 2nd Jack
+		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_SPADES],
+				p1Points: [Card.TEN_OF_HEARTS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+
+		// Player plays 3rd jack 
+		cy.get('[data-player-hand-card=11-2]').click(); // jack of clubs
+
+		cy.get('[data-opponent-point-card=10-2]')
+			.click(); // target ten of hearts
+		
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
+				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_SPADES],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+
+		// Attempt to play king out of turn
+		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+
+		
+		// opponent plays 4th Jack
+		cy.playJackOpponent(Card.JACK_OF_SPADES, Card.TEN_OF_HEARTS)
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1Points: [Card.TEN_OF_HEARTS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: []
+			});
+			
 	});
 });

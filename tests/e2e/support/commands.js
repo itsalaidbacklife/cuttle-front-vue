@@ -168,6 +168,43 @@ Cypress.Commands.add('playFaceCardOpponent', (card) => {
  * @param card {suit: number, rank: number}
  * @param target {suit: number, rank: number}
  */
+Cypress.Commands.add('playJackOpponent', (card, target) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot play opponent runes: Invalid card input');
+	}
+	return cy
+		.window()
+		.its('app.$store.state.game')
+		.then((game) => {
+			const player = game.players[game.myPNum];
+			const opponent = game.players[(game.myPNum + 1) % 2];
+			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
+			const foundTarget = player.points.find((pointCard) => cardsMatch(target, pointCard))
+			if (!foundCard) {
+				throw new Error(`Error playing opponents jack: could not find ${card.rank} of ${card.suit} in opponent hand`)
+			}
+			if (!foundTarget) {
+				throw new Error(`Error playing opponents jack: could not find ${target.rank} of ${target.suit} in player points`)
+			}
+			const cardId = foundCard.id;
+			const targetId = foundTarget.id
+			io.socket.get('/game/jack', {
+				opId: player.id,
+				cardId,
+				targetId
+			},
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode !== 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
+/**
+ * @param card {suit: number, rank: number}
+ * @param target {suit: number, rank: number}
+ */
 Cypress.Commands.add('scuttleOpponent', (card, target) => {
 	if (!hasValidSuitAndRank(card)) {
 		throw new Error('Cannot scuttle as opponent: Invalid card input');

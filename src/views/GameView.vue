@@ -73,6 +73,7 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:jacks="card.attachments"
 							:is-valid-target="validMoves.includes(card.id)"
 							:data-opponent-point-card="`${card.rank}-${card.suit}`"
 							@click="targetOpponentPointCard(index)"
@@ -84,8 +85,8 @@
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
-							:is-valid-target="validMoves.includes(card.id)"
 							:is-glasses="card.rank === 8"
+							:is-valid-target="validMoves.includes(card.id)"
 							:data-opponent-face-card="`${card.rank}-${card.suit}`"
 							@click="targetOpponentFaceCard(index)"
 						/>
@@ -98,11 +99,12 @@
 					@click="playToField"
 				>
 					<div class="field-points">
-						<card 
+						<card
 							v-for="card in player.points"
 							:key="card.id"
 							:suit="card.suit"
 							:rank="card.rank"
+							:jacks="card.attachments"
 							:data-player-point-card="`${card.rank}-${card.suit}`"
 						/>
 					</div>
@@ -359,6 +361,7 @@ export default {
 				res = [...res, ...this.validScuttleIds];
 				break;
 			case 11:
+				res = this.opponent.points.map(validTarget => validTarget.id) 
 				break;
 			case 12:
 			case 13:
@@ -465,6 +468,15 @@ export default {
 				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
+		playJack(targetIndex) {
+			const target = this.opponent.points[targetIndex];
+			this.$store.dispatch('requestPlayJack', {
+				cardId: this.selectedCard.id,
+				targetId: target.id,
+			})
+				.then(this.clearSelection())
+				.catch(this.handleError);
+		},
 		playToField() {
 			if (!this.selectedCard) return;
 
@@ -513,6 +525,7 @@ export default {
 				this.scuttle(targetIndex);
 				return;
 			case 11:
+				this.playJack(targetIndex)
 				return;
 			case 9:
 				// Determine whether to scuttle or play as one-off

@@ -18,6 +18,21 @@
 			:src="require(`../../assets/cards/card_${suit}_${rank}.png`)"
 			:alt="cardName"
 		>
+		<div 
+			v-if="jacks" 
+			class="jack-container"
+		>
+			<div 
+				v-for="jack in jacks" 
+				:key="jack.id"
+				class="jack"
+			>
+				<img
+					:src="require(`../../assets/cards/card_${jack.suit}_${jack.rank}.png`)"
+					:alt="cardName"
+				>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -45,6 +60,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		jacks: {
+			type: Array,
+			default: null,
+		}
 	},
 	computed: {
 		suitName() {
@@ -113,6 +132,29 @@ export default {
   &.glasses {
 	  transform: scale(1.3);
   }
+	.jack-container {
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: auto;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+
+		.jack {
+			height: 2vh;
+			width: 50%;
+			overflow: visible;
+			& img {
+				width: auto;
+				background-size: cover;
+				height: 10vh;
+				display: block;
+				position: relative;
+			}
+		}
+	}
 }
 .selected {
 	transform: scale(1.1);
