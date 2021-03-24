@@ -134,21 +134,22 @@ export default {
   }
 	.jack-container {
 		position: absolute;
-		left: 4vh;
+		right: 0;
 		top: 0;
 		width: auto;
 		height: 100%;
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
+		align-items: flex-start;
 
 		.jack {
-			width: 3vh;
-			height: 50%;
+			height: 2vh;
+			width: 50%;
 			overflow: visible;
 			& img {
-				width: 7.5vh;
+				width: auto;
 				background-size: cover;
-				height: 100%;
+				height: 10vh;
 				display: block;
 				position: relative;
 			}
