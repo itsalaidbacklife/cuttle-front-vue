@@ -142,11 +142,11 @@ export default {
 		flex-direction: row;
 
 		.jack {
-			width: 4vh;
-			height: 100%;
+			width: 3vh;
+			height: 50%;
 			overflow: visible;
 			& img {
-				width: 15vh;
+				width: 7.5vh;
 				background-size: cover;
 				height: 100%;
 				display: block;
