@@ -29,7 +29,7 @@
 				class="d-flex flex-column align-center option"
 				@click="scuttle"
 			>
-				<h3>SCUTTLE</h3>
+				<h3 class="my-2">SCUTTLE</h3>
 				<card
 					:suit="target.suit"
 					:rank="target.rank"
@@ -51,7 +51,7 @@
 				class="d-flex flex-column align-center option"
 				@click="$emit('one-off')"
 			>
-				<h3>ONE-OFF</h3>
+				<h3 class="my-2">ONE-OFF</h3>
 				<card
 					:suit="target.suit"
 					:rank="target.rank"
@@ -144,6 +144,7 @@ export default {
 			& .option {
 				position: relative;
 				cursor: pointer;
+				padding: 16px;
 			}
 		}
 
