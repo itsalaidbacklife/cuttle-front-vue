@@ -216,7 +216,16 @@
 			:card="selectedCard"
 			@points="playPoints"
 			@glasses="playFaceCard"
-			@cancel="clearOverlays"
+			@cancel="clearSelection"
+		/>
+		<nine-overlay
+			v-if="showNineOverlay"
+			v-model="showNineOverlay"
+			:nine="selectedCard"
+			:target="nineTarget"
+			@scuttle="scuttle(nineTargetIndex)"
+			@one-off="playTargetedOneOff(nineTargetIndex, targetType)"
+			@cancel="clearSelection"
 		/>
 	</div>
 </template>
@@ -226,6 +235,7 @@ import Card from '@/components/GameView/Card.vue';
 import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
 import CounterDialog from '@/components/GameView/CounterDialog.vue';
 import EightOverlay from '@/components/GameView/EightOverlay.vue';
+import NineOverlay from '../components/GameView/NineOverlay.vue';
 
 export default {
 	name: 'GameView',
@@ -233,7 +243,8 @@ export default {
 		Card,
 		CannotCounterDialog,
 		CounterDialog,
-		EightOverlay
+		EightOverlay,
+		NineOverlay,
 	},
 	data() {
 		return {
@@ -242,6 +253,9 @@ export default {
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
 			showEightOverlay: false,
+			showNineOverlay: false,
+			nineTargetIndex: null,
+			targetType: null,
 		}
 	},
 	computed: {
@@ -370,6 +384,16 @@ export default {
 			}
 			return res;
 		},
+		nineTarget() {
+			switch(this.targetType) {
+			case 'point':
+				return this.nineTargetIndex !== null ? this.opponent.points[this.nineTargetIndex] : null;
+			case 'rune':
+				this.nineTargetIndex !== null ? this.opponent.runes[this.nineTargetIndex] : null;
+			default:
+				return null;
+			}
+		},
 	},
 	methods: {
 		clearSnackBar() {
@@ -384,9 +408,13 @@ export default {
 		},
 		clearOverlays() {
 			this.showEightOverlay = false;
+			this.showNineOverlay = false;
+			this.nineTargetIndex = null;
+			this.targetType = null;
 		},
 		clearSelection() {
 			this.selectionIndex = null;
+			this.clearOverlays();
 		},
 		selectCard(index) {
 			if (index === this.selectionIndex){
@@ -457,9 +485,18 @@ export default {
 				.then(this.clearSelection())
 				.catch(this.handleError);
 		},
-		playTargetedOneOff(targetIndex) {
-			const target = this.opponent.runes[targetIndex];
-			const targetType = target.rank === 11 ? 'jack' : 'rune';
+		playTargetedOneOff(targetIndex, targetType) {
+			let target;
+			switch (targetType) {
+			case 'rune':
+				target = this.opponent.runes[targetIndex];
+				break;
+			case 'point':
+				target = this.opponent.points[targetIndex];
+				break;
+			case 'jack':
+				break;
+			}
 			this.$store.dispatch('requestPlayTargetedOneOff', {
 				cardId: this.selectedCard.id,
 				targetId: target.id,
@@ -529,6 +566,9 @@ export default {
 				return;
 			case 9:
 				// Determine whether to scuttle or play as one-off
+				this.nineTargetIndex = targetIndex;
+				this.showNineOverlay = true;
+				this.targetType = 'point';
 				return;
 			default:
 				return;
@@ -539,8 +579,10 @@ export default {
 
 			switch(this.selectedCard.rank) {
 			case 2:
-				this.playTargetedOneOff(targetIndex);
+				this.playTargetedOneOff(targetIndex, 'rune');
 				return;
+			case 9:
+				this.playTargetedOneOff(targetIndex, 'rune');
 			default:
 				return;
 			}
