@@ -29,7 +29,9 @@
 				class="d-flex flex-column align-center option"
 				@click="scuttle"
 			>
-				<h3 class="my-2">SCUTTLE</h3>
+				<h3 class="my-2">
+					SCUTTLE
+				</h3>
 				<card
 					:suit="target.suit"
 					:rank="target.rank"
@@ -41,7 +43,11 @@
 					mdi-delete
 				</v-icon>
 				<p>Scrap/Destroy Target</p>
-				<div id="nine-cannot-scuttle" v-if="!canScuttle" class="d-flex justify-center align-center pa-8">
+				<div
+					v-if="!canScuttle"
+					id="nine-cannot-scuttle"
+					class="d-flex justify-center align-center pa-8"
+				>
 					<p>Cannot Scuttle a larger point card</p>
 				</div>
 			</div>
@@ -51,7 +57,9 @@
 				class="d-flex flex-column align-center option"
 				@click="$emit('one-off')"
 			>
-				<h3 class="my-2">ONE-OFF</h3>
+				<h3 class="my-2">
+					ONE-OFF
+				</h3>
 				<card
 					:suit="target.suit"
 					:rank="target.rank"
