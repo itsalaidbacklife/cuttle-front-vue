@@ -1,3 +1,46 @@
+const validEmail = 'myCustomEmail@gmail.com';
+const validPassword = 'passwordLongerThanEight';
+const opponentEmail = 'yourMortalEnemy@cia.gov';
+const opponentPassword = 'deviousTrickery';
+
+export function setupGameAsP0() {
+	cy.wipeDatabase();
+	cy.visit('/');
+	cy.signupPlayer(validEmail, validPassword);
+	cy.createGamePlayer('Test Game')
+		.then((gameSummary) => {
+			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
+			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
+			cy.wrap(gameSummary).as('gameSummary');
+			cy.get('[data-cy=ready-button]').click();
+			cy.signupOpponent(opponentEmail, opponentPassword);
+			cy.subscribeOpponent(gameSummary.gameId);
+			cy.readyOpponent();
+			// Asserting 5 cards in players hand confirms game has loaded
+			cy.get('#player-hand-cards div')
+				.should('have.length', 5);
+		});
+}
+
+export function setupGameAsP1() {
+	cy.wipeDatabase();
+	cy.visit('/');
+	cy.signupPlayer(validEmail, validPassword);
+	cy.createGamePlayer('Test Game')
+		.then((gameSummary) => {
+			cy.signupOpponent(opponentEmail, opponentPassword);
+			cy.subscribeOpponent(gameSummary.gameId);
+			cy.readyOpponent();
+			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
+			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
+			cy.wrap(gameSummary).as('gameSummary');
+			cy.get('[data-cy=ready-button]').click();
+			// Asserting 6 cards in players hand confirms game has loaded
+			cy.get('#player-hand-cards div')
+				.should('have.length', 6);
+		});
+}
+
 export function hasValidSuitAndRank(card) {
 	if (!Object.prototype.hasOwnProperty.call(card, 'rank')) return false;
 	if (!Object.prototype.hasOwnProperty.call(card, 'suit')) return false;
