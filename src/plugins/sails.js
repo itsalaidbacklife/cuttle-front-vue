@@ -32,6 +32,7 @@ io.socket.on('game', function(evData) {
 		case 'scuttle':
 		case 'loadFixture':
 		case 'jack':
+		case 'resolveFour':
 			store.commit('updateGame', evData.data.game);
 			break;
 		case 'resolve':
