@@ -163,7 +163,7 @@ describe('Playing FOURS', () => {
 		setupGameAsP0();
 	});
 
-	it('Plays a 4 to make opponent discard two cards of their choice', () => {
+	it.only('Plays a 4 to make opponent discard two cards of their choice', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.FOUR_OF_SPADES, Card.FOUR_OF_CLUBS],
@@ -188,7 +188,6 @@ describe('Playing FOURS', () => {
 		cy.get('#waiting-for-opponent-scrim')
 			.should('not.be.visible');
         
-		cy.wait(1000);
 		// Opponent chooses two cards to discard
 		cy.discardOpponent(Card.ACE_OF_HEARTS, Card.TEN_OF_HEARTS);
 		cy.get('#waiting-for-opponent-scrim')
