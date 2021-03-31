@@ -195,7 +195,7 @@
 			opacity=".6"
 		>
 			<h1>
-				Waiting for Opponent
+				Waiting for Opponent to Counter
 			</h1>
 		</v-overlay>
 		<counter-dialog
