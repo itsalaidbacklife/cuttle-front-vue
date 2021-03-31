@@ -105,7 +105,7 @@ export default {
 			state.discarding = val;
 		},
 		setWaitingForOpponentToDiscard(state, val) {
-
+			state.waitingForOpponentToDiscard = val;
 		},
 	},
 	actions: {
