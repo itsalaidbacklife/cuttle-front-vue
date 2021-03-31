@@ -4,7 +4,7 @@ describe('Untargeted One-Offs', () => {
 	
 	beforeEach(() => {
 		setupGameAsP0();
-    });
+	});
     
 	it('Plays an Ace to destroy all point cards', () => {
 		// Setup
@@ -48,7 +48,7 @@ describe('Untargeted One-Offs', () => {
 			.should('have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
-    }); // End ace one-off
+	}); // End ace one-off
 
 	it('Plays a five to draw two cards', () => {
 		// Setup
@@ -159,11 +159,11 @@ describe('Untargeted One-Offs', () => {
 }); // End untargeted one-off describe
 
 describe('Playing FOURS', () => {
-    beforeEach(() => {
-        setupGameAsP0();
-    });
+	beforeEach(() => {
+		setupGameAsP0();
+	});
 
-    it('Plays a 4 to make opponent discard two cards of their choice', () => {
+	it('Plays a 4 to make opponent discard two cards of their choice', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.FOUR_OF_SPADES, Card.FOUR_OF_CLUBS],
@@ -174,50 +174,50 @@ describe('Playing FOURS', () => {
 			p1FaceCards: [],
 		});
 		cy.get('[data-player-hand-card]').should('have.length', 2);
-        cy.log('Loaded fixture');
+		cy.log('Loaded fixture');
         
-        // Play the four of spades
+		// Play the four of spades
 		cy.get('[data-player-hand-card=4-3]').click(); // four of spades
 		cy.get('#scrap')
 			.should('have.class', 'valid-move')
-            .click();
-        cy.get('#waiting-for-opponent-scrim')
+			.click();
+		cy.get('#waiting-for-opponent-scrim')
 			.should('be.visible');
 		// Opponent does not counter (resolves stack)
 		cy.resolveOpponent();
 		cy.get('#waiting-for-opponent-scrim')
-            .should('not.be.visible');
+			.should('not.be.visible');
         
-        cy.wait(1000);
-        // Opponent chooses two cards to discard
-        cy.discardOpponent(Card.ACE_OF_HEARTS, Card.TEN_OF_HEARTS);
+		cy.wait(1000);
+		// Opponent chooses two cards to discard
+		cy.discardOpponent(Card.ACE_OF_HEARTS, Card.TEN_OF_HEARTS);
 		cy.get('#waiting-for-opponent-scrim')
-            .should('not.be.visible');
+			.should('not.be.visible');
         
-        assertGameState(0,
-            {
-                p0Hand: [Card.FOUR_OF_CLUBS],
-                p0Points: [],
-                p0FaceCards: [],
-                p1Hand: [Card.ACE_OF_DIAMONDS],
-                p1Points: [],
-                p1FaceCards: [], 
-                scrap: [Card.FOUR_OF_SPADES, Card.ACE_OF_HEARTS, Card.TEN_OF_HEARTS],
-            }
-        );
-    });
+		assertGameState(0,
+			{
+				p0Hand: [Card.FOUR_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [], 
+				scrap: [Card.FOUR_OF_SPADES, Card.ACE_OF_HEARTS, Card.TEN_OF_HEARTS],
+			}
+		);
+	});
 
-    it('Plays a 4 to make opponent discard their only two cards', () => {
+	it('Plays a 4 to make opponent discard their only two cards', () => {
 
-    });
+	});
 
-    it('Plays a 4 to make opponent discard the last card in their hand', () => {
+	it('Plays a 4 to make opponent discard the last card in their hand', () => {
 
-    });
+	});
 
-    it('Prevents playing a 4 when opponent has no cards in hand', () => {
+	it('Prevents playing a 4 when opponent has no cards in hand', () => {
 
-    });
+	});
 });
 
 describe('Play TWOS', () => {
