@@ -475,3 +475,25 @@ describe('Playing NINES', () => {
 		);
 	});
 }); // End 9s describe
+
+describe('Playing THREEs', () => {
+	beforeEach(() => {
+		setupGameAsP0();
+	});
+
+	it.only('Plays 3s successfully', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.ACE_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+			scrap: [Card.JACK_OF_CLUBS, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES]
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+
+		expect(true).to.equal(false)
+	})
+}); // End 3s description
