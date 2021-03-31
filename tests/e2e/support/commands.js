@@ -308,6 +308,32 @@ Cypress.Commands.add('resolveOpponent', () => {
 			});
 		});
 });
+
+/**
+ * Discards 1-2 cards to resolve four
+ * @param card1 {suit: number, rank: number} REQUIRED
+ * @param card2 {suit: number, rank: number} OPTIONAL
+ */
+Cypress.Commands.add('discardOpponent', (card1, card2) => {
+	return cy
+		.window()
+		.its('app.$store.state.game')
+		.then((game) => {
+			const opponent = game.players[(game.myPNum + 1) % 2];
+			const cardId1 = opponent.hand.find((handCard) => cardsMatch(card1, handCard)).id;
+			const cardId2 = card2 ? opponent.hand.find((handCard) => cardsMatch(card2, handCard)).id : undefined;
+			io.socket.get('/game/resolveFour', {
+				cardId1,
+				cardId2,
+			}, function handleResponse(res, jwres) {
+				if (!jwres.statusCode === 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
+
 Cypress.Commands.add('vueRoute', (route) => {
 	cy.window()
 		.its('app.$router')
