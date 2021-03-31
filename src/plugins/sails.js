@@ -37,12 +37,15 @@ io.socket.on('game', function(evData) {
 			break;
 		case 'resolve':
 			store.commit('updateGame', evData.data.game);
-			store.commit('setWaitingForOpponent', false);
+			store.commit('setWaitingForOpponentToCounter', false);
 			if (evData.data.happened) {
 				switch (evData.data.oneOff.rank) {
 				case 3:
 					break;
 				case 4:
+					if (evData.data.playedBy === store.state.game.myPNum) {
+						// store.commit('set')
+					}
 					break;
 				case 7:
 					break;
@@ -55,7 +58,7 @@ io.socket.on('game', function(evData) {
 		case 'counter':
 			store.commit('updateGame', evData.data.game);
 			if (evData.data.pNum !== store.state.game.myPNum) {
-				store.commit('setWaitingForOpponent', false);
+				store.commit('setWaitingForOpponentToCounter', false);
 				store.commit('setMyTurnToCounter', true);
 			}
 			break;

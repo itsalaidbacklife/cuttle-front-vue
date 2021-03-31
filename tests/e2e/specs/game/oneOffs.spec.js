@@ -24,11 +24,11 @@ describe('Untargeted One-Offs', () => {
 		cy.get('#scrap')
 			.should('have.class', 'valid-move')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent does not counter (resolves stack)
 		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
 		assertGameState(
 			0,
@@ -72,11 +72,11 @@ describe('Untargeted One-Offs', () => {
 		cy.get('#scrap')
 			.should('have.class', 'valid-move')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent does not counter (resolves stack)
 		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
 
 		// Assert game state
@@ -122,11 +122,11 @@ describe('Untargeted One-Offs', () => {
 		cy.get('#scrap')
 			.should('have.class', 'valid-move')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent does not counter (resolves stack)
 		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
 		assertGameState(
 			0,
@@ -163,7 +163,7 @@ describe('Playing FOURS', () => {
 		setupGameAsP0();
 	});
 
-	it.only('Plays a 4 to make opponent discard two cards of their choice', () => {
+	it('Plays a 4 to make opponent discard two cards of their choice', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.FOUR_OF_SPADES, Card.FOUR_OF_CLUBS],
@@ -181,16 +181,16 @@ describe('Playing FOURS', () => {
 		cy.get('#scrap')
 			.should('have.class', 'valid-move')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent does not counter (resolves stack)
 		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
         
 		// Opponent chooses two cards to discard
 		cy.discardOpponent(Card.ACE_OF_HEARTS, Card.TEN_OF_HEARTS);
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
         
 		assertGameState(0,
@@ -244,11 +244,11 @@ describe('Play TWOS', () => {
 			.click(); // target king of hearts
 
 		// opponent resolve
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent does not counter (resolves stack)
 		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
 
 		assertGameState(0,
@@ -327,7 +327,7 @@ describe('Playing NINES', () => {
 			.click();
 
 		// Wait for opponent to resolve
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		cy.resolveOpponent();
 
@@ -377,7 +377,7 @@ describe('Playing NINES', () => {
 			.click();
 
 		// Wait for opponent to resolve
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		cy.resolveOpponent();
 		
@@ -413,7 +413,7 @@ describe('Playing NINES', () => {
 
 
 		// Wait for opponent to resolve
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		cy.resolveOpponent();
 

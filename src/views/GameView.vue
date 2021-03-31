@@ -190,8 +190,8 @@
 			</v-btn>
 		</v-snackbar>
 		<v-overlay
-			id="waiting-for-opponent-scrim"
-			v-model="waitingForOpponent"
+			id="waiting-for-opponent-counter-scrim"
+			v-model="waitingForOpponentToCounter"
 			opacity=".6"
 		>
 			<h1>
@@ -307,8 +307,8 @@ export default {
 		isPlayersTurn() {
 			return this.game.turn % 2 === this.game.myPNum
 		},
-		waitingForOpponent() {
-			return this.game.waitingForOpponent;
+		waitingForOpponentToCounter() {
+			return this.game.waitingForOpponentToCounter;
 		},
 		myTurnToCounter() {
 			return this.game.myTurnToCounter;
