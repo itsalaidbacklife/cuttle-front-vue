@@ -40,14 +40,14 @@ io.socket.on('game', function(evData) {
 			store.commit('setWaitingForOpponent', false);
 			if (evData.data.happened) {
 				switch (evData.data.oneOff.rank) {
-					case 3:
-						break;
-					case 4:
-						break;
-					case 7:
-						break;
-					default:
-						break;
+				case 3:
+					break;
+				case 4:
+					break;
+				case 7:
+					break;
+				default:
+					break;
 				}
 			}
 			break;
