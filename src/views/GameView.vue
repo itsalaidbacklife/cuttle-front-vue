@@ -198,6 +198,13 @@
 				Waiting for Opponent to Counter
 			</h1>
 		</v-overlay>
+		<v-overlay
+			id="waiting-for-opponent-discard-scrim"
+			v-model="waitingForOpponentToDiscard"
+			opacity=".6"
+		>
+			<h1>Waiting for Opponent to Discard</h1>
+		</v-overlay>
 		<counter-dialog
 			v-model="showCounterDialog"
 			:one-off="game.oneOff"
@@ -306,6 +313,9 @@ export default {
 		},
 		isPlayersTurn() {
 			return this.game.turn % 2 === this.game.myPNum
+		},
+		waitingForOpponentToDiscard() {
+			return this.game.waitingForOpponentToDiscard;
 		},
 		waitingForOpponentToCounter() {
 			return this.game.waitingForOpponentToCounter;

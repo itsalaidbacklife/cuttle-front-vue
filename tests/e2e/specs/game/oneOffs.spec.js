@@ -187,10 +187,11 @@ describe('Playing FOURS', () => {
 		cy.resolveOpponent();
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
-        
+		cy.get('#waiting-for-opponent-discard-scrim')
+			.should('be.visible');
 		// Opponent chooses two cards to discard
 		cy.discardOpponent(Card.ACE_OF_HEARTS, Card.TEN_OF_HEARTS);
-		cy.get('#waiting-for-opponent-counter-scrim')
+		cy.get('#waiting-for-opponent-discard-scrim')
 			.should('not.be.visible');
         
 		assertGameState(0,
