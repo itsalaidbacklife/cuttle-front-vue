@@ -481,6 +481,26 @@ describe('Playing THREEs', () => {
 		setupGameAsP0();
 	});
 
+	it('Plays 3s with no cards in scrap', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS],
+			p0Points: [Card.TEN_OF_SPADES],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+
+		// Player plays three
+		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click(); // scrap
+		assertSnackbarError('You can only play a 3 as a one-off, if there are cards in the scrap pile');
+	})
+
 	it.only('Plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
