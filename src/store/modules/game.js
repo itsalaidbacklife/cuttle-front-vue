@@ -264,6 +264,21 @@ export default {
 				});
 			});
 		},
+		async requestResolveThree(context, cardId ) {
+			context.commit('setMyTurnToCounter', false);
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/resolveThree', {
+					cardId,
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponent', false);
+					return resolve();
+				});
+			});
+		},
 		async requestCounter(context, twoId) {
 			context.commit('setMyTurnToCounter', false);
 			

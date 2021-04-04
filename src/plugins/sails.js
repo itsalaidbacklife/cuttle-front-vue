@@ -33,6 +33,7 @@ io.socket.on('game', function(evData) {
 		case 'loadFixture':
 		case 'jack':
 		case 'resolveFour':
+			console.log('sails resolveFour', evData.data.oneOff)
 			store.commit('updateGame', evData.data.game);
 			break;
 		case 'resolve':
