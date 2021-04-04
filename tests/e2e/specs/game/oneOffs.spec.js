@@ -487,7 +487,7 @@ describe('Playing THREEs', () => {
 			p0Hand: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS],
 			p0Points: [Card.TEN_OF_SPADES],
 			p0FaceCards: [],
-			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS],
 			p1Points: [Card.TEN_OF_HEARTS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
@@ -504,16 +504,118 @@ describe('Playing THREEs', () => {
 	it.only('Plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_SPADES],
+			p0Hand: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS],
 			p0Points: [Card.TEN_OF_SPADES],
 			p0FaceCards: [],
-			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS],
 			p1Points: [Card.TEN_OF_HEARTS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
-			scrap: [Card.JACK_OF_CLUBS, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES]
 		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+
+		// put some cards into scrap
+		cy.get('[data-player-hand-card=1-3]').click() // ace of space
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click() // one-off
+
+
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+
+		cy.resolveOpponent()
+
 		cy.get('[data-player-hand-card]').should('have.length', 1);
 
-		expect(true).to.equal(false)
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.THREE_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES],
+			}
+		);
+
+		cy.playPointsOpponent(Card.ACE_OF_HEARTS)
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.THREE_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.TEN_OF_DIAMONDS],
+				p1Points: [Card.ACE_OF_HEARTS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES],
+			}
+		);
+
+
+		// Player plays three
+		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click(); // scrap
+
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+		
+		cy.resolveOpponent()
+
+		cy.get('#waiting-for-opponent-scrim')
+			.should('not.be.visible');
+
+		cy.get('#three-dialog').should('be.visible')
+		// resolve button should be disabled
+		cy.get('[data-cy=three-resolve').should('be.disabled')
+		
+		// Player selects a card from scrap
+		cy.get('[data-scrap-dialog-card=10-2]').click();
+		cy.get('[data-cy=three-resolve').should('not.be.disabled').click()
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.TEN_OF_HEARTS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.TEN_OF_DIAMONDS],
+				p1Points: [Card.ACE_OF_HEARTS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES],
+			}
+		);
+
+
+		// Player attempts to play out of turn
+		cy.get('[data-player-hand-card=10-2]').click(); // ten of hearts
+
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn')
+
+		cy.playPointsOpponent(Card.TEN_OF_DIAMONDS)
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.TEN_OF_HEARTS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES],
+			}
+		);
+
+
+
 	})
 }); // End 3s description
