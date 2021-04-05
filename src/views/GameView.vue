@@ -612,12 +612,8 @@ export default {
 				.catch(this.handleError);
 		},
 		resolveThree(cardId) {
-			console.log('from dialog: resolve three', cardId);
 			this.$store.dispatch('requestResolveThree', cardId)
 				.then(this.clearSelection())
-				.then(()=>{
-					console.log('game oneOff', this.game.oneOff)
-				})
 				.catch(this.handleError)
 		},
 		counter(twoId) {

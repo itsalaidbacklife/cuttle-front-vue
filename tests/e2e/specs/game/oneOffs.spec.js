@@ -555,7 +555,6 @@ describe('Playing THREEs', () => {
 			}
 		);
 
-
 		// Player plays three
 		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
 		cy.get('#scrap')
@@ -591,7 +590,6 @@ describe('Playing THREEs', () => {
 			}
 		);
 
-
 		// Player attempts to play out of turn
 		cy.get('[data-player-hand-card=10-2]').click(); // ten of hearts
 
@@ -614,8 +612,5 @@ describe('Playing THREEs', () => {
 				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES],
 			}
 		);
-
-
-
 	})
 }); // End 3s description
