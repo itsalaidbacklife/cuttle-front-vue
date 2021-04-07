@@ -35,6 +35,7 @@ io.socket.on('game', function(evData) {
 		case 'resolveFour':
 			store.commit('updateGame', evData.data.game);
 			store.commit('setWaitingForOpponentToDiscard', false);
+			store.commit('setDiscarding', false);
 			break;
 		case 'resolve':
 			store.commit('updateGame', evData.data.game);
@@ -46,6 +47,9 @@ io.socket.on('game', function(evData) {
 				case 4:
 					if (evData.data.playedBy === store.state.game.myPNum) {
 						store.commit('setWaitingForOpponentToDiscard', true);
+					}
+					else {
+						store.commit('setDiscarding', true);
 					}
 					break;
 				case 7:
