@@ -1,4 +1,4 @@
-import { setupGameAsP0, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
+import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
 
 describe('Untargeted One-Offs', () => {
 	
@@ -217,6 +217,54 @@ describe('Playing FOURS', () => {
 
 	it('Prevents playing a 4 when opponent has no cards in hand', () => {
 
+	});
+});
+
+describe.only('Opponent playing FOURS', () => {
+	beforeEach(() => {
+		setupGameAsP1();
+	});
+	it('Discards two cards when opponent plays a four', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.FOUR_OF_CLUBS, Card.ACE_OF_HEARTS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS],
+			p1Points: [],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.log('Loaded fixture');
+
+		// Opponent plays four
+		cy.playOneOffOpponent(Card.FOUR_OF_CLUBS);
+		// Player cannot counter
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+
+		// Four Dialog appears (you must discard)
+		cy.get('#four-discard-dialog')
+			.should('be.visible');
+		cy.get('[data-cy=close-four-dialog]')
+			.click();
+		// Choosing cards to discard
+		cy.log('Choosing two cards to discard');
+		cy.get('[data-player-hand-card=1-1]').click(); // ace of diamonds
+		cy.get('[data-player-hand-card=4-2]').click(); // four of hearts
+
+		assertGameState(0,
+			{
+				p0Hand: [Card.ACE_OF_HEARTS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.TEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.FOUR_OF_CLUBS, Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS],
+			}
+		)
 	});
 });
 

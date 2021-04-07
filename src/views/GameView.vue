@@ -217,6 +217,9 @@
 			:one-off="game.oneOff"
 			@resolve="resolve"
 		/>
+		<four-dialog
+			v-model="showFourDialog"
+		/>
 		<eight-overlay
 			v-if="selectedCard && selectedCard.rank === 8"
 			v-model="showEightOverlay"
@@ -241,6 +244,7 @@
 import Card from '@/components/GameView/Card.vue';
 import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
 import CounterDialog from '@/components/GameView/CounterDialog.vue';
+import FourDialog from '@/components/GameView/FourDialog.vue';
 import EightOverlay from '@/components/GameView/EightOverlay.vue';
 import NineOverlay from '../components/GameView/NineOverlay.vue';
 
@@ -250,6 +254,7 @@ export default {
 		Card,
 		CannotCounterDialog,
 		CounterDialog,
+		FourDialog,
 		EightOverlay,
 		NineOverlay,
 	},
@@ -259,6 +264,8 @@ export default {
 			snackMessage: '',
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
+			showFourDialog: false,
+			discardIndex: null,
 			showEightOverlay: false,
 			showNineOverlay: false,
 			nineTargetIndex: null,
@@ -340,6 +347,9 @@ export default {
 		showCounterDialog() {
 			return this.myTurnToCounter && this.hasTwoInHand;
 		},
+		discarding() {
+			return this.$store.state.game.discarding;
+		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
 			return this.opponent.points
@@ -405,6 +415,13 @@ export default {
 			}
 		},
 	},
+	watch: {
+		discarding(newVal) {
+			if (newVal) {
+				this.showFourDialog = true;
+			}
+		},
+	},
 	methods: {
 		clearSnackBar() {
 			this.snackMessage = '';
@@ -427,7 +444,31 @@ export default {
 			this.clearOverlays();
 		},
 		selectCard(index) {
-			if (index === this.selectionIndex){
+			if (this.discarding) {
+				// If already selected, deselect card for discard
+				if (this.discardIndex === index) {
+					this.discardIndex = null;
+				} else {
+					// If only one card in hand, discard it
+					if (this.player.hand.length === 1) {
+						const cardId1 = this.player.hand[index].id;
+						this.$store.dispatch('requestDiscard', {
+							cardId1,
+						});
+					}
+					else if (this.discardIndex === null) {
+						this.discardIndex = index;
+					}
+					else {
+						const cardId1 = this.player.hand[this.discardIndex].id;
+						const cardId2 = this.player.hand[index].id;
+						this.$store.discardIndex('requestDiscard', {
+							cardId1,
+							cardId2,
+						});
+					}
+				}
+			} else if (index === this.selectionIndex){
 				this.clearSelection();
 			} else {
 				this.selectionIndex = index;

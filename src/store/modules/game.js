@@ -258,6 +258,33 @@ export default {
 				});
 			});
 		},
+		/**
+		 * 
+		 * @param {required} cardId1
+		 * @param {optional} cardId2
+		 */
+		async requestDiscard(context, { cardId1, cardId2 }) {
+			let reqData = {
+				cardId1,
+			};
+			if (cardId2) {
+				reqData = {
+					cardId2,
+					...rest,
+				};
+			}
+			debugger;
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/resolveFour',
+				reqData,
+				function(res, jwres) {
+					if (jwres.statusCode != 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
 		async requestResolve(context) {
 			context.commit('setMyTurnToCounter', false);
 			
