@@ -27,6 +27,7 @@
 				<v-btn
 					color="primary"
 					data-cy="close-four-dialog"
+					:disabled="!readyToDiscard"
 				>
 					Discard
 				</v-btn>
@@ -65,6 +66,10 @@ export default {
 		},
 		hand() {
 			return this.$store.state.game.players[this.$store.state.game.myPNum].hand;
+		},
+		readyToDiscard() {
+			return this.selectedIds.length === 2 || 
+			(this.selectedIds.length === 1 && this.hand.length === 1);
 		},
 	},
 	methods: {
