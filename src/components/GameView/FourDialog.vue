@@ -5,7 +5,7 @@
 			<v-card-text>
 				<p>
 					Your Opponent has resolved a Four One-Off.
-					You must discard two cards. Click to discard.
+					You must discard two cards. Click to select cards to discard.
 				</p>
 				<!-- Cards in hand -->
 				<div class="d-flex flex-wrap">
@@ -22,7 +22,6 @@
 				<v-btn
 					color="primary"
 					data-cy="close-four-dialog"
-					@click="show = false"
 				>
 					Discard
 				</v-btn>
@@ -44,6 +43,11 @@ export default {
 			required: true,
 			type: Boolean,
 		},
+	},
+	data() {
+		return {
+			selectedIndices: [],
+		}
 	},
 	computed: {
 		show: {

@@ -346,13 +346,8 @@ export default {
 		showCounterDialog() {
 			return this.myTurnToCounter && this.hasTwoInHand;
 		},
-		discarding: {
-			get() {
-				return this.$store.state.game.discarding;
-			},
-			set(newVal) {
-				// ignore attempts to set this directly
-			},
+		discarding() {
+			return this.$store.state.game.discarding;
 		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
