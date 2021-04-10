@@ -269,11 +269,10 @@ export default {
 			};
 			if (cardId2) {
 				reqData = {
+					cardId1,
 					cardId2,
-					...rest,
 				};
 			}
-			debugger;
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/resolveFour',
 					reqData,

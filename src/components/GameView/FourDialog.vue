@@ -28,6 +28,7 @@
 					color="primary"
 					data-cy="close-four-dialog"
 					:disabled="!readyToDiscard"
+					@click="discard"
 				>
 					Discard
 				</v-btn>
@@ -85,7 +86,13 @@ export default {
 					this.selectedIds.splice(0, 1);
 				}
 			}
-		}
+		},
+		discard() {
+			console.log(`Discarding from dialog: ${this.readyToDiscard}`);
+			if (this.readyToDiscard) {
+				this.$emit('discard', this.selectedIds);
+			}
+		},
 	},
 }
 </script>

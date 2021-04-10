@@ -219,6 +219,7 @@
 		/>
 		<four-dialog
 			v-model="discarding"
+			@discard="discard"
 		/>
 		<eight-overlay
 			v-if="selectedCard && selectedCard.rank === 8"
@@ -622,6 +623,16 @@ export default {
 			this.$store.dispatch('requestCounter', twoId)
 				.then(this.clearSelection())
 				.catch(this.handleError);
+		},
+		discard(cardIds) {
+			console.log('discarding from game view');
+			console.log(cardIds);
+			const cardId1 = cardIds[0];
+			const cardId2 = cardIds.length > 1 ? cardIds[1] : null;
+			this.$store.dispatch('requestDiscard', {
+				cardId1,
+				cardId2,
+			});
 		},
 	},
 }
