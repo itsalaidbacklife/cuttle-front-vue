@@ -625,8 +625,6 @@ export default {
 				.catch(this.handleError);
 		},
 		discard(cardIds) {
-			console.log('discarding from game view');
-			console.log(cardIds);
 			const cardId1 = cardIds[0];
 			const cardId2 = cardIds.length > 1 ? cardIds[1] : null;
 			this.$store.dispatch('requestDiscard', {

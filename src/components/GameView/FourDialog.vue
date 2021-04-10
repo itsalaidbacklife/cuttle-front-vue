@@ -88,7 +88,6 @@ export default {
 			}
 		},
 		discard() {
-			console.log(`Discarding from dialog: ${this.readyToDiscard}`);
 			if (this.readyToDiscard) {
 				this.$emit('discard', this.selectedIds);
 			}
