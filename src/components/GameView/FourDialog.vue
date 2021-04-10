@@ -26,7 +26,7 @@
 			<v-card-actions class="d-flex justify-end">
 				<v-btn
 					color="primary"
-					data-cy="close-four-dialog"
+					data-cy="submit-four-dialog"
 					:disabled="!readyToDiscard"
 					@click="discard"
 				>
