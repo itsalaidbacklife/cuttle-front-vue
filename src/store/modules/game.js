@@ -276,13 +276,13 @@ export default {
 			debugger;
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/resolveFour',
-				reqData,
-				function(res, jwres) {
-					if (jwres.statusCode != 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
-				});
+					reqData,
+					function(res, jwres) {
+						if (jwres.statusCode != 200) {
+							return reject(jwres.body.message);
+						}
+						return resolve();
+					});
 			});
 		},
 		async requestResolve(context) {
