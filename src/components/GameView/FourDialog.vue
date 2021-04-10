@@ -1,10 +1,22 @@
 <template>
-	<v-dialog v-model="show">
+	<v-dialog v-model="show" persistent>
 		<v-card id="four-discard-dialog">
 			<v-card-title>Discard Two Cards</v-card-title>
 			<v-card-text>
-				<p>Your Opponent has resolved a Four One-Off.</p>
-				<p>You must discard two cards. Click to discard.</p>
+				<p>
+					Your Opponent has resolved a Four One-Off.
+					You must discard two cards. Click to discard.
+				</p>
+				<!-- Cards in hand -->
+				<div class="d-flex flex-wrap">
+					<card
+						v-for="card in hand"
+						:key="card.id"
+						:suit="card.suit"
+						:rank="card.rank"
+						:data-discard-card="`${card.rank}-${card.suit}`"
+					/>
+				</div>
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end">
 				<v-btn
@@ -12,7 +24,7 @@
 					data-cy="close-four-dialog"
 					@click="show = false"
 				>
-					Okay
+					Discard
 				</v-btn>
 			</v-card-actions>
 		</v-card>
@@ -20,9 +32,13 @@
 </template>
 
 <script>
+import Card from '@/components/GameView/Card.vue';
 
 export default {
 	name: 'FourDialog',
+	components: {
+		Card,
+	},
 	props: {
 		value: {
 			required: true,
@@ -37,6 +53,9 @@ export default {
 			set(val) {
 				this.$emit('input', val);
 			},
+		},
+		hand() {
+			return this.$store.state.game.players[this.$store.state.game.myPNum].hand;
 		},
 	},
 }
