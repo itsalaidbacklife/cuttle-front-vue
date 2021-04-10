@@ -18,7 +18,7 @@
 						:suit="card.suit"
 						:rank="card.rank"
 						:data-discard-card="`${card.rank}-${card.suit}`"
-						:class="{'selected': selectedIds.includes(card.id)}"
+						:class="{'is-selected': selectedIds.includes(card.id)}"
 						@click="selectCard(index)"
 					/>
 				</div>
@@ -86,7 +86,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	.selected {
+	.is-selected {
 		border: 3px solid var(--v-error-base);
 	}
 </style>
