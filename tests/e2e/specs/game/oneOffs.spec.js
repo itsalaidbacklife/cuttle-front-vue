@@ -247,14 +247,13 @@ describe.only('Opponent playing FOURS', () => {
 		// Four Dialog appears (you must discard)
 		cy.get('#four-discard-dialog')
 			.should('be.visible');
-		cy.get('[data-cy=close-four-dialog]')
-			.click();
 		// Choosing cards to discard
 		cy.log('Choosing two cards to discard');
-		cy.get('[data-player-hand-card=1-1]').click(); // ace of diamonds
-		cy.get('[data-player-hand-card=4-2]').click(); // four of hearts
+		cy.get('[data-discard-card=1-1]').click(); // ace of diamonds
+		cy.get('[data-discard-card=4-3]').click(); // four of spades
+		cy.get('[data-cy=submit-four-dialog]').click();
 
-		assertGameState(0,
+		assertGameState(1,
 			{
 				p0Hand: [Card.ACE_OF_HEARTS],
 				p0Points: [],
