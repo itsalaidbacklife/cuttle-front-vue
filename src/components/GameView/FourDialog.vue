@@ -1,5 +1,8 @@
 <template>
-	<v-dialog v-model="show" persistent>
+	<v-dialog
+		v-model="show"
+		persistent
+	>
 		<v-card id="four-discard-dialog">
 			<v-card-title>Discard Two Cards</v-card-title>
 			<v-card-text>
