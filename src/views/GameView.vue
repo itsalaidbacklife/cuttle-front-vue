@@ -198,6 +198,15 @@
 				Waiting for Opponent
 			</h1>
 		</v-overlay>
+		<v-overlay
+			id="waiting-for-opponent-resolve-three-scrim"
+			v-model="showOpponentChoosingThreeScrim"
+			opacity=".6"
+		>
+			<h1>
+				Opponent Choosing Card from Scrap
+			</h1>
+		</v-overlay>
 		<counter-dialog
 			v-model="showCounterDialog"
 			:one-off="game.oneOff"
@@ -209,6 +218,13 @@
 			v-model="showCannotCounterDialog"
 			:one-off="game.oneOff"
 			@resolve="resolve"
+		/>
+		<three-dialog 
+			v-if="showThreeDialog"
+			v-model="showThreeDialog"
+			:one-off="game.oneOff"
+			:scrap="scrap"
+			@resolveThree="resolveThree($event)"
 		/>
 		<eight-overlay
 			v-if="selectedCard && selectedCard.rank === 8"
@@ -234,6 +250,7 @@
 import Card from '@/components/GameView/Card.vue';
 import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
 import CounterDialog from '@/components/GameView/CounterDialog.vue';
+import ThreeDialog from '@/components/GameView/ThreeDialog.vue';
 import EightOverlay from '@/components/GameView/EightOverlay.vue';
 import NineOverlay from '../components/GameView/NineOverlay.vue';
 
@@ -243,6 +260,7 @@ export default {
 		Card,
 		CannotCounterDialog,
 		CounterDialog,
+		ThreeDialog,
 		EightOverlay,
 		NineOverlay,
 	},
@@ -329,6 +347,12 @@ export default {
 		},
 		showCounterDialog() {
 			return this.myTurnToCounter && this.hasTwoInHand;
+		},
+		showThreeDialog() {
+			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 === this.game.myPNum && this.waitingForOpponent === false;
+		},
+		showOpponentChoosingThreeScrim() {
+			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 !== this.game.myPNum && this.waitingForOpponent === false && !this.showCannotCounterDialog;
 		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
@@ -598,6 +622,11 @@ export default {
 			this.$store.dispatch('requestResolve')
 				.then(this.clearSelection())
 				.catch(this.handleError);
+		},
+		resolveThree(cardId) {
+			this.$store.dispatch('requestResolveThree', cardId)
+				.then(this.clearSelection())
+				.catch(this.handleError)
 		},
 		counter(twoId) {
 			this.$store.dispatch('requestCounter', twoId)

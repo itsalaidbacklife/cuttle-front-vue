@@ -292,6 +292,32 @@ Cypress.Commands.add('counterOpponent', (card) => {
 		});
 });
 
+Cypress.Commands.add('resolveThreeOpponent', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot resolve three as opponent: Invalid card input');
+	}
+	return cy
+		.window()
+		.its('app.$store.state.game')
+		.then((game) => {
+			const opId = game.players[game.myPNum].id;
+			const foundCard = game.scrap.find((scrapCard) => cardsMatch(card, scrapCard));
+			if (!foundCard) {
+				throw new Error(`Error resolving three as opponent: could not find ${card.rank} of ${card.suit} in scrap`)
+			}
+			const cardId = foundCard.id;
+			io.socket.get('/game/resolveThree', {
+				cardId,
+				opId,
+			}, function handleResponse(res, jwres) {
+				console.log(res, jwres)
+				if (!jwres.statusCode === 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
 Cypress.Commands.add('resolveOpponent', () => {
 	return cy
 		.window()
@@ -308,6 +334,32 @@ Cypress.Commands.add('resolveOpponent', () => {
 			});
 		});
 });
+
+/**
+ * Discards 1-2 cards to resolve four
+ * @param card1 {suit: number, rank: number} REQUIRED
+ * @param card2 {suit: number, rank: number} OPTIONAL
+ */
+Cypress.Commands.add('discardOpponent', (card1, card2) => {
+	return cy
+		.window()
+		.its('app.$store.state.game')
+		.then((game) => {
+			const opponent = game.players[(game.myPNum + 1) % 2];
+			const cardId1 = opponent.hand.find((handCard) => cardsMatch(card1, handCard)).id;
+			const cardId2 = card2 ? opponent.hand.find((handCard) => cardsMatch(card2, handCard)).id : undefined;
+			io.socket.get('/game/resolveFour', {
+				cardId1,
+				cardId2,
+			}, function handleResponse(res, jwres) {
+				if (!jwres.statusCode === 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
+
 Cypress.Commands.add('vueRoute', (route) => {
 	cy.window()
 		.its('app.$router')

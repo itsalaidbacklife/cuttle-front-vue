@@ -67,6 +67,7 @@ export default {
 			if (Object.hasOwnProperty.call(newGame, 'topCard')) state.topCard = _.cloneDeep(newGame.topCard);
 			if (Object.hasOwnProperty.call(newGame, 'secondCard')) state.secondCard = _.cloneDeep(newGame.secondCard);
 			if (Object.hasOwnProperty.call(newGame, 'oneOff')) state.oneOff = _.cloneDeep(newGame.oneOff);
+			else state.oneOff = null
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
@@ -260,6 +261,21 @@ export default {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
 					}
+					return resolve();
+				});
+			});
+		},
+		async requestResolveThree(context, cardId ) {
+			context.commit('setMyTurnToCounter', false);
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/resolveThree', {
+					cardId,
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponent', false);
 					return resolve();
 				});
 			});

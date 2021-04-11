@@ -32,11 +32,24 @@ io.socket.on('game', function(evData) {
 		case 'scuttle':
 		case 'loadFixture':
 		case 'jack':
+		case 'resolveFour':
 			store.commit('updateGame', evData.data.game);
 			break;
 		case 'resolve':
 			store.commit('updateGame', evData.data.game);
 			store.commit('setWaitingForOpponent', false);
+			if (evData.data.happened) {
+				switch (evData.data.oneOff.rank) {
+				case 3:
+					break;
+				case 4:
+					break;
+				case 7:
+					break;
+				default:
+					break;
+				}
+			}
 			break;
 		case 'oneOff':
 		case 'counter':
