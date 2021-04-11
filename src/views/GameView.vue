@@ -204,7 +204,7 @@
 			opacity=".6"
 		>
 			<h1>
-				Waiting for Opponent to Choose From Scrap
+				Opponent Choosing Card from Scrap
 			</h1>
 		</v-overlay>
 		<counter-dialog
