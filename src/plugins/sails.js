@@ -33,6 +33,7 @@ io.socket.on('game', function(evData) {
 		case 'loadFixture':
 		case 'jack':
 		case 'resolveFour':
+		case 'resolveThree':
 			store.commit('updateGame', evData.data.game);
 			store.commit('setWaitingForOpponentToDiscard', false);
 			store.commit('setDiscarding', false);

@@ -700,7 +700,7 @@ describe('Playing THREEs', () => {
 			.should('have.class', 'valid-move')
 			.click(); // scrap
 		assertSnackbarError('You can only play a 3 as a one-off, if there are cards in the scrap pile');
-	})
+	});
 
 	it('Plays 3s successfully', () => {
 		// Set Up
@@ -718,13 +718,13 @@ describe('Playing THREEs', () => {
 		cy.get('[data-player-hand-card=1-3]').click() // ace of space
 		cy.get('#scrap')
 			.should('have.class', 'valid-move')
-			.click() // one-off
+			.click(); // one-off
 
 
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 
-		cy.resolveOpponent()
+		cy.resolveOpponent();
 
 		cy.get('[data-player-hand-card]').should('have.length', 1);
 
@@ -762,21 +762,21 @@ describe('Playing THREEs', () => {
 			.should('have.class', 'valid-move')
 			.click(); // scrap
 
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		
-		cy.resolveOpponent()
+		cy.resolveOpponent();
 
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
 
-		cy.get('#three-dialog').should('be.visible')
+		cy.get('#three-dialog').should('be.visible');
 		// resolve button should be disabled
-		cy.get('[data-cy=three-resolve').should('be.disabled')
+		cy.get('[data-cy=three-resolve').should('be.disabled');
 		
 		// Player selects a card from scrap
 		cy.get('[data-scrap-dialog-card=10-2]').click();
-		cy.get('[data-cy=three-resolve').should('not.be.disabled').click()
+		cy.get('[data-cy=three-resolve').should('not.be.disabled').click();
 
 		assertGameState(
 			0,
@@ -797,9 +797,9 @@ describe('Playing THREEs', () => {
 		cy.get('#player-field')
 			.should('have.class', 'valid-move')
 			.click();
-		assertSnackbarError('It\'s not your turn')
+		assertSnackbarError('It\'s not your turn');
 
-		cy.playPointsOpponent(Card.TEN_OF_DIAMONDS)
+		cy.playPointsOpponent(Card.TEN_OF_DIAMONDS);
 
 		assertGameState(
 			0,
@@ -815,7 +815,7 @@ describe('Playing THREEs', () => {
 		);
 	})
 
-	it('Opponent plays 3s successfully', () => {
+	it.only('Opponent plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES],
@@ -831,13 +831,12 @@ describe('Playing THREEs', () => {
 		cy.get('[data-player-hand-card=1-3]').click() // ace of space
 		cy.get('#scrap')
 			.should('have.class', 'valid-move')
-			.click() // one-off
+			.click(); // one-off
 
-
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 
-		cy.resolveOpponent()
+		cy.resolveOpponent();
 
 		assertGameState(
 			0,
@@ -853,7 +852,7 @@ describe('Playing THREEs', () => {
 		);
 
 		// opponent plays 3
-		cy.playOneOffOpponent(Card.THREE_OF_CLUBS)
+		cy.playOneOffOpponent(Card.THREE_OF_CLUBS);
 
 		// player resolves
 		cy.get('[data-cy=cannot-counter-resolve]')
@@ -864,7 +863,7 @@ describe('Playing THREEs', () => {
 		cy.get('#waiting-for-opponent-resolve-three-scrim')
 			.should('be.visible');
 		// waiting for opponent to choose from scrap scrim
-		cy.resolveThreeOpponent(Card.ACE_OF_SPADES)
+		cy.resolveThreeOpponent(Card.ACE_OF_SPADES);
 
 		cy.get('#waiting-for-opponent-resolve-three-scrim')
 			.should('not.be.visible');	
