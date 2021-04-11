@@ -158,7 +158,7 @@ describe('Untargeted One-Offs', () => {
 
 }); // End untargeted one-off describe
 
-describe('Playing FOURS', () => {
+describe.only('Playing FOURS', () => {
 	beforeEach(() => {
 		setupGameAsP0();
 	});
@@ -208,7 +208,48 @@ describe('Playing FOURS', () => {
 	});
 
 	it('Plays a 4 to make opponent discard their only two cards', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.FOUR_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1Points: [],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
 
+		// Play the four of spades
+		cy.log('Playing Four of clubs as one off');
+		cy.get('[data-player-hand-card=4-0]').click(); // four of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
+		cy.get('#waiting-for-opponent-discard-scrim')
+			.should('be.visible');
+		// Opponent chooses two cards to discard
+		cy.log('Opponent discards both their remaining cards');
+		cy.discardOpponent(Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS);
+		cy.get('#waiting-for-opponent-discard-scrim')
+			.should('not.be.visible');
+	
+		assertGameState(0, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+			scrap: [Card.FOUR_OF_CLUBS, Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+		})
+		
 	});
 
 	it('Plays a 4 to make opponent discard the last card in their hand', () => {
@@ -220,7 +261,7 @@ describe('Playing FOURS', () => {
 	});
 });
 
-describe.only('Opponent playing FOURS', () => {
+describe('Opponent playing FOURS', () => {
 	beforeEach(() => {
 		setupGameAsP1();
 	});
