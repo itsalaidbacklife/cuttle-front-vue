@@ -195,7 +195,7 @@
 			opacity=".6"
 		>
 			<h1>
-				Waiting for Opponent to Counter
+				Opponent May Counter
 			</h1>
 		</v-overlay>
 		<v-overlay
@@ -203,7 +203,7 @@
 			v-model="waitingForOpponentToDiscard"
 			opacity=".6"
 		>
-			<h1>Waiting for Opponent to Discard</h1>
+			<h1>Opponent Is Discarding</h1>
 		</v-overlay>
 		<counter-dialog
 			v-model="showCounterDialog"
