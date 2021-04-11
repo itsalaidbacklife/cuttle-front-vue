@@ -249,9 +249,11 @@ describe.only('Opponent playing FOURS', () => {
 			.should('be.visible');
 		// Choosing cards to discard
 		cy.log('Choosing two cards to discard');
+		cy.get('[data-cy=submit-four-dialog]').should('be.disabled'); // can't prematurely submit
 		cy.get('[data-discard-card=1-1]').click(); // ace of diamonds
+		cy.get('[data-cy=submit-four-dialog]').should('be.disabled'); // can't prematurely submit
 		cy.get('[data-discard-card=4-3]').click(); // four of spades
-		cy.get('[data-cy=submit-four-dialog]').click();
+		cy.get('[data-cy=submit-four-dialog]').click(); // submit choice to discard
 
 		assertGameState(1,
 			{
@@ -291,6 +293,7 @@ describe.only('Opponent playing FOURS', () => {
 			.should('be.visible');
 		// Choosing cards to discard
 		cy.log('Choosing (only) card to discard');
+		cy.get('[data-cy=submit-four-dialog]').should('be.disabled'); // can't prematurely submit
 		cy.get('[data-discard-card=1-1]').click(); // ace of diamonds
 		cy.get('[data-cy=submit-four-dialog]').click();
 		
