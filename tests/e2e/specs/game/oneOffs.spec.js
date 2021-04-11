@@ -501,7 +501,7 @@ describe('Playing THREEs', () => {
 		assertSnackbarError('You can only play a 3 as a one-off, if there are cards in the scrap pile');
 	})
 
-	it.only('Plays 3s successfully', () => {
+	it('Plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS],
@@ -610,6 +610,74 @@ describe('Playing THREEs', () => {
 				p1Points: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS],
 				p1FaceCards: [Card.KING_OF_HEARTS],
 				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES],
+			}
+		);
+	})
+
+	it.only('Opponent plays 3s successfully', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.ACE_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS, Card.THREE_OF_CLUBS],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+
+		// put some cards into scrap
+		cy.get('[data-player-hand-card=1-3]').click() // ace of space
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click() // one-off
+
+
+		cy.get('#waiting-for-opponent-scrim')
+			.should('be.visible');
+
+		cy.resolveOpponent()
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS, Card.THREE_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES],
+			}
+		);
+
+		// opponent plays 3
+		cy.playOneOffOpponent(Card.THREE_OF_CLUBS)
+
+		// player resolves
+		cy.get('[data-cy=cannot-counter-resolve]')
+			.should('be.visible')
+			.click()
+
+		
+		cy.get('#waiting-for-opponent-resolve-three-scrim')
+			.should('be.visible');
+		// waiting for opponent to choose from scrap scrim
+		cy.resolveThreeOpponent(Card.ACE_OF_SPADES)
+
+		cy.get('#waiting-for-opponent-resolve-three-scrim')
+			.should('not.be.visible');	
+
+		assertGameState(
+			0,
+			{
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS, Card.ACE_OF_SPADES],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES, Card.THREE_OF_CLUBS],
 			}
 		);
 	})
