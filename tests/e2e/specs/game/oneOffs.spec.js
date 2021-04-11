@@ -248,12 +248,51 @@ describe.only('Playing FOURS', () => {
 			p1Points: [],
 			p1FaceCards: [],
 			scrap: [Card.FOUR_OF_CLUBS, Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-		})
-		
+		});
 	});
 
 	it('Plays a 4 to make opponent discard the last card in their hand', () => {
+		// Set Up
+		cy.loadGameFixture({
+			p0Hand: [Card.FOUR_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Points: [],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
 
+		// Play the four of spades
+		cy.log('Playing Four of clubs as one off');
+		cy.get('[data-player-hand-card=4-0]').click(); // four of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
+		cy.get('#waiting-for-opponent-discard-scrim')
+			.should('be.visible');
+		// Opponent chooses two cards to discard
+		cy.log('Opponent discards both their remaining cards');
+		cy.discardOpponent(Card.ACE_OF_HEARTS);
+		cy.get('#waiting-for-opponent-discard-scrim')
+			.should('not.be.visible');
+	
+		assertGameState(0, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+			scrap: [Card.FOUR_OF_CLUBS, Card.ACE_OF_HEARTS],
+		});
 	});
 
 	it('Prevents playing a 4 when opponent has no cards in hand', () => {
