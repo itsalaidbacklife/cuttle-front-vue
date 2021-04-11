@@ -309,7 +309,7 @@ export default {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
 					}
-					context.commit('setWaitingForOpponent', false);
+					context.commit('setWaitingForOpponentToCounter', false);
 					return resolve();
 				});
 			});
