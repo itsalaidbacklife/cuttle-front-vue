@@ -265,6 +265,47 @@ describe.only('Opponent playing FOURS', () => {
 			}
 		)
 	});
+
+	it('Discards last card when FOURd with one card in hand', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.FOUR_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_DIAMONDS],
+			p1Points: [],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');	
+
+		// Opponent plays four
+		cy.playOneOffOpponent(Card.FOUR_OF_CLUBS);
+		// Player cannot counter
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+
+		// Four Dialog appears (you must discard)
+		cy.get('#four-discard-dialog')
+			.should('be.visible');
+		// Choosing cards to discard
+		cy.log('Choosing (only) card to discard');
+		cy.get('[data-discard-card=1-1]').click(); // ace of diamonds
+		cy.get('[data-cy=submit-four-dialog]').click();
+		
+		assertGameState(1,
+			{
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.FOUR_OF_CLUBS, Card.ACE_OF_DIAMONDS],
+			}
+		);
+	});
 });
 
 describe('Play TWOS', () => {
