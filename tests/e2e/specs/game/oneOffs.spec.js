@@ -815,7 +815,7 @@ describe('Playing THREEs', () => {
 		);
 	})
 
-	it.only('Opponent plays 3s successfully', () => {
+	it('Opponent plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES],
