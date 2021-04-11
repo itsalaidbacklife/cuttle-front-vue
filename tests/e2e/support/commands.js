@@ -292,6 +292,32 @@ Cypress.Commands.add('counterOpponent', (card) => {
 		});
 });
 
+Cypress.Commands.add('resolveThreeOpponent', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot resolve three as opponent: Invalid card input');
+	}
+	return cy
+		.window()
+		.its('app.$store.state.game')
+		.then((game) => {
+			const opId = game.players[game.myPNum].id;
+			const foundCard = game.scrap.find((scrapCard) => cardsMatch(card, scrapCard));
+			if (!foundCard) {
+				throw new Error(`Error resolving three as opponent: could not find ${card.rank} of ${card.suit} in scrap`)
+			}
+			const cardId = foundCard.id;
+			io.socket.get('/game/resolveThree', {
+				cardId,
+				opId,
+			}, function handleResponse(res, jwres) {
+				console.log(res, jwres)
+				if (!jwres.statusCode === 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
 Cypress.Commands.add('resolveOpponent', () => {
 	return cy
 		.window()
