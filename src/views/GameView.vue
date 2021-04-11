@@ -198,6 +198,15 @@
 				Waiting for Opponent
 			</h1>
 		</v-overlay>
+		<v-overlay
+			id="waiting-for-opponent-resolve-three-scrim"
+			v-model="showOpponentChoosingThreeScrim"
+			opacity=".6"
+		>
+			<h1>
+				Waiting for Opponent to Choose From Scrap
+			</h1>
+		</v-overlay>
 		<counter-dialog
 			v-model="showCounterDialog"
 			:one-off="game.oneOff"
@@ -341,6 +350,9 @@ export default {
 		},
 		showThreeDialog() {
 			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 === this.game.myPNum && this.waitingForOpponent === false;
+		},
+		showOpponentChoosingThreeScrim() {
+			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 !== this.game.myPNum && this.waitingForOpponent === false && !this.showCannotCounterDialog;
 		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
