@@ -190,13 +190,20 @@
 			</v-btn>
 		</v-snackbar>
 		<v-overlay
-			id="waiting-for-opponent-scrim"
-			v-model="waitingForOpponent"
+			id="waiting-for-opponent-counter-scrim"
+			v-model="waitingForOpponentToCounter"
 			opacity=".6"
 		>
 			<h1>
-				Waiting for Opponent
+				Opponent May Counter
 			</h1>
+		</v-overlay>
+		<v-overlay
+			id="waiting-for-opponent-discard-scrim"
+			v-model="waitingForOpponentToDiscard"
+			opacity=".6"
+		>
+			<h1>Opponent Is Discarding</h1>
 		</v-overlay>
 		<v-overlay
 			id="waiting-for-opponent-resolve-three-scrim"
@@ -218,6 +225,10 @@
 			v-model="showCannotCounterDialog"
 			:one-off="game.oneOff"
 			@resolve="resolve"
+		/>
+		<four-dialog
+			v-model="discarding"
+			@discard="discard"
 		/>
 		<three-dialog 
 			v-if="showThreeDialog"
@@ -250,6 +261,7 @@
 import Card from '@/components/GameView/Card.vue';
 import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
 import CounterDialog from '@/components/GameView/CounterDialog.vue';
+import FourDialog from '@/components/GameView/FourDialog.vue';
 import ThreeDialog from '@/components/GameView/ThreeDialog.vue';
 import EightOverlay from '@/components/GameView/EightOverlay.vue';
 import NineOverlay from '../components/GameView/NineOverlay.vue';
@@ -260,6 +272,7 @@ export default {
 		Card,
 		CannotCounterDialog,
 		CounterDialog,
+		FourDialog,
 		ThreeDialog,
 		EightOverlay,
 		NineOverlay,
@@ -270,6 +283,7 @@ export default {
 			snackMessage: '',
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
+			showFourDialog: false,
 			showEightOverlay: false,
 			showNineOverlay: false,
 			nineTargetIndex: null,
@@ -325,8 +339,11 @@ export default {
 		isPlayersTurn() {
 			return this.game.turn % 2 === this.game.myPNum
 		},
-		waitingForOpponent() {
-			return this.game.waitingForOpponent;
+		waitingForOpponentToDiscard() {
+			return this.game.waitingForOpponentToDiscard;
+		},
+		waitingForOpponentToCounter() {
+			return this.game.waitingForOpponentToCounter;
 		},
 		myTurnToCounter() {
 			return this.game.myTurnToCounter;
@@ -348,11 +365,14 @@ export default {
 		showCounterDialog() {
 			return this.myTurnToCounter && this.hasTwoInHand;
 		},
+		discarding() {
+			return this.$store.state.game.discarding;
+		},
 		showThreeDialog() {
-			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 === this.game.myPNum && this.waitingForOpponent === false;
+			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 === this.game.myPNum && this.waitingForOpponentToCounter === false;
 		},
 		showOpponentChoosingThreeScrim() {
-			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 !== this.game.myPNum && this.waitingForOpponent === false && !this.showCannotCounterDialog;
+			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 !== this.game.myPNum && this.waitingForOpponentToCounter === false && !this.showCannotCounterDialog;
 		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
@@ -632,6 +652,14 @@ export default {
 			this.$store.dispatch('requestCounter', twoId)
 				.then(this.clearSelection())
 				.catch(this.handleError);
+		},
+		discard(cardIds) {
+			const cardId1 = cardIds[0];
+			const cardId2 = cardIds.length > 1 ? cardIds[1] : null;
+			this.$store.dispatch('requestDiscard', {
+				cardId1,
+				cardId2,
+			});
 		},
 	},
 }

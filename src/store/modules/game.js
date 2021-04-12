@@ -19,8 +19,10 @@ function resetState() {
 		topCard: null,
 		secondCard: null,
 		oneOff: null,
-		waitingForOpponent: false,
+		waitingForOpponentToCounter: false,
 		myTurnToCounter: false,
+		discarding: false,
+		waitingForOpponentToDiscard: false,
 	};
 }
 const initialState = resetState();
@@ -94,11 +96,17 @@ export default {
 		opponentLeft(state) {
 			state.players = state.players.filter(player => player.pNum === state.myPNum);
 		},
-		setWaitingForOpponent(state, val) {
-			state.waitingForOpponent = val;
+		setWaitingForOpponentToCounter(state, val) {
+			state.waitingForOpponentToCounter = val;
 		},
 		setMyTurnToCounter(state, val) {
 			state.myTurnToCounter = val;
+		},
+		setDiscarding(state, val) {
+			state.discarding = val;
+		},
+		setWaitingForOpponentToDiscard(state, val) {
+			state.waitingForOpponentToDiscard = val;
 		},
 	},
 	actions: {
@@ -216,7 +224,7 @@ export default {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
 					}
-					context.commit('setWaitingForOpponent', true);
+					context.commit('setWaitingForOpponentToCounter', true);
 					return resolve();
 				});
 			});
@@ -232,7 +240,7 @@ export default {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
 					}
-					context.commit('setWaitingForOpponent', true);
+					context.commit('setWaitingForOpponentToCounter', true);
 					return resolve();
 				});
 			});
@@ -249,6 +257,32 @@ export default {
 					}
 					return resolve();
 				});
+			});
+		},
+		/**
+		 * 
+		 * @param {required} cardId1
+		 * @param {optional} cardId2
+		 */
+		async requestDiscard(context, { cardId1, cardId2 }) {
+			let reqData = {
+				cardId1,
+			};
+			if (cardId2) {
+				reqData = {
+					cardId1,
+					cardId2,
+				};
+			}
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/resolveFour',
+					reqData,
+					function(res, jwres) {
+						if (jwres.statusCode != 200) {
+							return reject(jwres.body.message);
+						}
+						return resolve();
+					});
 			});
 		},
 		async requestResolve(context) {
@@ -275,7 +309,7 @@ export default {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
 					}
-					context.commit('setWaitingForOpponent', false);
+					context.commit('setWaitingForOpponentToCounter', false);
 					return resolve();
 				});
 			});
@@ -291,7 +325,7 @@ export default {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
 					}
-					context.commit('setWaitingForOpponent', true);
+					context.commit('setWaitingForOpponentToCounter', true);
 					return resolve();
 				});
 			});
