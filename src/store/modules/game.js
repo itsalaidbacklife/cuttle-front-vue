@@ -23,6 +23,8 @@ function resetState() {
 		myTurnToCounter: false,
 		discarding: false,
 		waitingForOpponentToDiscard: false,
+		waitingForOpponentToPickFromScrap: false,
+		pickingFromScrap: false,
 	};
 }
 const initialState = resetState();
@@ -104,6 +106,12 @@ export default {
 		},
 		setDiscarding(state, val) {
 			state.discarding = val;
+		},
+		setPickingFromScrap(state, val) {
+			state.pickingFromScrap = val;
+		},
+		setWaitingForOpponentToPickFromScrap(state, val) {
+			state.waitingForOpponentToPickFromScrap = val;
 		},
 		setWaitingForOpponentToDiscard(state, val) {
 			state.waitingForOpponentToDiscard = val;
