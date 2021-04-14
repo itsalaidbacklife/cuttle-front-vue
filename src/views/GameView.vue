@@ -207,7 +207,7 @@
 		</v-overlay>
 		<v-overlay
 			id="waiting-for-opponent-resolve-three-scrim"
-			v-model="showOpponentChoosingThreeScrim"
+			v-model="waitingForOpponentToPickFromScrap"
 			opacity=".6"
 		>
 			<h1>
@@ -231,8 +231,7 @@
 			@discard="discard"
 		/>
 		<three-dialog 
-			v-if="showThreeDialog"
-			v-model="showThreeDialog"
+			v-model="pickingFromScrap"
 			:one-off="game.oneOff"
 			:scrap="scrap"
 			@resolveThree="resolveThree($event)"
@@ -345,6 +344,9 @@ export default {
 		waitingForOpponentToCounter() {
 			return this.game.waitingForOpponentToCounter;
 		},
+		waitingForOpponentToPickFromScrap() {
+			return this.game.waitingForOpponentToPickFromScrap;
+		},
 		myTurnToCounter() {
 			return this.game.myTurnToCounter;
 		},
@@ -368,11 +370,8 @@ export default {
 		discarding() {
 			return this.$store.state.game.discarding;
 		},
-		showThreeDialog() {
-			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 === this.game.myPNum && this.waitingForOpponentToCounter === false;
-		},
-		showOpponentChoosingThreeScrim() {
-			return this.game && this.game.oneOff !== null && this.game.oneOff.rank === 3 && this.game.turn % 2 !== this.game.myPNum && this.waitingForOpponentToCounter === false && !this.showCannotCounterDialog;
+		pickingFromScrap() {
+			return this.$store.state.game.pickingFromScrap;
 		},
 		validScuttleIds() {
 			if (!this.selectedCard) return [];
