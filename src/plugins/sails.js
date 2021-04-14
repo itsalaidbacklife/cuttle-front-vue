@@ -32,15 +32,17 @@ io.socket.on('game', function(evData) {
 		case 'scuttle':
 		case 'loadFixture':
 		case 'jack':
-		case 'resolveFour':
 			store.commit('updateGame', evData.data.game);
-			store.commit('setWaitingForOpponentToDiscard', false);
-			store.commit('setDiscarding', false);
 			break;
 		case 'resolveThree':
 			store.commit('updateGame', evData.data.game);
 			store.commit('setPickingFromScrap', false)
 			store.commit('setWaitingForOpponentToPickFromScrap', false);
+			break;
+		case 'resolveFour':
+			store.commit('updateGame', evData.data.game);
+			store.commit('setWaitingForOpponentToDiscard', false);
+			store.commit('setDiscarding', false);
 			break;
 		case 'resolve':
 			store.commit('updateGame', evData.data.game);
