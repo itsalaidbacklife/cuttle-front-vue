@@ -53,8 +53,26 @@
 					id="deck"
 					@click="drawCard"
 				>
-					<p>Deck</p>
-					<p>({{ deck.length }})</p>
+					<template v-if="!resolvingSeven">
+						<p>Deck</p>
+						<p>({{ deck.length }})</p>
+					</template>
+
+					<template v-if="resolvingSeven">
+						Resolving seven??
+						<card
+							v-if="topCard"
+							:suit="topCard.suit"
+							:rank="topCard.rank"
+							:data-top-card="`${topCard.rank}-${topCard.suit}`"
+						/>
+						<card
+							v-if="secondCard"
+							:suit="secondCard.suit"
+							:rank="secondCard.rank"
+							:data-second-card="`${secondCard.rank}-${secondCard.suit}`"
+						/>
+					</template>
 				</div>
 				<div
 					id="scrap"
@@ -230,7 +248,7 @@
 			v-model="discarding"
 			@discard="discard"
 		/>
-		<three-dialog 
+		<three-dialog
 			v-model="pickingFromScrap"
 			:one-off="game.oneOff"
 			:scrap="scrap"
@@ -436,6 +454,22 @@ export default {
 			default:
 				return null;
 			}
+		},
+		// Sevens
+		playingFromDeck() {
+			return this.$store.state.game.playingFromDeck;
+		},
+		waitingForOpponentToPlayFromDeck() {
+			return this.$store.state.game.waitingForOpponentToPlayFromDeck;	
+		},
+		resolvingSeven() {
+			return this.playingFromDeck || this.waitingForOpponentToPlayFromDeck;
+		},
+		topCard() {
+			return this.$store.state.game.topCard;
+		},
+		secondCard() {
+			return this.$store.state.game.secondCard;
 		},
 	},
 	methods: {
@@ -722,7 +756,7 @@ export default {
 		cursor: pointer;
 	}
 	& #deck, & #scrap{
-		width: 80%;
+		min-width: 80%;
 		height: 80%;
 		margin: 10px;
 		border: 1px solid #FFF;

@@ -21,10 +21,15 @@ function resetState() {
 		oneOff: null,
 		waitingForOpponentToCounter: false,
 		myTurnToCounter: false,
-		discarding: false,
-		waitingForOpponentToDiscard: false,
+		// Threes
 		waitingForOpponentToPickFromScrap: false,
 		pickingFromScrap: false,
+		// Fours
+		discarding: false,
+		waitingForOpponentToDiscard: false,
+		// Sevens
+		playingFromDeck: false,
+		waitingForOpponentToPlayFromDeck: false,
 	};
 }
 const initialState = resetState();
@@ -98,23 +103,33 @@ export default {
 		opponentLeft(state) {
 			state.players = state.players.filter(player => player.pNum === state.myPNum);
 		},
-		setWaitingForOpponentToCounter(state, val) {
-			state.waitingForOpponentToCounter = val;
-		},
 		setMyTurnToCounter(state, val) {
 			state.myTurnToCounter = val;
 		},
-		setDiscarding(state, val) {
-			state.discarding = val;
+		// Countering
+		setWaitingForOpponentToCounter(state, val) {
+			state.waitingForOpponentToCounter = val;
 		},
+		// Threes
 		setPickingFromScrap(state, val) {
 			state.pickingFromScrap = val;
 		},
 		setWaitingForOpponentToPickFromScrap(state, val) {
 			state.waitingForOpponentToPickFromScrap = val;
 		},
+		// Fours
+		setDiscarding(state, val) {
+			state.discarding = val;
+		},
 		setWaitingForOpponentToDiscard(state, val) {
 			state.waitingForOpponentToDiscard = val;
+		},
+		// Sevens
+		setPlayingFromDeck(state, val) {
+			state.playingFromDeck = val;
+		},
+		setWaitingForOpponentToPlayFromDeck(state, val) {
+			state.waitingForOpponentToPlayFromDeck = val;
 		},
 	},
 	actions: {
