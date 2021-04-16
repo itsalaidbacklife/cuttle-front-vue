@@ -60,19 +60,23 @@
 					</template>
 
 					<template v-if="resolvingSeven">
-						Resolving seven??
-						<card
-							v-if="topCard"
-							:suit="topCard.suit"
-							:rank="topCard.rank"
-							:data-top-card="`${topCard.rank}-${topCard.suit}`"
-						/>
-						<card
-							v-if="secondCard"
-							:suit="secondCard.suit"
-							:rank="secondCard.rank"
-							:data-second-card="`${secondCard.rank}-${secondCard.suit}`"
-						/>
+						<p class="mt-2">Play from Deck</p>
+						<div class="d-flex">
+							<card
+								v-if="topCard"
+								:suit="topCard.suit"
+								:rank="topCard.rank"
+								:data-top-card="`${topCard.rank}-${topCard.suit}`"
+								class="mb-4"
+							/>
+							<card
+								v-if="secondCard"
+								:suit="secondCard.suit"
+								:rank="secondCard.rank"
+								:data-second-card="`${secondCard.rank}-${secondCard.suit}`"
+								class="mb-4"
+							/>
+						</div>
 					</template>
 				</div>
 				<div
@@ -756,7 +760,7 @@ export default {
 	& #deck {
 		cursor: pointer;
 		&.reveal-top-two {
-			flex-direction: row;
+			height: auto;
 			align-self: start;
 		}
 	}
