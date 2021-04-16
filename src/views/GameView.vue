@@ -51,6 +51,7 @@
 			<div id="field-left">
 				<div
 					id="deck"
+					:class="{'reveal-top-two': resolvingSeven}"
 					@click="drawCard"
 				>
 					<template v-if="!resolvingSeven">
@@ -754,6 +755,10 @@ export default {
 	width: 20%;
 	& #deck {
 		cursor: pointer;
+		&.reveal-top-two {
+			flex-direction: row;
+			align-self: start;
+		}
 	}
 	& #deck, & #scrap{
 		min-width: 80%;
