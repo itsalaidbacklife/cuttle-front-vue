@@ -352,6 +352,23 @@ export default {
 					return resolve();
 				});
 			});
-		}
+		},
+		////////////
+		// Sevens //
+		////////////
+		async requestPlayPointsSeven(context, { cardId, index }) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/seven/points', {
+					cardId,
+					index, // 0 if topCard, 1 if secondCard
+				},
+				function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});	
+		},
 	}
 }

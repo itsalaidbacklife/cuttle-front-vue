@@ -83,6 +83,12 @@ io.socket.on('game', function(evData) {
 				store.commit('setMyTurnToCounter', true);
 			}
 			break;
+		// Sevens
+		case 'sevenPoints':
+			store.commit('updateGame', evData.data.game);
+			store.commit('setPlayingFromDeck', false);
+			store.commit('setWaitingForOpponentToPlayFromDeck', false);
+			break;
 		}
 	default:
 		break;

@@ -60,21 +60,27 @@
 					</template>
 
 					<template v-if="resolvingSeven">
-						<p class="mt-2">Play from Deck</p>
+						<p class="mt-2">
+							Play from Deck
+						</p>
 						<div class="d-flex">
 							<card
 								v-if="topCard"
 								:suit="topCard.suit"
 								:rank="topCard.rank"
 								:data-top-card="`${topCard.rank}-${topCard.suit}`"
+								:is-selected="topCardIsSelected"
 								class="mb-4"
+								@click="selectTopCard"
 							/>
 							<card
 								v-if="secondCard"
 								:suit="secondCard.suit"
 								:rank="secondCard.rank"
 								:data-second-card="`${secondCard.rank}-${secondCard.suit}`"
+								:is-selected="secondCardIsSelected"
 								class="mb-4"
+								@click="selectSecondCard"
 							/>
 						</div>
 					</template>
@@ -310,6 +316,8 @@ export default {
 			showNineOverlay: false,
 			nineTargetIndex: null,
 			targetType: null,
+			topCardIsSelected: false,
+			secondCardIsSelected: false,
 		}
 	},
 	computed: {
@@ -397,22 +405,38 @@ export default {
 			return this.$store.state.game.pickingFromScrap;
 		},
 		validScuttleIds() {
-			if (!this.selectedCard) return [];
+			let selectedCard;
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return [];
+				selectedCard = this.cardSelectedFromDeck.rank;
+			}
+			else {
+				if (!this.selectedCard) return [];
+				selectedCard = this.selectedCard.rank;
+			}
 			return this.opponent.points
 				.filter((potentialTarget) => {
-					return this.selectedCard.rank > potentialTarget.rank || 
+					return selectedCard.rank > potentialTarget.rank || 
 						(
-							this.selectedCard.rank === potentialTarget.rank && 
-							this.selectedCard.suit > potentialTarget.suit
+							selectedCard.rank === potentialTarget.rank && 
+							selectedCard.suit > potentialTarget.suit
 						);
 				})
 				.map((validTarget) => validTarget.id);			
 		},
 		validMoves() {
 			let res = [];
-			if (!this.selectedCard) return res;
+			let cardRank;
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return [];
+				cardRank = this.cardSelectedFromDeck.rank;
+			}
+			else {
+				if (!this.selectedCard) return [];
+				cardRank = this.selectedCard.rank;
+			}
 
-			switch (this.selectedCard.rank) {
+			switch (cardRank) {
 			case 1:
 			case 3:
 			case 4:
@@ -437,11 +461,11 @@ export default {
 				const validFaceCards = this.opponent.runes.filter(
 					(potentialTarget) => potentialTarget.rank > 10 || potentialTarget.rank === 8
 				).map((validTarget) => validTarget.id);
-				res.push(...validFaceCards)
+				res.push(...validFaceCards);
 				res = [...res, ...this.validScuttleIds];
 				break;
 			case 11:
-				res = this.opponent.points.map(validTarget => validTarget.id) 
+				res = this.opponent.points.map(validTarget => validTarget.id);
 				break;
 			case 12:
 			case 13:
@@ -476,6 +500,11 @@ export default {
 		secondCard() {
 			return this.$store.state.game.secondCard;
 		},
+		cardSelectedFromDeck() {
+			if (this.topCardIsSelected) return this.topCard;
+			if (this.secondCardIsSelected) return this.secondCard;
+			return null;
+		},
 	},
 	methods: {
 		clearSnackBar() {
@@ -504,6 +533,14 @@ export default {
 			} else {
 				this.selectionIndex = index;
 			}
+		},
+		selectTopCard() {
+			this.secondCardIsSelected = false;
+			this.topCardIsSelected = !this.topCardIsSelected;
+		},
+		selectSecondCard() {
+			this.topCardIsSelected = false;
+			this.secondCardIsSelected = !this.secondCardIsSelected;
 		},
 		/**
 		 * Returns number of kings a given player has
@@ -538,20 +575,33 @@ export default {
 		// Player Moves //
 		//////////////////
 		drawCard() {
-			this.$store.dispatch('requestDrawCard')
-				.then(this.clearSelection())
-				.catch((err) => {
-					this.snackMessage = err;
-					this.snackColor = 'error';
-					this.showSnack = true;
-					this.clearSelection();
-				});
+			if (!this.resolvingSeven) {
+				this.$store.dispatch('requestDrawCard')
+					.then(this.clearSelection())
+					.catch((err) => {
+						this.snackMessage = err;
+						this.snackColor = 'error';
+						this.showSnack = true;
+						this.clearSelection();
+					});
+			}
 		},
 		playPoints() {
 			this.clearOverlays();
-			this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
-				.then(this.clearSelection())
-				.catch(this.handleError);
+			if (this.resolvingSeven) {
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
+				this.$store.dispatch('requestPlayPointsSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					index: deckIndex,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
+			else {
+				this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 		},
 		playFaceCard() {
 			this.clearOverlays();
@@ -597,9 +647,17 @@ export default {
 				.catch(this.handleError);
 		},
 		playToField() {
-			if (!this.selectedCard) return;
+			let cardRank;
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return;
+				cardRank = this.cardSelectedFromDeck.rank;
+			}
+			else {
+				if (!this.selectedCard) return;
+				cardRank = this.selectedCard.rank;
+			}
 
-			switch (this.selectedCard.rank) {
+			switch (cardRank) {
 			case 1:
 			case 2:
 			case 3:
