@@ -49,13 +49,14 @@
 			class="d-flex justify-center align-center p-2 mx-auto"
 		>
 			<div id="field-left">
-				<div
+				<v-card
 					id="deck"
 					@click="drawCard"
 				>
-					<p>Deck</p>
-					<p>({{ deck.length }})</p>
-				</div>
+					<v-img :src="require('../assets/logo_head.svg')" />
+					<!-- <p>({{ deck.length }})</p> -->
+					<v-card-actions>({{ deck.length }})</v-card-actions>
+				</v-card>
 				<div
 					id="scrap"
 					:class="{'valid-move': validMoves.includes('scrap')}"
