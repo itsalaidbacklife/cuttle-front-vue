@@ -59,6 +59,7 @@
 				</v-card>
 				<div
 					id="scrap"
+					class="rounded"
 					:class="{'valid-move': validMoves.includes('scrap')}"
 					@click="playOneOff"
 				>
@@ -125,6 +126,7 @@
 				<div 
 					v-if="selectedCard === null"
 					id="history"
+					class="rounded"
 				>
 					History
 				</div>
