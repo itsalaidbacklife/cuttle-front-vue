@@ -63,6 +63,13 @@
 					:class="{'valid-move': validMoves.includes('scrap')}"
 					@click="playOneOff"
 				>
+					<v-overlay
+						:value="validMoves.includes('scrap')"
+						absolute
+						v-ripple
+						color="accent"
+						opacity=".8"
+					/>
 					<p>Scrap</p>
 					<p>({{ scrap.length }})</p>
 				</div>
@@ -100,6 +107,13 @@
 					:class="{'valid-move': validMoves.includes('field')}"
 					@click="playToField"
 				>
+					<v-overlay
+						:value="validMoves.includes('field')"
+						absolute
+						v-ripple
+						color="accent"
+						opacity=".8"
+					/>
 					<div class="field-points">
 						<card
 							v-for="card in player.points"
@@ -676,8 +690,8 @@ export default {
 }
 
 .valid-move {
-	background-color: var(--v-accent-lighten1);
-	opacity: .6;
+	// background-color: var(--v-accent-lighten1);
+	// opacity: .6;
 	cursor: pointer;
 }
 
@@ -725,6 +739,7 @@ export default {
 		cursor: pointer;
 	}
 	& #deck, & #scrap{
+		position: relative;
 		width: 80%;
 		height: 80%;
 		margin: 10px;
@@ -763,6 +778,7 @@ export default {
 	align-items: center;
 }
 #opponent-field,#player-field {
+	position: relative;
 	width: 100%;
 	height: 29vh;
 	display: flex;
