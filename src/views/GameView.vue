@@ -64,9 +64,9 @@
 					@click="playOneOff"
 				>
 					<v-overlay
+						v-ripple
 						:value="validMoves.includes('scrap')"
 						absolute
-						v-ripple
 						color="accent"
 						opacity=".8"
 					/>
@@ -108,9 +108,9 @@
 					@click="playToField"
 				>
 					<v-overlay
+						v-ripple
 						:value="validMoves.includes('field')"
 						absolute
-						v-ripple
 						color="accent"
 						opacity=".8"
 					/>

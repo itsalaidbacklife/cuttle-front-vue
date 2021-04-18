@@ -5,9 +5,9 @@
 		@click="$emit('click')"
 	>
 		<v-overlay
+			v-ripple
 			:value="isValidTarget"
 			absolute
-			v-ripple
 			color="accent"
 			class="target-overlay"
 			opacity=".8"
