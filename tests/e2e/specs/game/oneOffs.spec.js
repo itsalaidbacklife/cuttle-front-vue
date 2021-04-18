@@ -857,9 +857,8 @@ describe('Playing THREEs', () => {
 		// player resolves
 		cy.get('[data-cy=cannot-counter-resolve]')
 			.should('be.visible')
-			.click()
+			.click();
 
-		
 		cy.get('#waiting-for-opponent-resolve-three-scrim')
 			.should('be.visible');
 		// waiting for opponent to choose from scrap scrim
