@@ -17,7 +17,7 @@ describe('Countering One-Offs', () => {
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Confirm fixture has loaded
-		cy.get('#player-hand-cards div').should('have.length', 1);
+		cy.get('[data-player-hand-card]').should('have.length', 1);
 		cy.log('Fixture loaded');
 
 		// Opponent plays ace of clubs
@@ -53,7 +53,7 @@ describe('Countering One-Offs', () => {
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Confirm fixture has loaded
-		cy.get('#player-hand-cards div').should('have.length', 2);
+		cy.get('[data-player-hand-card]').should('have.length', 2);
 		cy.log('Fixture loaded');
 
 		// Opponent plays ace of clubs as one-off
@@ -69,7 +69,7 @@ describe('Countering One-Offs', () => {
 			.should('be.visible')
 			.get('[data-counter-dialog-card=2-3]')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent resolves
 		cy.resolveOpponent();
@@ -101,7 +101,7 @@ describe('Countering One-Offs', () => {
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
 		// Confirm fixture has loaded
-		cy.get('#player-hand-cards div').should('have.length', 2);
+		cy.get('[data-player-hand-card]').should('have.length', 2);
 		cy.log('Fixture loaded');
 
 		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
@@ -138,7 +138,7 @@ describe('Countering One-Offs', () => {
 			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
-		cy.get('#player-hand-cards div').should('have.length', 2);
+		cy.get('[data-player-hand-card]').should('have.length', 2);
 		cy.log('Fixture loaded');
 
 		// Opponent plays ace of clubs as one-off
@@ -202,7 +202,7 @@ describe('Countering One-Offs', () => {
 			.should('be.visible')
 			.get('[data-counter-dialog-card=2-2]')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent counters back
 		cy.counterOpponent(Card.TWO_OF_CLUBS);
@@ -265,7 +265,7 @@ describe('Countering One-Offs', () => {
 			.should('be.visible')
 			.get('[data-counter-dialog-card=2-2]')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent counters back (2nd counter)
 		cy.counterOpponent(Card.TWO_OF_CLUBS);
@@ -278,7 +278,7 @@ describe('Countering One-Offs', () => {
 			.should('be.visible')
 			.get('[data-counter-dialog-card=2-3]')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent resolves
 		cy.resolveOpponent();
@@ -331,7 +331,7 @@ describe('Countering One-Offs', () => {
 			.should('be.visible')
 			.get('[data-counter-dialog-card=2-2]')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent counters back (2nd counter)
 		cy.counterOpponent(Card.TWO_OF_CLUBS);
@@ -344,7 +344,7 @@ describe('Countering One-Offs', () => {
 			.should('be.visible')
 			.get('[data-counter-dialog-card=2-3]')
 			.click();
-		cy.get('#waiting-for-opponent-scrim')
+		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent plays 4th and final counter
 		cy.counterOpponent(Card.TWO_OF_DIAMONDS);
