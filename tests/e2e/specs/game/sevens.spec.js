@@ -106,7 +106,7 @@ describe('Opponent playing SEVENS', () => {
 
 		// Opponent plays four of clubs for points
 		cy.playPointsFromSevenOpponent(Card.FOUR_OF_CLUBS);
-		cy.log('Opponent played FOUR of CLUBS for points (from seven)');
+
 		// No longer wiating for opponent
 		cy.get('#waiting-for-opponent-play-from-deck-scrim')
 			.should('not.be.visible');
