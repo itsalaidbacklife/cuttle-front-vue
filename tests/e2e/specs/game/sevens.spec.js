@@ -31,7 +31,7 @@ describe('Playing SEVENS', () => {
 		cy.resolveOpponent();
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
-            
+        
 		cy.get('[data-top-card=4-0]')
 			.should('exist')
 			.and('be.visible');
@@ -51,6 +51,75 @@ describe('Playing SEVENS', () => {
 			p1Hand: [],
 			p1Points: [],
 			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS],
+		});
+	});
+});
+
+describe('Opponent playing SEVENS', () => {
+	beforeEach(() => {
+		setupGameAsP1();
+	});
+	it('Opponent plays points from seven', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+			topCard: Card.FOUR_OF_CLUBS,
+			secondCard: Card.SIX_OF_DIAMONDS,
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 0);
+		cy.log('Loaded fixture');
+	
+		// Opponent plays 7 of clubs
+		cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+		// Player resolves
+		cy.get('[data-cy=cannot-counter-resolve]')
+			.should('be.visible')
+			.click();
+		cy.log('Player resolves (could not counter');
+
+		// Waiting for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('be.visible');
+		// Deck cards appear but are not selectable
+		cy.get('[data-top-card=4-0]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('[data-second-card=6-1]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('#scrap')
+			.should('be.visible')
+			.and('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to scrap
+		cy.get('#player-field')
+			.should('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to field
+
+		// Opponent plays four of clubs for points
+		cy.playPointsFromSevenOpponent(Card.FOUR_OF_CLUBS);
+		cy.log('Opponent played FOUR of CLUBS for points (from seven)');
+		// No longer wiating for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('not.be.visible');
+		cy.log('Done waiting for opponent');
+
+		assertGameState(1, {
+			p0Hand: [],
+			p0Points: [Card.FOUR_OF_CLUBS],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+			secondCard: Card.SIX_OF_DIAMONDS,
 			scrap: [Card.SEVEN_OF_CLUBS],
 		});
 	});
