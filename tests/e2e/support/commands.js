@@ -367,6 +367,11 @@ Cypress.Commands.add('playPointsFromSevenOpponent', (card) => {
 	if (!hasValidSuitAndRank(card)) {
 		throw new Error('Cannot play opponent points: Invalid card input');
 	}
+	Cypress.log({
+		displayName: 'Opponent seven points',
+		name: 'Opponent plays points from seven',
+		message: printCard(card),
+	});
 	return cy.window().its('app.$store.state.game')
 		.then((game) => {
 			let foundCard;
