@@ -66,7 +66,6 @@ export default {
 			if (Object.hasOwnProperty.call(newGame, 'p1Ready')) state.p1Ready = newGame.p1Ready;
 			if (Object.hasOwnProperty.call(newGame, 'passes')) state.passes = newGame.passes;
 			if (Object.hasOwnProperty.call(newGame, 'players')) state.players = _.cloneDeep(newGame.players);
-			if (Object.hasOwnProperty.call(newGame, 'srap')) state.scrap = _.cloneDeep(newGame.scrap);
 			if (Object.hasOwnProperty.call(newGame, 'twos')) state.twos = _.cloneDeep(newGame.twos);
 			if (Object.hasOwnProperty.call(newGame, 'topCard')) state.topCard = _.cloneDeep(newGame.topCard);
 			if (Object.hasOwnProperty.call(newGame, 'secondCard')) state.secondCard = _.cloneDeep(newGame.secondCard);
