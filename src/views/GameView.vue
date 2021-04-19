@@ -243,6 +243,15 @@
 				Opponent Choosing Card from Scrap
 			</h1>
 		</v-overlay>
+		<v-overlay
+			id="waiting-for-opponent-play-from-deck-scrim"
+			v-model="waitingForOpponentToPlayFromDeck"
+			opacity=".6"
+		>
+			<h1>
+				Opponent Playing from Deck
+			</h1>
+		</v-overlay>
 		<counter-dialog
 			v-model="showCounterDialog"
 			:one-off="game.oneOff"
@@ -378,6 +387,9 @@ export default {
 		waitingForOpponentToPickFromScrap() {
 			return this.game.waitingForOpponentToPickFromScrap;
 		},
+		waitingForOpponentToPlayFromDeck() {
+			return this.$store.state.game.waitingForOpponentToPlayFromDeck;	
+		},
 		myTurnToCounter() {
 			return this.game.myTurnToCounter;
 		},
@@ -488,9 +500,6 @@ export default {
 		playingFromDeck() {
 			return this.$store.state.game.playingFromDeck;
 		},
-		waitingForOpponentToPlayFromDeck() {
-			return this.$store.state.game.waitingForOpponentToPlayFromDeck;	
-		},
 		resolvingSeven() {
 			return this.playingFromDeck || this.waitingForOpponentToPlayFromDeck;
 		},
@@ -535,12 +544,16 @@ export default {
 			}
 		},
 		selectTopCard() {
-			this.secondCardIsSelected = false;
-			this.topCardIsSelected = !this.topCardIsSelected;
+			if (!this.waitingForOpponentToPlayFromDeck) {
+				this.secondCardIsSelected = false;
+				this.topCardIsSelected = !this.topCardIsSelected;
+			}
 		},
 		selectSecondCard() {
-			this.topCardIsSelected = false;
-			this.secondCardIsSelected = !this.secondCardIsSelected;
+			if (!this.waitingForOpponentToPlayFromDeck) {
+				this.topCardIsSelected = false;
+				this.secondCardIsSelected = !this.secondCardIsSelected;
+			}
 		},
 		/**
 		 * Returns number of kings a given player has
