@@ -364,7 +364,6 @@ Cypress.Commands.add('discardOpponent', (card1, card2) => {
  * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('playPointsFromSevenOpponent', (card) => {
-	console.log('\n Cypress command playing points from seven for opponent');
 	if (!hasValidSuitAndRank(card)) {
 		throw new Error('Cannot play opponent points: Invalid card input');
 	}
