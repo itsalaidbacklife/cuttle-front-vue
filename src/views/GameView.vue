@@ -67,9 +67,20 @@
 						v-ripple
 						:value="validMoves.includes('scrap')"
 						absolute
-						color="accent"
-						opacity=".8"
-					/>
+						color="accent lighten-1"
+						opacity=".6"
+						class="d-flex flex-column align-center justify-center"
+					>
+						<p class="black--text">
+							Scrap
+						</p>
+						<p
+							class="black--text"
+							style="text-align: center"
+						>
+							({{ scrap.length }})
+						</p>
+					</v-overlay>
 					<p>Scrap</p>
 					<p>({{ scrap.length }})</p>
 				</div>
@@ -104,6 +115,7 @@
 				<v-divider light />
 				<div
 					id="player-field"
+					class="mb-4"
 					:class="{'valid-move': validMoves.includes('field')}"
 					@click="playToField"
 				>
@@ -111,8 +123,8 @@
 						v-ripple
 						:value="validMoves.includes('field')"
 						absolute
-						color="accent"
-						opacity=".8"
+						color="accent lighten-1"
+						opacity=".6"
 					/>
 					<div class="field-points">
 						<card
@@ -163,7 +175,6 @@
 		>
 			<h3
 				id="player-score"
-				class="mb-2"
 			>
 				<span>POINTS: {{ playerPointTotal }}</span>
 				<span 
@@ -692,7 +703,6 @@ export default {
 
 .valid-move {
 	// background-color: var(--v-accent-lighten1);
-	// opacity: .6;
 	cursor: pointer;
 }
 
@@ -786,6 +796,8 @@ export default {
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+	border: 4px solid transparent;
+	border-radius: 4px;
 }
 .field-points {
 	display: flex;
@@ -802,23 +814,23 @@ export default {
 	width: 50%
 }
 
-#player-hand-cards {
-	width: 100%;
-	height: 80%;
-	background: rgba(0, 0, 0, 0.46);
-	&.my-turn {
-		border: 4px solid var(--v-accent-base);
-		border-radius: 4px;
-	}
-}
-
 #player-hand {
 	min-width: 50%;
 	height: 30vh;
 	& #player-hand-cards {
+		width: 100%;
 		height: 80%;
 		background: rgba(0, 0, 0, 0.46);
 		overflow-y: hidden;
+		border-radius: 4px;
+
+		&.my-turn {
+			border: 4px solid var(--v-accent-base);
+			
+		}
+		&:not(.my-turn) {
+			border: 4px solid transparent;
+		}
 	}
 }
 </style>
