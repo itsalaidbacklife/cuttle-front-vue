@@ -51,11 +51,39 @@
 			<div id="field-left">
 				<v-card
 					id="deck"
+					:class="{'reveal-top-two': resolvingSeven}"
 					@click="drawCard"
 				>
-					<v-img :src="require('../assets/logo_head.svg')" />
-					<!-- <p>({{ deck.length }})</p> -->
-					<v-card-actions>({{ deck.length }})</v-card-actions>
+					<template v-if="!resolvingSeven">
+						<v-img :src="require('../assets/logo_head.svg')" />
+						<v-card-actions>({{ deck.length }})</v-card-actions>
+					</template>
+
+					<template v-if="resolvingSeven">
+						<v-card-title class="mt-2">
+							Play from Deck
+						</v-card-title>
+						<v-card-text class="d-flex">
+							<card
+								v-if="topCard"
+								:suit="topCard.suit"
+								:rank="topCard.rank"
+								:data-top-card="`${topCard.rank}-${topCard.suit}`"
+								:is-selected="topCardIsSelected"
+								class="mb-4"
+								@click="selectTopCard"
+							/>
+							<card
+								v-if="secondCard"
+								:suit="secondCard.suit"
+								:rank="secondCard.rank"
+								:data-second-card="`${secondCard.rank}-${secondCard.suit}`"
+								:is-selected="secondCardIsSelected"
+								class="mb-4"
+								@click="selectSecondCard"
+							/>
+						</v-card-text>
+					</template>
 				</v-card>
 				<div
 					id="scrap"
@@ -243,6 +271,15 @@
 				Opponent Choosing Card from Scrap
 			</h1>
 		</v-overlay>
+		<v-overlay
+			id="waiting-for-opponent-play-from-deck-scrim"
+			v-model="waitingForOpponentToPlayFromDeck"
+			opacity=".6"
+		>
+			<h1>
+				Opponent Playing from Deck
+			</h1>
+		</v-overlay>
 		<counter-dialog
 			v-model="showCounterDialog"
 			:one-off="game.oneOff"
@@ -259,7 +296,7 @@
 			v-model="discarding"
 			@discard="discard"
 		/>
-		<three-dialog 
+		<three-dialog
 			v-model="pickingFromScrap"
 			:one-off="game.oneOff"
 			:scrap="scrap"
@@ -316,6 +353,8 @@ export default {
 			showNineOverlay: false,
 			nineTargetIndex: null,
 			targetType: null,
+			topCardIsSelected: false,
+			secondCardIsSelected: false,
 		}
 	},
 	computed: {
@@ -376,6 +415,9 @@ export default {
 		waitingForOpponentToPickFromScrap() {
 			return this.game.waitingForOpponentToPickFromScrap;
 		},
+		waitingForOpponentToPlayFromDeck() {
+			return this.$store.state.game.waitingForOpponentToPlayFromDeck;	
+		},
 		myTurnToCounter() {
 			return this.game.myTurnToCounter;
 		},
@@ -403,22 +445,38 @@ export default {
 			return this.$store.state.game.pickingFromScrap;
 		},
 		validScuttleIds() {
-			if (!this.selectedCard) return [];
+			let selectedCard;
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return [];
+				selectedCard = this.cardSelectedFromDeck.rank;
+			}
+			else {
+				if (!this.selectedCard) return [];
+				selectedCard = this.selectedCard.rank;
+			}
 			return this.opponent.points
 				.filter((potentialTarget) => {
-					return this.selectedCard.rank > potentialTarget.rank || 
+					return selectedCard.rank > potentialTarget.rank || 
 						(
-							this.selectedCard.rank === potentialTarget.rank && 
-							this.selectedCard.suit > potentialTarget.suit
+							selectedCard.rank === potentialTarget.rank && 
+							selectedCard.suit > potentialTarget.suit
 						);
 				})
 				.map((validTarget) => validTarget.id);			
 		},
 		validMoves() {
 			let res = [];
-			if (!this.selectedCard) return res;
+			let cardRank;
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return [];
+				cardRank = this.cardSelectedFromDeck.rank;
+			}
+			else {
+				if (!this.selectedCard) return [];
+				cardRank = this.selectedCard.rank;
+			}
 
-			switch (this.selectedCard.rank) {
+			switch (cardRank) {
 			case 1:
 			case 3:
 			case 4:
@@ -443,11 +501,11 @@ export default {
 				const validFaceCards = this.opponent.runes.filter(
 					(potentialTarget) => potentialTarget.rank > 10 || potentialTarget.rank === 8
 				).map((validTarget) => validTarget.id);
-				res.push(...validFaceCards)
+				res.push(...validFaceCards);
 				res = [...res, ...this.validScuttleIds];
 				break;
 			case 11:
-				res = this.opponent.points.map(validTarget => validTarget.id) 
+				res = this.opponent.points.map(validTarget => validTarget.id);
 				break;
 			case 12:
 			case 13:
@@ -465,6 +523,24 @@ export default {
 			default:
 				return null;
 			}
+		},
+		// Sevens
+		playingFromDeck() {
+			return this.$store.state.game.playingFromDeck;
+		},
+		resolvingSeven() {
+			return this.playingFromDeck || this.waitingForOpponentToPlayFromDeck;
+		},
+		topCard() {
+			return this.$store.state.game.topCard;
+		},
+		secondCard() {
+			return this.$store.state.game.secondCard;
+		},
+		cardSelectedFromDeck() {
+			if (this.topCardIsSelected) return this.topCard;
+			if (this.secondCardIsSelected) return this.secondCard;
+			return null;
 		},
 	},
 	methods: {
@@ -493,6 +569,18 @@ export default {
 				this.clearSelection();
 			} else {
 				this.selectionIndex = index;
+			}
+		},
+		selectTopCard() {
+			if (!this.waitingForOpponentToPlayFromDeck) {
+				this.secondCardIsSelected = false;
+				this.topCardIsSelected = !this.topCardIsSelected;
+			}
+		},
+		selectSecondCard() {
+			if (!this.waitingForOpponentToPlayFromDeck) {
+				this.topCardIsSelected = false;
+				this.secondCardIsSelected = !this.secondCardIsSelected;
 			}
 		},
 		/**
@@ -528,20 +616,33 @@ export default {
 		// Player Moves //
 		//////////////////
 		drawCard() {
-			this.$store.dispatch('requestDrawCard')
-				.then(this.clearSelection())
-				.catch((err) => {
-					this.snackMessage = err;
-					this.snackColor = 'error';
-					this.showSnack = true;
-					this.clearSelection();
-				});
+			if (!this.resolvingSeven) {
+				this.$store.dispatch('requestDrawCard')
+					.then(this.clearSelection())
+					.catch((err) => {
+						this.snackMessage = err;
+						this.snackColor = 'error';
+						this.showSnack = true;
+						this.clearSelection();
+					});
+			}
 		},
 		playPoints() {
 			this.clearOverlays();
-			this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
-				.then(this.clearSelection())
-				.catch(this.handleError);
+			if (this.resolvingSeven) {
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
+				this.$store.dispatch('requestPlayPointsSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					index: deckIndex,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
+			else {
+				this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 		},
 		playFaceCard() {
 			this.clearOverlays();
@@ -587,9 +688,17 @@ export default {
 				.catch(this.handleError);
 		},
 		playToField() {
-			if (!this.selectedCard) return;
+			let cardRank;
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return;
+				cardRank = this.cardSelectedFromDeck.rank;
+			}
+			else {
+				if (!this.selectedCard) return;
+				cardRank = this.selectedCard.rank;
+			}
 
-			switch (this.selectedCard.rank) {
+			switch (cardRank) {
 			case 1:
 			case 2:
 			case 3:
@@ -748,10 +857,14 @@ export default {
 	width: 20%;
 	& #deck {
 		cursor: pointer;
+		&.reveal-top-two {
+			height: auto;
+			align-self: start;
+		}
 	}
 	& #deck, & #scrap{
 		position: relative;
-		width: 80%;
+		min-width: 80%;
 		height: 80%;
 		margin: 10px;
 		border: 1px solid #FFF;
