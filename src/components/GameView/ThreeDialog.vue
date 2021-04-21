@@ -54,7 +54,7 @@ export default {
 		},
 		oneOff: {
 			type: Object,
-			required: true,
+			default: null,
 		},
 		// list of card objects for available twos
 		scrap: {
