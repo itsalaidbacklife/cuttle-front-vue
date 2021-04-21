@@ -416,7 +416,7 @@ export default {
 		},
 		validMoves() {
 			let res = [];
-			if (!this.selectedCard) return res;
+			if (!this.isPlayersTurn || !this.selectedCard) return res;
 
 			switch (this.selectedCard.rank) {
 			case 1:

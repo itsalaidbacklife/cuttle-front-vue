@@ -45,7 +45,7 @@ describe('Untargeted One-Offs', () => {
 		// Attempt to plays ace out of turn
 		cy.get('[data-player-hand-card=1-1]').click(); // ace of diamonds
 		cy.get('#scrap')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 	}); // End ace one-off
@@ -97,7 +97,7 @@ describe('Untargeted One-Offs', () => {
 		// Attempt to plays five out of turn
 		cy.get('[data-player-hand-card=5-2]').click(); // five of hearts
 		cy.get('#scrap')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 	}); // End five one-off
@@ -151,7 +151,7 @@ describe('Untargeted One-Offs', () => {
 		// Attempt to plays six out of turn
 		cy.get('[data-player-hand-card=6-1]').click(); // six of diamonds
 		cy.get('#scrap')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 	}); // End 6 one-off
@@ -795,7 +795,7 @@ describe('Playing THREEs', () => {
 		cy.get('[data-player-hand-card=10-2]').click(); // ten of hearts
 
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
