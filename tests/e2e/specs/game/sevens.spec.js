@@ -1,4 +1,4 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
+import { setupGameAsP0, setupGameAsP1, assertGameState, Card } from '../../support/helpers';
 
 describe('Playing SEVENS', () => {
 	beforeEach(() => {
@@ -174,7 +174,7 @@ describe('Opponent playing SEVENS', () => {
 		});
 	});
 
-	it.only('Opponent plays jack from seven', () => {
+	it('Opponent plays jack from seven', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [],

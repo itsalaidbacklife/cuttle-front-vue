@@ -422,7 +422,7 @@ Cypress.Commands.add('playJackFromSevenOpponent', (card, target) => {
 			const player = game.players[game.myPNum];
 			const opponent = game.players[(game.myPNum + 1) % 2];
 			let foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
-			const foundTarget = player.points.find((pointCard) => cardsMatch(target, pointCard))
+			const foundTarget = player.points.find((pointCard) => cardsMatch(target, pointCard));
 
 			let index;
 			if (cardsMatch(card, game.topCard)) {
