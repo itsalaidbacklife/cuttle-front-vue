@@ -485,6 +485,8 @@ export default {
 				.map((validTarget) => validTarget.id);			
 		},
 		validMoves() {
+			if (!this.isPlayersTurn) return [];
+
 			let res = [];
 			let cardRank;
 			if (this.resolvingSeven) {
