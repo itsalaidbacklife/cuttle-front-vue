@@ -452,6 +452,12 @@ Cypress.Commands.add('loadGameFixture', (fixture) => {
 				const secondCardId = getCardIds(game, [fixture.secondCard])[0];
 				reqBody.secondCardId = secondCardId;
 			}
+			// Get scrap if specified
+			if (fixture.scrap) {
+				const scrapCardIds = getCardIds(game, fixture.scrap)
+				reqBody.scrapCardIds = scrapCardIds
+			}
+
 			io.socket.get('/game/loadFixture',
 				reqBody,
 				function handleResponse(res, jwres) {

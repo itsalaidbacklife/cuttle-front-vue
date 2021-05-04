@@ -45,7 +45,7 @@ describe('Untargeted One-Offs', () => {
 		// Attempt to plays ace out of turn
 		cy.get('[data-player-hand-card=1-1]').click(); // ace of diamonds
 		cy.get('#scrap')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 	}); // End ace one-off
@@ -97,7 +97,7 @@ describe('Untargeted One-Offs', () => {
 		// Attempt to plays five out of turn
 		cy.get('[data-player-hand-card=5-2]').click(); // five of hearts
 		cy.get('#scrap')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 	}); // End five one-off
@@ -151,7 +151,7 @@ describe('Untargeted One-Offs', () => {
 		// Attempt to plays six out of turn
 		cy.get('[data-player-hand-card=6-1]').click(); // six of diamonds
 		cy.get('#scrap')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 	}); // End 6 one-off
@@ -705,56 +705,15 @@ describe('Playing THREEs', () => {
 	it('Plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS],
-			p0Points: [Card.TEN_OF_SPADES],
+			p0Hand: [Card.THREE_OF_CLUBS],
+			p0Points: [],
 			p0FaceCards: [],
-			p1Hand: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS],
-			p1Points: [Card.TEN_OF_HEARTS],
+			p1Hand: [Card.TEN_OF_DIAMONDS],
+			p1Points: [Card.ACE_OF_HEARTS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
+			scrap: [Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES]
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
-
-		// put some cards into scrap
-		cy.get('[data-player-hand-card=1-3]').click() // ace of space
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click(); // one-off
-
-
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-
-		cy.resolveOpponent();
-
 		cy.get('[data-player-hand-card]').should('have.length', 1);
-
-		assertGameState(
-			0,
-			{
-				p0Hand: [Card.THREE_OF_CLUBS],
-				p0Points: [],
-				p0FaceCards: [],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS],
-				p1Points: [],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES],
-			}
-		);
-
-		cy.playPointsOpponent(Card.ACE_OF_HEARTS)
-
-		assertGameState(
-			0,
-			{
-				p0Hand: [Card.THREE_OF_CLUBS],
-				p0Points: [],
-				p0FaceCards: [],
-				p1Hand: [Card.TEN_OF_DIAMONDS],
-				p1Points: [Card.ACE_OF_HEARTS],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES],
-			}
-		);
 
 		// Player plays three
 		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
@@ -795,7 +754,7 @@ describe('Playing THREEs', () => {
 		cy.get('[data-player-hand-card=10-2]').click(); // ten of hearts
 
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 

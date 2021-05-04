@@ -55,7 +55,11 @@
 					@click="drawCard"
 				>
 					<template v-if="!resolvingSeven">
-						<v-img :src="require('../assets/logo_head.svg')" />
+						<v-img
+							:src="require('../assets/logo_head.svg')"
+							:width="deckLogoWidth"
+							contain
+						/>
 						<v-card-actions>({{ deck.length }})</v-card-actions>
 					</template>
 
@@ -358,6 +362,21 @@ export default {
 		}
 	},
 	computed: {
+		////////////////////
+		// Responsiveness //
+		////////////////////
+		deckLogoWidth() {
+			switch (this.$vuetify.breakpoint.name) {
+			case 'xs':
+			case 'sm':
+				return 70;
+			case 'md':
+			case 'lg':
+			case 'xl':
+			default:
+				return 140;
+			}
+		},
 		//////////////////////////
 		// Game, Deck and Scrap //
 		//////////////////////////
@@ -864,8 +883,8 @@ export default {
 	}
 	& #deck, & #scrap{
 		position: relative;
-		min-width: 80%;
-		height: 80%;
+		width: 80%;
+		max-width: 160px;
 		margin: 10px;
 		border: 1px solid #FFF;
 		height: 29vh;
@@ -873,6 +892,13 @@ export default {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		transition: all .3 ease-in-out;
+
+		&.reveal-top-two {
+			width: 130%;
+			max-width: 300px;
+			z-index: 1;
+		}
 	}
 }
 #field-center {
