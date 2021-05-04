@@ -360,6 +360,46 @@ Cypress.Commands.add('discardOpponent', (card1, card2) => {
 		});
 });
 
+/**
+ * @param card {suit: number, rank: number}
+ */
+Cypress.Commands.add('playPointsFromSevenOpponent', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot play opponent points: Invalid card input');
+	}
+	Cypress.log({
+		displayName: 'Opponent seven points',
+		name: 'Opponent plays points from seven',
+		message: printCard(card),
+	});
+	return cy.window().its('app.$store.state.game')
+		.then((game) => {
+			let foundCard;
+			let index;
+			if (cardsMatch(card, game.topCard)) {
+				foundCard = game.topCard;
+				index = 0;
+			} else if (cardsMatch(card, game.secondCard)) {
+				foundCard = game.secondCard;
+				index = 1;
+			} else {
+				throw new Error(`Error playing ${prtintCard(card)} for points from seven as opponent: Could not find it in top two cards`);
+			}
+
+			const cardId = foundCard.id;
+			io.socket.get('/game/seven/points', {
+				cardId,
+				index,
+			},
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode !== 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
+
 Cypress.Commands.add('vueRoute', (route) => {
 	cy.window()
 		.its('app.$router')
@@ -412,6 +452,12 @@ Cypress.Commands.add('loadGameFixture', (fixture) => {
 				const secondCardId = getCardIds(game, [fixture.secondCard])[0];
 				reqBody.secondCardId = secondCardId;
 			}
+			// Get scrap if specified
+			if (fixture.scrap) {
+				const scrapCardIds = getCardIds(game, fixture.scrap)
+				reqBody.scrapCardIds = scrapCardIds
+			}
+
 			io.socket.get('/game/loadFixture',
 				reqBody,
 				function handleResponse(res, jwres) {

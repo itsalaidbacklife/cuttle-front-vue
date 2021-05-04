@@ -52,20 +52,23 @@ io.socket.on('game', function(evData) {
 				case 3:
 					if (evData.data.playedBy !== store.state.game.myPNum) {
 						store.commit('setWaitingForOpponentToPickFromScrap', true);
-					}
-					else {
+					} else {
 						store.commit('setPickingFromScrap', true);
 					}
 					break;
 				case 4:
 					if (evData.data.playedBy === store.state.game.myPNum) {
 						store.commit('setWaitingForOpponentToDiscard', true);
-					}
-					else {
+					} else {
 						store.commit('setDiscarding', true);
 					}
 					break;
 				case 7:
+					if (evData.data.playedBy === store.state.game.myPNum) {
+						store.commit('setPlayingFromDeck', true);
+					} else {
+						store.commit('setWaitingForOpponentToPlayFromDeck', true);
+					}
 					break;
 				default:
 					break;
@@ -79,6 +82,12 @@ io.socket.on('game', function(evData) {
 				store.commit('setWaitingForOpponentToCounter', false);
 				store.commit('setMyTurnToCounter', true);
 			}
+			break;
+		// Sevens
+		case 'sevenPoints':
+			store.commit('updateGame', evData.data.game);
+			store.commit('setPlayingFromDeck', false);
+			store.commit('setWaitingForOpponentToPlayFromDeck', false);
 			break;
 		}
 	default:
