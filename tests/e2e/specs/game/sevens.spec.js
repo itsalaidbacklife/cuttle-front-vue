@@ -217,7 +217,6 @@ describe('Opponent playing SEVENS', () => {
 			.should('not.have.class', 'valid-move')
 			.click({ force: true }); // can't play to field
 
-		// Opponent plays jack of clubs
 		cy.playJackFromSevenOpponent(Card.JACK_OF_CLUBS, Card.TEN_OF_HEARTS);
 
 		// No longer waiting for opponent
