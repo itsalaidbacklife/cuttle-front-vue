@@ -85,10 +85,6 @@ io.socket.on('game', function(evData) {
 			break;
 		// Sevens
 		case 'sevenPoints':
-			store.commit('updateGame', evData.data.game);
-			store.commit('setPlayingFromDeck', false);
-			store.commit('setWaitingForOpponentToPlayFromDeck', false);
-			break;
 		case 'sevenJack':
 			store.commit('updateGame', evData.data.game);
 			store.commit('setPlayingFromDeck', false);
