@@ -101,7 +101,6 @@ describe('Playing SEVENS', () => {
 			p1Points: [],
 			p1FaceCards: [],
 			scrap: [Card.SEVEN_OF_CLUBS],
-			topCard: Card.SIX_OF_DIAMONDS,
 		});
 	});
 });
@@ -157,7 +156,7 @@ describe('Opponent playing SEVENS', () => {
 		// Opponent plays four of clubs for points
 		cy.playPointsFromSevenOpponent(Card.FOUR_OF_CLUBS);
 
-		// No longer wiating for opponent
+		// No longer waiting for opponent
 		cy.get('#waiting-for-opponent-play-from-deck-scrim')
 			.should('not.be.visible');
 		cy.log('Done waiting for opponent');
@@ -218,10 +217,10 @@ describe('Opponent playing SEVENS', () => {
 			.should('not.have.class', 'valid-move')
 			.click({ force: true }); // can't play to field
 
-		// Opponent plays four of clubs for points
+		// Opponent plays jack of clubs
 		cy.playJackFromSevenOpponent(Card.JACK_OF_CLUBS, Card.TEN_OF_HEARTS);
 
-		// No longer wiating for opponent
+		// No longer waiting for opponent
 		cy.get('#waiting-for-opponent-play-from-deck-scrim')
 			.should('not.be.visible');
 		cy.log('Done waiting for opponent');
@@ -233,7 +232,6 @@ describe('Opponent playing SEVENS', () => {
 			p1Hand: [],
 			p1Points: [],
 			p1FaceCards: [],
-			secondCard: Card.SIX_OF_DIAMONDS,
 			scrap: [Card.SEVEN_OF_CLUBS],
 		});
 	});
