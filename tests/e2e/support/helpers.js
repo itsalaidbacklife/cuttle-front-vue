@@ -17,8 +17,9 @@ export function setupGameAsP0() {
 			cy.subscribeOpponent(gameSummary.gameId);
 			cy.readyOpponent();
 			// Asserting 5 cards in players hand confirms game has loaded
-			cy.get('#player-hand-cards div')
+			cy.get('#player-hand-cards .player-card')
 				.should('have.length', 5);
+			cy.log('Finished setting up game as p0');
 		});
 }
 
@@ -36,8 +37,9 @@ export function setupGameAsP1() {
 			cy.wrap(gameSummary).as('gameSummary');
 			cy.get('[data-cy=ready-button]').click();
 			// Asserting 6 cards in players hand confirms game has loaded
-			cy.get('#player-hand-cards div')
+			cy.get('#player-hand-cards .player-card')
 				.should('have.length', 6);
+			cy.log('Finished setting up game as p1');
 		});
 }
 

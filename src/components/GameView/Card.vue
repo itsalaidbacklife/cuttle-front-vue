@@ -1,12 +1,16 @@
 <template>
-	<div 
-		class="mx-4 player-card" 
+	<v-card
+		class="mx-4 player-card"
 		:class="{'selected': isSelected, 'glasses': isGlasses}"
 		@click="$emit('click')"
 	>
-		<div
-			v-if="isValidTarget"
+		<v-overlay
+			v-ripple
+			:value="isValidTarget"
+			absolute
+			color="accent"
 			class="target-overlay"
+			opacity=".8"
 		/>
 		<img
 			v-if="isGlasses"
@@ -33,7 +37,7 @@
 				>
 			</div>
 		</div>
-	</div>
+	</v-card>
 </template>
 
 <script>
@@ -157,20 +161,13 @@ export default {
 	}
 }
 .selected {
-	transform: scale(1.1);
+	transform: scale(1.23);
 	img {
 		border: 3px solid var(--v-accent-lighten1);
 		border-radius: 5px;
 	}
 }
 .target-overlay {
-	display: block;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	z-index: 1;
-	background-color: var(--v-accent-lighten1);
-	opacity: .6;
 	cursor: pointer;
 }
 </style>

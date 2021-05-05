@@ -151,7 +151,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		// Attempt to play king out of turn
 		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
@@ -225,7 +225,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		// Attempt to play queen out of turn
 		cy.get('[data-player-hand-card=12-1]').click(); // queen of diamonds
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
@@ -343,7 +343,7 @@ describe('Playing 8s', () => {
 		// Player plays eight
 		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 	}); // End play 8 for points
@@ -388,7 +388,7 @@ describe('Playing 8s', () => {
 		// Player plays eight
 		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
@@ -485,7 +485,7 @@ describe('Play Jacks', () => {
 		// Attempt to play king out of turn
 		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
@@ -539,10 +539,9 @@ describe('Play Jacks', () => {
 		// Attempt to play king out of turn
 		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
-
 		
 		// opponent plays Jack
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
@@ -594,10 +593,9 @@ describe('Play Jacks', () => {
 		// Attempt to play king out of turn
 		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
-
 		
 		// opponent plays 2nd Jack
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
@@ -666,7 +664,7 @@ describe('Play Jacks', () => {
 		// Attempt to play king out of turn
 		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
@@ -705,7 +703,7 @@ describe('Play Jacks', () => {
 		// Attempt to play king out of turn
 		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
 		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+			.should('not.have.class', 'valid-move')
 			.click();
 		assertSnackbarError('It\'s not your turn');
 

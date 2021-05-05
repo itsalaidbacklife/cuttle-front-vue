@@ -49,14 +49,19 @@
 			class="d-flex justify-center align-center p-2 mx-auto"
 		>
 			<div id="field-left">
-				<div
+				<v-card
 					id="deck"
 					:class="{'reveal-top-two': resolvingSeven}"
 					@click="drawCard"
 				>
+
 					<template v-if="!resolvingSeven">
-						<p>Deck</p>
-						<p>({{ deck.length }})</p>
+						<v-img
+							:src="require('../assets/logo_head.svg')"
+							:width="deckLogoWidth"
+							contain
+						/>
+						<v-card-actions>({{ deck.length }})</v-card-actions>
 					</template>
 
 					<template v-if="resolvingSeven">
@@ -84,12 +89,31 @@
 							/>
 						</div>
 					</template>
-				</div>
+				</v-card>
 				<div
 					id="scrap"
+					class="rounded"
 					:class="{'valid-move': validMoves.includes('scrap')}"
 					@click="playOneOff"
 				>
+					<v-overlay
+						v-ripple
+						:value="validMoves.includes('scrap')"
+						absolute
+						color="accent lighten-1"
+						opacity=".6"
+						class="d-flex flex-column align-center justify-center"
+					>
+						<p class="black--text">
+							Scrap
+						</p>
+						<p
+							class="black--text"
+							style="text-align: center"
+						>
+							({{ scrap.length }})
+						</p>
+					</v-overlay>
 					<p>Scrap</p>
 					<p>({{ scrap.length }})</p>
 				</div>
@@ -124,9 +148,17 @@
 				<v-divider light />
 				<div
 					id="player-field"
+					class="mb-4"
 					:class="{'valid-move': validMoves.includes('field')}"
 					@click="playToField"
 				>
+					<v-overlay
+						v-ripple
+						:value="validMoves.includes('field')"
+						absolute
+						color="accent lighten-1"
+						opacity=".6"
+					/>
 					<div class="field-points">
 						<card
 							v-for="card in player.points"
@@ -153,6 +185,7 @@
 				<div 
 					v-if="selectedCard === null"
 					id="history"
+					class="rounded"
 				>
 					History
 				</div>
@@ -175,7 +208,6 @@
 		>
 			<h3
 				id="player-score"
-				class="mb-2"
 			>
 				<span>POINTS: {{ playerPointTotal }}</span>
 				<span 
@@ -189,6 +221,7 @@
 			<div
 				id="player-hand-cards"
 				class="d-flex justify-center align-start"
+				:class="{'my-turn': isPlayersTurn}"
 			> 
 				<card
 					v-for="(card, index) in player.hand"
@@ -330,6 +363,22 @@ export default {
 		}
 	},
 	computed: {
+		////////////////////
+		// Responsiveness //
+		////////////////////
+		deckLogoWidth() {
+			switch (this.$vuetify.breakpoint.name) {
+			case 'xs':
+				return 50;
+			case 'sm':
+				return 70;
+			case 'md':
+			case 'lg':
+			case 'xl':
+			default:
+				return 140;
+			}
+		},
 		//////////////////////////
 		// Game, Deck and Scrap //
 		//////////////////////////
@@ -437,6 +486,8 @@ export default {
 				.map((validTarget) => validTarget.id);			
 		},
 		validMoves() {
+			if (!this.isPlayersTurn) return [];
+
 			let res = [];
 			let cardRank;
 			if (this.resolvingSeven) {
@@ -804,8 +855,7 @@ export default {
 }
 
 .valid-move {
-	background-color: var(--v-accent-lighten1);
-	opacity: .6;
+	// background-color: var(--v-accent-lighten1);
 	cursor: pointer;
 }
 
@@ -857,15 +907,22 @@ export default {
 		}
 	}
 	& #deck, & #scrap{
-		min-width: 80%;
-		height: 80%;
+		position: relative;
 		margin: 10px;
 		border: 1px solid #FFF;
 		height: 29vh;
+		width: calc(29vh / 1.3);
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		transition: all .3 ease-in-out;
+
+		&.reveal-top-two {
+			width: calc(29vh * 1.5);
+			max-width: 300px;
+			z-index: 1;
+		}
 	}
 }
 #field-center {
@@ -895,12 +952,15 @@ export default {
 	align-items: center;
 }
 #opponent-field,#player-field {
+	position: relative;
 	width: 100%;
 	height: 29vh;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+	border: 4px solid transparent;
+	border-radius: 4px;
 }
 .field-points {
 	display: flex;
@@ -917,19 +977,23 @@ export default {
 	width: 50%
 }
 
-#player-hand-cards {
-	width: 100%;
-	height: 80%;
-	background: rgba(0, 0, 0, 0.46);
-}
-
 #player-hand {
 	min-width: 50%;
 	height: 30vh;
 	& #player-hand-cards {
+		width: 100%;
 		height: 80%;
 		background: rgba(0, 0, 0, 0.46);
 		overflow-y: hidden;
+		border-radius: 4px;
+
+		&.my-turn {
+			border: 4px solid var(--v-accent-base);
+			
+		}
+		&:not(.my-turn) {
+			border: 4px solid transparent;
+		}
 	}
 }
 </style>
