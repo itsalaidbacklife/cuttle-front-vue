@@ -886,11 +886,10 @@ export default {
 	}
 	& #deck, & #scrap{
 		position: relative;
-		width: 80%;
-		max-width: 160px;
 		margin: 10px;
 		border: 1px solid #FFF;
 		height: 29vh;
+		width: calc(29vh / 1.3);
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -898,7 +897,7 @@ export default {
 		transition: all .3 ease-in-out;
 
 		&.reveal-top-two {
-			width: 130%;
+			width: calc(29vh * 1.5);
 			max-width: 300px;
 			z-index: 1;
 		}
