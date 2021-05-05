@@ -369,6 +369,7 @@ export default {
 		deckLogoWidth() {
 			switch (this.$vuetify.breakpoint.name) {
 			case 'xs':
+				return 50;
 			case 'sm':
 				return 70;
 			case 'md':
