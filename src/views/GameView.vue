@@ -652,12 +652,25 @@ export default {
 		},
 		playJack(targetIndex) {
 			const target = this.opponent.points[targetIndex];
-			this.$store.dispatch('requestPlayJack', {
-				cardId: this.selectedCard.id,
-				targetId: target.id,
-			})
-				.then(this.clearSelection())
-				.catch(this.handleError);
+			if (this.resolvingSeven) {
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
+				this.$store.dispatch('requestPlayJackSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					index: deckIndex,
+					targetId: target.id
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}else{
+				
+				this.$store.dispatch('requestPlayJack', {
+					cardId: this.selectedCard.id,
+					targetId: target.id,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
+			
 		},
 		playToField() {
 			let cardRank;
@@ -700,9 +713,17 @@ export default {
 			}
 		}, // End playToField()
 		targetOpponentPointCard(targetIndex) {
-			if (!this.selectedCard) return;
-
-			switch (this.selectedCard.rank) {
+			if (!this.selectedCard && !this.topCardIsSelected && !this.secondCardIsSelected) return;
+			let cardRank;
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return;
+				cardRank = this.cardSelectedFromDeck.rank;
+			}
+			else {
+				if (!this.selectedCard) return;
+				cardRank = this.selectedCard.rank;
+			}
+			switch (cardRank) {
 			case 1:
 			case 2:
 			case 3:
