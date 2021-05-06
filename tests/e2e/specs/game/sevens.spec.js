@@ -1,4 +1,4 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, Card } from '../../support/helpers';
+import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
 
 describe('Playing SEVENS', () => {
 	beforeEach(() => {
@@ -104,60 +104,105 @@ describe('Playing SEVENS', () => {
 		});
 	});
 
-	it('Plays a one-off from a seven', () => {
-		cy.loadGameFixture({
-			p0Hand: [Card.SEVEN_OF_CLUBS],
-			p0Points: [],
-			p0FaceCards: [],
-			p1Hand: [],
-			p1Points: [Card.SEVEN_OF_SPADES, Card.TEN_OF_SPADES],
-			p1FaceCards: [],
-			topCard: Card.JACK_OF_CLUBS,
-			secondCard: Card.ACE_OF_DIAMONDS,
+	describe('Plays a one-off from a seven', () => {
+		it('Plays an ACE from a seven', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.SEVEN_OF_SPADES, Card.TEN_OF_SPADES],
+				p1FaceCards: [],
+				topCard: Card.JACK_OF_CLUBS,
+				secondCard: Card.ACE_OF_DIAMONDS,
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+			cy.log('Loaded fixture');
+	
+			// Play seven of clubs
+			cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
+			cy.get('#scrap')
+				.should('have.class', 'valid-move')
+				.click();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			// Opponent does not counter (resolves stack)
+			cy.resolveOpponent();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('not.be.visible');
+	
+			// Play Ace of diamonds
+			cy.get('[data-top-card=11-0]')
+				.should('exist')
+				.and('be.visible')
+			cy.get('[data-second-card=1-1]')
+				.should('exist')
+				.and('be.visible')
+				.click();
+			cy.get('#scrap')
+				.should('have.class', 'valid-move')
+				.click();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			// Opponent does not counter (resolves stack)
+			cy.resolveOpponent();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('not.be.visible');
+			
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.SEVEN_OF_CLUBS, Card.SEVEN_OF_SPADES, Card.TEN_OF_SPADES, Card.ACE_OF_DIAMONDS]
+			});
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 1);
-		cy.log('Loaded fixture');
 
-		// Play seven of clubs
-		cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('not.be.visible');
+		it('Cannot play 4 from seven when opponent has no cards in hand', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.SEVEN_OF_SPADES, Card.TEN_OF_SPADES],
+				p1FaceCards: [],
+				topCard: Card.FOUR_OF_HEARTS,
+				secondCard: Card.ACE_OF_DIAMONDS,
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+			cy.log('Loaded fixture');
+	
+			// Play seven of clubs
+			cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
+			cy.get('#scrap')
+				.should('have.class', 'valid-move')
+				.click();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			// Opponent does not counter (resolves stack)
+			cy.resolveOpponent();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('not.be.visible');
 
-		// Play Ace of diamonds
-		cy.get('[data-top-card=11-0]')
-			.should('exist')
-			.and('be.visible')
-		cy.get('[data-second-card=1-1]')
-			.should('exist')
-			.and('be.visible')
-			.click();
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('not.be.visible');
-		
-		assertGameState(0, {
-			p0Hand: [],
-			p0Points: [],
-			p0FaceCards: [],
-			p1Hand: [],
-			p1Points: [],
-			p1FaceCards: [],
-			scrap: [Card.SEVEN_OF_CLUBS, Card.SEVEN_OF_SPADES, Card.TEN_OF_SPADES, Card.ACE_OF_DIAMONDS]
+			// Play Four of hearts
+			cy.get('[data-top-card=4-2]')
+				.should('exist')
+				.and('be.visible')
+				.click();
+			cy.get('#scrap')
+				.should('have.class', 'valid-move')
+				.click();
+			
+			// Should not allow playing 4 as one-off
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('not.be.visible');
+			cy.get('#waiting-for-opponent-discard-scrim')
+				.should('not.be.visible');
+			assertSnackbarError('You cannot play a 4 as a one-off while your opponent has no cards in hand');
 		});
-	});
+	}); // End player seven one-off describe
 }); // End playing sevens describe()
 
 describe('Opponent playing SEVENS', () => {
