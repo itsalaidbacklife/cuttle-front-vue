@@ -104,7 +104,7 @@ describe('Playing SEVENS', () => {
 		});
 	});
 
-	it.only('Plays a one-off from a seven', () => {
+	it('Plays a one-off from a seven', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [],
@@ -289,4 +289,47 @@ describe('Opponent playing SEVENS', () => {
 			scrap: [Card.SEVEN_OF_CLUBS],
 		});
 	});
-});
+
+	it('Opponent plays one-off from seven', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [Card.QUEEN_OF_CLUBS, Card.KING_OF_HEARTS],
+			topCard: Card.SIX_OF_DIAMONDS,
+			secondCard: Card.JACK_OF_CLUBS,
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 0);
+		cy.log('Loaded fixture');
+	
+		// Opponent plays 7 of clubs
+		cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+		// Player resolves
+		cy.get('[data-cy=cannot-counter-resolve]')
+			.should('be.visible')
+			.click();
+		cy.log('Player resolves seven of clubs (could not counter');
+
+		// Waiting for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('be.visible');
+		// Opponent plays 6 of diamonds
+		cy.playOneOffFromSevenOpponent(Card.SIX_OF_DIAMONDS);
+		cy.log('Player resolves six of diamonds (could not counter');
+		cy.get('[data-cy=cannot-counter-resolve]')
+			.should('be.visible')
+			.click();
+
+		assertGameState(1, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+			scrap: [Card.SIX_OF_DIAMONDS, Card.QUEEN_OF_CLUBS, Card.KING_OF_HEARTS, Card.SEVEN_OF_CLUBS],
+		});
+	});
+}); // End Opponent plays sevens describe()
