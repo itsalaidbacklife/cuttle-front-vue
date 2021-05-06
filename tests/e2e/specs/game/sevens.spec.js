@@ -104,7 +104,7 @@ describe('Playing SEVENS', () => {
 		});
 	});
 
-	describe('Plays a one-off from a seven', () => {
+	describe('Playing one-offs from a seven', () => {
 		it('Plays an ACE from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
