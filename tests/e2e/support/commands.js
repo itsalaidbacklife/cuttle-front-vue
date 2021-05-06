@@ -481,10 +481,12 @@ Cypress.Commands.add('playOneOffFromSevenOpponent', (card) => {
 			} else {
 				throw new Error(`Error playing ${printCard(card)} as one-off from seven as opponent: Could not find it in top two cards`);
 			}
+			const playerId = game.players[game.myPNum].id;
 			const cardId = foundCard.id;
 			io.socket.get('/game/seven/untargetedOneOff', {
 				cardId,
 				index,
+				opId: playerId,
 			},
 			function handleResponse(res, jwres) {
 				if (jwres.statusCode !== 200) {

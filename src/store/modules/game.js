@@ -390,6 +390,7 @@ export default {
 				io.socket.get('/game/seven/untargetedOneOff', {
 					cardId,
 					index, // 0 if topCard, 1 if secondCard
+					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
