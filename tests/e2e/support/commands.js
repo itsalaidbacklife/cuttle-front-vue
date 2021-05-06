@@ -456,6 +456,45 @@ Cypress.Commands.add('playJackFromSevenOpponent', (card, target) => {
 });
 
 
+/**
+ * @param card {suit: number, rank: number}
+ */
+Cypress.Commands.add('playOneOffFromSevenOpponent', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot play opponent one-ff from seven: Invalid card input');
+	}
+	Cypress.log({
+		displayName: 'Opponent seven one-off',
+		name: 'Opponent plays one-off from seven',
+		message: printCard(card),
+	});
+	return cy.window().its('app.$store.state.game')
+		.then((game) => {
+			let foundCard;
+			let index;
+			if (cardsMatch(card, game.topCard)) {
+				foundCard = game.topCard;
+				index = 0;
+			} else if (cardsMatch(card, game.secondCard)) {
+				foundCard = game.secondCard;
+				index = 1;
+			} else {
+				throw new Error(`Error playing ${printCard(card)} as one-off from seven as opponent: Could not find it in top two cards`);
+			}
+			const cardId = foundCard.id;
+			io.socket.get('/game/seven/untargetedOneOff', {
+				cardId,
+				index,
+			},
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode !== 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
+
 Cypress.Commands.add('vueRoute', (route) => {
 	cy.window()
 		.its('app.$router')
