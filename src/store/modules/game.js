@@ -385,5 +385,20 @@ export default {
 				});
 			});
 		},
+		async requestPlayOneOffSeven(context, { cardId, index }) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/seven/untargetedOneOff', {
+					cardId,
+					index, // 0 if topCard, 1 if secondCard
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponentToCounter', true);
+					return resolve();
+				});
+			});
+		},
 	}
 }

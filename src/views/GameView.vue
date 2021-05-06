@@ -813,6 +813,17 @@ export default {
 			}
 		},
 		playOneOff() {
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return;
+
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
+				this.$store.dispatch('requestPlayOneOffSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					index: deckIndex,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 			if (!this.selectedCard) return;
 
 			this.$store.dispatch('requestPlayOneOff', this.selectedCard.id)
