@@ -77,10 +77,7 @@ io.socket.on('game', function(evData) {
 			break;
 		case 'oneOff':
 		case 'counter':
-		case 'sevenOneOff':
 			store.commit('updateGame', evData.data.game);
-			store.commit('setPlayingFromDeck', false);
-			store.commit('setWaitingForOpponentToPlayFromDeck', false);
 			if (evData.data.pNum !== store.state.game.myPNum) {
 				store.commit('setWaitingForOpponentToCounter', false);
 				store.commit('setMyTurnToCounter', true);
@@ -92,6 +89,15 @@ io.socket.on('game', function(evData) {
 			store.commit('updateGame', evData.data.game);
 			store.commit('setPlayingFromDeck', false);
 			store.commit('setWaitingForOpponentToPlayFromDeck', false);
+			break;
+		case 'sevenOneOff':
+			store.commit('updateGame', evData.data.game);
+			store.commit('setPlayingFromDeck', false);
+			store.commit('setWaitingForOpponentToPlayFromDeck', false);
+			if (evData.data.pNum !== store.state.game.myPNum) {
+				store.commit('setWaitingForOpponentToCounter', false);
+				store.commit('setMyTurnToCounter', true);
+			}
 			break;
 		}
 	default:
