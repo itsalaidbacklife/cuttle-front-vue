@@ -1,4 +1,4 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
+import { setupGameAsP0, setupGameAsP1, assertGameState, Card, assertSnackbarError } from '../../support/helpers';
 
 describe('Playing SEVENS', () => {
 	beforeEach(() => {
@@ -203,8 +203,58 @@ describe('Playing SEVENS', () => {
 			assertSnackbarError('You cannot play a 4 as a one-off while your opponent has no cards in hand');
 		});
 	}); // End player seven one-off describe
-}); // End playing sevens describe()
+	it.only('Plays TWO from a seven', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [Card.KING_OF_HEARTS, Card.QUEEN_OF_CLUBS],
+			topCard: Card.JACK_OF_CLUBS,
+			secondCard: Card.TWO_OF_SPADES,
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+        
+		// Play seven of clubs
+		cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
 
+		// Play two of spades
+		cy.get('[data-second-card=2-3]')
+			.should('exist')
+			.and('be.visible')
+			.click();
+		// target queen of clubs
+		cy.get('[data-opponent-face-card=12-0]')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
+		
+		assertSnackbarError(0, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+			scrap: [Card.QUEEN_OF_CLUBS, Card.TWO_OF_SPADES, Card.SEVEN_OF_CLUBS],
+		});
+	});
+}); // End playing sevens describe()
 describe('Opponent playing SEVENS', () => {
 	beforeEach(() => {
 		setupGameAsP1();
