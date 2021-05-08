@@ -244,7 +244,7 @@ describe('Playing SEVENS', () => {
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
 		
-		assertSnackbarError(0, {
+		assertGameState(0, {
 			p0Hand: [],
 			p0Points: [],
 			p0FaceCards: [],
