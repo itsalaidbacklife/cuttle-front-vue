@@ -693,13 +693,24 @@ export default {
 			case 'jack':
 				break;
 			}
-			this.$store.dispatch('requestPlayTargetedOneOff', {
-				cardId: this.selectedCard.id,
-				targetId: target.id,
-				targetType,
-			})
-				.then(this.clearSelection())
-				.catch(this.handleError);
+			if (this.resolvingSeven) {
+				this.$store.dispatch('requestPlayTargetedOneOffSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					targetId: target.id,
+					targetType,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
+			else {
+				this.$store.dispatch('requestPlayTargetedOneOff', {
+					cardId: this.selectedCard.id,
+					targetId: target.id,
+					targetType,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 		},
 		playJack(targetIndex) {
 			const target = this.opponent.points[targetIndex];
@@ -800,9 +811,17 @@ export default {
 			}
 		},
 		targetOpponentFaceCard(targetIndex) {
-			if (!this.selectedCard) return;
+			let cardToPlay = null;
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return;
+				cardToPlay = this.cardSelectedFromDeck;
+			}
+			else {
+				if (!this.selectedCard) return;
+				cardToPlay = this.selectedCard;
+			}
 
-			switch(this.selectedCard.rank) {
+			switch(cardToPlay.rank) {
 			case 2:
 				this.playTargetedOneOff(targetIndex, 'rune');
 				return;
