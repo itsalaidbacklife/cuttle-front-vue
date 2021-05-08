@@ -203,7 +203,7 @@ describe('Playing SEVENS', () => {
 			assertSnackbarError('You cannot play a 4 as a one-off while your opponent has no cards in hand');
 		});
 	}); // End player seven one-off describe
-	it.only('Plays TWO from a seven', () => {
+	it('Plays TWO from a seven', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [],
