@@ -526,7 +526,7 @@ describe('Opponent playing SEVENS', () => {
 			});
 		}); // End Opponent TWO from seven
 
-		it.only('Opponent plays NINE from seven', () => {
+		it('Opponent plays NINE from seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
