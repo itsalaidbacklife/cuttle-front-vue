@@ -424,7 +424,7 @@ Cypress.Commands.add('playFaceCardFromSevenOpponent', (card) => {
 				foundCard = game.secondCard;
 				index = 1;
 			} else {
-				throw new Error(`Error playing ${printCard(card)} for points from seven as opponent: Could not find it in top two cards`);
+				throw new Error(`Error playing face card: ${printCard(card)} from seven as opponent: Could not find it in top two cards`);
 			}
 
 			const cardId = foundCard.id;
