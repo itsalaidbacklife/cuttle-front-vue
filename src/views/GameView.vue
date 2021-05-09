@@ -54,7 +54,6 @@
 					:class="{'reveal-top-two': resolvingSeven}"
 					@click="drawCard"
 				>
-
 					<template v-if="!resolvingSeven">
 						<v-img
 							:src="require('../assets/logo_head.svg')"
@@ -469,11 +468,11 @@ export default {
 			let selectedCard;
 			if (this.resolvingSeven) {
 				if (!this.cardSelectedFromDeck) return [];
-				selectedCard = this.cardSelectedFromDeck.rank;
+				selectedCard = this.cardSelectedFromDeck;
 			}
 			else {
 				if (!this.selectedCard) return [];
-				selectedCard = this.selectedCard.rank;
+				selectedCard = this.selectedCard;
 			}
 			return this.opponent.points
 				.filter((potentialTarget) => {
@@ -674,12 +673,23 @@ export default {
 				.catch(this.handleError);
 		},
 		scuttle(targetIndex) {
-			this.$store.dispatch('requestScuttle', {
-				cardId: this.selectedCard.id,
-				targetId: this.opponent.points[targetIndex].id,
-			})
-				.then(this.clearSelection())
-				.catch(this.handleError);
+			if (this.resolvingSeven) {
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
+				this.$store.dispatch('requestScuttleSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					targetId: this.opponent.points[targetIndex].id,
+					index: deckIndex
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			} else {
+				this.$store.dispatch('requestScuttle', {
+					cardId: this.selectedCard.id,
+					targetId: this.opponent.points[targetIndex].id,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 		},
 		playTargetedOneOff(targetIndex, targetType) {
 			let target;
