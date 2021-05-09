@@ -20,17 +20,7 @@ describe('Playing SEVENS', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 1);
 		cy.log('Loaded fixture');
         
-		// Play seven of clubs
-		cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('not.be.visible');
+		cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
         
 		cy.get('[data-top-card=4-0]')
 			.should('exist')
@@ -70,17 +60,7 @@ describe('Playing SEVENS', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 1);
 		cy.log('Loaded fixture');
         
-		// Play seven of clubs
-		cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('not.be.visible');
+		cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
         
 		cy.get('[data-second-card=6-1]')
 			.should('exist')
@@ -118,17 +98,7 @@ describe('Playing SEVENS', () => {
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
 			
-			// Play seven of clubs
-			cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
 			
 			cy.get('[data-top-card=6-0]')
 				.should('exist')
@@ -167,17 +137,7 @@ describe('Playing SEVENS', () => {
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
 			
-			// Play seven of clubs
-			cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
 			
 			cy.get('[data-top-card=6-0]')
 				.should('exist')
@@ -216,17 +176,8 @@ describe('Playing SEVENS', () => {
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
 			
-			// Play seven of clubs
-			cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+
 			cy.get('[data-top-card=6-0]')
 				.should('exist')
 				.and('be.visible')
@@ -267,17 +218,11 @@ describe('Playing SEVENS', () => {
 			topCard: Card.TEN_OF_CLUBS,
 			secondCard: Card.SIX_OF_DIAMONDS,
 		});
-
 		cy.get('[data-player-hand-card]').should('have.length', 1);
 		cy.log('Loaded fixture');
 		
-		// Play seven of clubs
-		cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
+		cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+
 		// Opponent does not counter (resolves stack)
 		cy.resolveOpponent();
 		cy.get('#waiting-for-opponent-counter-scrim')
@@ -317,17 +262,7 @@ describe('Playing SEVENS', () => {
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
 	
-			// Play seven of clubs
-			cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
 	
 			// Play Ace of diamonds
 			cy.get('[data-top-card=11-0]')
@@ -373,16 +308,7 @@ describe('Playing SEVENS', () => {
 			cy.log('Loaded fixture');
 	
 			// Play seven of clubs
-			cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
 
 			// Play Four of hearts
 			cy.get('[data-top-card=4-2]')
@@ -417,17 +343,7 @@ describe('Playing SEVENS', () => {
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
 			
-			// Play seven of clubs
-			cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
 	
 			// Play two of spades
 			cy.get('[data-second-card=2-3]')
@@ -468,17 +384,8 @@ describe('Playing SEVENS', () => {
 			});
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
-			// Play seven of clubs
-			cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
+
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
 			
 			// Play Nine of diamonds
 			cy.get('[data-top-card=9-1]')
