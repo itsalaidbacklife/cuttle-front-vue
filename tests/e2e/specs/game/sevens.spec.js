@@ -240,17 +240,17 @@ describe('Playing SEVENS', () => {
 			.should('have.class', 'valid-move')
 			.click();
 		
-		// Choose to play for points
+		// Choose to play for face card
 		cy.get('#eight-overlay')
 			.should('be.visible')
-			.get('[data-cy=eight-for-points]')
+			.get('[data-cy=eight-as-glasses]')
 			.click();
         
 		assertGameState(0, {
 			p0Hand: [],
 			p0Points: [],
 			p0FaceCards: [Card.EIGHT_OF_CLUBS],
-			p1Hand: [],
+			p1Hand: [Card.TWO_OF_CLUBS],
 			p1Points: [Card.TEN_OF_HEARTS],
 			p1FaceCards: [],
 			scrap: [Card.SEVEN_OF_CLUBS],
