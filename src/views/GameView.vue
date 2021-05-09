@@ -307,9 +307,9 @@
 			@resolveThree="resolveThree($event)"
 		/>
 		<eight-overlay
-			v-if="selectedCard && selectedCard.rank === 8"
+			v-if="(selectedCard && selectedCard.rank === 8) || (cardSelectedFromDeck && cardSelectedFromDeck.rank === 8)"
 			v-model="showEightOverlay"
-			:card="selectedCard"
+			:card="selectedCard || cardSelectedFromDeck"
 			@points="playPoints"
 			@glasses="playFaceCard"
 			@cancel="clearSelection"
@@ -477,11 +477,11 @@ export default {
 			let selectedCard;
 			if (this.resolvingSeven) {
 				if (!this.cardSelectedFromDeck) return [];
-				selectedCard = this.cardSelectedFromDeck.rank;
+				selectedCard = this.cardSelectedFromDeck;
 			}
 			else {
 				if (!this.selectedCard) return [];
-				selectedCard = this.selectedCard.rank;
+				selectedCard = this.selectedCard;
 			}
 			return this.opponent.points
 				.filter((potentialTarget) => {
@@ -690,17 +690,38 @@ export default {
 		},
 		playFaceCard() {
 			this.clearOverlays();
-			this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
-				.then(this.clearSelection())
-				.catch(this.handleError);
+			if (this.resolvingSeven){
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
+				this.$store.dispatch('requestPlayFaceCardSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					index: deckIndex
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}else{
+				this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 		},
 		scuttle(targetIndex) {
-			this.$store.dispatch('requestScuttle', {
-				cardId: this.selectedCard.id,
-				targetId: this.opponent.points[targetIndex].id,
-			})
-				.then(this.clearSelection())
-				.catch(this.handleError);
+			if (this.resolvingSeven) {
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
+				this.$store.dispatch('requestScuttleSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					targetId: this.opponent.points[targetIndex].id,
+					index: deckIndex
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			} else {
+				this.$store.dispatch('requestScuttle', {
+					cardId: this.selectedCard.id,
+					targetId: this.opponent.points[targetIndex].id,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 		},
 		playTargetedOneOff(targetIndex, targetType) {
 			let target;

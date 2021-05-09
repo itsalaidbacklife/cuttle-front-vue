@@ -369,6 +369,22 @@ export default {
 				});
 			});	
 		},
+		async requestScuttleSeven(context, { cardId, index, targetId }) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/seven/scuttle', {
+					cardId,
+					index,
+					targetId,
+					opId: context.getters.opponent.id
+				},
+				function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});	
+		},
 		async requestPlayJackSeven(context, {cardId, index, targetId}) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/seven/jack', {
@@ -378,6 +394,19 @@ export default {
 					opId: context.getters.opponent.id,
 				},
 				function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
+		async requestPlayFaceCardSeven(context, {index, cardId}) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/seven/runes', {
+					cardId,
+					index
+				}, function handleResponse(res, jwres) {
 					if (jwres.statusCode !== 200) {
 						return reject(jwres.body.message);
 					}
@@ -417,5 +446,37 @@ export default {
 				});
 			});
 		},
-	}
-}
+		async requestPlayOneOffSeven(context, { cardId, index }) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/seven/untargetedOneOff', {
+					cardId,
+					index, // 0 if topCard, 1 if secondCard
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponentToCounter', true);
+					return resolve();
+				});
+			});
+		},
+		async requestPlayTargetedOneOffSeven(context, { cardId, index, targetId, targetType }) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/seven/targetedOneOff', {
+					cardId,
+					targetId,
+					targetType,
+					index, // 0 if topCard, 1 if secondCard
+					opId: context.getters.opponent.id,
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					context.commit('setWaitingForOpponentToCounter', true);
+					return resolve();
+				});
+			});
+		},
+	} // End actions
+} // End game module
