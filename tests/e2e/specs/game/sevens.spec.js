@@ -453,7 +453,7 @@ describe('Opponent playing SEVENS', () => {
 		});
 	}); // end opponent plays king from seven
 	
-	it.only('Opponent plays queen from seven', () => {
+	it('Opponent plays queen from seven', () => {
 
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -518,7 +518,7 @@ describe('Opponent playing SEVENS', () => {
 		});
 	}); // end opponent plays queen from seven
 
-	it.only('Opponent plays eight as glasses from seven', () => {
+	it('Opponent plays eight as glasses from seven', () => {
 
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -582,6 +582,4 @@ describe('Opponent playing SEVENS', () => {
 			scrap: [Card.SEVEN_OF_CLUBS],
 		});
 	}); // end opponent plays eight as glasses from seven
-
-
 });
