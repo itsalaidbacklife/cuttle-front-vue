@@ -202,7 +202,7 @@ describe('Playing SEVENS', () => {
 		});
 	});
 
-	it.only('Plays 8 as face card from a seven', () => {
+	it('Plays 8 as face card from a seven', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [],
@@ -246,8 +246,6 @@ describe('Playing SEVENS', () => {
 			.get('[data-cy=eight-for-points]')
 			.click();
         
-
-
 		assertGameState(0, {
 			p0Hand: [],
 			p0Points: [],
