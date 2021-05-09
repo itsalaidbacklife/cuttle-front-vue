@@ -387,4 +387,201 @@ describe('Opponent playing SEVENS', () => {
 			scrap: [Card.SEVEN_OF_CLUBS],
 		});
 	});
+
+	it('Opponent plays king from seven', () => {
+
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			topCard: Card.KING_OF_CLUBS,
+			secondCard: Card.SIX_OF_DIAMONDS,
+		});
+
+		cy.get('[data-player-hand-card]').should('have.length', 0);
+		cy.log('Loaded fixture');
+	
+		// Opponent plays 7 of clubs
+		cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+		// Player resolves
+		cy.get('[data-cy=cannot-counter-resolve]')
+			.should('be.visible')
+			.click();
+		cy.log('Player resolves (could not counter');
+
+		// Waiting for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('be.visible');
+		// Deck cards appear but are not selectable
+		cy.get('[data-top-card=13-0]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('[data-second-card=6-1]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('#scrap')
+			.should('be.visible')
+			.and('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to scrap
+		cy.get('#player-field')
+			.should('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to field
+
+		
+		cy.playFaceCardFromSevenOpponent(Card.KING_OF_CLUBS);
+
+		// No longer waiting for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('not.be.visible');
+		cy.log('Done waiting for opponent');
+
+		assertGameState(1, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [Card.KING_OF_CLUBS],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS],
+		});
+	}); // end opponent plays king from seven
+	
+	it.only('Opponent plays queen from seven', () => {
+
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			topCard: Card.QUEEN_OF_CLUBS,
+			secondCard: Card.SIX_OF_DIAMONDS,
+		});
+
+		cy.get('[data-player-hand-card]').should('have.length', 0);
+		cy.log('Loaded fixture');
+	
+		// Opponent plays 7 of clubs
+		cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+		// Player resolves
+		cy.get('[data-cy=cannot-counter-resolve]')
+			.should('be.visible')
+			.click();
+		cy.log('Player resolves (could not counter');
+
+		// Waiting for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('be.visible');
+		// Deck cards appear but are not selectable
+		cy.get('[data-top-card=12-0]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('[data-second-card=6-1]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('#scrap')
+			.should('be.visible')
+			.and('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to scrap
+		cy.get('#player-field')
+			.should('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to field
+
+		
+		cy.playFaceCardFromSevenOpponent(Card.QUEEN_OF_CLUBS);
+
+		// No longer waiting for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('not.be.visible');
+		cy.log('Done waiting for opponent');
+
+		assertGameState(1, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [Card.QUEEN_OF_CLUBS],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS],
+		});
+	}); // end opponent plays queen from seven
+
+	it.only('Opponent plays eight as glasses from seven', () => {
+
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			topCard: Card.EIGHT_OF_CLUBS,
+			secondCard: Card.SIX_OF_DIAMONDS,
+		});
+
+		cy.get('[data-player-hand-card]').should('have.length', 0);
+		cy.log('Loaded fixture');
+	
+		// Opponent plays 7 of clubs
+		cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+		// Player resolves
+		cy.get('[data-cy=cannot-counter-resolve]')
+			.should('be.visible')
+			.click();
+		cy.log('Player resolves (could not counter');
+
+		// Waiting for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('be.visible');
+		// Deck cards appear but are not selectable
+		cy.get('[data-top-card=8-0]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('[data-second-card=6-1]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('#scrap')
+			.should('be.visible')
+			.and('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to scrap
+		cy.get('#player-field')
+			.should('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to field
+
+		
+		cy.playFaceCardFromSevenOpponent(Card.EIGHT_OF_CLUBS);
+
+		// No longer waiting for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('not.be.visible');
+		cy.log('Done waiting for opponent');
+
+		assertGameState(1, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [Card.EIGHT_OF_CLUBS],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS],
+		});
+	}); // end opponent plays eight as glasses from seven
+
+
 });
