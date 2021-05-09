@@ -215,7 +215,7 @@ describe('Playing SEVENS', () => {
 		});
 		cy.get('[data-player-hand-card]').should('have.length', 1);
 		cy.log('Loaded fixture');
-        
+		
 		// Play seven of clubs
 		cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
 		cy.get('#scrap')
@@ -227,7 +227,6 @@ describe('Playing SEVENS', () => {
 		cy.resolveOpponent();
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
-		
 		cy.get('[data-top-card=6-0]')
 			.should('exist')
 			.and('be.visible')
@@ -235,7 +234,6 @@ describe('Playing SEVENS', () => {
 			.should('exist')
 			.and('be.visible')
 			.click();
-		
 		cy.get('#player-field')
 			.should('have.class', 'valid-move')
 			.click();
@@ -256,6 +254,51 @@ describe('Playing SEVENS', () => {
 			scrap: [Card.SEVEN_OF_CLUBS],
 		});
 	});
+	it('Scuttles from a seven', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.NINE_OF_CLUBS],
+			p1FaceCards: [],
+			topCard: Card.TEN_OF_CLUBS,
+			secondCard: Card.SIX_OF_DIAMONDS,
+		});
+
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+		
+		// Play seven of clubs
+		cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
+		cy.get('[data-second-card=6-1]')
+			.should('exist')
+			.and('be.visible');
+		cy.get('[data-top-card=10-0]')
+			.click();
+		// scuttles with 10 of clubs
+		cy.get('[data-opponent-point-card=9-0]')
+			.click();
+		
+		assertGameState(0, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS, Card.TEN_OF_CLUBS, Card.NINE_OF_CLUBS],
+		});
+	}); // End scuttle from seven
 });
 
 describe('Opponent playing SEVENS', () => {
@@ -389,7 +432,6 @@ describe('Opponent playing SEVENS', () => {
 	});
 
 	it('Opponent plays king from seven', () => {
-
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [],
@@ -400,7 +442,65 @@ describe('Opponent playing SEVENS', () => {
 			topCard: Card.KING_OF_CLUBS,
 			secondCard: Card.SIX_OF_DIAMONDS,
 		});
+		cy.get('[data-player-hand-card]').should('have.length', 0);
+		cy.log('Loaded fixture');
+	
+		// Opponent plays 7 of clubs
+		cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+		// Player resolves
+		cy.get('[data-cy=cannot-counter-resolve]')
+			.should('be.visible')
+			.click();
+		cy.log('Player resolves (could not counter');
 
+		// Waiting for opponent
+		cy.get('#waiting-for-opponent-play-from-deck-scrim')
+			.should('be.visible');
+		
+		cy.get('[data-top-card=13-0]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('#player-field')
+			.should('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to field
+		cy.get('[data-second-card=6-1]')
+			.should('exist')
+			.and('be.visible')
+			.click({ force: true })
+			.should('not.have.class', 'selected');
+		cy.get('#scrap')
+			.should('be.visible')
+			.and('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to scrap
+		cy.get('#player-field')
+			.should('not.have.class', 'valid-move')
+			.click({ force: true }); // can't play to field
+		
+		cy.playFaceCardFromSevenOpponent(Card.KING_OF_CLUBS);
+		assertGameState(1, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [Card.KING_OF_CLUBS],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS],
+		});
+	}); // end opponent plays king from seven
+
+	it('Opponent scuttles from seven', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.NINE_OF_CLUBS],
+			p1FaceCards: [],
+			topCard: Card.TEN_OF_CLUBS,
+			secondCard: Card.SIX_OF_DIAMONDS,
+		});
 		cy.get('[data-player-hand-card]').should('have.length', 0);
 		cy.log('Loaded fixture');
 	
@@ -416,7 +516,7 @@ describe('Opponent playing SEVENS', () => {
 		cy.get('#waiting-for-opponent-play-from-deck-scrim')
 			.should('be.visible');
 		// Deck cards appear but are not selectable
-		cy.get('[data-top-card=13-0]')
+		cy.get('[data-top-card=10-0]')
 			.should('exist')
 			.and('be.visible')
 			.click({ force: true })
@@ -434,8 +534,7 @@ describe('Opponent playing SEVENS', () => {
 			.should('not.have.class', 'valid-move')
 			.click({ force: true }); // can't play to field
 
-		
-		cy.playFaceCardFromSevenOpponent(Card.KING_OF_CLUBS);
+		cy.scuttleFromSevenOpponent(Card.TEN_OF_CLUBS, Card.NINE_OF_CLUBS);
 
 		// No longer waiting for opponent
 		cy.get('#waiting-for-opponent-play-from-deck-scrim')
@@ -445,13 +544,13 @@ describe('Opponent playing SEVENS', () => {
 		assertGameState(1, {
 			p0Hand: [],
 			p0Points: [],
-			p0FaceCards: [Card.KING_OF_CLUBS],
+			p0FaceCards: [],
 			p1Hand: [],
-			p1Points: [Card.TEN_OF_HEARTS],
+			p1Points: [],
 			p1FaceCards: [],
-			scrap: [Card.SEVEN_OF_CLUBS],
+			scrap: [Card.SEVEN_OF_CLUBS, Card.TEN_OF_CLUBS, Card.NINE_OF_CLUBS],
 		});
-	}); // end opponent plays king from seven
+	}); // end opponent scuttles from seven
 	
 	it('Opponent plays queen from seven', () => {
 

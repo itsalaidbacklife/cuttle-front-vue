@@ -87,6 +87,7 @@ io.socket.on('game', function(evData) {
 		case 'sevenPoints':
 		case 'sevenRunes':
 		case 'sevenJack':
+		case 'sevenScuttle':
 			store.commit('updateGame', evData.data.game);
 			store.commit('setPlayingFromDeck', false);
 			store.commit('setWaitingForOpponentToPlayFromDeck', false);

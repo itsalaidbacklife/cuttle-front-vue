@@ -369,6 +369,22 @@ export default {
 				});
 			});	
 		},
+		async requestScuttleSeven(context, { cardId, index, targetId }) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/seven/scuttle', {
+					cardId,
+					index,
+					targetId,
+					opId: context.getters.opponent.id
+				},
+				function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});	
+		},
 		async requestPlayJackSeven(context, {cardId, index, targetId}) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/seven/jack', {
