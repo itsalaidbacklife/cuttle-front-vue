@@ -385,5 +385,18 @@ export default {
 				});
 			});
 		},
+		async requestPlayFaceCardSeven(context, {index, cardId}) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/seven/runes', {
+					cardId,
+					index
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
 	}
 }
