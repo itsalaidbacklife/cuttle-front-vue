@@ -524,6 +524,48 @@ describe('Opponent playing SEVENS', () => {
 				p1FaceCards: [Card.KING_OF_HEARTS],
 				scrap: [Card.QUEEN_OF_CLUBS, Card.TWO_OF_SPADES, Card.SEVEN_OF_CLUBS],
 			});
-		});
+		}); // End Opponent TWO from seven
+
+		it.only('Opponent plays NINE from seven', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS, Card.QUEEN_OF_CLUBS],
+				topCard: Card.NINE_OF_DIAMONDS,
+				secondCard: Card.TWO_OF_SPADES,
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 0);
+			cy.log('Loaded fixture');
+
+			// Opponent plays 7 of clubs
+			cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+			// Player resolves
+			cy.get('[data-cy=cannot-counter-resolve]')
+				.should('be.visible')
+				.click();
+			cy.log('Player resolves seven of clubs (could not counter');
+
+			// Waiting for opponent
+			cy.get('#waiting-for-opponent-play-from-deck-scrim')
+				.should('be.visible');
+
+			cy.playTargetedOneOffFromSevenOpponent(Card.NINE_OF_DIAMONDS, Card.QUEEN_OF_CLUBS, 'rune');
+			cy.get('[data-cy=cannot-counter-resolve]')
+				.should('be.visible')
+				.click();
+
+			assertGameState(1, {
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.QUEEN_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.NINE_OF_DIAMONDS, Card.SEVEN_OF_CLUBS],
+			});
+		}) // End Opponent NINE from seven
 	}); // End Opponent seven one-off describe
 }); // End Opponent plays sevens describe()
