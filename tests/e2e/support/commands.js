@@ -657,6 +657,35 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 	});
 });
 
+/**
+ * @param card: {suit: number, rank: number}
+ */
+Cypress.Commands.add('playOneOffAndResolveAsPlayer', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error(`Cannot one-off & resolve: Invalid card to play: ${JSON.stringify(card)}`);
+	}
+	Cypress.log({
+		displayName: 'Play & Resolve One-Off',
+		name: 'Play one-off, opponent resolves',
+		message: printCard(card),
+	});
+	cy.window().its('app.$store.state.game').then((game) => {
+		const foundCard = game.players[game.myPNum].hand.find((handCard) => cardsMatch(card, handCard));
+		if (!foundCard) throw new Error(`Cannot one-off & resolve: cannot find ${printCard(card)} in player's hand`);
+		// Play chosen card as one-off
+		cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`).click();
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
+	});
+});
+
 Cypress.Commands.add('vueRoute', (route) => {
 	cy.window()
 		.its('app.$router')
