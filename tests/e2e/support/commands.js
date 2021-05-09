@@ -404,7 +404,7 @@ Cypress.Commands.add('playPointsFromSevenOpponent', (card) => {
 /**
  * @param card {suit: number, rank: number}
  */
- Cypress.Commands.add('playFaceCardFromSevenOpponent', (card) => {
+Cypress.Commands.add('playFaceCardFromSevenOpponent', (card) => {
 	if (!hasValidSuitAndRank(card)) {
 		throw new Error('Cannot play opponent face card: Invalid card input');
 	}

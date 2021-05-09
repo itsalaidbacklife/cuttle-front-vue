@@ -54,7 +54,6 @@
 					:class="{'reveal-top-two': resolvingSeven}"
 					@click="drawCard"
 				>
-
 					<template v-if="!resolvingSeven">
 						<v-img
 							:src="require('../assets/logo_head.svg')"
