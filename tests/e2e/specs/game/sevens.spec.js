@@ -103,6 +103,103 @@ describe('Playing SEVENS', () => {
 			scrap: [Card.SEVEN_OF_CLUBS],
 		});
 	});
+	it('Plays king from a seven', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			topCard: Card.SIX_OF_CLUBS,
+			secondCard: Card.KING_OF_CLUBS,
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+        
+		// Play seven of clubs
+		cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
+		
+		cy.get('[data-top-card=6-0]')
+			.should('exist')
+			.and('be.visible')
+		cy.get('[data-second-card=13-0]')
+			.should('exist')
+			.and('be.visible')
+			.click();
+        
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+
+		assertGameState(0, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [Card.KING_OF_CLUBS],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS],
+		});
+	});
+
+	it('Plays queen from a seven', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			topCard: Card.SIX_OF_CLUBS,
+			secondCard: Card.QUEEN_OF_CLUBS,
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+        
+		// Play seven of clubs
+		cy.get('[data-player-hand-card=7-0]').click(); // seven of clubs
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
+		
+		cy.get('[data-top-card=6-0]')
+			.should('exist')
+			.and('be.visible')
+		cy.get('[data-second-card=12-0]')
+			.should('exist')
+			.and('be.visible')
+			.click();
+        
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+
+		assertGameState(0, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [Card.QUEEN_OF_CLUBS],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS],
+		});
+	});
 });
 
 describe('Opponent playing SEVENS', () => {
