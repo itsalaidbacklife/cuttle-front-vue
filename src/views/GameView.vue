@@ -307,9 +307,9 @@
 			@resolveThree="resolveThree($event)"
 		/>
 		<eight-overlay
-			v-if="selectedCard && selectedCard.rank === 8"
+			v-if="(selectedCard && selectedCard.rank === 8) || (cardSelectedFromDeck && cardSelectedFromDeck.rank === 8)"
 			v-model="showEightOverlay"
-			:card="selectedCard"
+			:card="selectedCard || cardSelectedFromDeck"
 			@points="playPoints"
 			@glasses="playFaceCard"
 			@cancel="clearSelection"
@@ -668,9 +668,19 @@ export default {
 		},
 		playFaceCard() {
 			this.clearOverlays();
-			this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
-				.then(this.clearSelection())
-				.catch(this.handleError);
+			if (this.resolvingSeven){
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
+				this.$store.dispatch('requestPlayFaceCardSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					index: deckIndex
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}else{
+				this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 		},
 		scuttle(targetIndex) {
 			if (this.resolvingSeven) {

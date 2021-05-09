@@ -85,6 +85,7 @@ io.socket.on('game', function(evData) {
 			break;
 		// Sevens
 		case 'sevenPoints':
+		case 'sevenRunes':
 		case 'sevenJack':
 		case 'sevenScuttle':
 			store.commit('updateGame', evData.data.game);
