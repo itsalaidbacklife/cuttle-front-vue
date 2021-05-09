@@ -9,7 +9,7 @@
 			:value="isValidTarget"
 			absolute
 			color="accent"
-			class="target-overlay"
+			class="valid-move target-overlay"
 			opacity=".8"
 		/>
 		<img
