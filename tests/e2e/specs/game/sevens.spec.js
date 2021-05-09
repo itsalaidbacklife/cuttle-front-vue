@@ -256,7 +256,7 @@ describe('Playing SEVENS', () => {
 			});
 		}); // End playing TWO from seven
 
-		it.only('Plays a NINE from a seven', () => {
+		it('Plays a NINE from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
