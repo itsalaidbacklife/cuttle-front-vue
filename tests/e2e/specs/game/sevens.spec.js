@@ -288,7 +288,7 @@ describe('Playing SEVENS', () => {
 				.click();
 			// target queen of clubs
 			cy.get('[data-opponent-face-card=12-0]')
-				.should('have.class', 'valid-move')
+				.find('.valid-move')
 				.click();
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
@@ -300,8 +300,8 @@ describe('Playing SEVENS', () => {
 			assertGameState(0, {
 				p0Hand: [],
 				p0Points: [],
-				p0FaceCards: [Card.QUEEN_OF_CLUBS],
-				p1Hand: [],
+				p0FaceCards: [],
+				p1Hand: [Card.QUEEN_OF_CLUBS],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
 				scrap: [Card.NINE_OF_DIAMONDS, Card.SEVEN_OF_CLUBS],

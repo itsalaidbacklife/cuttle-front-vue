@@ -525,23 +525,23 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 		}
 		// Find target by suit & rank
 		switch (targetType) {
-			case 'point':
-				foundTarget = player.points.find((pointCard) => cardsMatch(pointCard, target));
-				break;
-			case 'rune':
-				foundTarget = player.runes.find((faceCard) => cardsMatch(faceCard, target));
-				break;
-			case 'jack':
-				player.points.forEach((pointCard) => {
-					pointCard.attachments.forEach((jack) => {
-						if (cardsMatch(jack, target)) {
-							foundTarget = jack;
-						}
-					});
+		case 'point':
+			foundTarget = player.points.find((pointCard) => cardsMatch(pointCard, target));
+			break;
+		case 'rune':
+			foundTarget = player.runes.find((faceCard) => cardsMatch(faceCard, target));
+			break;
+		case 'jack':
+			player.points.forEach((pointCard) => {
+				pointCard.attachments.forEach((jack) => {
+					if (cardsMatch(jack, target)) {
+						foundTarget = jack;
+					}
 				});
-				break;
-			default:
-				throw new Error(`Error playing ${printCard(card)} as one-off from seven as opponent: invalid target type, ${targetType}`);
+			});
+			break;
+		default:
+			throw new Error(`Error playing ${printCard(card)} as one-off from seven as opponent: invalid target type, ${targetType}`);
 		}
 		if (!foundTarget) {
 			throw new Error(`Error: Could not find target ${printCard(target)} when playing ${printCard(card)} as one-off from seven for opponent`);
