@@ -54,7 +54,6 @@
 					:class="{'reveal-top-two': resolvingSeven}"
 					@click="drawCard"
 				>
-
 					<template v-if="!resolvingSeven">
 						<v-img
 							:src="require('../assets/logo_head.svg')"
@@ -418,6 +417,15 @@ export default {
 		opponentPointsToWin() {
 			return this.pointsToWin(this.kingCount(this.opponent));
 		},
+		////////////
+		// Queens //
+		////////////
+		playerQueenCount() {
+			return this.queenCount(this.player);
+		},
+		opponentQueenCount() {
+			return this.queenCount(this.opponent);
+		},
 		//////////////////
 		// Interactions //
 		//////////////////
@@ -485,6 +493,16 @@ export default {
 				})
 				.map((validTarget) => validTarget.id);			
 		},
+		validFaceCardTargetIds() {
+			switch (this.opponentQueenCount) {
+			case 0:
+				return this.opponent.runes.map((card) => card.id);
+			case 1:
+				return [this.opponent.runes.find((card) => card.rank === 12).id];
+			default:
+				return [];
+			}
+		},
 		validMoves() {
 			if (!this.isPlayersTurn) return [];
 
@@ -517,15 +535,11 @@ export default {
 				break;
 			case 9:
 				res.push('field');
-				res = [...res, ...this.validScuttleIds];
+				res = [...res, ...this.validScuttleIds, ...this.validFaceCardTargetIds];
 				break;
 			case 2:
 				res.push('field');
-				const validFaceCards = this.opponent.runes.filter(
-					(potentialTarget) => potentialTarget.rank > 10 || potentialTarget.rank === 8
-				).map((validTarget) => validTarget.id);
-				res.push(...validFaceCards);
-				res = [...res, ...this.validScuttleIds];
+				res = [...res, ...this.validScuttleIds, ...this.validFaceCardTargetIds];
 				break;
 			case 11:
 				res = this.opponent.points.map(validTarget => validTarget.id);
@@ -607,7 +621,14 @@ export default {
 			}
 		},
 		/**
-		 * Returns number of kings a given player has
+		 * @returns number of queens a given player has
+		 * @param player is the player object
+		 */
+		queenCount(player) {
+			return player.runes.reduce((kingCount, card) => kingCount + (card.rank === 12 ? 1 : 0), 0);
+		},
+		/**
+		 * @returns number of kings a given player has
 		 * @param player is the player object
 		 */
 		kingCount(player) {
