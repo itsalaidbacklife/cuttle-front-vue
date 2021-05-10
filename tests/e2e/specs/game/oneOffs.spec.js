@@ -20,16 +20,8 @@ describe('Untargeted One-Offs', () => {
 		cy.log('Loaded fixture');
 
 		// Player plays ace
-		cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('not.be.visible');
+		cy.playOneOffAndResolveAsPlayer(Card.ACE_OF_CLUBS);
+
 		assertGameState(
 			0,
 			{
@@ -68,16 +60,7 @@ describe('Untargeted One-Offs', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Loaded fixture');
 		// Player plays five
-		cy.get('[data-player-hand-card=5-3]').click(); // five of spades
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('not.be.visible');
+		cy.playOneOffAndResolveAsPlayer(Card.FIVE_OF_SPADES);
 
 		// Assert game state
 		assertGameState(
@@ -117,17 +100,8 @@ describe('Untargeted One-Offs', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Loaded fixture');
 
-		// Player plays six
-		cy.get('[data-player-hand-card=6-3]').click(); // six of spades
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('not.be.visible');
+		cy.playOneOffAndResolveAsPlayer(Card.SIX_OF_SPADES);
+
 		assertGameState(
 			0,
 			{
@@ -177,19 +151,7 @@ describe('FOURS', () => {
 			cy.get('[data-player-hand-card]').should('have.length', 2);
 			cy.log('Loaded fixture');
 			
-			// Play the four of spades
-			cy.get('[data-player-hand-card=4-3]').click(); // four of spades
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
-			cy.get('#waiting-for-opponent-discard-scrim')
-				.should('be.visible');
+			cy.playOneOffAndResolveAsPlayer(Card.FOUR_OF_SPADES);
 			// Opponent chooses two cards to discard
 			cy.discardOpponent(Card.ACE_OF_HEARTS, Card.TEN_OF_HEARTS);
 			cy.get('#waiting-for-opponent-discard-scrim')
@@ -220,19 +182,9 @@ describe('FOURS', () => {
 			});
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
-	
-			// Play the four of spades
-			cy.log('Playing Four of clubs as one off');
-			cy.get('[data-player-hand-card=4-0]').click(); // four of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
+
+			cy.playOneOffAndResolveAsPlayer(Card.FOUR_OF_CLUBS);
+
 			cy.get('#waiting-for-opponent-discard-scrim')
 				.should('be.visible');
 			// Opponent chooses two cards to discard
@@ -265,18 +217,8 @@ describe('FOURS', () => {
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
 	
-			// Play the four of spades
-			cy.log('Playing Four of clubs as one off');
-			cy.get('[data-player-hand-card=4-0]').click(); // four of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('be.visible');
-			// Opponent does not counter (resolves stack)
-			cy.resolveOpponent();
-			cy.get('#waiting-for-opponent-counter-scrim')
-				.should('not.be.visible');
+			// Play the four of clubs
+			cy.playOneOffAndResolveAsPlayer(Card.FOUR_OF_CLUBS);
 			cy.get('#waiting-for-opponent-discard-scrim')
 				.should('be.visible');
 			// Opponent chooses two cards to discard
