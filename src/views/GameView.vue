@@ -417,6 +417,15 @@ export default {
 		opponentPointsToWin() {
 			return this.pointsToWin(this.kingCount(this.opponent));
 		},
+		////////////
+		// Queens //
+		////////////
+		playerQueenCount() {
+			return this.queenCount(this.player);
+		},
+		opponentQueenCount() {
+			return this.queenCount(this.opponent);
+		},
 		//////////////////
 		// Interactions //
 		//////////////////
@@ -484,6 +493,16 @@ export default {
 				})
 				.map((validTarget) => validTarget.id);			
 		},
+		validFaceCardTargetIds() {
+			switch (this.opponentQueenCount) {
+			case 0:
+				return this.opponent.runes.map((card) => card.id);
+			case 1:
+				return [this.opponent.runes.find((card) => card.rank === 12).id];
+			default:
+				return [];
+			}
+		},
 		validMoves() {
 			if (!this.isPlayersTurn) return [];
 
@@ -516,15 +535,11 @@ export default {
 				break;
 			case 9:
 				res.push('field');
-				res = [...res, ...this.validScuttleIds];
+				res = [...res, ...this.validScuttleIds, ...this.validFaceCardTargetIds];
 				break;
 			case 2:
 				res.push('field');
-				const validFaceCards = this.opponent.runes.filter(
-					(potentialTarget) => potentialTarget.rank > 10 || potentialTarget.rank === 8
-				).map((validTarget) => validTarget.id);
-				res.push(...validFaceCards);
-				res = [...res, ...this.validScuttleIds];
+				res = [...res, ...this.validScuttleIds, ...this.validFaceCardTargetIds];
 				break;
 			case 11:
 				res = this.opponent.points.map(validTarget => validTarget.id);
@@ -606,7 +621,14 @@ export default {
 			}
 		},
 		/**
-		 * Returns number of kings a given player has
+		 * @returns number of queens a given player has
+		 * @param player is the player object
+		 */
+		queenCount(player) {
+			return player.runes.reduce((kingCount, card) => kingCount + (card.rank === 12 ? 1 : 0), 0);
+		},
+		/**
+		 * @returns number of kings a given player has
 		 * @param player is the player object
 		 */
 		kingCount(player) {
@@ -713,13 +735,24 @@ export default {
 			case 'jack':
 				break;
 			}
-			this.$store.dispatch('requestPlayTargetedOneOff', {
-				cardId: this.selectedCard.id,
-				targetId: target.id,
-				targetType,
-			})
-				.then(this.clearSelection())
-				.catch(this.handleError);
+			if (this.resolvingSeven) {
+				this.$store.dispatch('requestPlayTargetedOneOffSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					targetId: target.id,
+					targetType,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
+			else {
+				this.$store.dispatch('requestPlayTargetedOneOff', {
+					cardId: this.selectedCard.id,
+					targetId: target.id,
+					targetType,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 		},
 		playJack(targetIndex) {
 			const target = this.opponent.points[targetIndex];
@@ -820,9 +853,17 @@ export default {
 			}
 		},
 		targetOpponentFaceCard(targetIndex) {
-			if (!this.selectedCard) return;
+			let cardToPlay = null;
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return;
+				cardToPlay = this.cardSelectedFromDeck;
+			}
+			else {
+				if (!this.selectedCard) return;
+				cardToPlay = this.selectedCard;
+			}
 
-			switch(this.selectedCard.rank) {
+			switch(cardToPlay.rank) {
 			case 2:
 				this.playTargetedOneOff(targetIndex, 'rune');
 				return;
@@ -833,6 +874,17 @@ export default {
 			}
 		},
 		playOneOff() {
+			if (this.resolvingSeven) {
+				if (!this.cardSelectedFromDeck) return;
+
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
+				this.$store.dispatch('requestPlayOneOffSeven', {
+					cardId: this.cardSelectedFromDeck.id,
+					index: deckIndex,
+				})
+					.then(this.clearSelection())
+					.catch(this.handleError);
+			}
 			if (!this.selectedCard) return;
 
 			this.$store.dispatch('requestPlayOneOff', this.selectedCard.id)

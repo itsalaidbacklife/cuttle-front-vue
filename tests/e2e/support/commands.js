@@ -513,7 +513,7 @@ Cypress.Commands.add('playJackFromSevenOpponent', (card, target) => {
 		.then((game) => {
 			const player = game.players[game.myPNum];
 			const opponent = game.players[(game.myPNum + 1) % 2];
-			let foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
+			let foundCard;
 			const foundTarget = player.points.find((pointCard) => cardsMatch(target, pointCard));
 
 			let index;
@@ -547,6 +547,144 @@ Cypress.Commands.add('playJackFromSevenOpponent', (card, target) => {
 		});
 });
 
+
+/**
+ * @param card {suit: number, rank: number}
+ */
+Cypress.Commands.add('playOneOffFromSevenOpponent', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot play opponent one-ff from seven: Invalid card input');
+	}
+	Cypress.log({
+		displayName: 'Opponent seven one-off',
+		name: 'Opponent plays one-off from seven',
+		message: printCard(card),
+	});
+	return cy.window().its('app.$store.state.game')
+		.then((game) => {
+			let foundCard;
+			let index;
+			if (cardsMatch(card, game.topCard)) {
+				foundCard = game.topCard;
+				index = 0;
+			} else if (cardsMatch(card, game.secondCard)) {
+				foundCard = game.secondCard;
+				index = 1;
+			} else {
+				throw new Error(`Error playing ${printCard(card)} as one-off from seven as opponent: Could not find it in top two cards`);
+			}
+			const playerId = game.players[game.myPNum].id;
+			const cardId = foundCard.id;
+			io.socket.get('/game/seven/untargetedOneOff', {
+				cardId,
+				index,
+				opId: playerId,
+			},
+			function handleResponse(res, jwres) {
+				if (jwres.statusCode !== 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
+
+Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targetType) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error(`Cannot play targeted one-off from seven for opponent: Invalid card to play: ${JSON.stringify(card)}`);
+	}
+	if (!hasValidSuitAndRank(target)) {
+		throw new Error(`Cannot play targeted one-off from seven for opponent: Invalid target: ${JSON.stringify(target)}`);
+	}
+	Cypress.log({
+		displayName: 'Opponent seven targeted one-off',
+		name: 'Opponent plays one-off from seven',
+		message: printCard(card),
+	});
+	let foundCard;
+	let foundTarget;
+	let index;
+	return cy.window().its('app.$store.state.game').then((game) => {
+		const player = game.players[game.myPNum];
+		if (cardsMatch(card, game.topCard)) {
+			foundCard = game.topCard;
+			index = 0;
+		} else if (cardsMatch(card, game.secondCard)) {
+			foundCard = game.secondCard;
+			index = 1;
+		} else {
+			throw new Error(`Error playing ${printCard(card)} as one-off from seven as opponent: Could not find it in top two cards`);
+		}
+		// Find target by suit & rank
+		switch (targetType) {
+		case 'point':
+			foundTarget = player.points.find((pointCard) => cardsMatch(pointCard, target));
+			break;
+		case 'rune':
+			foundTarget = player.runes.find((faceCard) => cardsMatch(faceCard, target));
+			break;
+		case 'jack':
+			player.points.forEach((pointCard) => {
+				pointCard.attachments.forEach((jack) => {
+					if (cardsMatch(jack, target)) {
+						foundTarget = jack;
+					}
+				});
+			});
+			break;
+		default:
+			throw new Error(`Error playing ${printCard(card)} as one-off from seven as opponent: invalid target type, ${targetType}`);
+		}
+		if (!foundTarget) {
+			throw new Error(`Error: Could not find target ${printCard(target)} when playing ${printCard(card)} as one-off from seven for opponent`);
+		}
+		const playerId = player.id;
+		const cardId = foundCard.id;
+		const targetId = foundTarget.id;
+		io.socket.get('/game/seven/targetedOneOff', {
+			cardId,
+			index,
+			targetId,
+			targetType,
+			opId: playerId,
+		},
+		function handleResponse(res, jwres) {
+			if (jwres.statusCode !== 200) {
+				throw new Error(jwres.body.message);
+			}
+			return jwres;
+		});
+	});
+});
+
+/**
+ * @param card: {suit: number, rank: number}
+ */
+Cypress.Commands.add('playOneOffAndResolveAsPlayer', (card) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error(`Cannot one-off & resolve: Invalid card to play: ${JSON.stringify(card)}`);
+	}
+	Cypress.log({
+		displayName: 'Play & Resolve One-Off',
+		name: 'Play one-off, opponent resolves',
+		message: printCard(card),
+	});
+	cy.window().its('app.$store.state.game').then((game) => {
+		const foundCard = game.players[game.myPNum].hand.find((handCard) => cardsMatch(card, handCard));
+		if (!foundCard) throw new Error(`Cannot one-off & resolve: cannot find ${printCard(card)} in player's hand`);
+		// Play chosen card as one-off
+		cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`).click();
+		cy.get('#scrap')
+			.should('have.class', 'valid-move')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
+	});
+});
 
 Cypress.Commands.add('vueRoute', (route) => {
 	cy.window()
