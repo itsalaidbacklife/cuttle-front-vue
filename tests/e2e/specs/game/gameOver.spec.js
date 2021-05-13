@@ -42,5 +42,11 @@ describe('Ending the game', () =>  {
 			.click();
 		cy.url()
 			.should('not.include', '/game');
+		// Re-join game and confirm it loads normally
+		setupGameAsP0(true);
+		cy.get('#game-over-dialog')
+			.should('not.be.visible');
+		cy.get('[data-player-hand-card]')
+			.should('have.length', 5);
 	});
 });
