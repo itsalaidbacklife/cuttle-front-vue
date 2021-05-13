@@ -323,6 +323,10 @@
 			@one-off="playTargetedOneOff(nineTargetIndex, targetType)"
 			@cancel="clearSelection"
 		/>
+		<game-over-dialog
+			v-model="gameIsOver"
+			:player-wins="playerWins"
+		/>
 	</div>
 </template>
 
@@ -334,6 +338,7 @@ import FourDialog from '@/components/GameView/FourDialog.vue';
 import ThreeDialog from '@/components/GameView/ThreeDialog.vue';
 import EightOverlay from '@/components/GameView/EightOverlay.vue';
 import NineOverlay from '../components/GameView/NineOverlay.vue';
+import GameOverDialog from '@/components/GameView/GameOverDialog.vue';
 
 export default {
 	name: 'GameView',
@@ -345,6 +350,7 @@ export default {
 		ThreeDialog,
 		EightOverlay,
 		NineOverlay,
+		GameOverDialog,
 	},
 	data() {
 		return {
@@ -416,6 +422,15 @@ export default {
 		},
 		opponentPointsToWin() {
 			return this.pointsToWin(this.kingCount(this.opponent));
+		},
+		///////////////
+		// Game Over //
+		///////////////
+		gameIsOver() {
+			return this.$store.state.game.gameIsOver;
+		},
+		playerWins() {
+			return this.$store.state.game.gameIsOver && this.$store.state.game.winnerPNum === this.$store.state.game.myPNum;
 		},
 		////////////
 		// Queens //

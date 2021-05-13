@@ -30,6 +30,10 @@ function resetState() {
 		// Sevens
 		playingFromDeck: false,
 		waitingForOpponentToPlayFromDeck: false,
+		// GameOver
+		gameIsOver: false,
+		winnerPNum: null,
+		conceded: false,
 	};
 }
 const initialState = resetState();
@@ -129,6 +133,12 @@ export default {
 		},
 		setWaitingForOpponentToPlayFromDeck(state, val) {
 			state.waitingForOpponentToPlayFromDeck = val;
+		},
+		// Game Over
+		setGameOver(state, {gameOver, conceded, winner}) {
+			state.gameIsOver = gameOver;
+			state.conceded = conceded;
+			state.winnerPNum = winner;
 		},
 	},
 	actions: {
