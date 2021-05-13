@@ -17,6 +17,7 @@
 				<v-btn
 					color="primary"
 					data-cy="gameover-go-home"
+					@click="goHome"
 				>
 					Go Home
 				</v-btn>
@@ -46,6 +47,11 @@ export default {
 			set(newValue) {
 				this.$emit('input', newValue);
 			},
+		},
+	},
+	methods: {
+		goHome() {
+			this.$router.push('/');
 		},
 	},
 }
