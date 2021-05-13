@@ -52,6 +52,11 @@ export default {
 	methods: {
 		goHome() {
 			this.$router.push('/');
+			this.$store.commit('setGameOver', {
+				gameOver: false,
+				conceded: false,
+				winner: null,
+			});
 		},
 	},
 }
