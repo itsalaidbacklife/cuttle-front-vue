@@ -406,6 +406,8 @@ describe('Play TWOS', () => {
 				scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_HEARTS]
 			});
 	});
+
+	it.skip('Plays Two to Destroy Jacks', () => {})
 });
 
 describe('Playing NINES', () => {

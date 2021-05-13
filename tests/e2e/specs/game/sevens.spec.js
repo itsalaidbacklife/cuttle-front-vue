@@ -371,6 +371,10 @@ describe('Playing SEVENS', () => {
 			});
 		}); // End playing TWO from seven
 
+		it.skip('Plays TWO on jacks from a seven', () => {
+
+		}) //End playing TWO on jacks from a seven
+
 		it('Plays a NINE from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -413,6 +417,11 @@ describe('Playing SEVENS', () => {
 				scrap: [Card.NINE_OF_DIAMONDS, Card.SEVEN_OF_CLUBS],
 			});
 		}); // End playing NINE from seven
+
+
+		it.skip('Plays NINE on jacks from a seven', () => {
+
+		}) //End playing NINE on jacks from a seven
 	}); // End player seven tarted one-off describe
 }); // End playing sevens describe()
 describe('Opponent playing SEVENS', () => {
