@@ -3,17 +3,25 @@ const validPassword = 'passwordLongerThanEight';
 const opponentEmail = 'yourMortalEnemy@cia.gov';
 const opponentPassword = 'deviousTrickery';
 
-export function setupGameAsP0() {
-	cy.wipeDatabase();
-	cy.visit('/');
-	cy.signupPlayer(validEmail, validPassword);
+/**
+ * Signs up two players, navigates home, creates game, subscribes, ready's up
+ * @param {boolean} alreadyAuthenticated: skips setup steps: db wipe, signup, navigate /
+ */
+export function setupGameAsP0(alreadyAuthenticated = false) {
+	if (!alreadyAuthenticated) {
+		cy.wipeDatabase();
+		cy.visit('/');
+		cy.signupPlayer(validEmail, validPassword);
+	}
 	cy.createGamePlayer('Test Game')
 		.then((gameSummary) => {
 			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);
 			cy.vueRoute(`/lobby/${gameSummary.gameId}`);
 			cy.wrap(gameSummary).as('gameSummary');
 			cy.get('[data-cy=ready-button]').click();
-			cy.signupOpponent(opponentEmail, opponentPassword);
+			if (!alreadyAuthenticated) {
+				cy.signupOpponent(opponentEmail, opponentPassword);
+			}
 			cy.subscribeOpponent(gameSummary.gameId);
 			cy.readyOpponent();
 			// Asserting 5 cards in players hand confirms game has loaded
