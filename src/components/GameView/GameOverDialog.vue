@@ -21,11 +21,13 @@
 					v-if="playerWins"
 					:src="require('../../assets/logo_body_no_text.svg')"
 					max-width="350"
+					data-cy="victory-logo"
 				/>
 				<v-img
 					v-else
 					:src="require('../../assets/logo_dead.svg')"
 					max-width="350"
+					data-cy="loss-logo"
 				/>
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end">
