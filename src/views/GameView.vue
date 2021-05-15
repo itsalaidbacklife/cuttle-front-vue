@@ -120,16 +120,32 @@
 			<div id="field-center">
 				<div id="opponent-field">
 					<div class="field-points">
-						<card 
+						<div 
 							v-for="(card, index) in opponent.points"
 							:key="card.id"
-							:suit="card.suit"
-							:rank="card.rank"
-							:jacks="card.attachments"
-							:is-valid-target="validMoves.includes(card.id)"
-							:data-opponent-point-card="`${card.rank}-${card.suit}`"
-							@click="targetOpponentPointCard(index)"
-						/>
+							class="field-point-container"
+						>
+							<card 
+								:suit="card.suit"
+								:rank="card.rank"
+								:is-valid-target="validMoves.includes(card.id)"
+								:data-opponent-point-card="`${card.rank}-${card.suit}`"
+								@click="targetOpponentPointCard(index)"
+							/>
+							<div 
+								v-for="jack in card.attachments"
+								:key="jack.id"
+								class="jacks-container"
+							>
+								<card 
+									:suit="jack.suit"
+									:rank="jack.rank"
+									:is-valid-target="validMoves.includes(jack.id)"
+									:data-opponent-face-card="`${jack.rank}-${jack.suit}`"
+									@click="targetOpponentFaceCard(-index-1)"
+								/>
+							</div>
+						</div>
 					</div>
 					<div class="field-effects">
 						<card 
@@ -159,14 +175,29 @@
 						opacity=".6"
 					/>
 					<div class="field-points">
-						<card
+						<div 
 							v-for="card in player.points"
 							:key="card.id"
-							:suit="card.suit"
-							:rank="card.rank"
-							:jacks="card.attachments"
-							:data-player-point-card="`${card.rank}-${card.suit}`"
-						/>
+							class="field-point-container"
+						>
+							<card
+								:suit="card.suit"
+								:rank="card.rank"
+								:jacks="card.attachments"
+								:data-player-point-card="`${card.rank}-${card.suit}`"
+							/>
+							<div 
+								v-for="jack in card.attachments"
+								:key="jack.id"
+								class="jacks-container"
+							>
+								<card 
+									:suit="jack.suit"
+									:rank="jack.rank"
+									:data-player-face-card="`${jack.rank}-${jack.suit}`"
+								/>
+							</div>
+						</div>
 					</div>
 					<div class="field-effects">
 						<card
