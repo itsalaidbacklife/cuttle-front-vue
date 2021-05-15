@@ -1,6 +1,6 @@
 import { setupGameAsP0, setupGameAsP1, assertGameState, Card, assertSnackbarError } from '../../support/helpers';
 
-describe('Ending the game', () =>  {
+describe('Winning the game', () =>  {
 	beforeEach(() => {
 		setupGameAsP0();
 	});
@@ -81,6 +81,43 @@ describe('Ending the game', () =>  {
 		cy.get('#game-over-dialog')
 			.should('be.visible')
 			.get('[data-cy=victory-heading]')
+			.should('be.visible');
+        
+		cy.get('[data-cy=gameover-go-home]')
+			.click();
+		cy.url()
+			.should('not.include', '/game');
+		// Re-join game and confirm it loads normally
+		setupGameAsP0(true);
+		cy.get('#game-over-dialog')
+			.should('not.be.visible');
+		cy.get('[data-player-hand-card]')
+			.should('have.length', 5);
+    });
+});
+
+describe('Losing the game', () => {
+    beforeEach(() => {
+        setupGameAsP1();
+    });
+
+    it('Shows when opponent wins with 21 points', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]')
+			.should('have.length', 0);
+        cy.log('Fixture loaded');
+        
+        cy.playPointsOpponent(Card.SEVEN_OF_CLUBS);
+		cy.get('#game-over-dialog')
+			.should('be.visible')
+			.get('[data-cy=loss-heading]')
 			.should('be.visible');
         
 		cy.get('[data-cy=gameover-go-home]')
