@@ -123,5 +123,32 @@ describe('Losing the game', () => {
         cy.playPointsOpponent(Card.SEVEN_OF_CLUBS);
         assertLoss();
         goHomeJoinNewGame();
-	});
+    });
+    
+    it.only('Loses by conceding', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]')
+			.should('have.length', 0);
+        cy.log('Fixture loaded');
+        
+        cy.get('#game-menu-activator')
+            .click();
+        cy.get('#game-menu')
+            .should('be.visible')
+            .get('[data-cy=concede-initiate]')
+                .click();
+        cy.get('#concede-menu')
+            .should('be.visible')
+            .get('[data-cy=concede-confirm]')
+                .click();
+        assertLoss();
+        goHomeJoinNewGame();
+    });
 });
