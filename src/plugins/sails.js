@@ -75,6 +75,7 @@ io.socket.on('game', function(evData) {
 				}
 			}
 			break;
+		case 'targetedOneOff':
 		case 'oneOff':
 		case 'counter':
 			store.commit('updateGame', evData.data.game);
