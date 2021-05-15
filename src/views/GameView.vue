@@ -1070,7 +1070,31 @@ export default {
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	width: 50%
+	width: 50%;
+
+	.jack-container {
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: auto;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+
+		.jack {
+			height: 2vh;
+			width: 50%;
+			overflow: visible;
+			& img {
+				width: auto;
+				background-size: cover;
+				height: 10vh;
+				display: block;
+				position: relative;
+			}
+		}
+	}
 }
 .field-effects {
 	display: flex;
