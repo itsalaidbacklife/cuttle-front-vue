@@ -881,7 +881,7 @@ describe('Playing NINES', ()=>{
 				p0Hand: [],
 				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
 				p0FaceCards: [],
-				p1Hand: [Card.TEN_OF_CLUBS],
+				p1Hand: [],
 				p1Points: [Card.ACE_OF_DIAMONDS, Card.TEN_OF_DIAMONDS],
 				p1FaceCards: [],
 				scrap: [Card.NINE_OF_CLUBS]
