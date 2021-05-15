@@ -13,6 +13,10 @@
 			>
 				You Lose
 			</v-card-title>
+			<v-card-text class="d-flex justify-center">
+				<v-img v-if="playerWins" :src="require('../../assets/logo_body_no_text.svg')" max-width="350" />
+				<v-img v-else  :src="require('../../assets/logo_dead.svg')" max-width="350" />
+			</v-card-text>
 			<v-card-actions class="d-flex justify-end">
 				<v-btn
 					color="primary"
