@@ -265,6 +265,71 @@ Cypress.Commands.add('playOneOffOpponent', (card) => {
 });
 /**
  * @param card {suit: number, rank: number}
+ * @param target {suit: number, rank: number}
+ * @param targetType string 'rune' | 'point' | 'jack'
+ */
+Cypress.Commands.add('playTargetedOneOffOpponent', (card, target, targetType) => {
+	if (!hasValidSuitAndRank(card)) {
+		throw new Error('Cannot play targeted one-off as opponent: Invalid card input');
+	}
+	if (!hasValidSuitAndRank(target)) {
+		throw new Error('Cannot play targeted one-off as opponent: Invalid target input');
+	}
+	return cy
+		.window()
+		.its('app.$store.state.game')
+		.then((game) => {
+			const player = game.players[game.myPNum]
+			const playerId = player.id;
+			const opponent = game.players[(game.myPNum + 1) % 2];
+			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
+			let foundTarget;
+			let foundPointCard;
+			switch (targetType) {
+			case 'point':
+				foundTarget = player.points.find((pointCard) => cardsMatch(pointCard, target));
+				break;
+			case 'rune':
+				foundTarget = player.runes.find((faceCard) => cardsMatch(faceCard, target));
+				break;
+			case 'jack':
+				player.points.forEach((pointCard) => {
+					pointCard.attachments.forEach((jack) => {
+						if (cardsMatch(jack, target)) {
+							foundTarget = jack;
+							foundPointCard = pointCard;
+						}	
+					});
+				});
+				break;
+			default:
+				throw new Error(`Error playing ${printCard(card)} as one-off from seven as opponent: invalid target type, ${targetType}`);
+			}
+			if (!foundCard) {
+				throw new Error(`Error playing targeted one-off as opponent: could not find ${printCard(card)} in opponent hand`);
+			}
+			if (!foundTarget) {
+				throw new Error(`Error playing targeted one-off as opponent: could not find ${printCard(target)} in player hand`);
+			}
+			if(targetType === 'jack' && !foundPointCard){
+				throw new Error('Error playing targeted one-off as opponent: could not find point card in player hand');
+			}
+			io.socket.get('/game/targetedOneOff', {
+				opId: playerId, // opponent's opponent is the player
+				targetId: foundTarget.id,
+				cardId: foundCard.id,
+				pointId: foundPointCard.id,
+				targetType
+			}, function handleResponse(res, jwres) {
+				if (!jwres.statusCode === 200) {
+					throw new Error(jwres.body.message);
+				}
+				return jwres;
+			});
+		});
+});
+/**
+ * @param card {suit: number, rank: number}
  */
 Cypress.Commands.add('counterOpponent', (card) => {
 	if (!hasValidSuitAndRank(card)) {
