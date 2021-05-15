@@ -804,7 +804,7 @@ describe('Playing NINES', ()=>{
 			setupGameAsP1();
 		});
 
-		it.only('Opponent plays a NINE on a jack to steal back point card', () => {
+		it('Opponent plays a NINE on a jack to steal back point card', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.NINE_OF_CLUBS, Card.ACE_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_SPADES],
