@@ -51,12 +51,15 @@ export default {
 	},
 	methods: {
 		goHome() {
-			this.$router.push('/');
-			this.$store.commit('setGameOver', {
-				gameOver: false,
-				conceded: false,
-				winner: null,
-			});
+			this.$store.dispatch('requestUnsubscribeFromGame')
+				.then(() => {
+					this.$router.push('/');
+					this.$store.commit('setGameOver', {
+						gameOver: false,
+						conceded: false,
+						winner: null,
+					});
+				});
 		},
 	},
 }

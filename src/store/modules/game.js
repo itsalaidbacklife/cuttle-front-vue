@@ -456,5 +456,15 @@ export default {
 				});
 			});
 		},
+		async requestUnsubscribeFromGame(context) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/over', function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
 	} // End actions
 } // End game module
