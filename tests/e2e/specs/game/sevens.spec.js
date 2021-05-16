@@ -371,8 +371,64 @@ describe('Playing SEVENS', () => {
 			});
 		}); // End playing TWO from seven
 
-		it.skip('Plays TWO on jacks from a seven', () => {
+		it('Plays TWO on jacks from a seven', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS, Card.ACE_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				topCard: Card.FOUR_OF_CLUBS,
+				secondCard: Card.TWO_OF_SPADES,
+			});
 
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+
+			cy.get('[data-player-hand-card=1-0]').click();
+			cy.get('#player-field').should('have.class', 'valid-move').click()
+
+			cy.get('[data-player-hand-card]').should('have.length', 1);	
+
+			// opponent plays jack
+			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_CLUBS)
+
+			assertGameState(0, {
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.ACE_OF_CLUBS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+			});
+			
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+	
+			// Play two of spades
+			cy.get('[data-second-card=2-3]')
+				.should('exist')
+				.and('be.visible')
+				.click();
+			// target queen of clubs
+			cy.get('[data-opponent-face-card=11-0]')
+				.click();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			// Opponent does not counter (resolves stack)
+			cy.resolveOpponent();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('not.be.visible');
+			
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [Card.ACE_OF_CLUBS],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.JACK_OF_CLUBS, Card.TWO_OF_SPADES, Card.SEVEN_OF_CLUBS],
+			});
 		}) //End playing TWO on jacks from a seven
 
 		it('Plays a NINE from a seven', () => {
@@ -419,8 +475,64 @@ describe('Playing SEVENS', () => {
 		}); // End playing NINE from seven
 
 
-		it.skip('Plays NINE on jacks from a seven', () => {
+		it('Plays NINE on jacks from a seven', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS, Card.ACE_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				topCard: Card.NINE_OF_DIAMONDS,
+				secondCard: Card.TWO_OF_SPADES,
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
 
+			cy.get('[data-player-hand-card=1-0]').click();
+			cy.get('#player-field').should('have.class', 'valid-move').click()
+
+			cy.get('[data-player-hand-card]').should('have.length', 1);	
+
+			// opponent plays jack
+			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_CLUBS)
+
+			assertGameState(0, {
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.ACE_OF_CLUBS],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+			});
+
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+			
+			// Play Nine of diamonds
+			cy.get('[data-top-card=9-1]')
+				.should('exist')
+				.and('be.visible')
+				.click();
+			// target queen of clubs
+			cy.get('[data-opponent-face-card=11-0]')
+				.find('.valid-move')
+				.click();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			// Opponent does not counter (resolves stack)
+			cy.resolveOpponent();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('not.be.visible');
+
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [Card.ACE_OF_CLUBS],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [Card.NINE_OF_DIAMONDS, Card.SEVEN_OF_CLUBS],
+			});
 		}) //End playing NINE on jacks from a seven
 	}); // End player seven tarted one-off describe
 }); // End playing sevens describe()
