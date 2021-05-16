@@ -1,36 +1,36 @@
 import { setupGameAsP0, setupGameAsP1, assertGameState, Card, assertSnackbarError } from '../../support/helpers';
 
 function assertVictory() {
-    cy.log('Asserting player victory');
-    cy.get('#game-over-dialog')
-        .should('be.visible')
-        .get('[data-cy=victory-heading]')
-        .should('be.visible');
+	cy.log('Asserting player victory');
+	cy.get('#game-over-dialog')
+		.should('be.visible')
+		.get('[data-cy=victory-heading]')
+		.should('be.visible');
 }
 
 function assertLoss() {
-    cy.log('Asserting player loss');
-    cy.get('#game-over-dialog')
-        .should('be.visible')
-        .get('[data-cy=loss-heading]')
-        .should('be.visible');
-    cy.get('[data-cy=loss-img]')
-        .should('be.visible');
+	cy.log('Asserting player loss');
+	cy.get('#game-over-dialog')
+		.should('be.visible')
+		.get('[data-cy=loss-heading]')
+		.should('be.visible');
+	cy.get('[data-cy=loss-img]')
+		.should('be.visible');
 }
 
 function goHomeJoinNewGame() {
-    cy.log('Going home');
-    cy.get('[data-cy=gameover-go-home]')
-        .click();
-    cy.url()
-        .should('not.include', '/game');
-    // Re-join game and confirm it loads normally
-    setupGameAsP0(true);
-    cy.get('#game-over-dialog')
-        .should('not.be.visible');
-    cy.get('[data-player-hand-card]')
-        .should('have.length', 5);
-    cy.log('Joined new game successfully');
+	cy.log('Going home');
+	cy.get('[data-cy=gameover-go-home]')
+		.click();
+	cy.url()
+		.should('not.include', '/game');
+	// Re-join game and confirm it loads normally
+	setupGameAsP0(true);
+	cy.get('#game-over-dialog')
+		.should('not.be.visible');
+	cy.get('[data-player-hand-card]')
+		.should('have.length', 5);
+	cy.log('Joined new game successfully');
 }
 
 describe('Winning the game', () =>  {
@@ -65,8 +65,8 @@ describe('Winning the game', () =>  {
 			p1Points: [],
 			p1FaceCards: [],
 		});
-        assertVictory();
-        goHomeJoinNewGame();
+		assertVictory();
+		goHomeJoinNewGame();
 	});
     
 	it('Shows when player wins game with 14 points and one king', () => {
@@ -97,8 +97,8 @@ describe('Winning the game', () =>  {
 			p1FaceCards: [],
 		});
 
-        assertVictory();
-        goHomeJoinNewGame();
+		assertVictory();
+		goHomeJoinNewGame();
 	});
 });
 
@@ -120,12 +120,12 @@ describe('Losing the game', () => {
 			.should('have.length', 0);
 		cy.log('Fixture loaded');
         
-        cy.playPointsOpponent(Card.SEVEN_OF_CLUBS);
-        assertLoss();
-        goHomeJoinNewGame();
-    });
+		cy.playPointsOpponent(Card.SEVEN_OF_CLUBS);
+		assertLoss();
+		goHomeJoinNewGame();
+	});
     
-    it.only('Loses by conceding', () => {
+	it('Loses by conceding', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
@@ -136,19 +136,19 @@ describe('Losing the game', () => {
 		});
 		cy.get('[data-player-hand-card]')
 			.should('have.length', 0);
-        cy.log('Fixture loaded');
+		cy.log('Fixture loaded');
         
-        cy.get('#game-menu-activator')
-            .click();
-        cy.get('#game-menu')
-            .should('be.visible')
-            .get('[data-cy=concede-initiate]')
-                .click();
-        cy.get('#concede-menu')
-            .should('be.visible')
-            .get('[data-cy=concede-confirm]')
-                .click();
-        assertLoss();
-        goHomeJoinNewGame();
-    });
+		cy.get('#game-menu-activator')
+			.click();
+		cy.get('#game-menu')
+			.should('be.visible')
+			.get('[data-cy=concede-initiate]')
+			.click();
+		cy.get('#concede-menu')
+			.should('be.visible')
+			.get('[data-cy=concede-confirm]')
+			.click();
+		assertLoss();
+		goHomeJoinNewGame();
+	});
 });
