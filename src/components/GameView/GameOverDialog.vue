@@ -4,8 +4,11 @@
 		persistent
 	>
 		<v-card id="game-over-dialog">
+			<v-card-title v-if="stalemate" data-cy="stalemate-heading">
+				<h1>Stalemate</h1>
+			</v-card-title>
 			<v-card-title
-				v-if="playerWins"
+				v-else-if="playerWins"
 				data-cy="victory-heading"
 			>
 				<h1>You Win</h1>
@@ -18,7 +21,13 @@
 			</v-card-title>
 			<v-card-text class="d-flex justify-center">
 				<v-img
-					v-if="playerWins"
+					v-if="stalemate"
+					:src="require('../../assets/logo_stalemate.svg')"
+					max-width="250"
+					data-cy="stalemate-img"
+				/>
+				<v-img
+					v-else-if="playerWins"
 					:src="require('../../assets/logo_body_no_text.svg')"
 					max-width="350"
 					data-cy="victory-img"
@@ -53,6 +62,10 @@ export default {
 			required: true,
 		},
 		playerWins: {
+			type: Boolean,
+			required: true,
+		},
+		stalemate: {
 			type: Boolean,
 			required: true,
 		},

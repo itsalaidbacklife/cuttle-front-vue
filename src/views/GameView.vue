@@ -63,7 +63,8 @@
 							:width="deckLogoWidth"
 							contain
 						/>
-						<v-card-actions>({{ deck.length }})</v-card-actions>
+						<v-card-actions>({{ deckLength }})</v-card-actions>
+						<h1 v-if="deckLength === 0" id="empty-deck-text">PASS</h1>
 					</template>
 
 					<template v-if="resolvingSeven">
@@ -329,6 +330,7 @@
 		<game-over-dialog
 			v-model="gameIsOver"
 			:player-wins="playerWins"
+			:stalemate="stalemate"
 		/>
 	</div>
 </template>
@@ -401,6 +403,12 @@ export default {
 		scrap() {
 			return this.game.scrap;
 		},
+		deckLength() {
+			let res = this.deck.length;
+			if (this.game.topCard) res++;
+			if (this.game.secondCard) res++;
+			return res;
+		},
 		////////////////////
 		// Player Objects //
 		////////////////////
@@ -436,6 +444,9 @@ export default {
 		},
 		playerWins() {
 			return this.$store.state.game.gameIsOver && this.$store.state.game.winnerPNum === this.$store.state.game.myPNum;
+		},
+		stalemate() {
+			return this.$store.state.game.gameIsOver && this.$store.state.game.winnerPNum === null;
 		},
 		////////////
 		// Queens //
@@ -681,14 +692,25 @@ export default {
 		//////////////////
 		drawCard() {
 			if (!this.resolvingSeven) {
-				this.$store.dispatch('requestDrawCard')
-					.then(this.clearSelection())
-					.catch((err) => {
-						this.snackMessage = err;
-						this.snackColor = 'error';
-						this.showSnack = true;
-						this.clearSelection();
-					});
+				if (this.deckLength > 0) {
+					this.$store.dispatch('requestDrawCard')
+						.then(this.clearSelection())
+						.catch((err) => {
+							this.snackMessage = err;
+							this.snackColor = 'error';
+							this.showSnack = true;
+							this.clearSelection();
+						});
+				} else {
+					this.$store.dispatch('requestPass')
+						.then(this.clearSelection())
+						.catch((err) => {
+							this.snackMessage = err;
+							this.snackColor = 'error';
+							this.showSnack = true;
+							this.clearSelection();
+						});			
+				}
 			}
 		},
 		playPoints() {
@@ -1001,6 +1023,9 @@ export default {
 		&.reveal-top-two {
 			height: auto;
 			align-self: start;
+		}
+		& #empty-deck-text {
+			position: absolute;
 		}
 	}
 	& #deck, & #scrap{
