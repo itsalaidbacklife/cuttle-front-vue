@@ -711,7 +711,7 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 		const playerId = player.id;
 		const cardId = foundCard.id;
 		const targetId = foundTarget.id;
-		const pointId = foundPointCard.id ?? null
+		const pointId = foundPointCard ? foundPointCard.id : null
 		io.socket.get('/game/seven/targetedOneOff', {
 			cardId,
 			index,
