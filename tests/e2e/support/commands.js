@@ -657,6 +657,15 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 	});
 });
 
+Cypress.Commands.add('concedeOpponent', () => {
+	io.socket.get('/game/concede', function handleResponse(res, jwres) {
+		if (jwres.statusCode !== 200) {
+			throw new Error(jwres.body.message);
+		}
+		return jwres;
+	});
+});
+
 /**
  * @param card: {suit: number, rank: number}
  */
