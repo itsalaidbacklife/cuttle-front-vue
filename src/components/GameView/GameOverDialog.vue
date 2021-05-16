@@ -4,7 +4,10 @@
 		persistent
 	>
 		<v-card id="game-over-dialog">
-			<v-card-title v-if="stalemate" data-cy="stalemate-heading">
+			<v-card-title
+				v-if="stalemate"
+				data-cy="stalemate-heading"
+			>
 				<h1>Stalemate</h1>
 			</v-card-title>
 			<v-card-title
@@ -29,13 +32,13 @@
 				<v-img
 					v-else-if="playerWins"
 					:src="require('../../assets/logo_body_no_text.svg')"
-					max-width="350"
+					:max-width="logoWidth"
 					data-cy="victory-img"
 				/>
 				<v-img
 					v-else
 					:src="require('../../assets/logo_dead.svg')"
-					max-width="350"
+					:max-width="logoWidth"
 					data-cy="loss-img"
 				/>
 			</v-card-text>
@@ -78,6 +81,15 @@ export default {
 			set(newValue) {
 				this.$emit('input', newValue);
 			},
+		},
+		logoWidth() {
+			switch(this.$vuetify.breakpoint.name) {
+			case 'xs':
+			case 'sm':
+				return '180';
+			default:
+				return '300';
+			}
 		},
 	},
 	methods: {
