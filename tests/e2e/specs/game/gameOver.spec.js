@@ -124,8 +124,8 @@ describe('Losing the game', () => {
 		assertLoss();
 		goHomeJoinNewGame();
 	});
-    
-	it('Loses by conceding', () => {
+
+	it.only('Loses by conceding', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
@@ -143,7 +143,21 @@ describe('Losing the game', () => {
 		cy.get('#game-menu')
 			.should('be.visible')
 			.get('[data-cy=concede-initiate]')
+            .click();
+        // Cancel Concede
+        cy.get('#concede-menu')
+            .should('be.visible')
+            .get('[data-cy=concede-cancel]')
+            .click();
+        cy.get('#concede-menu')
+            .should('not.be.visible');
+        // Re-open concede menu and confirm concession
+		cy.get('#game-menu-activator')
 			.click();
+		cy.get('#game-menu')
+			.should('be.visible')
+			.get('[data-cy=concede-initiate]')
+            .click();
 		cy.get('#concede-menu')
 			.should('be.visible')
 			.get('[data-cy=concede-confirm]')
