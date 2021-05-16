@@ -64,7 +64,12 @@
 							contain
 						/>
 						<v-card-actions>({{ deckLength }})</v-card-actions>
-						<h1 v-if="deckLength === 0" id="empty-deck-text">PASS</h1>
+						<h1
+							v-if="deckLength === 0"
+							id="empty-deck-text"
+						>
+							PASS
+						</h1>
 					</template>
 
 					<template v-if="resolvingSeven">

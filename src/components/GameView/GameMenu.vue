@@ -9,7 +9,12 @@
 				icon
 				v-on="on"
 			>
-				<v-icon large color="neutral lighten-1">mdi-cog</v-icon>
+				<v-icon
+					large
+					color="neutral lighten-1"
+				>
+					mdi-cog
+				</v-icon>
 			</v-btn>
 		</template>
 		<!-- Menu -->
@@ -29,10 +34,20 @@
 					The game will end and your opponent will win.
 				</v-card-text>
 				<v-card-actions class="d-flex justify-end">
-					<v-btn text color="primary" data-cy="concede-cancel" @click="showConcedeDialog = false">
+					<v-btn
+						text
+						color="primary"
+						data-cy="concede-cancel"
+						@click="showConcedeDialog = false"
+					>
 						Cancel
 					</v-btn>
-					<v-btn color="error" depressed data-cy="concede-confirm" @click="concede">
+					<v-btn
+						color="error"
+						depressed
+						data-cy="concede-confirm"
+						@click="concede"
+					>
 						Concede
 					</v-btn>
 				</v-card-actions>

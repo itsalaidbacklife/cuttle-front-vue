@@ -109,9 +109,9 @@ describe('Winning the game', () =>  {
 
 		assertVictory();
 		goHomeJoinNewGame();
-    });
+	});
     
-    it('Wins the game when opponent concedes', () => {
+	it('Wins the game when opponent concedes', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
@@ -122,12 +122,12 @@ describe('Winning the game', () =>  {
 		});
 		cy.get('[data-player-hand-card]')
 			.should('have.length', 1);
-        cy.log('Fixture loaded');
+		cy.log('Fixture loaded');
         
-        cy.concedeOpponent();
-        assertVictory();
-        goHomeJoinNewGame();
-    });
+		cy.concedeOpponent();
+		assertVictory();
+		goHomeJoinNewGame();
+	});
 });
 
 describe('Losing the game', () => {
@@ -171,21 +171,21 @@ describe('Losing the game', () => {
 		cy.get('#game-menu')
 			.should('be.visible')
 			.get('[data-cy=concede-initiate]')
-            .click();
-        // Cancel Concede
-        cy.get('#concede-menu')
-            .should('be.visible')
-            .get('[data-cy=concede-cancel]')
-            .click();
-        cy.get('#concede-menu')
-            .should('not.be.visible');
-        // Re-open concede menu and confirm concession
+			.click();
+		// Cancel Concede
+		cy.get('#concede-menu')
+			.should('be.visible')
+			.get('[data-cy=concede-cancel]')
+			.click();
+		cy.get('#concede-menu')
+			.should('not.be.visible');
+		// Re-open concede menu and confirm concession
 		cy.get('#game-menu-activator')
 			.click();
 		cy.get('#game-menu')
 			.should('be.visible')
 			.get('[data-cy=concede-initiate]')
-            .click();
+			.click();
 		cy.get('#concede-menu')
 			.should('be.visible')
 			.get('[data-cy=concede-confirm]')
@@ -196,75 +196,75 @@ describe('Losing the game', () => {
 });
 
 describe('Stalemeates', () => {
-    it('Passes three times for a stalemate', () => {
-        setupGameAsP0();
-        cy.loadGameFixture({
+	it('Passes three times for a stalemate', () => {
+		setupGameAsP0();
+		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
 			p0FaceCards: [],
 			p1Hand: [],
 			p1Points: [],
 			p1FaceCards: [],
-        });
+		});
 		cy.get('[data-player-hand-card]')
 			.should('have.length', 1);
-        cy.log('Fixture loaded');
+		cy.log('Fixture loaded');
         
-        cy.deleteDeck();
-        cy.log('Drawing last two cards');
-        cy.get('#deck')
-            .should('contain', '(2)')
-            .click();
-        cy.drawCardOpponent();
-        cy.log('Deck empty');
+		cy.deleteDeck();
+		cy.log('Drawing last two cards');
+		cy.get('#deck')
+			.should('contain', '(2)')
+			.click();
+		cy.drawCardOpponent();
+		cy.log('Deck empty');
 
-        //Pass three times for stalemate
-        cy.get('#deck')
-            .should('contain', '(0)')
-            .should('contain', 'PASS')
-            .click();
-        cy.passOpponent();
-        cy.get('#deck')
-            .should('contain', '(0)')
-            .should('contain', 'PASS')
-            .click();
+		//Pass three times for stalemate
+		cy.get('#deck')
+			.should('contain', '(0)')
+			.should('contain', 'PASS')
+			.click();
+		cy.passOpponent();
+		cy.get('#deck')
+			.should('contain', '(0)')
+			.should('contain', 'PASS')
+			.click();
         
-        assertStalemate();
-        goHomeJoinNewGame();
-    });
+		assertStalemate();
+		goHomeJoinNewGame();
+	});
 
-    it('Registers stalemate when opponent passes first/last', () => {
-        setupGameAsP1();
-        cy.loadGameFixture({
+	it('Registers stalemate when opponent passes first/last', () => {
+		setupGameAsP1();
+		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
 			p0FaceCards: [],
 			p1Hand: [],
 			p1Points: [],
 			p1FaceCards: [],
-        });
+		});
 		cy.get('[data-player-hand-card]')
 			.should('have.length', 0);
-        cy.log('Fixture loaded');
+		cy.log('Fixture loaded');
 
-        cy.deleteDeck();
-        cy.get('#deck')
-            .should('contain', '(2)');
-        cy.log('Drawing last two cards');
-        cy.drawCardOpponent();
-        cy.get('#deck')
-            .should('contain', '(1)')
-            .click();
-        cy.log('Deck empty');
+		cy.deleteDeck();
+		cy.get('#deck')
+			.should('contain', '(2)');
+		cy.log('Drawing last two cards');
+		cy.drawCardOpponent();
+		cy.get('#deck')
+			.should('contain', '(1)')
+			.click();
+		cy.log('Deck empty');
 
-        cy.passOpponent();
-        cy.get('#deck')
-            .should('contain', '(0)')
-            .should('contain', 'PASS')
-            .click();
-        cy.passOpponent();
+		cy.passOpponent();
+		cy.get('#deck')
+			.should('contain', '(0)')
+			.should('contain', 'PASS')
+			.click();
+		cy.passOpponent();
 
-        assertStalemate();
-        goHomeJoinNewGame();
-    });
+		assertStalemate();
+		goHomeJoinNewGame();
+	});
 });
