@@ -99,7 +99,25 @@ describe('Winning the game', () =>  {
 
 		assertVictory();
 		goHomeJoinNewGame();
-	});
+    });
+    
+    it.only('Wins the game when opponent concedes', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]')
+			.should('have.length', 1);
+        cy.log('Fixture loaded');
+        
+        cy.concedeOpponent();
+        assertVictory();
+        goHomeJoinNewGame();
+    });
 });
 
 describe('Losing the game', () => {
@@ -125,7 +143,7 @@ describe('Losing the game', () => {
 		goHomeJoinNewGame();
 	});
 
-	it.only('Loses by conceding', () => {
+	it('Loses by conceding', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
