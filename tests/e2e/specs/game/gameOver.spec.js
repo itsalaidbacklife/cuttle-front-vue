@@ -232,4 +232,39 @@ describe('Stalemeates', () => {
         assertStalemate();
         goHomeJoinNewGame();
     });
+
+    it('Registers stalemate when opponent passes first/last', () => {
+        setupGameAsP1();
+        cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+        });
+		cy.get('[data-player-hand-card]')
+			.should('have.length', 0);
+        cy.log('Fixture loaded');
+
+        cy.deleteDeck();
+        cy.get('#deck')
+            .should('contain', '(2)');
+        cy.log('Drawing last two cards');
+        cy.drawCardOpponent();
+        cy.get('#deck')
+            .should('contain', '(1)')
+            .click();
+        cy.log('Deck empty');
+
+        cy.passOpponent();
+        cy.get('#deck')
+            .should('contain', '(0)')
+            .should('contain', 'PASS')
+            .click();
+        cy.passOpponent();
+
+        assertStalemate();
+        goHomeJoinNewGame();
+    });
 });
