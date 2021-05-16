@@ -1,5 +1,8 @@
 <template>
 	<div id="game-view-wrapper">
+		<div id="game-menu-wrapper">
+			<game-menu />
+		</div>
 		<!-- Opponent Hand -->
 		<div 
 			id="opponent-hand"
@@ -337,8 +340,9 @@ import CounterDialog from '@/components/GameView/CounterDialog.vue';
 import FourDialog from '@/components/GameView/FourDialog.vue';
 import ThreeDialog from '@/components/GameView/ThreeDialog.vue';
 import EightOverlay from '@/components/GameView/EightOverlay.vue';
-import NineOverlay from '../components/GameView/NineOverlay.vue';
+import NineOverlay from '@/components/GameView/NineOverlay.vue';
 import GameOverDialog from '@/components/GameView/GameOverDialog.vue';
+import GameMenu from '@/components/GameView/GameMenu.vue';
 
 export default {
 	name: 'GameView',
@@ -351,6 +355,7 @@ export default {
 		EightOverlay,
 		NineOverlay,
 		GameOverDialog,
+		GameMenu,
 	},
 	data() {
 		return {
@@ -939,6 +944,11 @@ export default {
 	width: 100%;
 	height: 100%;
 	background: linear-gradient(180deg, #6202EE 14.61%, #FD6222 100%), #C4C4C4;
+}
+
+#game-menu-wrapper {
+	position: absolute;
+	display: inline-block;
 }
 
 .valid-move {
