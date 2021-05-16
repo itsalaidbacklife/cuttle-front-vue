@@ -668,6 +668,7 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 	});
 	let foundCard;
 	let foundTarget;
+	let foundPointCard;
 	let index;
 	return cy.window().its('app.$store.state.game').then((game) => {
 		const player = game.players[game.myPNum];
@@ -693,6 +694,7 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 				pointCard.attachments.forEach((jack) => {
 					if (cardsMatch(jack, target)) {
 						foundTarget = jack;
+						foundPointCard = pointCard
 					}
 				});
 			});
@@ -703,14 +705,19 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 		if (!foundTarget) {
 			throw new Error(`Error: Could not find target ${printCard(target)} when playing ${printCard(card)} as one-off from seven for opponent`);
 		}
+		if (targetType === 'jack' && ! foundPointCard) {
+			throw new Error(`Error: Could not find point card when playing ${printCard(card)} as one-off from seven for opponent`);
+		}
 		const playerId = player.id;
 		const cardId = foundCard.id;
 		const targetId = foundTarget.id;
+		const pointId = foundPointCard.id ?? null
 		io.socket.get('/game/seven/targetedOneOff', {
 			cardId,
 			index,
 			targetId,
 			targetType,
+			pointId,
 			opId: playerId,
 		},
 		function handleResponse(res, jwres) {
