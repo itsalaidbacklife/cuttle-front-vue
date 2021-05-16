@@ -110,7 +110,8 @@ export default {
 <style scoped lang="scss">
 .player-card {
   position: relative;
-  width: 15vh;
+  width: 8vw;
+	max-width: 10vw;
 
   & img {
 	width: 100%;

@@ -132,12 +132,10 @@
 								:data-opponent-point-card="`${card.rank}-${card.suit}`"
 								@click="targetOpponentPointCard(index)"
 							/>
-							<div 
-								v-for="jack in card.attachments"
-								:key="jack.id"
-								class="jacks-container"
-							>
+							<div class="jacks-container">
 								<card 
+									v-for="jack in card.attachments"
+									:key="jack.id"
 									:suit="jack.suit"
 									:rank="jack.rank"
 									:is-valid-target="validMoves.includes(jack.id)"
@@ -186,12 +184,10 @@
 								:jacks="card.attachments"
 								:data-player-point-card="`${card.rank}-${card.suit}`"
 							/>
-							<div 
-								v-for="jack in card.attachments"
-								:key="jack.id"
-								class="jacks-container"
-							>
+							<div class="jacks-container">
 								<card 
+									v-for="jack in card.attachments"
+									:key="jack.id"
 									:suit="jack.suit"
 									:rank="jack.rank"
 									:data-player-face-card="`${jack.rank}-${jack.suit}`"
@@ -1088,28 +1084,33 @@ export default {
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	width: 50%;
 
-	.jack-container {
-		position: absolute;
-		right: 0;
-		top: 0;
-		width: auto;
-		height: 100%;
+	.field-point-container {
 		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
+		flex-direction: row;
+		max-height: 25vh;
+		min-width: 8vw;
+		margin: 10px;
 
-		.jack {
-			height: 2vh;
-			width: 50%;
-			overflow: visible;
-			& img {
-				width: auto;
-				background-size: cover;
-				height: 10vh;
-				display: block;
-				position: relative;
+		.jacks-container {
+			margin-left: -8vw;
+			width: auto;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+			
+			& .player-card {
+				height: calc(29vh * 0.75);
+				margin-bottom: -20vh;
+				overflow: visible;
+
+				& img {
+					height: calc(29vh * 0.2);
+					background-size: cover;
+					display: block;
+					position: relative;
+				}
 			}
 		}
 	}
