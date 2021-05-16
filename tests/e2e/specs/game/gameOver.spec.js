@@ -18,6 +18,16 @@ function assertLoss() {
 		.should('be.visible');
 }
 
+function assertStalemate() {
+	cy.log('Asserting player loss');
+	cy.get('#game-over-dialog')
+		.should('be.visible')
+		.get('[data-cy=stalemate-heading]')
+		.should('be.visible');
+	cy.get('[data-cy=stalemate-img]')
+		.should('be.visible');
+}
+
 function goHomeJoinNewGame() {
 	cy.log('Going home');
 	cy.get('[data-cy=gameover-go-home]')
@@ -101,7 +111,7 @@ describe('Winning the game', () =>  {
 		goHomeJoinNewGame();
     });
     
-    it.only('Wins the game when opponent concedes', () => {
+    it('Wins the game when opponent concedes', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
@@ -183,4 +193,43 @@ describe('Losing the game', () => {
 		assertLoss();
 		goHomeJoinNewGame();
 	});
+});
+
+describe('Stalemeates', () => {
+    it.only('Passes three times for a stalemate', () => {
+        setupGameAsP0();
+        cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+        });
+		cy.get('[data-player-hand-card]')
+			.should('have.length', 1);
+        cy.log('Fixture loaded');
+        
+        cy.deleteDeck();
+        cy.log('Drawing last two cards');
+        cy.get('#deck')
+            .should('contain', '(2)')
+            .click();
+        cy.drawCardOpponent();
+        cy.log('Deck empty');
+
+        //Pass three times for stalemate
+        cy.get('#deck')
+            .should('contain', '(0)')
+            .should('contain', 'PASS')
+            .click();
+        cy.passOpponent();
+        cy.get('#deck')
+            .should('contain', '(0)')
+            .should('contain', 'PASS')
+            .click();
+        
+        assertStalemate();
+        goHomeJoinNewGame();
+    });
 });
