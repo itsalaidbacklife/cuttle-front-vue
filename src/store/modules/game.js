@@ -456,6 +456,16 @@ export default {
 				});
 			});
 		},
+		async requestConcede(context) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/concede', function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
 		async requestUnsubscribeFromGame(context) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/over', function handleResponse(res, jwres) {
