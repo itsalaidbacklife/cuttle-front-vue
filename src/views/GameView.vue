@@ -1,5 +1,8 @@
 <template>
 	<div id="game-view-wrapper">
+		<div id="game-menu-wrapper">
+			<game-menu />
+		</div>
 		<!-- Opponent Hand -->
 		<div 
 			id="opponent-hand"
@@ -60,7 +63,13 @@
 							:width="deckLogoWidth"
 							contain
 						/>
-						<v-card-actions>({{ deck.length }})</v-card-actions>
+						<v-card-actions>({{ deckLength }})</v-card-actions>
+						<h1
+							v-if="deckLength === 0"
+							id="empty-deck-text"
+						>
+							PASS
+						</h1>
 					</template>
 
 					<template v-if="resolvingSeven">
@@ -323,6 +332,11 @@
 			@one-off="playTargetedOneOff(nineTargetIndex, targetType)"
 			@cancel="clearSelection"
 		/>
+		<game-over-dialog
+			v-model="gameIsOver"
+			:player-wins="playerWins"
+			:stalemate="stalemate"
+		/>
 	</div>
 </template>
 
@@ -333,7 +347,9 @@ import CounterDialog from '@/components/GameView/CounterDialog.vue';
 import FourDialog from '@/components/GameView/FourDialog.vue';
 import ThreeDialog from '@/components/GameView/ThreeDialog.vue';
 import EightOverlay from '@/components/GameView/EightOverlay.vue';
-import NineOverlay from '../components/GameView/NineOverlay.vue';
+import NineOverlay from '@/components/GameView/NineOverlay.vue';
+import GameOverDialog from '@/components/GameView/GameOverDialog.vue';
+import GameMenu from '@/components/GameView/GameMenu.vue';
 
 export default {
 	name: 'GameView',
@@ -345,6 +361,8 @@ export default {
 		ThreeDialog,
 		EightOverlay,
 		NineOverlay,
+		GameOverDialog,
+		GameMenu,
 	},
 	data() {
 		return {
@@ -390,6 +408,12 @@ export default {
 		scrap() {
 			return this.game.scrap;
 		},
+		deckLength() {
+			let res = this.deck.length;
+			if (this.game.topCard) res++;
+			if (this.game.secondCard) res++;
+			return res;
+		},
 		////////////////////
 		// Player Objects //
 		////////////////////
@@ -416,6 +440,18 @@ export default {
 		},
 		opponentPointsToWin() {
 			return this.pointsToWin(this.kingCount(this.opponent));
+		},
+		///////////////
+		// Game Over //
+		///////////////
+		gameIsOver() {
+			return this.$store.state.game.gameIsOver;
+		},
+		playerWins() {
+			return this.$store.state.game.gameIsOver && this.$store.state.game.winnerPNum === this.$store.state.game.myPNum;
+		},
+		stalemate() {
+			return this.$store.state.game.gameIsOver && this.$store.state.game.winnerPNum === null;
 		},
 		////////////
 		// Queens //
@@ -661,14 +697,25 @@ export default {
 		//////////////////
 		drawCard() {
 			if (!this.resolvingSeven) {
-				this.$store.dispatch('requestDrawCard')
-					.then(this.clearSelection())
-					.catch((err) => {
-						this.snackMessage = err;
-						this.snackColor = 'error';
-						this.showSnack = true;
-						this.clearSelection();
-					});
+				if (this.deckLength > 0) {
+					this.$store.dispatch('requestDrawCard')
+						.then(this.clearSelection())
+						.catch((err) => {
+							this.snackMessage = err;
+							this.snackColor = 'error';
+							this.showSnack = true;
+							this.clearSelection();
+						});
+				} else {
+					this.$store.dispatch('requestPass')
+						.then(this.clearSelection())
+						.catch((err) => {
+							this.snackMessage = err;
+							this.snackColor = 'error';
+							this.showSnack = true;
+							this.clearSelection();
+						});			
+				}
 			}
 		},
 		playPoints() {
@@ -926,6 +973,11 @@ export default {
 	background: linear-gradient(180deg, #6202EE 14.61%, #FD6222 100%), #C4C4C4;
 }
 
+#game-menu-wrapper {
+	position: absolute;
+	display: inline-block;
+}
+
 .valid-move {
 	// background-color: var(--v-accent-lighten1);
 	cursor: pointer;
@@ -976,6 +1028,9 @@ export default {
 		&.reveal-top-two {
 			height: auto;
 			align-self: start;
+		}
+		& #empty-deck-text {
+			position: absolute;
 		}
 	}
 	& #deck, & #scrap{

@@ -18,6 +18,12 @@ io.socket.on('game', function(evData) {
 		store.commit('addGameToList', newGame);
 		break;
 	case 'updated':
+		// Handle GameOver
+		if (evData.data.victory && evData.data.victory.gameOver) {
+			setTimeout(() => {
+				store.commit('setGameOver', evData.data.victory);
+			}, 1000);
+		}
 		switch (evData.data.change) {
 		case 'ready':
 			store.commit('updateReady', evData.data.pNum);
@@ -32,6 +38,7 @@ io.socket.on('game', function(evData) {
 		case 'scuttle':
 		case 'loadFixture':
 		case 'jack':
+		case 'deleteDeck':
 			store.commit('updateGame', evData.data.game);
 			break;
 		case 'resolveThree':

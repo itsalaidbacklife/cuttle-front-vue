@@ -657,6 +657,26 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 	});
 });
 
+Cypress.Commands.add('passOpponent', () => {
+	cy.log('Opponent Passes');
+	io.socket.get('/game/pass', function handleResponse(res, jwres) {
+		if (jwres.statusCode !== 200) {
+			throw new Error(jwres.body.message);
+		}
+		return jwres;
+	});
+});
+
+Cypress.Commands.add('concedeOpponent', () => {
+	cy.log('Opponent Concedes');
+	io.socket.get('/game/concede', function handleResponse(res, jwres) {
+		if (jwres.statusCode !== 200) {
+			throw new Error(jwres.body.message);
+		}
+		return jwres;
+	});
+});
+
 /**
  * @param card: {suit: number, rank: number}
  */
@@ -683,6 +703,16 @@ Cypress.Commands.add('playOneOffAndResolveAsPlayer', (card) => {
 		cy.resolveOpponent();
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
+	});
+});
+
+Cypress.Commands.add('deleteDeck', () => {
+	cy.log('Deleting deck');
+	io.socket.get('/game/deleteDeck', function handleResponse(res, jwres) {
+		if (jwres.statusCode !== 200) {
+			throw new Error(jwres.body.message);
+		}
+		return jwres;
 	});
 });
 

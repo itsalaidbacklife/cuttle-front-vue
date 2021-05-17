@@ -1,0 +1,73 @@
+<template>
+	<v-menu>
+		<!-- Activator -->
+		<template #activator="{ on, attrs }">
+			<v-btn
+				id="game-menu-activator"
+				v-bind="attrs"
+				class="ma-2"
+				icon
+				v-on="on"
+			>
+				<v-icon
+					large
+					color="neutral lighten-1"
+				>
+					mdi-cog
+				</v-icon>
+			</v-btn>
+		</template>
+		<!-- Menu -->
+		<v-list id="game-menu">
+			<!-- Concede Dialog (Initiate + Confirm) -->
+			<v-list-item
+				data-cy="concede-initiate"
+				@click="showConcedeDialog = true"
+			>
+				Concede
+			</v-list-item>
+		</v-list>
+		<v-dialog v-model="showConcedeDialog">
+			<v-card id="concede-menu">
+				<v-card-title>Concede?</v-card-title>
+				<v-card-text>
+					The game will end and your opponent will win.
+				</v-card-text>
+				<v-card-actions class="d-flex justify-end">
+					<v-btn
+						text
+						color="primary"
+						data-cy="concede-cancel"
+						@click="showConcedeDialog = false"
+					>
+						Cancel
+					</v-btn>
+					<v-btn
+						color="error"
+						depressed
+						data-cy="concede-confirm"
+						@click="concede"
+					>
+						Concede
+					</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+	</v-menu>
+</template>
+
+<script>
+export default {
+	name: 'GameMenu',
+	data() {
+		return {
+			showConcedeDialog: false,
+		};
+	},
+	methods: {
+		concede() {
+			this.$store.dispatch('requestConcede');
+		},
+	}
+}
+</script>

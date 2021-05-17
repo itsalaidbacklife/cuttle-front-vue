@@ -30,6 +30,10 @@ function resetState() {
 		// Sevens
 		playingFromDeck: false,
 		waitingForOpponentToPlayFromDeck: false,
+		// GameOver
+		gameIsOver: false,
+		winnerPNum: null,
+		conceded: false,
 	};
 }
 const initialState = resetState();
@@ -72,8 +76,13 @@ export default {
 			if (Object.hasOwnProperty.call(newGame, 'passes')) state.passes = newGame.passes;
 			if (Object.hasOwnProperty.call(newGame, 'players')) state.players = _.cloneDeep(newGame.players);
 			if (Object.hasOwnProperty.call(newGame, 'twos')) state.twos = _.cloneDeep(newGame.twos);
+
 			if (Object.hasOwnProperty.call(newGame, 'topCard')) state.topCard = _.cloneDeep(newGame.topCard);
+			else state.topCard = null;
+
 			if (Object.hasOwnProperty.call(newGame, 'secondCard')) state.secondCard = _.cloneDeep(newGame.secondCard);
+			else state.secondCard = null;
+
 			if (Object.hasOwnProperty.call(newGame, 'oneOff')) state.oneOff = _.cloneDeep(newGame.oneOff);
 			else state.oneOff = null
 		},
@@ -129,6 +138,12 @@ export default {
 		},
 		setWaitingForOpponentToPlayFromDeck(state, val) {
 			state.waitingForOpponentToPlayFromDeck = val;
+		},
+		// Game Over
+		setGameOver(state, {gameOver, conceded, winner}) {
+			state.gameIsOver = gameOver;
+			state.conceded = conceded;
+			state.winnerPNum = winner;
 		},
 	},
 	actions: {
@@ -442,6 +457,36 @@ export default {
 						return reject(jwres.body.message);
 					}
 					context.commit('setWaitingForOpponentToCounter', true);
+					return resolve();
+				});
+			});
+		},
+		async requestPass(context) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/pass', function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
+		async requestConcede(context) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/concede', function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
+					return resolve();
+				});
+			});
+		},
+		async requestUnsubscribeFromGame(context) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/over', function handleResponse(res, jwres) {
+					if (jwres.statusCode !== 200) {
+						return reject(jwres.body.message);
+					}
 					return resolve();
 				});
 			});
