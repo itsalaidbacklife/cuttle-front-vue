@@ -195,7 +195,7 @@ describe('Losing the game', () => {
 	});
 });
 
-describe('Stalemeates', () => {
+describe('Stalemates', () => {
 	it('Passes three times for a stalemate', () => {
 		setupGameAsP0();
 		cy.loadGameFixture({
