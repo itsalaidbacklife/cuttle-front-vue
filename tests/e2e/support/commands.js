@@ -309,10 +309,10 @@ Cypress.Commands.add('playTargetedOneOffOpponent', (card, target, targetType) =>
 				throw new Error(`Error playing targeted one-off as opponent: could not find ${printCard(card)} in opponent hand`);
 			}
 			if (!foundTarget) {
-				throw new Error(`Error playing targeted one-off as opponent: could not find ${printCard(target)} in player hand`);
+				throw new Error(`Error playing targeted one-off as opponent: could not find ${printCard(target)} in player field`);
 			}
 			if(targetType === 'jack' && !foundPointCard){
-				throw new Error('Error playing targeted one-off as opponent: could not find point card in player hand');
+				throw new Error('Error playing targeted one-off as opponent: could not find point card in player field');
 			}
 			io.socket.get('/game/targetedOneOff', {
 				opId: playerId, // opponent's opponent is the player

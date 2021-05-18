@@ -774,8 +774,6 @@ export default {
 					const targetJacks = this.opponent.points[-targetIndex-1].attachments
 					target = targetJacks[targetJacks.length - 1]
 					jackedPointId = this.opponent.points[-targetIndex-1].id
-					console.log('jacked point id', jackedPointId)
-					console.log('target id', target.id)
 				}
 				break;
 			}

@@ -410,7 +410,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			// target queen of clubs
+			// target jack of clubs
 			cy.get('[data-opponent-face-card=11-0]')
 				.click();
 			cy.get('#waiting-for-opponent-counter-scrim')
@@ -513,7 +513,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			// target queen of clubs
+			// target jack of clubs
 			cy.get('[data-opponent-face-card=11-0]')
 				.find('.valid-move')
 				.click();
