@@ -1088,7 +1088,7 @@ export default {
 	.field-point-container {
 		display: flex;
 		flex-direction: row;
-		max-height: 25vh;
+		max-height: 20vh;
 		min-width: 8vw;
 		margin: 10px;
 
@@ -1101,8 +1101,9 @@ export default {
 			align-items: flex-end;
 			
 			& .player-card {
-				height: calc(29vh * 0.75);
-				margin-bottom: -20vh;
+				height: 16vh;
+				margin-bottom: -14vh;
+				width: calc(16vh / 1.45);
 				overflow: visible;
 
 				& img {
