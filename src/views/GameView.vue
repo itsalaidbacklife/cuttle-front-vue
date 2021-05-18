@@ -138,6 +138,7 @@
 									:key="jack.id"
 									:suit="jack.suit"
 									:rank="jack.rank"
+									:is-jack="true"
 									:is-valid-target="validMoves.includes(jack.id)"
 									:data-opponent-face-card="`${jack.rank}-${jack.suit}`"
 									@click="targetOpponentFaceCard(-index-1)"
@@ -190,6 +191,7 @@
 									:key="jack.id"
 									:suit="jack.suit"
 									:rank="jack.rank"
+									:is-jack="true"
 									:data-player-face-card="`${jack.rank}-${jack.suit}`"
 								/>
 							</div>
@@ -1088,31 +1090,17 @@ export default {
 	.field-point-container {
 		display: flex;
 		flex-direction: row;
-		max-height: 20vh;
-		min-width: 8vw;
+		height: 20vh;
+		width: calc(20vh / 1.45);
 		margin: 10px;
 
 		.jacks-container {
-			margin-left: -8vw;
-			width: auto;
-			height: 100%;
+			margin-left: calc(-20vh / 1.45 * 0.6);
+			width: calc(14vh / 1.45);
+			height: 20vh;
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;
-			
-			& .player-card {
-				height: 16vh;
-				margin-bottom: -14vh;
-				width: calc(16vh / 1.45);
-				overflow: visible;
-
-				& img {
-					height: calc(29vh * 0.2);
-					background-size: cover;
-					display: block;
-					position: relative;
-				}
-			}
 		}
 	}
 }

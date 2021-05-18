@@ -1,7 +1,7 @@
 <template>
 	<v-card
 		class="mx-4 player-card"
-		:class="{'selected': isSelected, 'glasses': isGlasses}"
+		:class="{'selected': isSelected, 'glasses': isGlasses, 'jack': isJack}"
 		@click="$emit('click')"
 	>
 		<v-overlay
@@ -46,6 +46,10 @@ export default {
 			default: false,
 		},
 		isGlasses: {
+			type: Boolean,
+			default: false,
+		},
+		isJack: {
 			type: Boolean,
 			default: false,
 		},
@@ -110,7 +114,9 @@ export default {
 <style scoped lang="scss">
 .player-card {
   position: relative;
-  width: calc(20vh / 1.45);
+	height: 20vh;
+	width: calc(20vh / 1.45);
+  min-width: calc(20vh / 1.45);
 
   & img {
 	width: 100%;
@@ -127,6 +133,21 @@ export default {
 	img {
 		border: 3px solid var(--v-accent-lighten1);
 		border-radius: 5px;
+	}
+}
+.jack {
+	height: 14vh;
+	margin-bottom: -12vh;
+	width: calc(14vh / 1.45);
+	min-width: calc(14vh / 1.45);
+	overflow: visible;
+
+	& img {
+		height: 14vh;
+		width: calc(14vh / 1.45);
+		background-size: cover;
+		display: block;
+		position: relative;
 	}
 }
 .target-overlay {
