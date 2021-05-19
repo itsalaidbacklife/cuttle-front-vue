@@ -54,7 +54,7 @@
 			<div id="field-left">
 				<v-card
 					id="deck"
-					:class="{'reveal-top-two': resolvingSeven}"
+					:class="{'reveal-top-two': resolvingSeven, 'my-turn': isPlayersTurn}"
 					@click="drawCard"
 				>
 					<template v-if="!resolvingSeven">
@@ -1031,6 +1031,9 @@ export default {
 		}
 		& #empty-deck-text {
 			position: absolute;
+		}
+		&.my-turn {
+			border: 4px solid var(--v-accent-base);
 		}
 	}
 	& #deck, & #scrap{
