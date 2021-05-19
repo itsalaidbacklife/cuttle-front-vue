@@ -195,7 +195,10 @@
 					id="history"
 					class="rounded d-flex flex-column justify-start"
 				>
-					<p v-for="(log, index) in game.log" :key="index">{{ log }}</p>
+					<h3>History</h3>
+					<div id="history-logs" class="d-flex flex-column justify-start mt-2">
+						<p v-for="(log, index) in game.log" :key="index">{{ log }}</p>
+					</div>
 				</div>
 				<div 
 					v-if="selectedCard !== null"
@@ -1072,7 +1075,10 @@ export default {
 		height: 100%;
 	}
 	#history {
-		overflow: scroll;
+		& #history-logs {
+			height: 80%;
+			overflow: scroll;
+		}
 	}
 }
 #field-left,#field-center {
