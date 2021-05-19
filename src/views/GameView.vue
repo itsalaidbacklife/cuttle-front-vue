@@ -193,9 +193,9 @@
 				<div 
 					v-if="selectedCard === null"
 					id="history"
-					class="rounded"
+					class="rounded d-flex flex-column justify-start"
 				>
-					History
+					<p v-for="(log, index) in game.log" :key="index">{{ log }}</p>
 				</div>
 				<div 
 					v-if="selectedCard !== null"
@@ -1070,6 +1070,9 @@ export default {
 		width: 80%;
 		max-width: 80%;
 		height: 100%;
+	}
+	#history {
+		overflow: scroll;
 	}
 }
 #field-left,#field-center {
