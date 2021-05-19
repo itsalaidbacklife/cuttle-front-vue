@@ -196,7 +196,8 @@
 					class="rounded d-flex flex-column justify-start"
 				>
 					<h3>History</h3>
-					<div id="history-logs" class="d-flex flex-column justify-start mt-2">
+					<v-divider />
+					<div id="history-logs" class="d-flex flex-column justify-start mt-2 text-caption">
 						<p v-for="(log, index) in game.log" :key="index">{{ log }}</p>
 					</div>
 				</div>
