@@ -1084,18 +1084,22 @@ export default {
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+	width: 50%;
 
 	.field-point-container {
 		display: flex;
 		flex-direction: row;
-		height: 20vh;
+		max-height: 20vh;
 		width: calc(20vh / 1.45);
-		margin: 10px;
+		margin: 3px;
+		position: relative;
 
 		.jacks-container {
-			margin-left: calc(-20vh / 1.45 * 0.6);
-			width: calc(14vh / 1.45);
-			height: 20vh;
+			position: absolute;
+			right: -20%;
+			top: 0;
+			width: auto;
+			height: auto;
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;

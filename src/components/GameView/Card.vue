@@ -1,7 +1,8 @@
 <template>
 	<v-card
-		class="mx-4 player-card"
+		class="mx-1 player-card"
 		:class="{'selected': isSelected, 'glasses': isGlasses, 'jack': isJack}"
+		:elevation="elevation"
 		@click="$emit('click')"
 	>
 		<v-overlay
@@ -107,6 +108,9 @@ export default {
 		},
 		cardName() {
 			return `${this.rankName} of ${this.suitName}`;
+		},
+		elevation() {
+			return this.isGlasses ? '0' : '1'
 		}
 	}
 }
@@ -114,9 +118,10 @@ export default {
 <style scoped lang="scss">
 .player-card {
   position: relative;
-	height: 20vh;
-	width: calc(20vh / 1.45);
-  min-width: calc(20vh / 1.45);
+	max-height: 20vh;
+  max-width: calc(20vh / 1.45);
+	background: transparent;
+	flex-grow: 1;
 
   & img {
 	width: 100%;
@@ -125,7 +130,8 @@ export default {
   }
 
   &.glasses {
-	  transform: scale(1.3);
+		max-width: 20vh;
+		height: calc(20vh / 1.45);
   }
 }
 .selected {
@@ -136,15 +142,16 @@ export default {
 	}
 }
 .jack {
-	height: 14vh;
-	margin-bottom: -12vh;
-	width: calc(14vh / 1.45);
-	min-width: calc(14vh / 1.45);
+	height: 50%;
+	margin-bottom: -50%;
+	width: 50%;
 	overflow: visible;
+	display: flex;
+	position: relative;
 
 	& img {
-		height: 14vh;
-		width: calc(14vh / 1.45);
+		height: 100%;
+		width: 100%;
 		background-size: cover;
 		display: block;
 		position: relative;
