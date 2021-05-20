@@ -98,7 +98,6 @@ describe('Game View Layout', () => {
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
-		
 		// opponent plays 4th Jack
 		cy.playJackOpponent(Card.JACK_OF_SPADES, Card.TEN_OF_HEARTS)
 
@@ -152,7 +151,6 @@ describe('Game View Layout', () => {
 			.click();
 		assertSnackbarError('It\'s not your turn');
 
-
 		// opponent plays 2nd Jack
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
 
@@ -192,7 +190,7 @@ describe('Game View Layout', () => {
 		assertSnackbarError('It\'s not your turn');
 	});
 
-	it.only('Four cards, each with a jack', () => {
+	it('Four cards, each with a jack', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.JACK_OF_CLUBS, Card.JACK_OF_HEARTS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES],
@@ -226,7 +224,7 @@ describe('Game View Layout', () => {
 		);
 
 		// Play jack 
-		cy.get('[data-player-hand-card=11-1]').click(); // jack of clubs
+		cy.get('[data-player-hand-card=11-1]').click(); // jack of diamonds
 
 		cy.get('[data-opponent-point-card=1-3]')
 			.click(); // target ace of spades
@@ -245,9 +243,8 @@ describe('Game View Layout', () => {
 			}
 		);
 
-
 		// Play jack 
-		cy.get('[data-player-hand-card=11-2]').click(); // jack of clubs
+		cy.get('[data-player-hand-card=11-2]').click(); // jack of hearts
 
 		cy.get('[data-opponent-point-card=1-1]')
 			.click(); // target ace of diamonds
@@ -266,14 +263,11 @@ describe('Game View Layout', () => {
 			}
 		);
 
-
 		// Play jack 
-		cy.get('[data-player-hand-card=11-3]').click(); // jack of clubs
+		cy.get('[data-player-hand-card=11-3]').click(); // jack of spades
 
 		cy.get('[data-opponent-point-card=1-0]')
 			.click(); // target ace of clubs
-
-
 
 		assertGameState(
 			0,
@@ -286,8 +280,6 @@ describe('Game View Layout', () => {
 				p1FaceCards: [Card.KING_OF_HEARTS],
 			}
 		);
-  
-
 	})
 
 	it('Three dialogs', ()=>{
