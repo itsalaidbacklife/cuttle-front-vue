@@ -222,9 +222,13 @@
 				<div 
 					v-if="selectedCard === null"
 					id="history"
-					class="rounded"
+					class="rounded d-flex flex-column justify-start"
 				>
-					History
+					<h3>History</h3>
+					<v-divider />
+					<div id="history-logs" class="d-flex flex-column justify-start mt-2 text-caption">
+						<p v-for="(log, index) in game.log" :key="index">{{ log }}</p>
+					</div>
 				</div>
 				<div 
 					v-if="selectedCard !== null"
@@ -1118,6 +1122,12 @@ export default {
 		width: 80%;
 		max-width: 80%;
 		height: 100%;
+	}
+	#history {
+		& #history-logs {
+			height: 80%;
+			overflow: auto;
+		}
 	}
 }
 #field-left,#field-center {
