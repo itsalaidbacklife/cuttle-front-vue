@@ -364,260 +364,532 @@ describe('FOURS', () => {
 });
 
 describe('Play TWOS', () => {
-	beforeEach(() => {
-		setupGameAsP0();
-	});
-
-	it('Plays Two to Destroy Face Card', () => {
-		// Set Up
-		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
-			p0Points: [Card.TEN_OF_SPADES],
-			p0FaceCards: [Card.KING_OF_SPADES],
-			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-			p1Points: [Card.TEN_OF_HEARTS],
-			p1FaceCards: [Card.KING_OF_HEARTS],
+	describe('Player Playing TWOS', () => {
+		beforeEach(() => {
+			setupGameAsP0();
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
-		cy.log('Loaded fixture');
 
-		// Play two as one off (two of clubs)
-		cy.get('[data-player-hand-card=2-0]').click(); // two of clubs
-			
-		cy.get('[data-opponent-face-card=13-2]')
-			.click(); // target king of hearts
-
-		// opponent resolve
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('not.be.visible');
-
-		assertGameState(0,
-			{
-				p0Hand: [Card.ACE_OF_SPADES],
+		it('Plays Two to Destroy Face Card', () => {
+			// Set Up
+			cy.loadGameFixture({
+				p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES],
 				p0FaceCards: [Card.KING_OF_SPADES],
 				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 				p1Points: [Card.TEN_OF_HEARTS],
-				p1FaceCards: [],
-				scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_HEARTS]
+				p1FaceCards: [Card.KING_OF_HEARTS],
 			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+
+			// Play two as one off (two of clubs)
+			cy.get('[data-player-hand-card=2-0]').click(); // two of clubs
+				
+			cy.get('[data-opponent-face-card=13-2]')
+				.click(); // target king of hearts
+
+			// opponent resolve
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			// Opponent does not counter (resolves stack)
+			cy.resolveOpponent();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('not.be.visible');
+
+			assertGameState(0,
+				{
+					p0Hand: [Card.ACE_OF_SPADES],
+					p0Points: [Card.TEN_OF_SPADES],
+					p0FaceCards: [Card.KING_OF_SPADES],
+					p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+					p1Points: [Card.TEN_OF_HEARTS],
+					p1FaceCards: [],
+					scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_HEARTS]
+				});
+		});
+
+		it('Plays TWO to Destroy Jacks', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+
+			// player plays Ace of Spades
+			cy.get('[data-player-hand-card=1-3]').click();
+			cy.get('#player-field')
+				.should('have.class', 'valid-move')
+				.click()
+
+			assertGameState(0, {
+				p0Hand: [Card.TWO_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: []
+			});
+
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+
+			// opponent plays jack
+			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_SPADES)
+
+
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+
+			assertGameState(0, {
+				p0Hand: [Card.TWO_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.ACE_OF_SPADES],
+				p1FaceCards: []
+			});
+
+			// player plays TWO to destroy jack
+			cy.get('[data-player-hand-card=2-0]').click()
+			cy.get('[data-opponent-face-card=11-0]').click()
+
+
+			// Wait for opponent to resolve
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			cy.resolveOpponent()
+
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [Card.ACE_OF_SPADES, Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.TWO_OF_CLUBS, Card.JACK_OF_CLUBS]
+			});
+		}); // End playing TWO to destroy jack
+
+		
+	}); // End describe player playing twos
+
+	describe('Opponent Playing TWOS', () => {
+		beforeEach(() => {
+			setupGameAsP1();
+		});
+
+		it('Opponent Plays TWO to Destroy Jacks', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+			cy.log('Loaded fixture');
+
+			cy.playPointsOpponent(Card.ACE_OF_SPADES);
+
+			cy.get('[data-player-hand-card=11-0]').click()
+			cy.get('[data-opponent-point-card=1-3]').click()
+
+			assertGameState(1, {
+				p0Hand: [Card.TWO_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.ACE_OF_SPADES],
+				p1FaceCards: [],
+			});
+			cy.log('Opponent playing TWO on jack')
+			cy.playTargetedOneOffOpponent(Card.TWO_OF_CLUBS, Card.JACK_OF_CLUBS, 'jack')
+
+			// player resolves
+			cy.get('[data-cy=cannot-counter-resolve]').click()
+
+			assertGameState(1, {
+				p0Hand: [],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.TWO_OF_CLUBS, Card.JACK_OF_CLUBS]
+			});
+		});
+		
 	});
 });
 
-describe('Playing NINES', () => {
-	beforeEach(() => {
-		setupGameAsP0();
-	});
-
-	it('Plays a nine to SCUTTLE a lower point card', () => {
-		cy.loadGameFixture({
-			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [],
+describe('Playing NINES', ()=>{
+	describe('Player Playing NINES', () => {
+		beforeEach(() => {
+			setupGameAsP0();
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
-		cy.log('Loaded fixture');
-
-		// Player plays nine
-		cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
-		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
-
-		cy.get('#nine-overlay')
-			.should('be.visible')
-			.get('[data-cy=nine-scuttle]')
-			.click();
-		
-		assertGameState(
-			0,
-			{
-				p0Hand: [Card.NINE_OF_HEARTS],
-				p0Points: [Card.TEN_OF_HEARTS],
-				p0FaceCards: [],
-				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-				p1Points: [],
-				p1FaceCards: [],
-				scrap: [Card.NINE_OF_SPADES, Card.ACE_OF_DIAMONDS],
-			}
-		);
-	}); // End 9 scuttle
-
-	it('Plays a nine as ONE-OFF on lower point card to return it to owners hand', () => {
-		cy.loadGameFixture({
-			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
-		cy.log('Loaded fixture');
-
-		// Player plays nine
-		cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
-		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
-		
-		// Chooses to play as one-off
-		cy.get('#nine-overlay')
-			.should('be.visible')
-			.get('[data-cy=nine-one-off]')
-			.click();
-
-		// Wait for opponent to resolve
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		cy.resolveOpponent();
-
-		assertGameState(
-			0,
-			{
-				p0Hand: [Card.NINE_OF_HEARTS],
-				p0Points: [Card.TEN_OF_HEARTS],
-				p0FaceCards: [],
-				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-				p1Points: [],
-				p1FaceCards: [],
-				scrap: [Card.NINE_OF_SPADES],
-			}
-		);		
-	}); // End 9 one-off low point card
-
-	it('Plays a nine as ONE-OFF on a higher point card to return it to owners hand', () => {
-		cy.loadGameFixture({
-			p0Hand: [Card.NINE_OF_CLUBS, Card.NINE_OF_HEARTS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [Card.NINE_OF_SPADES],
-			p1FaceCards: [],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
-		cy.log('Loaded fixture');
-
-		// Player plays nine
-		cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts	
-		cy.get('[data-opponent-point-card=9-3]').click(); // nine of spades
-
-		// Attempt illegal scuttle
-		cy.log('Attempting illegal scuttle');
-		cy.get('#nine-cannot-scuttle').should('be.visible');
-		cy.get('#nine-overlay')
-			.should('be.visible')
-			.get('[data-cy=nine-scuttle]')
-			.click();
-
-		cy.log('Choosing to play nine as one-off');
-		// Chooses to play as one-off
-		cy.get('#nine-overlay')
-			.should('be.visible')
-			.get('[data-cy=nine-one-off]')
-			.click();
-
-		// Wait for opponent to resolve
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		cy.resolveOpponent();
-		
-		assertGameState(
-			0,
-			{
-				p0Hand: [Card.NINE_OF_CLUBS],
-				p0Points: [Card.TEN_OF_HEARTS],
-				p0FaceCards: [],
-				p1Hand: [Card.NINE_OF_SPADES, Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-				p1Points: [],
-				p1FaceCards: [],
-				scrap: [Card.NINE_OF_HEARTS],
-			}
-		);
-	}); // End 9 one-off high-point card
-
-	it('Plays a nine as a ONE-OFF to return a face card to its owners hand', () => {
-		cy.loadGameFixture({
-			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [],
-			p1FaceCards: [Card.KING_OF_DIAMONDS],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
-		cy.log('Loaded fixture');
-
-		// Player plays nine
-		cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
-		cy.get('[data-opponent-face-card=13-1]').click(); // ace of diamonds
-
-
-		// Wait for opponent to resolve
-		cy.get('#waiting-for-opponent-counter-scrim')
-			.should('be.visible');
-		cy.resolveOpponent();
-
-		assertGameState(
-			0,
-			{
-				p0Hand: [Card.NINE_OF_HEARTS],
-				p0Points: [Card.TEN_OF_HEARTS],
-				p0FaceCards: [],
-				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.KING_OF_DIAMONDS],
-				p1Points: [],
-				p1FaceCards: [],
-				scrap: [Card.NINE_OF_SPADES],
-			}
-		);			
-	}); // End 9 on face card
-
-
-	it.skip('Plays a 9 on a jack to steal back point card', () => {
-
-	}); // End 9 on jack
-
-	it('Cancels playing a nine', () => {
-		cy.loadGameFixture({
-			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
-		cy.log('Loaded fixture');
-
-		// Player plays nine
-		cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
-		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
-
-		cy.get('#nine-overlay')
-			.should('be.visible')
-			.get('[data-cy=cancel-nine]')
-			.click();
-		
-		cy.get('#nine-overlay')
-			.should('not.be.visible');
-
-		assertGameState(
-			0,
-			{
-				p0Hand: [Card.NINE_OF_HEARTS, Card.NINE_OF_SPADES],
+	
+		it('Plays a nine to SCUTTLE a lower point card', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [],
 				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [],
-				scrap: [],
-			}
-		);
-	});
-}); // End 9s describe
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+	
+			// Player plays nine
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
+			cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
+	
+			cy.get('#nine-overlay')
+				.should('be.visible')
+				.get('[data-cy=nine-scuttle]')
+				.click();
+			
+			assertGameState(
+				0,
+				{
+					p0Hand: [Card.NINE_OF_HEARTS],
+					p0Points: [Card.TEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+					p1Points: [],
+					p1FaceCards: [],
+					scrap: [Card.NINE_OF_SPADES, Card.ACE_OF_DIAMONDS],
+				}
+			);
+		}); // End 9 scuttle
+	
+		it('Plays a nine as ONE-OFF on lower point card to return it to owners hand', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+	
+			// Player plays nine
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
+			cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
+			
+			// Chooses to play as one-off
+			cy.get('#nine-overlay')
+				.should('be.visible')
+				.get('[data-cy=nine-one-off]')
+				.click();
+	
+			// Wait for opponent to resolve
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			cy.resolveOpponent();
+	
+			assertGameState(
+				0,
+				{
+					p0Hand: [Card.NINE_OF_HEARTS],
+					p0Points: [Card.TEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+					p1Points: [],
+					p1FaceCards: [],
+					scrap: [Card.NINE_OF_SPADES],
+				}
+			);		
+		}); // End 9 one-off low point card
+	
+		it('Plays a nine as ONE-OFF on a higher point card to return it to owners hand', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.NINE_OF_CLUBS, Card.NINE_OF_HEARTS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.NINE_OF_SPADES],
+				p1FaceCards: [],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+	
+			// Player plays nine
+			cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts	
+			cy.get('[data-opponent-point-card=9-3]').click(); // nine of spades
+	
+			// Attempt illegal scuttle
+			cy.log('Attempting illegal scuttle');
+			cy.get('#nine-cannot-scuttle').should('be.visible');
+			cy.get('#nine-overlay')
+				.should('be.visible')
+				.get('[data-cy=nine-scuttle]')
+				.click();
+	
+			cy.log('Choosing to play nine as one-off');
+			// Chooses to play as one-off
+			cy.get('#nine-overlay')
+				.should('be.visible')
+				.get('[data-cy=nine-one-off]')
+				.click();
+	
+			// Wait for opponent to resolve
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			cy.resolveOpponent();
+			
+			assertGameState(
+				0,
+				{
+					p0Hand: [Card.NINE_OF_CLUBS],
+					p0Points: [Card.TEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.NINE_OF_SPADES, Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+					p1Points: [],
+					p1FaceCards: [],
+					scrap: [Card.NINE_OF_HEARTS],
+				}
+			);
+		}); // End 9 one-off high-point card
+	
+		it('Plays a nine as a ONE-OFF to return a face card to its owners hand', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_DIAMONDS],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+	
+			// Player plays nine
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
+			cy.get('[data-opponent-face-card=13-1]').click(); // ace of diamonds
+	
+	
+			// Wait for opponent to resolve
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			cy.resolveOpponent();
+	
+			assertGameState(
+				0,
+				{
+					p0Hand: [Card.NINE_OF_HEARTS],
+					p0Points: [Card.TEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.KING_OF_DIAMONDS],
+					p1Points: [],
+					p1FaceCards: [],
+					scrap: [Card.NINE_OF_SPADES],
+				}
+			);			
+		}); // End 9 on face card
+	
+	
+		it('Plays a 9 on a jack to steal back point card', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.ACE_OF_SPADES, Card.NINE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+	
+			// player plays Ace of Spades
+			cy.get('[data-player-hand-card=1-3]').click();
+			cy.get('#player-field')
+				.should('have.class', 'valid-move')
+				.click()
+	
+			assertGameState(0, {
+				p0Hand: [Card.NINE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: []
+			});
+	
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+	
+			// opponent plays jack
+			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_SPADES)
+	
+	
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+	
+			assertGameState(0, {
+				p0Hand: [Card.NINE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.ACE_OF_SPADES],
+				p1FaceCards: []
+			});
+	
+			// player plays TWO to destroy jack
+			cy.get('[data-player-hand-card=9-0]').click()
+			cy.get('[data-opponent-face-card=11-0]').click()
+	
+	
+			// Wait for opponent to resolve
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			cy.resolveOpponent()
+	
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [Card.ACE_OF_SPADES, Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_CLUBS]
+			});
+		}); // End 9 on jack
+	
+		it('Cancels playing a nine', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+	
+			// Player plays nine
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
+			cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
+	
+			cy.get('#nine-overlay')
+				.should('be.visible')
+				.get('[data-cy=cancel-nine]')
+				.click();
+			
+			cy.get('#nine-overlay')
+				.should('not.be.visible');
+	
+			assertGameState(
+				0,
+				{
+					p0Hand: [Card.NINE_OF_HEARTS, Card.NINE_OF_SPADES],
+					p0Points: [Card.TEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+					p1Points: [Card.ACE_OF_DIAMONDS],
+					p1FaceCards: [],
+					scrap: [],
+				}
+			);
+		});
+	}); // End Player playing 9s describe
+
+	describe('Opponent Playing NINES', () => {
+		beforeEach(() => {
+			setupGameAsP1();
+		});
+
+		it('Opponent plays a NINE on a jack to steal back point card', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.ACE_OF_SPADES, Card.NINE_OF_CLUBS, Card.ACE_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS, Card.TEN_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [],
+				topCard: Card.TEN_OF_CLUBS
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+
+			// opponent plays Ace of Spades
+			cy.playPointsOpponent(Card.ACE_OF_SPADES)
+
+			// player plays jack
+			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-opponent-point-card=1-3]').click();
+
+			assertGameState(1, {
+				p0Hand: [Card.NINE_OF_CLUBS, Card.ACE_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.TEN_OF_DIAMONDS],
+				p1Points: [Card.ACE_OF_SPADES],
+				p1FaceCards: []
+			});
+
+			cy.playTargetedOneOffOpponent(Card.NINE_OF_CLUBS, Card.JACK_OF_CLUBS, 'jack')
+
+			// player resolves
+			cy.get('[data-cy=cannot-counter-resolve]').click();
+
+			assertGameState(1, {
+				p0Hand: [Card.ACE_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS, Card.TEN_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_CLUBS]
+			});
+
+			// player plays the returned jack immediately
+			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-opponent-point-card=1-3]').click();
+
+			assertSnackbarError('That card is frozen! You must wait a turn to play it')
+
+
+			cy.get('[data-player-hand-card=10-1]').click()
+			cy.get('#player-field').click()
+
+		
+			assertGameState(1, {
+				p0Hand: [Card.ACE_OF_DIAMONDS],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.JACK_OF_CLUBS],
+				p1Points: [Card.TEN_OF_DIAMONDS],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_CLUBS]
+			});	
+
+			cy.playPointsOpponent(Card.ACE_OF_DIAMONDS)
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+
+
+			// player plays jack after one turn
+			cy.get('[data-player-hand-card=11-0]').click()
+			cy.get('[data-opponent-point-card=1-1]').click()
+
+			assertGameState(1, {
+				p0Hand: [],
+				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.ACE_OF_DIAMONDS, Card.TEN_OF_DIAMONDS],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_CLUBS]
+			});
+		}); // End 9 on jack
+	}) // End Opponent playing NINES describe
+})
+
 
 describe('Playing THREEs', () => {
 	beforeEach(() => {

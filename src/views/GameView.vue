@@ -129,16 +129,31 @@
 			<div id="field-center">
 				<div id="opponent-field">
 					<div class="field-points">
-						<card 
+						<div 
 							v-for="(card, index) in opponent.points"
 							:key="card.id"
-							:suit="card.suit"
-							:rank="card.rank"
-							:jacks="card.attachments"
-							:is-valid-target="validMoves.includes(card.id)"
-							:data-opponent-point-card="`${card.rank}-${card.suit}`"
-							@click="targetOpponentPointCard(index)"
-						/>
+							class="field-point-container"
+						>
+							<card 
+								:suit="card.suit"
+								:rank="card.rank"
+								:is-valid-target="validMoves.includes(card.id)"
+								:data-opponent-point-card="`${card.rank}-${card.suit}`"
+								@click="targetOpponentPointCard(index)"
+							/>
+							<div class="jacks-container">
+								<card 
+									v-for="jack in card.attachments"
+									:key="jack.id"
+									:suit="jack.suit"
+									:rank="jack.rank"
+									:is-jack="true"
+									:is-valid-target="validMoves.includes(jack.id)"
+									:data-opponent-face-card="`${jack.rank}-${jack.suit}`"
+									@click="targetOpponentFaceCard(-index-1)"
+								/>
+							</div>
+						</div>
 					</div>
 					<div class="field-effects">
 						<card 
@@ -168,14 +183,28 @@
 						opacity=".6"
 					/>
 					<div class="field-points">
-						<card
+						<div 
 							v-for="card in player.points"
 							:key="card.id"
-							:suit="card.suit"
-							:rank="card.rank"
-							:jacks="card.attachments"
-							:data-player-point-card="`${card.rank}-${card.suit}`"
-						/>
+							class="field-point-container"
+						>
+							<card
+								:suit="card.suit"
+								:rank="card.rank"
+								:jacks="card.attachments"
+								:data-player-point-card="`${card.rank}-${card.suit}`"
+							/>
+							<div class="jacks-container">
+								<card 
+									v-for="jack in card.attachments"
+									:key="jack.id"
+									:suit="jack.suit"
+									:rank="jack.rank"
+									:is-jack="true"
+									:data-player-face-card="`${jack.rank}-${jack.suit}`"
+								/>
+							</div>
+						</div>
 					</div>
 					<div class="field-effects">
 						<card
@@ -532,7 +561,14 @@ export default {
 		validFaceCardTargetIds() {
 			switch (this.opponentQueenCount) {
 			case 0:
-				return this.opponent.runes.map((card) => card.id);
+				const opponentRuneIds = this.opponent.runes.map((card) => card.id);
+				const opponentJackIds = []
+				this.opponent.points.forEach((card) => {
+					if (card.attachments.length > 0){
+						opponentJackIds.push(card.attachments[card.attachments.length - 1].id)
+					}
+				})
+				return [...opponentRuneIds, ...opponentJackIds];
 			case 1:
 				return [this.opponent.runes.find((card) => card.rank === 12).id];
 			default:
@@ -772,20 +808,27 @@ export default {
 		},
 		playTargetedOneOff(targetIndex, targetType) {
 			let target;
+			let jackedPointId;
 			switch (targetType) {
-			case 'rune':
+			case 'rune': 
 				target = this.opponent.runes[targetIndex];
 				break;
 			case 'point':
 				target = this.opponent.points[targetIndex];
 				break;
 			case 'jack':
+				if(targetIndex < 0){ // targeting the last jack attached to a point card
+					const targetJacks = this.opponent.points[-targetIndex-1].attachments
+					target = targetJacks[targetJacks.length - 1]
+					jackedPointId = this.opponent.points[-targetIndex-1].id
+				}
 				break;
 			}
 			if (this.resolvingSeven) {
 				this.$store.dispatch('requestPlayTargetedOneOffSeven', {
 					cardId: this.cardSelectedFromDeck.id,
 					targetId: target.id,
+					pointId: jackedPointId,
 					targetType,
 				})
 					.then(this.clearSelection())
@@ -795,6 +838,7 @@ export default {
 				this.$store.dispatch('requestPlayTargetedOneOff', {
 					cardId: this.selectedCard.id,
 					targetId: target.id,
+					pointId: jackedPointId,
 					targetType,
 				})
 					.then(this.clearSelection())
@@ -910,12 +954,13 @@ export default {
 				cardToPlay = this.selectedCard;
 			}
 
+			const targetType = targetIndex < 0 ? 'jack' : 'rune'
 			switch(cardToPlay.rank) {
 			case 2:
-				this.playTargetedOneOff(targetIndex, 'rune');
+				this.playTargetedOneOff(targetIndex, targetType);
 				return;
 			case 9:
-				this.playTargetedOneOff(targetIndex, 'rune');
+				this.playTargetedOneOff(targetIndex, targetType);
 			default:
 				return;
 			}
@@ -1097,7 +1142,27 @@ export default {
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	width: 50%
+	width: 50%;
+
+	.field-point-container {
+		display: flex;
+		flex-direction: row;
+		max-height: 20vh;
+		width: calc(20vh / 1.45);
+		margin: 3px;
+		position: relative;
+
+		.jacks-container {
+			position: absolute;
+			right: -20%;
+			top: 0;
+			width: auto;
+			height: auto;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+		}
+	}
 }
 .field-effects {
 	display: flex;

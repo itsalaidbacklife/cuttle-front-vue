@@ -662,7 +662,7 @@ describe('Play Jacks', () => {
 		
 		cy.get('[data-player-hand-card]').should('have.length', 3);
 		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
+		cy.get('[data-player-hand-card=13-3]').click(); // king of spades
 		cy.get('#player-field')
 			.should('not.have.class', 'valid-move')
 			.click();
@@ -684,7 +684,7 @@ describe('Play Jacks', () => {
 			});
 
 		// Player plays 3rd jack 
-		cy.get('[data-player-hand-card=11-2]').click(); // jack of clubs
+		cy.get('[data-player-hand-card=11-2]').click(); // jack of hearts
 
 		cy.get('[data-opponent-point-card=10-2]')
 			.click(); // target ten of hearts

@@ -266,11 +266,12 @@ export default {
 				});
 			});
 		},
-		async requestPlayTargetedOneOff(context, {cardId, targetId, targetType}) {
+		async requestPlayTargetedOneOff(context, {cardId, targetId, pointId, targetType}) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/targetedOneOff', {
 					cardId,
 					targetId,
+					pointId,
 					targetType,
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
@@ -444,11 +445,12 @@ export default {
 				});
 			});
 		},
-		async requestPlayTargetedOneOffSeven(context, { cardId, index, targetId, targetType }) {
+		async requestPlayTargetedOneOffSeven(context, { cardId, index, targetId, pointId, targetType }) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/seven/targetedOneOff', {
 					cardId,
 					targetId,
+					pointId,
 					targetType,
 					index, // 0 if topCard, 1 if secondCard
 					opId: context.getters.opponent.id,
