@@ -1078,7 +1078,7 @@ export default {
 	#history {
 		& #history-logs {
 			height: 80%;
-			overflow: scroll;
+			overflow: auto;
 		}
 	}
 }
