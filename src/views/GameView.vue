@@ -43,7 +43,11 @@
 				class="mt-2"
 			>
 				<span>POINTS: {{ opponentPointTotal }}</span>
-				<span class="ml-4">GOAL: {{ opponentPointsToWin }}</span>
+				<score-goal-tool-tip
+					:king-count="opponentKingCount"
+					:points-to-win="opponentPointsToWin"
+					:is-player="false"
+				/>
 			</h3>
 		</div>
 		<!-- Field -->
@@ -247,12 +251,11 @@
 				id="player-score"
 			>
 				<span>POINTS: {{ playerPointTotal }}</span>
-				<span 
-					class="ml-4"
-					data-cy="player-points-to-win"
-				>
-					GOAL: {{ playerPointsToWin }}
-				</span>
+				<score-goal-tool-tip
+					:king-count="playerKingCount"
+					:points-to-win="playerPointsToWin"
+					:is-player="true"
+				/>
 			</h3>
 
 			<div
@@ -379,6 +382,7 @@ import EightOverlay from '@/components/GameView/EightOverlay.vue';
 import NineOverlay from '@/components/GameView/NineOverlay.vue';
 import GameOverDialog from '@/components/GameView/GameOverDialog.vue';
 import GameMenu from '@/components/GameView/GameMenu.vue';
+import ScoreGoalToolTip from '@/components/GameView/ScoreGoalToolTip.vue';
 
 export default {
 	name: 'GameView',
@@ -392,6 +396,7 @@ export default {
 		NineOverlay,
 		GameOverDialog,
 		GameMenu,
+		ScoreGoalToolTip,
 	},
 	data() {
 		return {
@@ -461,14 +466,23 @@ export default {
 		opponentPointTotal() {
 			return this.opponent.points.reduce((total, card)=> total + card.rank, 0) || 0;
 		},
+		/////////////////
+		// King Counts //
+		/////////////////
+		playerKingCount() {
+			return this.kingCount(this.player);
+		},
+		opponentKingCount() {
+			return this.kingCount(this.opponent);
+		},
 		///////////////////
 		// Points to Win //
 		///////////////////
 		playerPointsToWin() {
-			return this.pointsToWin(this.kingCount(this.player));
+			return this.pointsToWin(this.playerKingCount);
 		},
 		opponentPointsToWin() {
-			return this.pointsToWin(this.kingCount(this.opponent));
+			return this.pointsToWin(this.opponentKingCount);
 		},
 		///////////////
 		// Game Over //
@@ -1028,37 +1042,40 @@ export default {
 	cursor: pointer;
 }
 
+
+
 #opponent-hand {
 	min-width: 50%;
 	height: 20vh;
-}
-
-#opponent-hand-cards {
-	height: 80%;
-	background: rgba(0, 0, 0, 0.46);
-
-	& #opponent-hand-glasses {
-		margin-top: -48px;
-		.opponent-hand-card-revealed {
-			transform: scale(.8);
-		}
+	& #opponent-score {
+		z-index: 1;
 	}
+	& #opponent-hand-cards {
+		height: 80%;
+		background: rgba(0, 0, 0, 0.46);
 
-	& .opponent-hand-wrapper {
-		display: flex;
-		position: relative;
-		height: 100%;
+		& #opponent-hand-glasses {
+			margin-top: -48px;
+			.opponent-hand-card-revealed {
+				transform: scale(.8);
+			}
+		}
 
-		& .opponent-card-back {
-			height: 90%;
-			width: 10vw;
-			display: inline-block;
+		& .opponent-hand-wrapper {
+			display: flex;
 			position: relative;
-			background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
-			transform: rotate(180deg);
+			height: 100%;
+
+			& .opponent-card-back {
+				height: 90%;
+				width: 10vw;
+				display: inline-block;
+				position: relative;
+				background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
+				transform: rotate(180deg);
+			}
 		}
 	}
-
 }
 #field {
 	display: flex;
