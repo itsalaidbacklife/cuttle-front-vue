@@ -43,7 +43,7 @@
 				class="mt-2"
 			>
 				<span>POINTS: {{ opponentPointTotal }}</span>
-				<span class="ml-4">TARGET: {{ opponentPointsToWin }}</span>
+				<span class="ml-4">GOAL: {{ opponentPointsToWin }}</span>
 			</h3>
 		</div>
 		<!-- Field -->
@@ -251,7 +251,7 @@
 					class="ml-4"
 					data-cy="player-points-to-win"
 				>
-					TARGET: {{ playerPointsToWin }}
+					GOAL: {{ playerPointsToWin }}
 				</span>
 			</h3>
 
