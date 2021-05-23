@@ -231,10 +231,10 @@ function assertDomMatchesFixture(pNum, fixture) {
 	// Test scores
 	cy.get(`#${p0Role}-score`)
 		.should('contain', `POINTS: ${expectedP0Points}`)
-		.should('contain', `TARGET: ${expectedP0PointsToWin}`);
+		.should('contain', `GOAL: ${expectedP0PointsToWin}`);
 	cy.get(`#${p1Role}-score`)
 		.should('contain', `POINTS: ${expectedP1Points}`)
-		.should('contain', `TARGET: ${expectedP1PointsToWin}`);
+		.should('contain', `GOAL: ${expectedP1PointsToWin}`);
 
 	let playerHasGlasses = false;
 	
