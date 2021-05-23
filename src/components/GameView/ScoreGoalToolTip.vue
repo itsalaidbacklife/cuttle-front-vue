@@ -77,7 +77,6 @@ export default {
 
 <style lang="scss" scoped>
 .score-goal-explanation .current-goal {
-	color: #ffffff !important;
 	background-color: var(--v-accent-lighten1);
 }
 </style>
