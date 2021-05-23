@@ -14,8 +14,19 @@
 			offset-y
 		>
 			<template #activator="{on, attrs}">
-				<v-btn class="mb-2" x-small icon v-bind="attrs" v-on="on">
-					<v-icon color="white" small>mdi-information</v-icon>
+				<v-btn
+					class="mb-2"
+					x-small
+					icon
+					v-bind="attrs"
+					v-on="on"
+				>
+					<v-icon
+						color="white"
+						small
+					>
+						mdi-information
+					</v-icon>
 				</v-btn>
 			</template>
 			<v-list class="score-goal-explanation">
