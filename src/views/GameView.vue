@@ -332,6 +332,7 @@
 		<counter-dialog
 			v-model="showCounterDialog"
 			:one-off="game.oneOff"
+			:target="game.oneOffTarget"
 			:twos-in-hand="twosInHand"
 			@resolve="resolve"
 			@counter="counter($event)"
