@@ -207,7 +207,6 @@ export function assertSnackbarError(message) {
 		.should('contain', message)
 		.get('[data-cy=close-snackbar]')
 		.click();
-
 }
 
 function assertDomMatchesFixture(pNum, fixture) {
