@@ -90,7 +90,7 @@ describe('Untargeted One-Offs', () => {
 		cy.loadGameFixture({
 			//Player is P0
 			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES, Card.SIX_OF_DIAMONDS],
-			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0Points: [Card.THREE_OF_SPADES, Card.ACE_OF_SPADES],
 			p0FaceCards: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS],
 			// Opponent is P1
 			p1Hand: [Card.ACE_OF_HEARTS],
@@ -106,7 +106,7 @@ describe('Untargeted One-Offs', () => {
 			0,
 			{
 				p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_DIAMONDS],
-				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+				p0Points: [Card.THREE_OF_SPADES, Card.ACE_OF_SPADES],
 				p0FaceCards: [],
 				// Opponent is P1
 				p1Hand: [Card.ACE_OF_HEARTS],
