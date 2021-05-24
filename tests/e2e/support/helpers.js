@@ -200,8 +200,8 @@ function pointsToWin(kingCount) {
 		throw new Error(`Cannot count points to win for invalid kingcount: ${kingCount}`);
 	}
 }
-export function assertSnackbarError(message) {
-	cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
+export function assertSnackbarError(message, snackName='game') {
+	cy.get(`[data-cy=${snackName}-snackbar] .v-snack__wrapper`)
 		.should('be.visible')
 		.should('have.class', 'error')
 		.should('contain', message)
