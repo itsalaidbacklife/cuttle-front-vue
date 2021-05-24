@@ -10,7 +10,9 @@
 		>
 			<v-card-title>Chance to Counter</v-card-title>
 			<v-card-text>
-				Your opponent has played the {{ oneOff.name }} as a one-off.
+				Your opponent has played the {{ oneOff.name }} as a one-off
+				<span v-if="target"> targetting your {{ target.name }}</span>
+
 				<div class="d-flex justify-center align-center my-8">
 					<card
 						:suit="oneOff.suit"
@@ -19,6 +21,15 @@
 					<p class="ml-8">
 						{{ oneOff.ruleText }}
 					</p>
+					<div id="target-wrapper" v-if="target">
+						<span id="target-icon-wrapper" class="d-flex justify-center align-center">
+							<v-icon x-large color="red">mdi-target</v-icon>
+						</span>
+						<card
+							:suit="target.suit"
+							:rank="target.rank"
+						/>
+					</div>
 				</div>
 				Would you like to play a two to counter?
 			</v-card-text>
@@ -95,6 +106,9 @@ export default {
 		oneOff: {
 			required: true,
 		},
+		target: {
+			default: null,
+		},
 		// list of card objects for available twos
 		twosInHand: {
 			required: true,
@@ -128,4 +142,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#target-wrapper {
+	position: relative;
+	& #target-icon-wrapper {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
+	}
+}
+</style>

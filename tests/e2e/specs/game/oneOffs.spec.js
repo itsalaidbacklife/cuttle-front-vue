@@ -510,7 +510,10 @@ describe('Play TWOS', () => {
 			cy.playTargetedOneOffOpponent(Card.TWO_OF_CLUBS, Card.JACK_OF_CLUBS, 'jack')
 
 			// player resolves
-			cy.get('[data-cy=cannot-counter-resolve]').click()
+			cy.get('#cannot-counter-dialog')
+				.should('be.visible')
+				.get('[data-cy=cannot-counter-resolve]')
+				.click()
 
 			assertGameState(1, {
 				p0Hand: [],
@@ -836,7 +839,10 @@ describe('Playing NINES', ()=>{
 			cy.playTargetedOneOffOpponent(Card.NINE_OF_CLUBS, Card.JACK_OF_CLUBS, 'jack')
 
 			// player resolves
-			cy.get('[data-cy=cannot-counter-resolve]').click();
+			cy.get('#cannot-counter-dialog')
+				.should('be.visible')
+				.get('[data-cy=cannot-counter-resolve]')
+				.click();
 
 			assertGameState(1, {
 				p0Hand: [Card.ACE_OF_DIAMONDS],
