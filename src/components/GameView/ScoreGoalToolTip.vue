@@ -1,10 +1,8 @@
 <template>
 	<span>
 		<span
-			v-bind="attrs"
 			class="ml-4"
 			:data-cy="dataCyName"
-			v-on="on"
 		>
 			GOAL: {{ pointsToWin }}
 		</span>
