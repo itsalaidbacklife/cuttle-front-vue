@@ -19,6 +19,7 @@ function resetState() {
 		topCard: null,
 		secondCard: null,
 		oneOff: null,
+		oneOffTarget: null,
 		waitingForOpponentToCounter: false,
 		myTurnToCounter: false,
 		// Threes
@@ -85,6 +86,9 @@ export default {
 
 			if (Object.hasOwnProperty.call(newGame, 'oneOff')) state.oneOff = _.cloneDeep(newGame.oneOff);
 			else state.oneOff = null
+			
+			if (Object.hasOwnProperty.call(newGame, 'oneOffTarget')) state.oneOffTarget = _.cloneDeep(newGame.oneOffTarget);
+			else state.oneOffTarget = null;
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;

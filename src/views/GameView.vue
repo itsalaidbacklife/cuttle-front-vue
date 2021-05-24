@@ -339,6 +339,7 @@
 		<cannot-counter-dialog
 			v-model="showCannotCounterDialog"
 			:one-off="game.oneOff"
+			:target="game.oneOffTarget"
 			@resolve="resolve"
 		/>
 		<four-dialog
