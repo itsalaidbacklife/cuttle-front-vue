@@ -53,6 +53,20 @@
 						{{ switchLabelText }}
 					</v-btn>
 				</div>
+				<v-snackbar
+					v-model="showSnackBar"
+					color="error"
+					content-class="d-flex justify-space-between align-center"
+					data-cy="auth-snackbar"
+				>
+					{{ snackBarMessage }}
+					<v-icon
+						data-cy="close-snackbar"
+						@click="clearSnackBar"
+					>
+						mdi-close
+					</v-icon>
+				</v-snackbar>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -65,7 +79,9 @@ export default {
 		return {
 			username: '',
 			pw: '',
-			isLoggingIn: true
+			isLoggingIn: true,
+			showSnackBar: false,
+			snackBarMessage: '',
 		};
 	},
 	computed: {
@@ -98,9 +114,7 @@ export default {
 						this.pw = '';
 						this.$router.push('/');
 					})
-					.catch(() => {
-						console.log('Error logging in');
-					});
+					.catch(this.handleError);
 			} else {
 				this.$store
 					.dispatch('requestSignup', {
@@ -114,16 +128,21 @@ export default {
 						this.pw = '';
 						this.$router.push('/');
 					})
-					.catch(() => {
-						// Handle Error
-						console.log('Error signing up');
-					});
+					.catch(this.handleError);
 			}
 		},
 		switchMode() {
 			this.isLoggingIn = !this.isLoggingIn;
 			this.pw = '';
-		}
+		},
+		handleError(message) {
+			this.showSnackBar = true;
+			this.snackBarMessage = message;
+		},
+		clearSnackBar() {
+			this.showSnackBar = false;
+			this.snackBarMessage = '';
+		},
 	}
 };
 </script>
