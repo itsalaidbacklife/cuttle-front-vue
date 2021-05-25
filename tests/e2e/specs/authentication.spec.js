@@ -1,3 +1,5 @@
+import {  assertSnackbarError } from '../support/helpers';
+
 const validEmail = 'myCustomEmail@gmail.com';
 const validPassword = 'passwordLongerThanEight';
 
@@ -69,12 +71,14 @@ describe('Logging In', () => {
 		cy.get('[data-cy=username]').type('unRegisteredEmail@aol.gov');
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
+		assertSnackbarError('Could not find that User with that Username. Try signing up!', 'auth');
 		assertFailedAuth();
 	});
 	it('Rejects incorrect password', () => {
 		cy.get('[data-cy=username]').type(validEmail);
 		cy.get('[data-cy=password]').type('incorrectPw');
 		cy.get('[data-cy=submit]').click();
+		assertSnackbarError('Username and password do not match', 'auth');
 		assertFailedAuth();
 	});
 });
@@ -114,21 +118,26 @@ describe('Signing Up', () => {
 		cy.get('[data-cy=password]').type('sh0rt');
 		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
+		assertSnackbarError('Your password must contain at least eight characters', 'auth');
 	});
 	it('Requires valid email', () => {
 		cy.get('[data-cy=username]').type('incompleteEmail');
 		cy.get('[data-cy=password]').type(validPassword);
+		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
+		assertSnackbarError('Please provide a valid email address', 'auth');
 	});
 	it('Password is required', () => {
 		cy.get('[data-cy=username]').type(validEmail);
 		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
+		assertSnackbarError('Password is required', 'auth');
 	});
 	it('Email is required', () => {
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
+		assertSnackbarError('Please provide a valid email address', 'auth');
 	});
 	it('Rejects signup if username already exists', () => {
 		cy.signupOpponent(validEmail, validPassword);
@@ -136,5 +145,6 @@ describe('Signing Up', () => {
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
+		assertSnackbarError('That email is already registered to another user; try logging in!', 'auth');
 	});
 });

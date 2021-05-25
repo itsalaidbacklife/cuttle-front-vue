@@ -35,7 +35,7 @@ export default {
 							return resolve();
 						}
 						context.commit('authFailure');
-						return reject(new Error('Error logging in'));
+						return reject(jwres.body.message);
 					}
 				);
 			});
@@ -54,8 +54,16 @@ export default {
 							context.commit('authSuccess', data.email);
 							return resolve();
 						}
+						let message;
+						if (Object.prototype.hasOwnProperty.call(resData, 'message')) {
+							message = resData.message;
+						} else if (typeof resData === 'string') {
+							message = resData;
+						} else {
+							message = new Error('Unknown error signing up');
+						}
 						context.commit('authFailure');
-						return reject(new Error('Error Signing Up :('));
+						return reject(message);
 					}
 				);
 			});
