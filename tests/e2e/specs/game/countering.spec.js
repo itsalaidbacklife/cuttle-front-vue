@@ -378,4 +378,27 @@ describe('Countering One-Offs', () => {
 			}
 		);
 	});
+
+	it('Cannot Counter When Opponent Has Queen', () => {
+		cy.loadGameFixture({
+			// Opponent is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.QUEEN_OF_CLUBS],
+			// Player is P1
+			p1Hand: [Card.TWO_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+		// Opponent plays ace of clubs as one-off
+		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+
+	});
 });
