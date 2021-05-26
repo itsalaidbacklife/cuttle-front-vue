@@ -230,8 +230,17 @@
 				>
 					<h3>History</h3>
 					<v-divider />
-					<div id="history-logs" class="d-flex flex-column justify-start mt-2 text-caption">
-						<p v-for="(log, index) in game.log" :key="index">{{ log }}</p>
+					<div 
+						id="history-logs" 
+						ref="logsContainer" 
+						class="d-flex flex-column justify-start mt-2 text-caption"
+					>
+						<p
+							v-for="(log, index) in logs"
+							:key="index"
+						>
+							{{ log }}
+						</p>
 					</div>
 				</div>
 				<div 
@@ -436,9 +445,9 @@ export default {
 				return 140;
 			}
 		},
-		//////////////////////////
-		// Game, Deck and Scrap //
-		//////////////////////////
+		///////////////////////////////
+		// Game, Deck, Log and Scrap //
+		///////////////////////////////
 		game() {
 			return this.$store.state.game;
 		},
@@ -447,6 +456,9 @@ export default {
 		},
 		scrap() {
 			return this.game.scrap;
+		},
+		logs() {
+			return this.game.log;
 		},
 		deckLength() {
 			let res = this.deck.length;
@@ -670,6 +682,14 @@ export default {
 			if (this.topCardIsSelected) return this.topCard;
 			if (this.secondCardIsSelected) return this.secondCard;
 			return null;
+		},
+	},
+	watch: {
+		logs: function() {
+			this.$nextTick(function() {
+				var container = this.$refs.logsContainer;
+				container.scrollTop = container.scrollHeight + 120;
+			});
 		},
 	},
 	methods: {
