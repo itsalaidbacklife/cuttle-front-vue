@@ -20,9 +20,19 @@
 					<p class="ml-8">
 						{{ oneOff.ruleText }}
 					</p>
-					<div id="target-wrapper" v-if="target">
-						<span id="target-icon-wrapper" class="d-flex justify-center align-center">
-							<v-icon id="target-icon" x-large color="red">mdi-target</v-icon>
+					<div
+						v-if="target"
+						id="target-wrapper"
+					>
+						<span
+							id="target-icon-wrapper"
+							class="d-flex justify-center align-center"
+						>
+							<v-icon
+								id="target-icon"
+								x-large
+								color="red"
+							>mdi-target</v-icon>
 						</span>
 						<card
 							:suit="target.suit"
