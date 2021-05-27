@@ -559,10 +559,10 @@ export default {
 				.length > 0;
 		},
 		showCannotCounterDialog() {
-			return this.myTurnToCounter && !this.hasTwoInHand;
+			return (this.myTurnToCounter && !this.hasTwoInHand) || (this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount > 0);
 		},
 		showCounterDialog() {
-			return this.myTurnToCounter && this.hasTwoInHand;
+			return this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount === 0;
 		},
 		discarding() {
 			return this.$store.state.game.discarding;
