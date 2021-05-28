@@ -922,7 +922,7 @@ describe('Playing THREEs', () => {
 		assertSnackbarError('You can only play a 3 as a one-off, if there are cards in the scrap pile');
 	});
 
-	it('Plays 3s successfully', () => {
+	it.only('Plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.THREE_OF_CLUBS],
