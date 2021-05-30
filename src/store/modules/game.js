@@ -37,6 +37,17 @@ function resetState() {
 		conceded: false,
 	};
 }
+function handleGameResponse(context, jwres, resolve, reject) {
+	switch (jwres.statusCode) {
+	case 200:
+		return resolve();
+	case 403:
+		context.commit('setMustReauthenticate', true, {root: true});
+		return reject(jwres.body.message);
+	default:
+		return reject(jwres.body.message);
+	}
+}
 const initialState = resetState();
 export default {
 	state: initialState,
@@ -201,14 +212,7 @@ export default {
 		async requestDrawCard(context) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/draw', function handleResponse(res, jwres) {
-					if (jwres.statusCode === 200) {
-						// Success (nothing to do)
-						return resolve();
-					}
-					
-					// Failure
-					return reject(jwres.body.message);
-					
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},

@@ -251,7 +251,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		setupGameAsP1();
 	});
 
-	it('Draws from deck', () => {
+	it.only('Draws from deck', () => {
 		// Opponent draws card
 		cy.drawCardOpponent();
 		// Opponent now has 6 cards in hand

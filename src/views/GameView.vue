@@ -384,6 +384,10 @@
 			:player-wins="playerWins"
 			:stalemate="stalemate"
 		/>
+		<reauthenticate-dialog
+			v-model="mustReauthenticate"
+			@reauthenticated="reconnectToGame"
+		/>
 	</div>
 </template>
 
@@ -398,6 +402,7 @@ import NineOverlay from '@/components/GameView/NineOverlay.vue';
 import GameOverDialog from '@/components/GameView/GameOverDialog.vue';
 import GameMenu from '@/components/GameView/GameMenu.vue';
 import ScoreGoalToolTip from '@/components/GameView/ScoreGoalToolTip.vue';
+import ReauthenticateDialog from '@/components/GameView/ReauthenticateDialog.vue';
 
 export default {
 	name: 'GameView',
@@ -412,6 +417,7 @@ export default {
 		GameOverDialog,
 		GameMenu,
 		ScoreGoalToolTip,
+		ReauthenticateDialog,
 	},
 	data() {
 		return {
@@ -429,6 +435,17 @@ export default {
 		}
 	},
 	computed: {
+		//////////
+		// Auth //
+		//////////
+		mustReauthenticate: {
+			get() {
+				return this.$store.state.auth.mustReauthenticate;
+			},
+			set(val) {
+				this.$store.commit('setMustReauthenticate', val);
+			},
+		},
 		////////////////////
 		// Responsiveness //
 		////////////////////
@@ -693,11 +710,15 @@ export default {
 		},
 	},
 	methods: {
+		reconnectToGame() {
+			thie.$store.commit('setMustReauthenticate', false);
+		},
 		clearSnackBar() {
 			this.snackMessage = '';
 			this.showSnack = false;
 		},
 		handleError(err) {
+			console.log(err);
 			this.snackMessage = err;
 			this.snackColor = 'error';
 			this.showSnack = true;

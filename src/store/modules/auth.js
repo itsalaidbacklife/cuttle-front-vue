@@ -4,6 +4,8 @@ export default {
 	state: {
 		authenticated: false,
 		email: null,
+		socketHasDisconnected: false,
+		mustReauthenticate: false,
 	},
 	getters: {
 		myUserName(state) {
@@ -18,6 +20,9 @@ export default {
 		authFailure(state) {
 			state.authenticated = false;
 			state.email = null;
+		},
+		setMustReauthenticate(state, val) {
+			state.mustReauthenticate = val;
 		},
 	},
 	actions: {
@@ -79,6 +84,19 @@ export default {
 						return resolve();
 					}
 					return reject(new Error('Error logging out :('));
+				});
+			});
+		},
+		requestReauthenticate(context, {email, password}) {
+			return new Promise((resolve, reject) => {
+				io.socket.get('/user/reLogin', {
+					email,
+					password
+				}, function handleResponse(res, jwres) {
+					if (jwres.statusCode === 200) {
+						return resolve();
+					}
+					return reject(new Error('Error reauthenticating'));
 				});
 			});
 		},

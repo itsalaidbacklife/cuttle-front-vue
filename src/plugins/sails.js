@@ -8,6 +8,7 @@ if (process.env.NODE_ENV != 'production') {
 	io.sails.url = process.env.VUE_APP_API_URL;
 }
 io.sails.useCORSRouteToGetCookie = false;
+io.sails.reconnection = true;
 
 // Handles socket updates of game data
 io.socket.on('game', function(evData) {
