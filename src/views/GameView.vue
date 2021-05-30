@@ -718,7 +718,6 @@ export default {
 			this.showSnack = false;
 		},
 		handleError(err) {
-			console.log(err);
 			this.snackMessage = err;
 			this.snackColor = 'error';
 			this.showSnack = true;
