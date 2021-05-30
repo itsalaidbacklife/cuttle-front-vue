@@ -4,7 +4,6 @@ export default {
 	state: {
 		authenticated: false,
 		email: null,
-		socketHasDisconnected: false,
 		mustReauthenticate: false,
 	},
 	getters: {
