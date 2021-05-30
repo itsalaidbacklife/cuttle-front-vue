@@ -711,7 +711,7 @@ export default {
 	},
 	methods: {
 		reconnectToGame() {
-			thie.$store.commit('setMustReauthenticate', false);
+			this.$store.commit('setMustReauthenticate', false);
 		},
 		clearSnackBar() {
 			this.snackMessage = '';
