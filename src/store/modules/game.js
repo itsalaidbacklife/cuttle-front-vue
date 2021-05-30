@@ -209,6 +209,9 @@ export default {
 				});
 			});
 		},
+		///////////////////
+		// In-Game Moves //
+		///////////////////
 		async requestDrawCard(context) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/draw', function handleResponse(res, jwres) {
