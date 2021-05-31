@@ -37,9 +37,9 @@
 			</v-card-actions>
 		</v-card>
 		<v-snackbar
-			v-if="showSnackBar"
+			v-model="showSnackBar"
 			color="error"
-			class="d-flex justify-space-between"
+			content-class="d-flex justify-space-between align-center"
 		>
 			{{ snackBarMessage }}
 			<v-btn
