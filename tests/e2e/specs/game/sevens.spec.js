@@ -247,6 +247,51 @@ describe('Playing SEVENS', () => {
 		});
 	}); // End scuttle from seven
 
+	it('Scuttles using a NINE from a SEVEN', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.NINE_OF_CLUBS],
+			p1FaceCards: [],
+			topCard: Card.NINE_OF_DIAMONDS,
+			secondCard: Card.SIX_OF_DIAMONDS,
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+		
+		cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+
+		// Opponent does not counter (resolves stack)
+		cy.resolveOpponent();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('not.be.visible');
+		cy.get('[data-second-card=6-1]')
+			.should('exist')
+			.and('be.visible');
+		cy.get('[data-top-card=9-1]')
+			.click();
+		// scuttles with nine of diamonds
+		cy.get('[data-opponent-point-card=9-0]')
+			.click();
+		
+		cy.get('#nine-overlay')
+			.should('be.visible')
+			.get('[data-cy=nine-scuttle]')
+			.click();
+		
+		assertGameState(0, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [],
+			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS, Card.NINE_OF_DIAMONDS, Card.NINE_OF_CLUBS],
+		});
+	}); // End scuttle from seven
+
 	describe('Playing untargeted one-offs from a seven', () => {
 		it('Plays an ACE from a seven', () => {
 			cy.loadGameFixture({
