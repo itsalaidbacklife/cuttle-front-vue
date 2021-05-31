@@ -93,6 +93,12 @@ export default {
 					password
 				}, function handleResponse(res, jwres) {
 					if (jwres.statusCode === 200) {
+						context.commit('authSuccess', email);
+						let myPNum = context.rootState.game.players.findIndex((player) => player.userName === context.getters.myUserName);
+						if (myPNum === -1) {
+							myPNum = null;
+						}
+						context.commit('setMyPNum', myPNum);
 						return resolve();
 					}
 					return reject(res.message);

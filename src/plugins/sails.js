@@ -112,6 +112,16 @@ io.socket.on('game', function(evData) {
 			}
 			break;
 		}
+	case 'reLogin':
+		store.commit('updateGame', evData.data.game);
+		if (store.state.game.myPNum === null) {
+			let myPNum = store.state.game.players.findIndex((player) => player.username === store.getters.myUserName);
+			if (myPNum === -1) {
+				myPNum = null;
+			}
+			store.commit('setMyPNum', myPNum);
+		}
+		break;
 	default:
 		break;
 	}

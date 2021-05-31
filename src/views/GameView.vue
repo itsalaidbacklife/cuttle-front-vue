@@ -1,393 +1,403 @@
 <template>
 	<div id="game-view-wrapper">
-		<div id="game-menu-wrapper">
-			<game-menu />
-		</div>
-		<!-- Opponent Hand -->
-		<div 
-			id="opponent-hand"
-			class="d-flex flex-column justify-start align-center px-2 pb-2 mx-auto" 
-		>
+		<!-- Unauthenticated/Must re-log in -->
+		<template v-if="$store.state.game.myPNum === null">
+			<reauthenticate-dialog
+				v-model="mustReauthenticate"
+				@reauthenticated="reconnectToGame"
+			/>
+		</template>
+		<!-- Authenticated View -->
+		<template v-else>
+			<div id="game-menu-wrapper">
+				<game-menu />
+			</div>
+			<!-- Opponent Hand -->
 			<div 
-				id="opponent-hand-cards"
-				class="d-flex justify-center align-start"
+				id="opponent-hand"
+				class="d-flex flex-column justify-start align-center px-2 pb-2 mx-auto" 
 			>
-				<div
-					v-if="hasGlassesEight"
-					id="opponent-hand-glasses"
-					class="opponent-hand-wrapper"
+				<div 
+					id="opponent-hand-cards"
+					class="d-flex justify-center align-start"
 				>
+					<div
+						v-if="hasGlassesEight"
+						id="opponent-hand-glasses"
+						class="opponent-hand-wrapper"
+					>
+						<card
+							v-for="card in opponent.hand"
+							:key="card.id"
+							:suit="card.suit"
+							:rank="card.rank"
+							:data-opponent-hand-card="`${card.rank}-${card.suit}`"
+							class="opponent-hand-card-revealed"
+						/>
+					</div>
+					<div
+						v-else
+						class="opponent-hand-wrapper"
+					>
+						<div
+							v-for="card in opponent.hand"
+							:key="card.id"
+							class="opponent-card-back mx-2"
+							data-opponent-hand-card
+						/>
+					</div>
+				</div>
+				<h3
+					id="opponent-score"
+					class="mt-2"
+				>
+					<span>POINTS: {{ opponentPointTotal }}</span>
+					<score-goal-tool-tip
+						:king-count="opponentKingCount"
+						:points-to-win="opponentPointsToWin"
+						:is-player="false"
+					/>
+				</h3>
+			</div>
+			<!-- Field -->
+			<div
+				id="field"
+				class="d-flex justify-center align-center p-2 mx-auto"
+			>
+				<div id="field-left">
+					<v-card
+						id="deck"
+						:class="{'reveal-top-two': resolvingSeven, 'my-turn': isPlayersTurn}"
+						@click="drawCard"
+					>
+						<template v-if="!resolvingSeven">
+							<v-img
+								:src="require('../assets/logo_head.svg')"
+								:width="deckLogoWidth"
+								contain
+							/>
+							<v-card-actions>({{ deckLength }})</v-card-actions>
+							<h1
+								v-if="deckLength === 0"
+								id="empty-deck-text"
+							>
+								PASS
+							</h1>
+						</template>
+
+						<template v-if="resolvingSeven">
+							<p class="mt-2">
+								Play from Deck
+							</p>
+							<div class="d-flex">
+								<card
+									v-if="topCard"
+									:suit="topCard.suit"
+									:rank="topCard.rank"
+									:data-top-card="`${topCard.rank}-${topCard.suit}`"
+									:is-selected="topCardIsSelected"
+									class="mb-4"
+									@click="selectTopCard"
+								/>
+								<card
+									v-if="secondCard"
+									:suit="secondCard.suit"
+									:rank="secondCard.rank"
+									:data-second-card="`${secondCard.rank}-${secondCard.suit}`"
+									:is-selected="secondCardIsSelected"
+									class="mb-4"
+									@click="selectSecondCard"
+								/>
+							</div>
+						</template>
+					</v-card>
+					<div
+						id="scrap"
+						class="rounded"
+						:class="{'valid-move': validMoves.includes('scrap')}"
+						@click="playOneOff"
+					>
+						<v-overlay
+							v-ripple
+							:value="validMoves.includes('scrap')"
+							absolute
+							color="accent lighten-1"
+							opacity=".6"
+							class="d-flex flex-column align-center justify-center"
+						>
+							<p class="black--text">
+								Scrap
+							</p>
+							<p
+								class="black--text"
+								style="text-align: center"
+							>
+								({{ scrap.length }})
+							</p>
+						</v-overlay>
+						<p>Scrap</p>
+						<p>({{ scrap.length }})</p>
+					</div>
+				</div>
+				<div id="field-center">
+					<div id="opponent-field">
+						<div class="field-points">
+							<div 
+								v-for="(card, index) in opponent.points"
+								:key="card.id"
+								class="field-point-container"
+							>
+								<card 
+									:suit="card.suit"
+									:rank="card.rank"
+									:is-valid-target="validMoves.includes(card.id)"
+									:data-opponent-point-card="`${card.rank}-${card.suit}`"
+									@click="targetOpponentPointCard(index)"
+								/>
+								<div class="jacks-container">
+									<card 
+										v-for="jack in card.attachments"
+										:key="jack.id"
+										:suit="jack.suit"
+										:rank="jack.rank"
+										:is-jack="true"
+										:is-valid-target="validMoves.includes(jack.id)"
+										:data-opponent-face-card="`${jack.rank}-${jack.suit}`"
+										@click="targetOpponentFaceCard(-index-1)"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="field-effects">
+							<card 
+								v-for="(card, index) in opponent.runes"
+								:key="card.id"
+								:suit="card.suit"
+								:rank="card.rank"
+								:is-glasses="card.rank === 8"
+								:is-valid-target="validMoves.includes(card.id)"
+								:data-opponent-face-card="`${card.rank}-${card.suit}`"
+								@click="targetOpponentFaceCard(index)"
+							/>
+						</div>
+					</div>
+					<v-divider light />
+					<div
+						id="player-field"
+						class="mb-4"
+						:class="{'valid-move': validMoves.includes('field')}"
+						@click="playToField"
+					>
+						<v-overlay
+							v-ripple
+							:value="validMoves.includes('field')"
+							absolute
+							color="accent lighten-1"
+							opacity=".6"
+						/>
+						<div class="field-points">
+							<div 
+								v-for="card in player.points"
+								:key="card.id"
+								class="field-point-container"
+							>
+								<card
+									:suit="card.suit"
+									:rank="card.rank"
+									:jacks="card.attachments"
+									:data-player-point-card="`${card.rank}-${card.suit}`"
+								/>
+								<div class="jacks-container">
+									<card 
+										v-for="jack in card.attachments"
+										:key="jack.id"
+										:suit="jack.suit"
+										:rank="jack.rank"
+										:is-jack="true"
+										:data-player-face-card="`${jack.rank}-${jack.suit}`"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="field-effects">
+							<card
+								v-for="card in player.runes"
+								:key="card.id"
+								:suit="card.suit"
+								:rank="card.rank"
+								:is-glasses="card.rank === 8"
+								:data-player-face-card="`${card.rank}-${card.suit}`"
+							/>
+						</div>
+					</div>
+				</div>
+				<div id="field-right">
+					<div 
+						v-if="selectedCard === null"
+						id="history"
+						class="rounded d-flex flex-column justify-start"
+					>
+						<h3>History</h3>
+						<v-divider />
+						<div 
+							id="history-logs" 
+							ref="logsContainer" 
+							class="d-flex flex-column justify-start mt-2 text-caption"
+						>
+							<p
+								v-for="(log, index) in logs"
+								:key="index"
+							>
+								{{ log }}
+							</p>
+						</div>
+					</div>
+					<div 
+						v-if="selectedCard !== null"
+						id="card-preview"	
+					>
+						<card 
+							:suit="selectedCard.suit"
+							:rank="selectedCard.rank"
+						/>
+						<p>{{ selectedCard.ruleText }}</p>
+					</div>
+				</div>
+			</div>
+			<!-- Player Hand -->
+			<div
+				id="player-hand"
+				class="d-flex flex-column justify-end align-center px-2 pt-2 mx-auto"
+			>
+				<h3
+					id="player-score"
+				>
+					<span>POINTS: {{ playerPointTotal }}</span>
+					<score-goal-tool-tip
+						:king-count="playerKingCount"
+						:points-to-win="playerPointsToWin"
+						:is-player="true"
+					/>
+				</h3>
+
+				<div
+					id="player-hand-cards"
+					class="d-flex justify-center align-start"
+					:class="{'my-turn': isPlayersTurn}"
+				> 
 					<card
-						v-for="card in opponent.hand"
+						v-for="(card, index) in player.hand"
 						:key="card.id"
 						:suit="card.suit"
 						:rank="card.rank"
-						:data-opponent-hand-card="`${card.rank}-${card.suit}`"
-						class="opponent-hand-card-revealed"
-					/>
-				</div>
-				<div
-					v-else
-					class="opponent-hand-wrapper"
-				>
-					<div
-						v-for="card in opponent.hand"
-						:key="card.id"
-						class="opponent-card-back mx-2"
-						data-opponent-hand-card
+						:is-selected="selectedCard && card.id === selectedCard.id"
+						class="mt-8"
+						:data-player-hand-card="`${card.rank}-${card.suit}`"
+						@click="selectCard(index)"
 					/>
 				</div>
 			</div>
-			<h3
-				id="opponent-score"
-				class="mt-2"
+			<v-snackbar
+				v-model="showSnack"
+				:color="snackColor"
+				content-class="d-flex justify-space-between align-center"
+				data-cy="game-snackbar"
 			>
-				<span>POINTS: {{ opponentPointTotal }}</span>
-				<score-goal-tool-tip
-					:king-count="opponentKingCount"
-					:points-to-win="opponentPointsToWin"
-					:is-player="false"
-				/>
-			</h3>
-		</div>
-		<!-- Field -->
-		<div
-			id="field"
-			class="d-flex justify-center align-center p-2 mx-auto"
-		>
-			<div id="field-left">
-				<v-card
-					id="deck"
-					:class="{'reveal-top-two': resolvingSeven, 'my-turn': isPlayersTurn}"
-					@click="drawCard"
-				>
-					<template v-if="!resolvingSeven">
-						<v-img
-							:src="require('../assets/logo_head.svg')"
-							:width="deckLogoWidth"
-							contain
-						/>
-						<v-card-actions>({{ deckLength }})</v-card-actions>
-						<h1
-							v-if="deckLength === 0"
-							id="empty-deck-text"
-						>
-							PASS
-						</h1>
-					</template>
-
-					<template v-if="resolvingSeven">
-						<p class="mt-2">
-							Play from Deck
-						</p>
-						<div class="d-flex">
-							<card
-								v-if="topCard"
-								:suit="topCard.suit"
-								:rank="topCard.rank"
-								:data-top-card="`${topCard.rank}-${topCard.suit}`"
-								:is-selected="topCardIsSelected"
-								class="mb-4"
-								@click="selectTopCard"
-							/>
-							<card
-								v-if="secondCard"
-								:suit="secondCard.suit"
-								:rank="secondCard.rank"
-								:data-second-card="`${secondCard.rank}-${secondCard.suit}`"
-								:is-selected="secondCardIsSelected"
-								class="mb-4"
-								@click="selectSecondCard"
-							/>
-						</div>
-					</template>
-				</v-card>
-				<div
-					id="scrap"
-					class="rounded"
-					:class="{'valid-move': validMoves.includes('scrap')}"
-					@click="playOneOff"
-				>
-					<v-overlay
-						v-ripple
-						:value="validMoves.includes('scrap')"
-						absolute
-						color="accent lighten-1"
-						opacity=".6"
-						class="d-flex flex-column align-center justify-center"
+				{{ snackMessage }}
+				<v-btn icon>
+					<v-icon
+						data-cy="close-snackbar"
+						@click="clearSnackBar"
 					>
-						<p class="black--text">
-							Scrap
-						</p>
-						<p
-							class="black--text"
-							style="text-align: center"
-						>
-							({{ scrap.length }})
-						</p>
-					</v-overlay>
-					<p>Scrap</p>
-					<p>({{ scrap.length }})</p>
-				</div>
-			</div>
-			<div id="field-center">
-				<div id="opponent-field">
-					<div class="field-points">
-						<div 
-							v-for="(card, index) in opponent.points"
-							:key="card.id"
-							class="field-point-container"
-						>
-							<card 
-								:suit="card.suit"
-								:rank="card.rank"
-								:is-valid-target="validMoves.includes(card.id)"
-								:data-opponent-point-card="`${card.rank}-${card.suit}`"
-								@click="targetOpponentPointCard(index)"
-							/>
-							<div class="jacks-container">
-								<card 
-									v-for="jack in card.attachments"
-									:key="jack.id"
-									:suit="jack.suit"
-									:rank="jack.rank"
-									:is-jack="true"
-									:is-valid-target="validMoves.includes(jack.id)"
-									:data-opponent-face-card="`${jack.rank}-${jack.suit}`"
-									@click="targetOpponentFaceCard(-index-1)"
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="field-effects">
-						<card 
-							v-for="(card, index) in opponent.runes"
-							:key="card.id"
-							:suit="card.suit"
-							:rank="card.rank"
-							:is-glasses="card.rank === 8"
-							:is-valid-target="validMoves.includes(card.id)"
-							:data-opponent-face-card="`${card.rank}-${card.suit}`"
-							@click="targetOpponentFaceCard(index)"
-						/>
-					</div>
-				</div>
-				<v-divider light />
-				<div
-					id="player-field"
-					class="mb-4"
-					:class="{'valid-move': validMoves.includes('field')}"
-					@click="playToField"
-				>
-					<v-overlay
-						v-ripple
-						:value="validMoves.includes('field')"
-						absolute
-						color="accent lighten-1"
-						opacity=".6"
-					/>
-					<div class="field-points">
-						<div 
-							v-for="card in player.points"
-							:key="card.id"
-							class="field-point-container"
-						>
-							<card
-								:suit="card.suit"
-								:rank="card.rank"
-								:jacks="card.attachments"
-								:data-player-point-card="`${card.rank}-${card.suit}`"
-							/>
-							<div class="jacks-container">
-								<card 
-									v-for="jack in card.attachments"
-									:key="jack.id"
-									:suit="jack.suit"
-									:rank="jack.rank"
-									:is-jack="true"
-									:data-player-face-card="`${jack.rank}-${jack.suit}`"
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="field-effects">
-						<card
-							v-for="card in player.runes"
-							:key="card.id"
-							:suit="card.suit"
-							:rank="card.rank"
-							:is-glasses="card.rank === 8"
-							:data-player-face-card="`${card.rank}-${card.suit}`"
-						/>
-					</div>
-				</div>
-			</div>
-			<div id="field-right">
-				<div 
-					v-if="selectedCard === null"
-					id="history"
-					class="rounded d-flex flex-column justify-start"
-				>
-					<h3>History</h3>
-					<v-divider />
-					<div 
-						id="history-logs" 
-						ref="logsContainer" 
-						class="d-flex flex-column justify-start mt-2 text-caption"
-					>
-						<p
-							v-for="(log, index) in logs"
-							:key="index"
-						>
-							{{ log }}
-						</p>
-					</div>
-				</div>
-				<div 
-					v-if="selectedCard !== null"
-					id="card-preview"	
-				>
-					<card 
-						:suit="selectedCard.suit"
-						:rank="selectedCard.rank"
-					/>
-					<p>{{ selectedCard.ruleText }}</p>
-				</div>
-			</div>
-		</div>
-		<!-- Player Hand -->
-		<div
-			id="player-hand"
-			class="d-flex flex-column justify-end align-center px-2 pt-2 mx-auto"
-		>
-			<h3
-				id="player-score"
+						mdi-close
+					</v-icon>
+				</v-btn>
+			</v-snackbar>
+			<v-overlay
+				id="waiting-for-opponent-counter-scrim"
+				v-model="waitingForOpponentToCounter"
+				opacity=".6"
 			>
-				<span>POINTS: {{ playerPointTotal }}</span>
-				<score-goal-tool-tip
-					:king-count="playerKingCount"
-					:points-to-win="playerPointsToWin"
-					:is-player="true"
-				/>
-			</h3>
-
-			<div
-				id="player-hand-cards"
-				class="d-flex justify-center align-start"
-				:class="{'my-turn': isPlayersTurn}"
-			> 
-				<card
-					v-for="(card, index) in player.hand"
-					:key="card.id"
-					:suit="card.suit"
-					:rank="card.rank"
-					:is-selected="selectedCard && card.id === selectedCard.id"
-					class="mt-8"
-					:data-player-hand-card="`${card.rank}-${card.suit}`"
-					@click="selectCard(index)"
-				/>
-			</div>
-		</div>
-		<v-snackbar
-			v-model="showSnack"
-			:color="snackColor"
-			content-class="d-flex justify-space-between align-center"
-			data-cy="game-snackbar"
-		>
-			{{ snackMessage }}
-			<v-btn icon>
-				<v-icon
-					data-cy="close-snackbar"
-					@click="clearSnackBar"
-				>
-					mdi-close
-				</v-icon>
-			</v-btn>
-		</v-snackbar>
-		<v-overlay
-			id="waiting-for-opponent-counter-scrim"
-			v-model="waitingForOpponentToCounter"
-			opacity=".6"
-		>
-			<h1>
-				Opponent May Counter
-			</h1>
-		</v-overlay>
-		<v-overlay
-			id="waiting-for-opponent-discard-scrim"
-			v-model="waitingForOpponentToDiscard"
-			opacity=".6"
-		>
-			<h1>Opponent Is Discarding</h1>
-		</v-overlay>
-		<v-overlay
-			id="waiting-for-opponent-resolve-three-scrim"
-			v-model="waitingForOpponentToPickFromScrap"
-			opacity=".6"
-		>
-			<h1>
-				Opponent Choosing Card from Scrap
-			</h1>
-		</v-overlay>
-		<v-overlay
-			id="waiting-for-opponent-play-from-deck-scrim"
-			v-model="waitingForOpponentToPlayFromDeck"
-			opacity=".6"
-		>
-			<h1>
-				Opponent Playing from Deck
-			</h1>
-		</v-overlay>
-		<counter-dialog
-			v-model="showCounterDialog"
-			:one-off="game.oneOff"
-			:target="game.oneOffTarget"
-			:twos-in-hand="twosInHand"
-			@resolve="resolve"
-			@counter="counter($event)"
-		/>
-		<cannot-counter-dialog
-			v-model="showCannotCounterDialog"
-			:one-off="game.oneOff"
-			:target="game.oneOffTarget"
-			@resolve="resolve"
-		/>
-		<four-dialog
-			v-model="discarding"
-			@discard="discard"
-		/>
-		<three-dialog
-			v-model="pickingFromScrap"
-			:one-off="game.oneOff"
-			:scrap="scrap"
-			@resolveThree="resolveThree($event)"
-		/>
-		<eight-overlay
-			v-if="(selectedCard && selectedCard.rank === 8) || (cardSelectedFromDeck && cardSelectedFromDeck.rank === 8)"
-			v-model="showEightOverlay"
-			:card="selectedCard || cardSelectedFromDeck"
-			@points="playPoints"
-			@glasses="playFaceCard"
-			@cancel="clearSelection"
-		/>
-		<nine-overlay
-			v-if="showNineOverlay"
-			v-model="showNineOverlay"
-			:nine="selectedCard"
-			:target="nineTarget"
-			@scuttle="scuttle(nineTargetIndex)"
-			@one-off="playTargetedOneOff(nineTargetIndex, targetType)"
-			@cancel="clearSelection"
-		/>
-		<game-over-dialog
-			v-model="gameIsOver"
-			:player-wins="playerWins"
-			:stalemate="stalemate"
-		/>
-		<reauthenticate-dialog
-			v-model="mustReauthenticate"
-			@reauthenticated="reconnectToGame"
-		/>
+				<h1>
+					Opponent May Counter
+				</h1>
+			</v-overlay>
+			<v-overlay
+				id="waiting-for-opponent-discard-scrim"
+				v-model="waitingForOpponentToDiscard"
+				opacity=".6"
+			>
+				<h1>Opponent Is Discarding</h1>
+			</v-overlay>
+			<v-overlay
+				id="waiting-for-opponent-resolve-three-scrim"
+				v-model="waitingForOpponentToPickFromScrap"
+				opacity=".6"
+			>
+				<h1>
+					Opponent Choosing Card from Scrap
+				</h1>
+			</v-overlay>
+			<v-overlay
+				id="waiting-for-opponent-play-from-deck-scrim"
+				v-model="waitingForOpponentToPlayFromDeck"
+				opacity=".6"
+			>
+				<h1>
+					Opponent Playing from Deck
+				</h1>
+			</v-overlay>
+			<counter-dialog
+				v-model="showCounterDialog"
+				:one-off="game.oneOff"
+				:target="game.oneOffTarget"
+				:twos-in-hand="twosInHand"
+				@resolve="resolve"
+				@counter="counter($event)"
+			/>
+			<cannot-counter-dialog
+				v-model="showCannotCounterDialog"
+				:one-off="game.oneOff"
+				:target="game.oneOffTarget"
+				@resolve="resolve"
+			/>
+			<four-dialog
+				v-model="discarding"
+				@discard="discard"
+			/>
+			<three-dialog
+				v-model="pickingFromScrap"
+				:one-off="game.oneOff"
+				:scrap="scrap"
+				@resolveThree="resolveThree($event)"
+			/>
+			<eight-overlay
+				v-if="(selectedCard && selectedCard.rank === 8) || (cardSelectedFromDeck && cardSelectedFromDeck.rank === 8)"
+				v-model="showEightOverlay"
+				:card="selectedCard || cardSelectedFromDeck"
+				@points="playPoints"
+				@glasses="playFaceCard"
+				@cancel="clearSelection"
+			/>
+			<nine-overlay
+				v-if="showNineOverlay"
+				v-model="showNineOverlay"
+				:nine="selectedCard"
+				:target="nineTarget"
+				@scuttle="scuttle(nineTargetIndex)"
+				@one-off="playTargetedOneOff(nineTargetIndex, targetType)"
+				@cancel="clearSelection"
+			/>
+			<game-over-dialog
+				v-model="gameIsOver"
+				:player-wins="playerWins"
+				:stalemate="stalemate"
+			/>
+			<reauthenticate-dialog
+				v-model="mustReauthenticate"
+				@reauthenticated="reconnectToGame"
+			/>
+		</template>
 	</div>
 </template>
 
@@ -704,10 +714,17 @@ export default {
 	watch: {
 		logs: function() {
 			this.$nextTick(function() {
-				var container = this.$refs.logsContainer;
-				container.scrollTop = container.scrollHeight + 120;
+				const container = this.$refs.logsContainer;
+				if (container) {
+					container.scrollTop = container.scrollHeight + 120;
+				}
 			});
 		},
+	},
+	mounted() {
+		if (!this.$store.state.auth.authenticated) {
+			this.$store.commit('setMustReauthenticate', true);
+		}
 	},
 	methods: {
 		reconnectToGame() {
