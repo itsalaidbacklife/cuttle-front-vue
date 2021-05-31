@@ -1060,3 +1060,61 @@ describe('Playing THREEs', () => {
 		);
 	})
 }); // End 3s description
+
+
+describe('Opponent plays NINEs', () => {
+	beforeEach(()=>{
+		setupGameAsP1();
+	});
+
+	it.only('Opponent plays a nine as ONE-OFF on lower point card to return it to owners hand, and see if oneOffTarget is removed', () => {
+		cy.loadGameFixture({
+			// p0 is opponent 
+			p0Hand: [Card.NINE_OF_SPADES, Card.ACE_OF_HEARTS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			//p1 is player
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Opponent plays nine
+		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.ACE_OF_DIAMONDS, 'point');
+
+		// player resolves
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+
+		assertGameState(
+			1,
+			{
+				// p0 is opponent 
+				p0Hand: [Card.ACE_OF_HEARTS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				//p1 is player
+				p1Hand: [Card.ACE_OF_DIAMONDS, Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [],
+			}
+		);
+		
+		// player plays points
+		cy.get('[data-player-hand-card=6-2]').click();
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+
+		cy.playOneOffOpponent(Card.ACE_OF_HEARTS);
+
+		// player resolves
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+
+	}); // End Opponent NINE one-off low point card
+});
