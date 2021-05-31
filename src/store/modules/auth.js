@@ -95,7 +95,7 @@ export default {
 					if (jwres.statusCode === 200) {
 						return resolve();
 					}
-					return reject(new Error('Error reauthenticating'));
+					return reject(res.message);
 				});
 			});
 		},
