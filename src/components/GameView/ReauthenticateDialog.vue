@@ -30,6 +30,13 @@
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end">
 				<v-btn
+					text
+					color="primary"
+					@click="leaveGame"
+				>
+					Leave Game
+				</v-btn>
+				<v-btn
 					color="primary"
 					depressed
 					@click="login"
@@ -108,6 +115,11 @@ export default {
 		clearForm() {
 			this.username = '';
 			this.password = '';
+		},
+		leaveGame() {
+			this.clearForm();
+			this.clearSnackBar();
+			this.$router.push('/');
 		}
 	}
 }
