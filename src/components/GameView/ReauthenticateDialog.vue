@@ -16,6 +16,7 @@
 					:dense="$vuetify.breakpoint.mdAndDown ? true : false"
 					label="Email"
 					data-cy="username"
+					@keyup.enter="login"
 				/>
 				<v-text-field
 					v-model="password"
@@ -24,6 +25,7 @@
 					:dense="$vuetify.breakpoint.mdAndDown ? true : false"
 					type="password"
 					data-cy="password"
+					@keyup.enter="login"
 				/>
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end">
