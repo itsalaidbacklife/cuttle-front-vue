@@ -1,7 +1,8 @@
 <template>
 	<v-container id="lobby-wrapper">
 		<v-row>
-			<v-col 
+			<v-col
+				sm="3" 
 				md="1" 
 				class="my-auto"
 			>
@@ -36,7 +37,7 @@
 			</v-col>
 		</v-row>
 		<!-- Buttons -->
-		<v-row class="mt-8">
+		<v-row class="mt-4">
 			<v-spacer />
 			<v-col
 				cols="3"
@@ -119,6 +120,7 @@ export default {
 <style scoped lang="scss">
 #logo {
 	height: 10vh;
+	min-height: 64px;
 	margin: 0 auto;
 }
 </style>
