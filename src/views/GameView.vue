@@ -382,7 +382,7 @@
 			<nine-overlay
 				v-if="showNineOverlay"
 				v-model="showNineOverlay"
-				:nine="selectedCard"
+				:nine="selectedCard || cardSelectedFromDeck"
 				:target="nineTarget"
 				@scuttle="scuttle(nineTargetIndex)"
 				@one-off="playTargetedOneOff(nineTargetIndex, targetType)"

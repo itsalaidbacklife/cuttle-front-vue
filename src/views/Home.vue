@@ -19,31 +19,35 @@
 							id="card-content-header"
 							class="mb-4"
 						>
-							<v-col cols="3">
+							<v-col cols="4">
 								<h1 id="home-card-title">
 									Games
 								</h1>
 							</v-col>
-							<v-col cols="9">
+							<v-col cols="8">
 								<v-row id="add-new-game">
-									<v-text-field
-										v-model="newGameName"
-										outlined
-										label="Game Name"
-										hide-details
-										class="mr-4"
-										:dense="$vuetify.breakpoint.mdAndDown ? true : false"
-										data-cy="create-game-input"
-										@keyup.enter="submitNewGame"
-									/>
-									<v-btn
-										color="primary"
-										:small="$vuetify.breakpoint.mdAndDown ? true : false"
-										data-cy="create-game-btn"
-										@click="submitNewGame"
-									>
-										Create New Game
-									</v-btn>
+									<v-col cols="8">
+										<v-text-field
+											v-model="newGameName"
+											outlined
+											label="Game Name"
+											hide-details
+											class="mr-4"
+											:dense="$vuetify.breakpoint.mdAndDown ? true : false"
+											data-cy="create-game-input"
+											@keyup.enter="submitNewGame"
+										/>
+									</v-col>
+									<v-col cols="4">
+										<v-btn
+											color="primary"
+											:small="$vuetify.breakpoint.mdAndDown ? true : false"
+											data-cy="create-game-btn"
+											@click="submitNewGame"
+										>
+											Create New Game
+										</v-btn>
+									</v-col>
 								</v-row>
 							</v-col>
 						</v-row>

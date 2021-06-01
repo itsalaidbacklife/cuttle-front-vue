@@ -10,10 +10,11 @@
 		>
 			<v-card-title>Select a Card from Scrap</v-card-title>
 			<v-card-text>
-				<div class="d-flex justify-center align-center my-8">
+				<div class="d-flex flex-wrap justify-center align-center my-8">
 					<card 
 						v-for="(card, index) in scrap"
 						:key="card.id"
+						class="mx-1 my-1"
 						:suit="card.suit"
 						:rank="card.rank"
 						:is-selected="selectedScrapCard && card.id === selectedScrapCard.id"
