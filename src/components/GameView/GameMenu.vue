@@ -1,5 +1,5 @@
 <template>
-	<v-menu>
+	<v-menu v-model="showGameMenu">
 		<!-- Activator -->
 		<template #activator="{ on, attrs }">
 			<v-btn
@@ -22,7 +22,7 @@
 			<!-- Concede Dialog (Initiate + Confirm) -->
 			<v-list-item
 				data-cy="concede-initiate"
-				@click="showConcedeDialog = true"
+				@click.stop="openConcedeDialog"
 			>
 				Concede
 			</v-list-item>
@@ -61,12 +61,18 @@ export default {
 	name: 'GameMenu',
 	data() {
 		return {
+			showGameMenu: false,
 			showConcedeDialog: false,
 		};
 	},
 	methods: {
+		openConcedeDialog() {
+			this.showConcedeDialog = true;
+			this.showGameMenu = false;
+		},
 		concede() {
 			this.$store.dispatch('requestConcede');
+			this.showConcedeDialog = false;
 		},
 	}
 }
