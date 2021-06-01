@@ -30,12 +30,17 @@
 					v-else
 					class="opponent-hand-wrapper"
 				>
-					<div
+					<v-card
 						v-for="card in opponent.hand"
 						:key="card.id"
 						class="opponent-card-back mx-2"
 						data-opponent-hand-card
-					/>
+					>
+						<v-img
+							:src="require('../assets/logo_head.svg')"
+							contain
+						/>
+					</v-card>
 				</div>
 			</div>
 			<h3
@@ -59,6 +64,7 @@
 				<v-card
 					id="deck"
 					:class="{'reveal-top-two': resolvingSeven, 'my-turn': isPlayersTurn}"
+					elevation="10"
 					@click="drawCard"
 				>
 					<template v-if="!resolvingSeven">
@@ -1097,7 +1103,8 @@ export default {
 				width: 10vw;
 				display: inline-block;
 				position: relative;
-				background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
+				// background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
+
 				transform: rotate(180deg);
 			}
 		}
