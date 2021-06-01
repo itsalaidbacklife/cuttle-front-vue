@@ -46,6 +46,7 @@
 					<v-btn
 						color="error"
 						depressed
+						outlined
 						data-cy="concede-confirm"
 						:loading="conceding"
 						@click="concede"
