@@ -38,6 +38,7 @@
 						text
 						color="primary"
 						data-cy="concede-cancel"
+						:disabled="conceding"
 						@click="showConcedeDialog = false"
 					>
 						Cancel
@@ -46,6 +47,7 @@
 						color="error"
 						depressed
 						data-cy="concede-confirm"
+						:loading="conceding"
 						@click="concede"
 					>
 						Concede
@@ -63,6 +65,7 @@ export default {
 		return {
 			showGameMenu: false,
 			showConcedeDialog: false,
+			conceding: false,
 		};
 	},
 	methods: {
@@ -70,8 +73,9 @@ export default {
 			this.showConcedeDialog = true;
 			this.showGameMenu = false;
 		},
-		concede() {
-			this.$store.dispatch('requestConcede');
+		async concede() {
+			this.conceding = true;
+			await this.$store.dispatch('requestConcede');
 			this.showConcedeDialog = false;
 		},
 	}
