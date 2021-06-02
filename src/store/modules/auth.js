@@ -94,6 +94,7 @@ export default {
 				}, function handleResponse(res, jwres) {
 					if (jwres.statusCode === 200) {
 						context.commit('authSuccess', email);
+						context.commit('setMustReauthenticate', false);
 						let myPNum = context.rootState.game.players.findIndex((player) => player.userName === context.getters.myUserName);
 						if (myPNum === -1) {
 							myPNum = null;

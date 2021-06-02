@@ -3,7 +3,7 @@
 		v-model="show"
 		persistent
 	>
-		<v-card>
+		<v-card id="reauthenticate-dialog">
 			<v-card-title>Reconnect to Game</v-card-title>
 			<v-card-text>
 				<p>
@@ -99,7 +99,6 @@ export default {
 				this.clearSnackBar();
 				this.clearForm();
 				this.isLoggingIn = false;
-				this.$emit('reauthenticated');
 			})
 				.catch(this.handleError);
 		},

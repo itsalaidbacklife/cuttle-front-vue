@@ -2,10 +2,7 @@
 	<div id="game-view-wrapper">
 		<!-- Unauthenticated/Must re-log in -->
 		<template v-if="$store.state.game.myPNum === null">
-			<reauthenticate-dialog
-				v-model="mustReauthenticate"
-				@reauthenticated="reconnectToGame"
-			/>
+			<reauthenticate-dialog v-model="mustReauthenticate" />
 		</template>
 		<!-- Authenticated View -->
 		<template v-else>
@@ -393,10 +390,7 @@
 				:player-wins="playerWins"
 				:stalemate="stalemate"
 			/>
-			<reauthenticate-dialog
-				v-model="mustReauthenticate"
-				@reauthenticated="reconnectToGame"
-			/>
+			<reauthenticate-dialog v-model="mustReauthenticate" />
 		</template>
 	</div>
 </template>
@@ -727,9 +721,6 @@ export default {
 		}
 	},
 	methods: {
-		reconnectToGame() {
-			this.$store.commit('setMustReauthenticate', false);
-		},
 		clearSnackBar() {
 			this.snackMessage = '';
 			this.showSnack = false;
