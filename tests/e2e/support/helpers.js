@@ -1,5 +1,5 @@
-const validEmail = 'myCustomEmail@gmail.com';
-const validPassword = 'passwordLongerThanEight';
+export const validEmail = 'myCustomEmail@gmail.com';
+export const validPassword = 'passwordLongerThanEight';
 const opponentEmail = 'yourMortalEnemy@cia.gov';
 const opponentPassword = 'deviousTrickery';
 
