@@ -40,7 +40,7 @@
 						/>
 					</div>
 				</div>
-				You cannot Counter, because you do not have a two.
+				You cannot Counter, because {{ reason }}.
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end">
 				<v-btn
@@ -70,10 +70,20 @@ export default {
 			required: true,
 		},
 		oneOff: {
+			type: Object,
 			required: true,
 		},
 		target: {
+			type: Object,
 			default: null,
+		},
+		opponentQueenCount: {
+			type: Number, 
+			default: 0,
+		},
+		playerTwoCount: {
+			type: Number,
+			default: 0,
 		},
 	},
 	computed: {
@@ -84,6 +94,18 @@ export default {
 			set(val) {
 				this.$emit('input', val);
 			}
+		},
+		reason() {
+			let reason = '';
+			const OPPONENT_HAS_QUEEN = 'your opponent has a queen';
+			const PLAYER_HAS_NO_TWOS = 'you do not have a two';
+			if (this.opponentQueenCount > 0){
+				 reason += OPPONENT_HAS_QUEEN;
+			}
+			if (this.playerTwoCount > 0) {
+				reason += (reason ? 'and ': '') + PLAYER_HAS_NO_TWOS;
+			}
+			return reason || PLAYER_HAS_NO_TWOS;
 		}
 	}
 }

@@ -24,6 +24,7 @@ describe('Countering One-Offs', () => {
 		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
+			.should('contain', 'You cannot Counter, because you do not have a two.')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 
@@ -397,6 +398,7 @@ describe('Countering One-Offs', () => {
 		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
+			.should('contain', 'You cannot Counter, because your opponent has a queen.')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 

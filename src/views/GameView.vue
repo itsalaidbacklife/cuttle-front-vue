@@ -349,6 +349,8 @@
 		<cannot-counter-dialog
 			v-model="showCannotCounterDialog"
 			:one-off="game.oneOff"
+			:opponent-queen-count="opponentQueenCount"
+			:player-two-count="playerTwoCount"
 			:target="game.oneOffTarget"
 			@resolve="resolve"
 		/>
@@ -522,6 +524,12 @@ export default {
 		},
 		opponentQueenCount() {
 			return this.queenCount(this.opponent);
+		},
+		//////////
+		// Twos //
+		//////////
+		playerTwoCount() {
+			return this.twoCount(this.player);
 		},
 		//////////////////
 		// Interactions //
@@ -737,7 +745,7 @@ export default {
 		 * @param player is the player object
 		 */
 		queenCount(player) {
-			return player.runes.reduce((kingCount, card) => kingCount + (card.rank === 12 ? 1 : 0), 0);
+			return player.runes.reduce((queenCount, card) => queenCount + (card.rank === 12 ? 1 : 0), 0);
 		},
 		/**
 		 * @returns number of kings a given player has
@@ -745,6 +753,13 @@ export default {
 		 */
 		kingCount(player) {
 			return player.runes.reduce((kingCount, card) => kingCount + (card.rank === 13 ? 1 : 0), 0);
+		},
+		/** 
+		 * @returns number of queens a given player has
+		 * @param player is the player object
+		 */
+		twoCount(player) {
+			return player.runes.reduce((twoCOunt, card) => twoCOunt + (card.rank === 2 ? 1 : 0), 0);
 		},
 		/**
 		 * Returns the number of points to win
