@@ -8,6 +8,7 @@ if (process.env.NODE_ENV != 'production') {
 	io.sails.url = process.env.VUE_APP_API_URL || 'localhost:1337';
 }
 io.sails.useCORSRouteToGetCookie = false;
+io.sails.reconnection = true;
 
 // Handles socket updates of game data
 io.socket.on('game', function(evData) {
@@ -108,6 +109,16 @@ io.socket.on('game', function(evData) {
 			if (evData.data.pNum !== store.state.game.myPNum) {
 				store.commit('setWaitingForOpponentToCounter', false);
 				store.commit('setMyTurnToCounter', true);
+			}
+			break;
+		case 'reLogin':
+			store.commit('updateGame', evData.data.game);
+			if (store.state.game.myPNum === null) {
+				let myPNum = store.state.game.players.findIndex((player) => player.username === store.getters.myUserName);
+				if (myPNum === -1) {
+					myPNum = null;
+				}
+				store.commit('setMyPNum', myPNum);
 			}
 			break;
 		}
