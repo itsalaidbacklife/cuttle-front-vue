@@ -39,6 +39,7 @@
 				<v-btn
 					color="primary"
 					depressed
+					data-cy="login"
 					@click="login"
 				>
 					Log In
