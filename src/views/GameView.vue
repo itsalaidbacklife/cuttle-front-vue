@@ -1103,9 +1103,8 @@ export default {
 				width: 10vw;
 				display: inline-block;
 				position: relative;
-				// background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
-
 				transform: rotate(180deg);
+				// background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
 			}
 		}
 	}
