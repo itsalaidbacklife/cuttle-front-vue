@@ -238,7 +238,7 @@ describe('Countering One-Offs', () => {
 		);
 	});
 
-	it('Triple counters successfully', ()=> {
+	it.only('Triple counters successfully', ()=> {
 		cy.loadGameFixture({
 			// Opponent is P0
 			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS],
@@ -273,6 +273,7 @@ describe('Countering One-Offs', () => {
 		// Player counters again (3rd counter)
 		cy.get('#counter-dialog')
 			.should('be.visible')
+			.should('contain', 'Your opponent has played Two of clubs to Counter.')
 			.get('[data-cy=counter]')
 			.click();
 		cy.get('#choose-two-dialog')

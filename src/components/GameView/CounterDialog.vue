@@ -10,8 +10,13 @@
 		>
 			<v-card-title>Chance to Counter</v-card-title>
 			<v-card-text>
-				Your opponent has played the {{ oneOff.name }} as a one-off
-				<span v-if="target"> targetting your {{ target.name }}</span>
+				<span v-if="twosPlayed === 0">Your opponent has played the {{ oneOff.name }} as a one-off
+					<span v-if="target"> targetting your {{ target.name }}</span>
+				</span>
+				<span v-else>
+					Your opponent has played {{ twosPlayed[twosPlayed.length - 1].name }} to Counter.
+				</span>
+
 
 				<div class="d-flex justify-center align-center my-8">
 					<card
@@ -113,13 +118,20 @@ export default {
 			required: true,
 		},
 		oneOff: {
+			type: Object,
 			required: true,
 		},
 		target: {
+			type: Object,
 			default: null,
 		},
 		// list of card objects for available twos
 		twosInHand: {
+			type: Array,
+			required: true,
+		},
+		twosPlayed: {
+			type: Array,
 			required: true,
 		},
 	},

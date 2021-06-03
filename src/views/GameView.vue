@@ -343,6 +343,7 @@
 			:one-off="game.oneOff"
 			:target="game.oneOffTarget"
 			:twos-in-hand="twosInHand"
+			:twos-played="twosPlayed"
 			@resolve="resolve"
 			@counter="counter($event)"
 		/>
@@ -557,6 +558,9 @@ export default {
 		},
 		twosInHand() {
 			return this.player.hand.filter((card) => card.rank === 2);
+		},
+		twosPlayed() {
+			return game.twos;
 		},
 		hasTwoInHand() {
 			return this.twosInHand.length > 0;
