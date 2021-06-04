@@ -352,6 +352,7 @@
 			:one-off="game.oneOff"
 			:opponent-queen-count="opponentQueenCount"
 			:player-two-count="playerTwoCount"
+			:twos-played="twosPlayed"
 			:target="game.oneOffTarget"
 			@resolve="resolve"
 		/>

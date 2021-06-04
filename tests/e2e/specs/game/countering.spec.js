@@ -494,4 +494,36 @@ describe('Countering One-Offs P0 Perspective', () => {
 		);
 	});
 
+	it('Cannot Counter When Opponent Has Queen, dialog message', () => {
+		cy.loadGameFixture({
+			// Player is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [],
+			// Opponent is P1
+			p1Hand: [Card.TWO_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS, Card.QUEEN_OF_CLUBS],
+		});
+
+		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.log('Loaded fixture');
+		// Player plays ace of clubs as one-off
+		cy.log('Player plays ace of clubs as one-off');
+		cy.get('[data-player-hand-card=1-0]').click();
+		cy.get('#scrap').should('have.class', 'valid-move').click();
+
+		// Opponent counters
+		cy.log('Opponent counters');
+		cy.counterOpponent(Card.TWO_OF_HEARTS);
+
+		// Player cannot counter because of queen
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.should('contain', 'Your opponent has played 2 of Hearts to Counter.')
+			.should('contain', 'You cannot Counter, because your opponent has a queen.')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+	});
+
 });
