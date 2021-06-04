@@ -1,4 +1,4 @@
-import { setupGameAsP1, assertGameState, Card } from '../../support/helpers';
+import { setupGameAsP1, setupGameAsP0, assertGameState, Card } from '../../support/helpers';
 
 describe('Countering One-Offs', () => {
 	beforeEach(() => {
@@ -24,6 +24,7 @@ describe('Countering One-Offs', () => {
 		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
+			.should('contain', 'You cannot Counter, because you do not have a two.')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 
@@ -257,6 +258,7 @@ describe('Countering One-Offs', () => {
 			.should('not.be.visible');
 
 		// Player counters (1st counter)
+		cy.log('Player counters (1st counter)');
 		cy.get('#counter-dialog')
 			.should('be.visible')
 			.get('[data-cy=counter]')
@@ -268,10 +270,13 @@ describe('Countering One-Offs', () => {
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
 		// Opponent counters back (2nd counter)
+		cy.log('Opponent counters back (2nd counter)');
 		cy.counterOpponent(Card.TWO_OF_CLUBS);
 		// Player counters again (3rd counter)
+		cy.log('Player counters again (3rd counter');	
 		cy.get('#counter-dialog')
 			.should('be.visible')
+			.should('contain', 'Your opponent has played 2 of Hearts to Counter your 2 of Clubs.')
 			.get('[data-cy=counter]')
 			.click();
 		cy.get('#choose-two-dialog')
@@ -397,8 +402,128 @@ describe('Countering One-Offs', () => {
 		cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
+			.should('contain', 'You cannot Counter, because your opponent has a queen.')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 
 	});
+});
+
+
+describe('Countering One-Offs P0 Perspective', () => {
+	beforeEach(() => {
+		setupGameAsP0();
+	});
+
+	it('Quadruple counters successfully - P0 Perspective', () => {
+		cy.loadGameFixture({
+			// Player is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			// Opponent is P1
+			p1Hand: [Card.TWO_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.log('Loaded fixture');
+		// Player plays ace of clubs as one-off
+		cy.get('[data-player-hand-card=1-0]').click();
+		cy.get('#scrap').should('have.class', 'valid-move').click();
+
+		// Opponent counters (1st counter)
+		cy.log('Opponent counters (1st counter)');
+		cy.counterOpponent(Card.TWO_OF_HEARTS);
+		
+		// Player counters back (2nd counter)
+		cy.log('Player counters back (2nd counter)');
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.should('contain', 'Your opponent has played 2 of Hearts to Counter.')
+			.get('[data-cy=counter]')
+			.click();
+		
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-0]')
+			.click();
+		
+		// Opponent counters back (3rd counter)
+		cy.log('Opponent counters (3rd counter)');
+		cy.counterOpponent(Card.TWO_OF_SPADES);
+
+		// Player counters (4th counter)
+		cy.log('Player counters (4th counter)');
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.should('contain', 'Your opponent has played 2 of Spades to Counter your 2 of Hearts.')
+			.get('[data-cy=counter]')
+			.click();
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-1]')
+			.click();
+		cy.get('#waiting-for-opponent-counter-scrim')
+			.should('be.visible');
+
+		cy.resolveOpponent();
+		assertGameState(
+			0,
+			{
+				// Player is P0
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				// Opponent is P1
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_HEARTS],
+				scrap: [
+					Card.ACE_OF_CLUBS,
+					Card.TWO_OF_HEARTS,
+					Card.TWO_OF_CLUBS,
+					Card.TWO_OF_SPADES,
+					Card.TWO_OF_DIAMONDS,
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.TEN_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS
+				],
+			}
+		);
+	});
+
+	it('Cannot Counter When Opponent Has Queen, dialog message', () => {
+		cy.loadGameFixture({
+			// Player is P0
+			p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_CLUBS, Card.TWO_OF_DIAMONDS],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [],
+			// Opponent is P1
+			p1Hand: [Card.TWO_OF_HEARTS, Card.TWO_OF_SPADES],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS, Card.QUEEN_OF_CLUBS],
+		});
+
+		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.log('Loaded fixture');
+		// Player plays ace of clubs as one-off
+		cy.log('Player plays ace of clubs as one-off');
+		cy.get('[data-player-hand-card=1-0]').click();
+		cy.get('#scrap').should('have.class', 'valid-move').click();
+
+		// Opponent counters
+		cy.log('Opponent counters');
+		cy.counterOpponent(Card.TWO_OF_HEARTS);
+
+		// Player cannot counter because of queen
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.should('contain', 'Your opponent has played 2 of Hearts to Counter.')
+			.should('contain', 'You cannot Counter, because your opponent has a queen.')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+	});
+
 });

@@ -10,8 +10,12 @@
 		>
 			<v-card-title>Cannot Counter</v-card-title>
 			<v-card-text>
-				Your opponent has played the {{ oneOff.name }} as a one-off
-				<span v-if="target"> targetting your {{ target.name }}</span>
+				<span v-if="!opponentLastTwo">Your opponent has played the {{ oneOff.name }} as a one-off
+					<span v-if="target"> targetting your {{ target.name }}</span>
+				</span>
+				<span v-else>
+					Your opponent has played {{ opponentLastTwo.name }} to Counter<span v-if="playerLastTwo"> your {{ playerLastTwo.name }}</span>.
+				</span>
 				<div class="d-flex justify-center align-center my-8">
 					<card
 						:suit="oneOff.suit"
@@ -40,7 +44,7 @@
 						/>
 					</div>
 				</div>
-				You cannot Counter, because you do not have a two.
+				You cannot Counter, because {{ reason }}.
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end">
 				<v-btn
@@ -70,9 +74,23 @@ export default {
 			required: true,
 		},
 		oneOff: {
+			type: Object,
 			required: true,
 		},
 		target: {
+			type: Object,
+			default: null,
+		},
+		opponentQueenCount: {
+			type: Number, 
+			default: 0,
+		},
+		playerTwoCount: {
+			type: Number,
+			default: 0,
+		},
+		twosPlayed: {
+			type: Array,
 			default: null,
 		},
 	},
@@ -84,6 +102,24 @@ export default {
 			set(val) {
 				this.$emit('input', val);
 			}
+		},
+		reason() {
+			let reason = '';
+			const OPPONENT_HAS_QUEEN = 'your opponent has a queen';
+			const PLAYER_HAS_NO_TWOS = 'you do not have a two';
+			if (this.opponentQueenCount > 0){
+				 reason += OPPONENT_HAS_QUEEN;
+			}
+			if (this.playerTwoCount > 0) {
+				reason += (reason ? 'and ': '') + PLAYER_HAS_NO_TWOS;
+			}
+			return reason || PLAYER_HAS_NO_TWOS;
+		},
+		opponentLastTwo() {
+			return this.twosPlayed && this.twosPlayed.length > 0 ? this.twosPlayed[this.twosPlayed.length - 1] : null;
+		},
+		playerLastTwo() {
+			return this.twosPlayed && this.twosPlayed.length > 1 ? this.twosPlayed[this.twosPlayed.length - 2] : null;
 		}
 	}
 }
