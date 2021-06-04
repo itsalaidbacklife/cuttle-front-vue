@@ -37,6 +37,17 @@ function resetState() {
 		conceded: false,
 	};
 }
+function handleGameResponse(context, jwres, resolve, reject) {
+	switch (jwres.statusCode) {
+	case 200:
+		return resolve();
+	case 403:
+		context.commit('setMustReauthenticate', true, {root: true});
+		return reject(jwres.body.message);
+	default:
+		return reject(jwres.body.message);
+	}
+}
 const initialState = resetState();
 export default {
 	state: initialState,
@@ -198,17 +209,13 @@ export default {
 				});
 			});
 		},
+		///////////////////
+		// In-Game Moves //
+		///////////////////
 		async requestDrawCard(context) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/draw', function handleResponse(res, jwres) {
-					if (jwres.statusCode === 200) {
-						// Success (nothing to do)
-						return resolve();
-					}
-					
-					// Failure
-					return reject(jwres.body.message);
-					
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
@@ -218,10 +225,7 @@ export default {
 					cardId,
 				},
 				function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
@@ -230,10 +234,7 @@ export default {
 				io.socket.get('/game/runes', {
 					cardId,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
@@ -249,10 +250,7 @@ export default {
 					targetId,
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
@@ -262,13 +260,13 @@ export default {
 					cardId,
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					context.commit('setWaitingForOpponentToCounter', true);
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
-			});
+			})
+				.then(() => {
+					context.commit('setWaitingForOpponentToCounter', true);
+					return Promise.resolve();
+				});
 		},
 		async requestPlayTargetedOneOff(context, {cardId, targetId, pointId, targetType}) {
 			return new Promise((resolve, reject) => {
@@ -279,13 +277,12 @@ export default {
 					targetType,
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					context.commit('setWaitingForOpponentToCounter', true);
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
-			});
+			})
+				.then(() => {
+					context.commit('setWaitingForOpponentToCounter', true);
+				});
 		},
 		async requestPlayJack(context, {cardId, targetId}) {
 			return new Promise((resolve, reject) => {
@@ -294,10 +291,7 @@ export default {
 					targetId,
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
@@ -320,10 +314,7 @@ export default {
 				io.socket.get('/game/resolveFour',
 					reqData,
 					function(res, jwres) {
-						if (jwres.statusCode != 200) {
-							return reject(jwres.body.message);
-						}
-						return resolve();
+						return handleGameResponse(context, jwres, resolve, reject);
 					});
 			});
 		},
@@ -334,10 +325,7 @@ export default {
 				io.socket.get('/game/resolve', {
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
@@ -348,13 +336,12 @@ export default {
 					cardId,
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					context.commit('setWaitingForOpponentToCounter', false);
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
-			});
+			})
+				.then(() => {
+					context.commit('setWaitingForOpponentToCounter', false);
+				})
 		},
 		async requestCounter(context, twoId) {
 			context.commit('setMyTurnToCounter', false);
@@ -364,13 +351,12 @@ export default {
 					cardId: twoId,
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					context.commit('setWaitingForOpponentToCounter', true);
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
-			});
+			})
+				.then(() => {
+					context.commit('setWaitingForOpponentToCounter', true);
+				});
 		},
 		////////////
 		// Sevens //
@@ -382,10 +368,7 @@ export default {
 					index, // 0 if topCard, 1 if secondCard
 				},
 				function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});	
 		},
@@ -398,10 +381,7 @@ export default {
 					opId: context.getters.opponent.id
 				},
 				function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});	
 		},
@@ -414,10 +394,7 @@ export default {
 					opId: context.getters.opponent.id,
 				},
 				function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
@@ -427,10 +404,7 @@ export default {
 					cardId,
 					index
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
@@ -441,13 +415,12 @@ export default {
 					index, // 0 if topCard, 1 if secondCard
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					context.commit('setWaitingForOpponentToCounter', true);
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
-			});
+			})
+				.then(() => {
+					context.commit('setWaitingForOpponentToCounter', true);
+				});
 		},
 		async requestPlayTargetedOneOffSeven(context, { cardId, index, targetId, pointId, targetType }) {
 			return new Promise((resolve, reject) => {
@@ -459,41 +432,31 @@ export default {
 					index, // 0 if topCard, 1 if secondCard
 					opId: context.getters.opponent.id,
 				}, function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					context.commit('setWaitingForOpponentToCounter', true);
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
-			});
+			})
+				.then(() => {
+					context.commit('setWaitingForOpponentToCounter', true);
+				});
 		},
 		async requestPass(context) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/pass', function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
 		async requestConcede(context) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/concede', function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
 		async requestUnsubscribeFromGame(context) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/over', function handleResponse(res, jwres) {
-					if (jwres.statusCode !== 200) {
-						return reject(jwres.body.message);
-					}
-					return resolve();
+					return handleGameResponse(context, jwres, resolve, reject);
 				});
 			});
 		},
