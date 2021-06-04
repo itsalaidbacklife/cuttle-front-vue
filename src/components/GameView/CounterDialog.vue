@@ -10,14 +10,12 @@
 		>
 			<v-card-title>Chance to Counter</v-card-title>
 			<v-card-text>
-				<span v-if="twosPlayed === 0">Your opponent has played the {{ oneOff.name }} as a one-off
+				<span v-if="!opponentLastTwo">Your opponent has played the {{ oneOff.name }} as a one-off
 					<span v-if="target"> targetting your {{ target.name }}</span>
 				</span>
 				<span v-else>
-					Your opponent has played {{ twosPlayed[twosPlayed.length - 1].name }} to Counter.
+					Your opponent has played {{ opponentLastTwo.name }} to Counter<span v-if="playerLastTwo"> your {{ playerLastTwo.name }}</span>.
 				</span>
-
-
 				<div class="d-flex justify-center align-center my-8">
 					<card
 						:suit="oneOff.suit"
@@ -148,7 +146,13 @@ export default {
 			set(val) {
 				this.$emit('input', val);
 			}
-		}
+		},
+		opponentLastTwo() {
+			return this.twosPlayed && this.twosPlayed.length > 0 ? this.twosPlayed[this.twosPlayed.length - 1] : null;
+		},
+		playerLastTwo() {
+			return this.twosPlayed && this.twosPlayed.length > 1 ? this.twosPlayed[this.twosPlayed.length - 2] : null;
+		},
 	},
 	methods: {
 		counter(two) {

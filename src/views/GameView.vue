@@ -560,7 +560,7 @@ export default {
 			return this.player.hand.filter((card) => card.rank === 2);
 		},
 		twosPlayed() {
-			return game.twos;
+			return this.game.twos;
 		},
 		hasTwoInHand() {
 			return this.twosInHand.length > 0;
