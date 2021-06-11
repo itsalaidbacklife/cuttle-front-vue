@@ -343,6 +343,20 @@ export default {
 					context.commit('setWaitingForOpponentToCounter', false);
 				})
 		},
+		async requestResolveSevenDoubleJacks(context, {cardId, index}) {
+			context.commit('setMyTurnToCounter', false);
+			return new Promise((resolve, reject) => {
+				io.socket.get('/game/seven/jack', {
+					cardId,
+					index, // 0 if topCard, 1 if secondCard
+					targetId: -1, // -1 for the double jacks with no points to steal case
+					opId: context.getters.opponent.id,
+				},
+				function handleResponse(res, jwres) {
+					return handleGameResponse(context, jwres, resolve, reject);
+				});
+			});
+		},
 		async requestCounter(context, twoId) {
 			context.commit('setMyTurnToCounter', false);
 			

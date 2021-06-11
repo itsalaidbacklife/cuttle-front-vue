@@ -377,6 +377,12 @@
 				:scrap="scrap"
 				@resolveThree="resolveThree($event)"
 			/>
+			<seven-double-jacks-dialog
+				v-model="showSevenDoubleJacksDialog"
+				:top-card="topCard"
+				:second-card="secondCard"
+				@resolveSevenDoubleJacks="resolveSevenDoubleJacks($event)"
+			/>
 			<eight-overlay
 				v-if="(selectedCard && selectedCard.rank === 8) || (cardSelectedFromDeck && cardSelectedFromDeck.rank === 8)"
 				v-model="showEightOverlay"
@@ -416,6 +422,7 @@ import GameOverDialog from '@/components/GameView/GameOverDialog.vue';
 import GameMenu from '@/components/GameView/GameMenu.vue';
 import ScoreGoalToolTip from '@/components/GameView/ScoreGoalToolTip.vue';
 import ReauthenticateDialog from '@/components/GameView/ReauthenticateDialog.vue';
+import SevenDoubleJacksDialog from '../components/GameView/SevenDoubleJacksDialog.vue';
 
 export default {
 	name: 'GameView',
@@ -431,6 +438,7 @@ export default {
 		GameMenu,
 		ScoreGoalToolTip,
 		ReauthenticateDialog,
+		SevenDoubleJacksDialog,
 	},
 	data() {
 		return {
@@ -602,6 +610,9 @@ export default {
 		},
 		showCounterDialog() {
 			return this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount === 0;
+		},
+		showSevenDoubleJacksDialog() {
+			return this.resolvingSeven && this.topCard.rank === 11 && this.secondCard.rank === 11;
 		},
 		discarding() {
 			return this.$store.state.game.discarding;
@@ -1085,6 +1096,11 @@ export default {
 			this.$store.dispatch('requestResolveThree', cardId)
 				.then(this.clearSelection())
 				.catch(this.handleError)
+		},
+		resolveSevenDoubleJacks(cardId, index) {
+			this.$store.dispatch('requestResolveSevenDoubleJacks', {cardId, index})
+				.then(this.clearSelection)
+				.catch(this.handleError);
 		},
 		counter(twoId) {
 			this.$store.dispatch('requestCounter', twoId)
