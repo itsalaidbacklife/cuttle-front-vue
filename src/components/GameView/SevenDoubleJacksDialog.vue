@@ -6,6 +6,7 @@
 	>
 		<v-card
 			id="seven-double-jacks-dialog"
+			v-if="oneOff"
 		>
 			<v-card-title>Select a Card</v-card-title>
 			<v-card-text>
