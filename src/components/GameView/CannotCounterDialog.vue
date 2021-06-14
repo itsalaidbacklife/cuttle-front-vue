@@ -75,7 +75,7 @@ export default {
 		},
 		oneOff: {
 			type: Object,
-			required: true,
+			default: null,
 		},
 		target: {
 			type: Object,

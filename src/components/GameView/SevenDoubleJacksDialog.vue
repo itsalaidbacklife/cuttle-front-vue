@@ -59,10 +59,6 @@ export default {
 			type: Boolean,
 			required: true,
 		},
-		oneOff: {
-			type: Object,
-			default: null,
-		},
 		topCard: {
 			type: Object,
 			default: null
