@@ -133,64 +133,148 @@ describe('Playing SEVENS', () => {
 			scrap: [Card.SEVEN_OF_CLUBS],
 		});
 	});
-			p0Points: [],
-			p0FaceCards: [],
-			p1Hand: [],
-			p1Points: [Card.SIX_OF_DIAMONDS],
-			p1FaceCards: [],
-			scrap: [Card.SEVEN_OF_CLUBS, Card.JACK_OF_CLUBS],
+
+	describe('Plays jack from a seven - special case', () => {
+		it('Plays jack from a seven - special case - double jacks with some points to steal should work as normal', () => {
+
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_CLUBS],
+				p1Points: [Card.SIX_OF_DIAMONDS],
+				p1FaceCards: [],
+				topCard: Card.JACK_OF_CLUBS,
+				secondCard: Card.JACK_OF_DIAMONDS,
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+			cy.log('Loaded fixture');
+					
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+	
+			cy.get('[data-second-card=11-1]')
+				.should('exist')
+				.and('be.visible');
+			cy.get('[data-top-card=11-0]')
+				.should('exist')
+				.and('be.visible')
+				.click();
+					
+			cy.get('[data-opponent-point-card=6-1]')
+				.click();
+					
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [Card.SIX_OF_DIAMONDS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.SEVEN_OF_CLUBS],
+			});
 		});
 
-	});
+		it('Plays jack from a seven - special case - double jacks with some points to steal but opponent has queen', () => {
 
-	it('Plays jack from a seven - special case - double jacks with no points to steal', () => {
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_CLUBS],
+				p1Points: [Card.SIX_OF_DIAMONDS],
+				p1FaceCards: [Card.QUEEN_OF_CLUBS],
+				topCard: Card.JACK_OF_CLUBS,
+				secondCard: Card.JACK_OF_DIAMONDS,
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+			cy.log('Loaded fixture');
+					
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+	
+			cy.get('#seven-double-jacks-dialog')
+				.should('be.visible')
+				.should('contain', 'Oops')
+				.get('[data-seven-double-jacks-dialog-card=11-0]')
+				.click();
+			
+			cy.get('[data-cy=seven-double-jacks-resolve]').click();
+					
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_CLUBS],
+				p1Points: [Card.SIX_OF_DIAMONDS],
+				p1FaceCards: [Card.QUEEN_OF_CLUBS],
+				scrap: [Card.SEVEN_OF_CLUBS, Card.JACK_OF_CLUBS],
+			});
+					
+			// see if opponent can still make moves
+			cy.playPointsOpponent(Card.ACE_OF_CLUBS);
 
-		cy.loadGameFixture({
-			p0Hand: [Card.SEVEN_OF_CLUBS],
-			p0Points: [],
-			p0FaceCards: [],
-			p1Hand: [Card.ACE_OF_CLUBS],
-			p1Points: [],
-			p1FaceCards: [],
-			topCard: Card.JACK_OF_CLUBS,
-			secondCard: Card.JACK_OF_DIAMONDS,
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.SIX_OF_DIAMONDS, Card.ACE_OF_CLUBS],
+				p1FaceCards: [Card.QUEEN_OF_CLUBS],
+				scrap: [Card.SEVEN_OF_CLUBS, Card.JACK_OF_CLUBS],
+			});
+
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 1);
-		cy.log('Loaded fixture');
-        
-		cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
 
-		cy.get('#seven-double-jacks-dialog')
-			.should('be.visible')
-			.should('contain', 'Oops')
-			.get('[data-seven-double-jacks-dialog-card=11-0]')
-			.click();
-		
-		cy.get('[data-cy=seven-double-jacks-resolve]').click();
-        
-		assertGameState(0, {
-			p0Hand: [],
-			p0Points: [],
-			p0FaceCards: [],
-			p1Hand: [Card.ACE_OF_CLUBS],
-			p1Points: [],
-			p1FaceCards: [],
-			scrap: [Card.SEVEN_OF_CLUBS, Card.JACK_OF_CLUBS],
+		it('Plays jack from a seven - special case - double jacks with no points to steal', () => {
+
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+				topCard: Card.JACK_OF_CLUBS,
+				secondCard: Card.JACK_OF_DIAMONDS,
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 1);
+			cy.log('Loaded fixture');
+					
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+	
+			cy.get('#seven-double-jacks-dialog')
+				.should('be.visible')
+				.should('contain', 'Oops')
+				.get('[data-seven-double-jacks-dialog-card=11-0]')
+				.click();
+			
+			cy.get('[data-cy=seven-double-jacks-resolve]').click();
+					
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.SEVEN_OF_CLUBS, Card.JACK_OF_CLUBS],
+			});
+	
+			// see if opponent can still make moves
+			cy.playPointsOpponent(Card.ACE_OF_CLUBS);
+	
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [Card.ACE_OF_CLUBS],
+				p1FaceCards: [],
+				scrap: [Card.SEVEN_OF_CLUBS, Card.JACK_OF_CLUBS],
+			});
 		});
 
-		// see if opponent can still make moves
-		cy.playPointsOpponent(Card.ACE_OF_CLUBS);
 
-		assertGameState(0, {
-			p0Hand: [],
-			p0Points: [],
-			p0FaceCards: [],
-			p1Hand: [],
-			p1Points: [Card.ACE_OF_CLUBS],
-			p1FaceCards: [],
-			scrap: [Card.SEVEN_OF_CLUBS, Card.JACK_OF_CLUBS],
-		});
-	});
+	})
 
 	describe('Plays face cards from a seven', () => {
 		it('Plays king from a seven', () => {
