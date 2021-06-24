@@ -84,6 +84,57 @@ describe('Playing SEVENS', () => {
 		});
 	});
 
+	it('Cannot play jack from a seven if opponent has queen', () => {
+
+		cy.loadGameFixture({
+			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.QUEEN_OF_CLUBS],
+			topCard: Card.JACK_OF_CLUBS,
+			secondCard: Card.SIX_OF_DIAMONDS,
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+        
+		cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+        
+		cy.get('[data-second-card=6-1]')
+			.should('exist')
+			.and('be.visible')
+		cy.get('[data-top-card=11-0]')
+			.should('exist')
+			.and('be.visible')
+			.click();
+        
+		cy.get('[data-opponent-point-card=10-2]')
+			.click();
+        
+		assertSnackbarError('Your opponent\'s queen prevents you from targeting their other cards');
+
+		cy.get('[data-second-card=6-1]')
+			.should('exist')
+			.and('be.visible')
+			.click();
+
+		cy.get('#player-field')
+			.should('have.class', 'valid-move')
+			.click();
+
+		assertGameState(0, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.SIX_OF_DIAMONDS],
+			p1FaceCards: [],
+			scrap: [Card.SEVEN_OF_CLUBS, Card.JACK_OF_CLUBS],
+		});
+
+	});
+
 	it('Plays jack from a seven - special case - double jacks with no points to steal', () => {
 
 		cy.loadGameFixture({
