@@ -64,7 +64,7 @@ describe('Playing SEVENS', () => {
         
 		cy.get('[data-second-card=6-1]')
 			.should('exist')
-			.and('be.visible')
+			.and('be.visible');
 		cy.get('[data-top-card=11-0]')
 			.should('exist')
 			.and('be.visible')
@@ -103,7 +103,7 @@ describe('Playing SEVENS', () => {
         
 		cy.get('[data-second-card=6-1]')
 			.should('exist')
-			.and('be.visible')
+			.and('be.visible');
 		cy.get('[data-top-card=11-0]')
 			.should('exist')
 			.and('be.visible')
@@ -125,6 +125,14 @@ describe('Playing SEVENS', () => {
 
 		assertGameState(0, {
 			p0Hand: [],
+			p0Points: [Card.SIX_OF_DIAMONDS],
+			p0FaceCards: [],
+			p1Hand: [],
+			p1Points: [Card.TEN_OF_HEARTS],
+			p1FaceCards: [Card.QUEEN_OF_CLUBS],
+			scrap: [Card.SEVEN_OF_CLUBS],
+		});
+	});
 			p0Points: [],
 			p0FaceCards: [],
 			p1Hand: [],
