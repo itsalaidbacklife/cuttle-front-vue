@@ -612,7 +612,7 @@ export default {
 			return this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount === 0;
 		},
 		showSevenDoubleJacksDialog() {
-			return this.resolvingSeven && this.topCard.rank === 11 && this.secondCard.rank === 11;
+			return this.resolvingSeven && this.topCard.rank === 11 && this.secondCard.rank === 11 && (this.opponentPointTotal === 0 || this.opponentQueenCount > 0);
 		},
 		discarding() {
 			return this.$store.state.game.discarding;
