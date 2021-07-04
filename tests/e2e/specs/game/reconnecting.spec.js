@@ -85,7 +85,8 @@ describe('Reconnecting to a game', () => {
 			p0FaceCards: [],
 			p1Hand: [Card.ACE_OF_DIAMONDS],
 			p1Points: [],
-			p1FaceCards: [Card.ACE_OF_CLUBS, Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.SIX_OF_CLUBS],
+			p1FaceCards: [],
+			scrap: [Card.ACE_OF_CLUBS, Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.SIX_OF_CLUBS],
 		});
 	});
 
