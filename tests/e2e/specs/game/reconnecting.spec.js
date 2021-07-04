@@ -90,7 +90,7 @@ describe('Reconnecting to a game', () => {
 		});
 	});
 
-	it.only('Can counter after reconnecting', () => {
+	it('Can counter after reconnecting', () => {
 		setupGameAsP1();
 
 		cy.loadGameFixture({
