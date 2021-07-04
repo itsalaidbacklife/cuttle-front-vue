@@ -43,7 +43,7 @@ describe('Reconnecting to a game', () => {
 		});
 	});
 
-	it.only('Allows countering a one-off after reconnecting', () => {
+	it('Shows Cannot Counter Dialog after reconnecting', () => {
 		setupGameAsP1();
 
 		cy.loadGameFixture({
@@ -80,5 +80,14 @@ describe('Reconnecting to a game', () => {
 			.should('be.visible')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
+
+		assertGameState(1, {
+			p0Hand: [],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.ACE_OF_DIAMONDS],
+			p1Points: [],
+			p1FaceCards: [Card.ACE_OF_CLUBS, Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.SIX_OF_CLUBS],
+		});
 	});
 });
