@@ -1,5 +1,5 @@
 <template>
-	<v-dialog>
+	<v-dialog v-model="show">
 		<template #activator="{ on, attrs} ">
 			<span v-bind="attrs" v-on="on">
 				<slot name="activator">
@@ -13,8 +13,11 @@
 			</span>
 		</template>
 		<v-card>
-			<v-card-title>
+			<v-card-title class="d-flex justify-space-between">
 				<h1>Rules of Cuttle</h1>
+				<v-btn icon @click="show = false">
+					<v-icon large>mdi-close</v-icon>
+				</v-btn>
 			</v-card-title>
 			<v-card-text>
 				<h2>Game Rules</h2>
@@ -195,6 +198,11 @@
 
 <script>
 export default {
-	name: 'RulesDialog'
+	name: 'RulesDialog',
+	data() {
+		return {
+			show: false,
+		}
+	},
 }
 </script>
