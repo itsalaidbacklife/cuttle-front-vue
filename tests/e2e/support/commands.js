@@ -318,7 +318,7 @@ Cypress.Commands.add('playTargetedOneOffOpponent', (card, target, targetType) =>
 				opId: playerId, // opponent's opponent is the player
 				targetId: foundTarget.id,
 				cardId: foundCard.id,
-				pointId: foundPointCard.id,
+				pointId: foundPointCard ? foundPointCard.id : null,
 				targetType
 			}, function handleResponse(res, jwres) {
 				if (!jwres.statusCode === 200) {
