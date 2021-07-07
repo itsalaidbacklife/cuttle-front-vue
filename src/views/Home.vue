@@ -2,7 +2,6 @@
 	<div class="home">
 		<div class="container">
 			<div>
-				<rules-dialog />
 				<v-btn
 					id="btn-logout"
 					text
@@ -84,9 +83,11 @@
 							alt="Vue logo"
 							src="../assets/logo.png"
 						>
+						<rules-dialog />
 						<v-btn
 							outlined
 							color="secondary"
+							class="mt-4"
 							:small="$vuetify.breakpoint.mdAndDown ? true : false"
 							href="https://human-ai-interaction.github.io/cuttle-bot/"
 							target="_blank"
@@ -167,6 +168,12 @@ h1 {
 	height: auto;
 	width: 80%;
   margin: 20px auto;
+}
+
+#btn-logout {
+	position: absolute;
+	top: 8px;
+	right: 16px;
 }
 
 .page-title {

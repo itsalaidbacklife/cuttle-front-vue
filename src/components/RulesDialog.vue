@@ -6,6 +6,7 @@
 					<v-btn
 						color="primary"
 						outlined
+						id="rules-button"
 					>
 						Rules
 					</v-btn>
@@ -206,3 +207,8 @@ export default {
 	},
 }
 </script>
+<style lang="scss" scoped>
+#rules-button {
+	width: 100%;
+}
+</style>
