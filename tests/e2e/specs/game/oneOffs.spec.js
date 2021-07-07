@@ -1081,13 +1081,13 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		cy.log('Loaded fixture');
 
 		// Opponent plays NINE
-		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.ACE_OF_DIAMONDS, 'point')
+		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.ACE_OF_DIAMONDS, 'point');
 		
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.get('[data-cy=cannot-counter-resolve]')
-			.click()
+			.click();
 
 		assertGameState(
 			1,
@@ -1107,7 +1107,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		cy.get('#player-field').should('have.class', 'valid-move').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
-		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS)
+		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
 		
@@ -1134,14 +1134,14 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		cy.log('Loaded fixture');
 
 		// Opponent plays NINE
-		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.QUEEN_OF_HEARTS, 'rune')
+		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.QUEEN_OF_HEARTS, 'rune');
 		
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('contain', 'targetting')
 			.get('[data-cy=cannot-counter-resolve]')
-			.click()
+			.click();
 
 		assertGameState(
 			1,
@@ -1161,7 +1161,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		cy.get('#player-field').should('have.class', 'valid-move').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
-		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS)
+		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
 		
@@ -1188,10 +1188,10 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		cy.log('Loaded fixture');
 
 		// Opponent plays POINT
-		cy.playPointsOpponent(Card.TEN_OF_HEARTS)
+		cy.playPointsOpponent(Card.TEN_OF_HEARTS);
 
 		// Play plays JACK
-		cy.get('[data-player-hand-card=11-0]').click()
+		cy.get('[data-player-hand-card=11-0]').click();
 		cy.get('[data-opponent-point-card=10-2]').click();
 
 		assertGameState(
@@ -1208,14 +1208,14 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		);	
 
 		// Opponent plays TWO
-		cy.playTargetedOneOffOpponent(Card.TWO_OF_SPADES, Card.JACK_OF_CLUBS, 'jack')
+		cy.playTargetedOneOffOpponent(Card.TWO_OF_SPADES, Card.JACK_OF_CLUBS, 'jack');
 		
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('contain', 'targetting')
 			.get('[data-cy=cannot-counter-resolve]')
-			.click()
+			.click();
 
 		assertGameState(
 			1,
@@ -1235,7 +1235,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		cy.get('#player-field').should('have.class', 'valid-move').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
-		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS)
+		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
 		
