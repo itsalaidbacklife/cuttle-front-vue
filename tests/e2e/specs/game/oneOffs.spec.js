@@ -1173,7 +1173,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 	});
 
 
-	it.only('ONE-OFF Target should be removed after one-off resolves - target is JACK', () => {
+	it('ONE-OFF Target should be removed after one-off resolves - target is JACK', () => {
 		cy.loadGameFixture({
 			// Opponent is p0
 			p0Hand: [Card.TWO_OF_SPADES, Card.FIVE_OF_CLUBS, Card.TEN_OF_HEARTS],
