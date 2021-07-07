@@ -1060,3 +1060,189 @@ describe('Playing THREEs', () => {
 		);
 	})
 }); // End 3s description
+
+describe('ONE-OFF Target should be removed after one-off resolves', () => {
+	beforeEach(() => {
+		setupGameAsP1();
+	});
+
+	it('ONE-OFF Target should be removed after one-off resolves - target is POINTS', () => {
+		cy.loadGameFixture({
+			// Opponent is p0
+			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			//player is p1
+			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Opponent plays NINE
+		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.ACE_OF_DIAMONDS, 'point');
+		
+		// Player resolves
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+
+		assertGameState(
+			1,
+			{
+				p0Hand: [Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_SPADES],
+			}
+		);
+
+		// Player plays another point
+		cy.get('[data-player-hand-card=6-2]').click();
+		cy.get('#player-field').should('have.class', 'valid-move').click();
+
+		// Opponent plays UN-TARGETED ONE-OFF
+		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
+
+		// Cannot counter dialog should not have a target
+		
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.should('not.contain', 'targetting')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+	})
+
+
+	it('ONE-OFF Target should be removed after one-off resolves - target is FACE CARD', () => {
+		cy.loadGameFixture({
+			// Opponent is p0
+			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			//player is p1
+			p1Hand: [Card.SIX_OF_HEARTS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.QUEEN_OF_HEARTS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+
+		// Opponent plays NINE
+		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.QUEEN_OF_HEARTS, 'rune');
+		
+		// Player resolves
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.should('contain', 'targetting')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+
+		assertGameState(
+			1,
+			{
+				p0Hand: [Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_SPADES],
+			}
+		);
+
+		// Player plays another point
+		cy.get('[data-player-hand-card=6-2]').click();
+		cy.get('#player-field').should('have.class', 'valid-move').click();
+
+		// Opponent plays UN-TARGETED ONE-OFF
+		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
+
+		// Cannot counter dialog should not have a target
+		
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.should('not.contain', 'targetting')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+	});
+
+
+	it('ONE-OFF Target should be removed after one-off resolves - target is JACK', () => {
+		cy.loadGameFixture({
+			// Opponent is p0
+			p0Hand: [Card.TWO_OF_SPADES, Card.FIVE_OF_CLUBS, Card.TEN_OF_HEARTS],
+			p0Points: [],
+			p0FaceCards: [],
+			//player is p1
+			p1Hand: [Card.SIX_OF_HEARTS, Card.JACK_OF_CLUBS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Opponent plays POINT
+		cy.playPointsOpponent(Card.TEN_OF_HEARTS);
+
+		// Play plays JACK
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-opponent-point-card=10-2]').click();
+
+		assertGameState(
+			1,
+			{
+				p0Hand: [Card.TWO_OF_SPADES, Card.FIVE_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS],
+				p1FaceCards: [],
+				scrap: [],
+			}
+		);	
+
+		// Opponent plays TWO
+		cy.playTargetedOneOffOpponent(Card.TWO_OF_SPADES, Card.JACK_OF_CLUBS, 'jack');
+		
+		// Player resolves
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.should('contain', 'targetting')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+
+		assertGameState(
+			1,
+			{
+				p0Hand: [Card.FIVE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.SIX_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+				scrap: [Card.TWO_OF_SPADES, Card.JACK_OF_CLUBS],
+			}
+		);
+
+		// Player plays another point
+		cy.get('[data-player-hand-card=6-2]').click();
+		cy.get('#player-field').should('have.class', 'valid-move').click();
+
+		// Opponent plays UN-TARGETED ONE-OFF
+		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
+
+		// Cannot counter dialog should not have a target
+		
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.should('not.contain', 'targetting')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+	});
+});
