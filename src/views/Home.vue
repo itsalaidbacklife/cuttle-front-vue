@@ -176,7 +176,7 @@ h1 {
 
 #game-list-card {
   border-radius: 15px;
-  padding: 20px;
+  margin-top: 8px;
 }
 
 #card-content-header {
