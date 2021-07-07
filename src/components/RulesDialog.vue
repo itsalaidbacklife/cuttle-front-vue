@@ -143,45 +143,45 @@
 
 				<section>
 					<h2>FAQ</h2>
-					<h5>
+					<h4>
 						Can I play a two to counter a point card? What about a scuttle?
 						Can I play a two to destroy my opponent's Face Card or Glasses Eight on their turn?
-					</h5>
+					</h4>
 					<p>Nope! Twos can only counter One-Offs. You can play a two to destroy a Face Card or Glasses Eight, but this takes your turn, unlike countering.</p>
 
-					<h5>
+					<h4>
 						Do Queens protect against countering with a two?
-					</h5>
+					</h4>
 					<p>
 						Yes! Queens protect against targeting, when a card applies a unique effect to one specific card. This means your other cards (not the Queen, herself) are protected against Twos (either effect), Nines, and Jacks.
 					</p>
 
-					<h5>
+					<h4>
 						Can I counter a Two with a Two?
-					</h5>
+					</h4>
 					<p>
 						Heck yeah! Playing a Two to counter is a One-Off, which can be countered with a two. Stacked counters make for exciting plays.
 					</p>
 
-					<h5>
+					<h4>
 						Can I win by playing a King?
-					</h5>
+					</h4>
 					<p>
 						Yes. If you meet the required number of points, you win immediately. 
 						This means if you play a King when you already have enough points to meet the new limit, you win on that turn.
 					</p>
 
-					<h5>
+					<h4>
 						If I play an Ace or a Six, are my cards destroyed as well?
-					</h5>
+					</h4>
 					<p>
 						Yes. Aces and Sixes destroy all Point Cards and all Face Cards and Glasses Eights respectively. 
 						That includes any that you have out. Try to avoid destroying many of your own cards!
 					</p>
 
-					<h5>
+					<h4>
 						Where can I play Cuttle?
-					</h5>
+					</h4>
 					<p>
 						You can play Cuttle anywhere you have a deck of cards and a friend! If you want to play online, there is only one place: <a href="www.cuttle.cards">www.cuttle.cards</a>
 					</p>
