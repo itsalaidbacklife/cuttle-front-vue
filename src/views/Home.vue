@@ -85,7 +85,6 @@
 							src="../assets/logo.png"
 						>
 						<v-btn
-							rounded
 							outlined
 							color="secondary"
 							:small="$vuetify.breakpoint.mdAndDown ? true : false"
