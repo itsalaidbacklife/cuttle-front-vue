@@ -1,14 +1,16 @@
 <template>
 	<v-dialog>
 		<template #activator="{ on, attrs} ">
-			<v-btn
-				color="primary"
-				outlined
-				v-bind="attrs"
-				v-on="on"
-			>
-				Rules
-			</v-btn>
+			<span v-bind="attrs" v-on="on">
+				<slot name="activator">
+					<v-btn
+						color="primary"
+						outlined
+					>
+						Rules
+					</v-btn>
+				</slot>
+			</span>
 		</template>
 		<v-card>
 			<v-card-title>

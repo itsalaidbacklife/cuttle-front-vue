@@ -19,6 +19,11 @@
 		</template>
 		<!-- Menu -->
 		<v-list id="game-menu">
+			<v-list-item>
+				<rules-dialog>
+					<template #activator>Rules</template>
+				</rules-dialog>
+			</v-list-item>
 			<!-- Concede Dialog (Initiate + Confirm) -->
 			<v-list-item
 				data-cy="concede-initiate"
@@ -60,8 +65,10 @@
 </template>
 
 <script>
+import RulesDialog from '../RulesDialog.vue';
 export default {
 	name: 'GameMenu',
+  	components: { RulesDialog },
 	data() {
 		return {
 			showGameMenu: false,
