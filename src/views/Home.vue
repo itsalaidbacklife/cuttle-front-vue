@@ -1,16 +1,17 @@
 <template>
 	<div class="home">
 		<div class="container">
-			<v-btn
-				id="btn-logout"
-				rounded
-				outlined
-				color="primary"
-				data-cy="btn-logout"
-				@click="logout"
-			>
-				Logout
-			</v-btn>
+			<div>
+				<v-btn
+					id="btn-logout"
+					text
+					color="primary"
+					data-cy="btn-logout"
+					@click="logout"
+				>
+					Logout
+				</v-btn>
+			</div>
 			
 			<div id="game-list-card">
 				<v-row>
@@ -82,10 +83,11 @@
 							alt="Vue logo"
 							src="../assets/logo.png"
 						>
+						<rules-dialog />
 						<v-btn
-							rounded
 							outlined
 							color="secondary"
+							class="mt-4"
 							:small="$vuetify.breakpoint.mdAndDown ? true : false"
 							href="https://human-ai-interaction.github.io/cuttle-bot/"
 							target="_blank"
@@ -100,11 +102,13 @@
 </template>
 <script>
 import GameListItem from '@/components/GameListItem.vue';
+import RulesDialog from '@/components/RulesDialog.vue';
+
 export default {
 	name: 'Home',
 	components: {
-		// HelloWorld
-		GameListItem
+		GameListItem,
+		RulesDialog,
 	},
 	data() {
 		return {
@@ -168,8 +172,8 @@ h1 {
 
 #btn-logout {
 	position: absolute;
-	top: 5px;
-	right: 5px;
+	top: 8px;
+	right: 16px;
 }
 
 .page-title {
@@ -179,7 +183,7 @@ h1 {
 
 #game-list-card {
   border-radius: 15px;
-  padding: 20px;
+  margin-top: 8px;
 }
 
 #card-content-header {
