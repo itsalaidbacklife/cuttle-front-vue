@@ -4,9 +4,10 @@
 			<span v-bind="attrs" v-on="on">
 				<slot name="activator">
 					<v-btn
+						id="rules-button"
 						color="primary"
 						outlined
-						id="rules-button"
+						:small="$vuetify.breakpoint.mdAndDown ? true : false"
 					>
 						Rules
 					</v-btn>
