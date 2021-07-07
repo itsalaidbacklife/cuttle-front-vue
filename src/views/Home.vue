@@ -1,16 +1,18 @@
 <template>
 	<div class="home">
 		<div class="container">
-			<v-btn
-				id="btn-logout"
-				rounded
-				outlined
-				color="primary"
-				data-cy="btn-logout"
-				@click="logout"
-			>
-				Logout
-			</v-btn>
+			<div>
+				<rules-dialog />
+				<v-btn
+					id="btn-logout"
+					text
+					color="primary"
+					data-cy="btn-logout"
+					@click="logout"
+				>
+					Logout
+				</v-btn>
+			</div>
 			
 			<div id="game-list-card">
 				<v-row>
@@ -100,11 +102,13 @@
 </template>
 <script>
 import GameListItem from '@/components/GameListItem.vue';
+import RulesDialog from '@/components/RulesDialog.vue';
+
 export default {
 	name: 'Home',
 	components: {
-		// HelloWorld
-		GameListItem
+		GameListItem,
+		RulesDialog,
 	},
 	data() {
 		return {
@@ -164,12 +168,6 @@ h1 {
 	height: auto;
 	width: 80%;
   margin: 20px auto;
-}
-
-#btn-logout {
-	position: absolute;
-	top: 5px;
-	right: 5px;
 }
 
 .page-title {
