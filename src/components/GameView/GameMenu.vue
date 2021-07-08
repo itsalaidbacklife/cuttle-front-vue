@@ -21,7 +21,9 @@
 		<v-list id="game-menu">
 			<v-list-item>
 				<rules-dialog>
-					<template #activator>Rules</template>
+					<template #activator>
+						Rules
+					</template>
 				</rules-dialog>
 			</v-list-item>
 			<!-- Concede Dialog (Initiate + Confirm) -->
