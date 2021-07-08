@@ -280,6 +280,13 @@
 						:points-to-win="playerPointsToWin"
 						:is-player="true"
 					/>
+					<span
+						id="turn-indicator"
+						class="text--darken-1 ml-2"
+						:class="{'white--text': isPlayersTurn, 'black--text': !isPlayersTurn}"
+					>
+						{{ turnText }}
+					</span>
 				</h3>
 
 				<div
@@ -575,6 +582,9 @@ export default {
 		},
 		isPlayersTurn() {
 			return this.game.turn % 2 === this.game.myPNum
+		},
+		turnText() {
+			return this.isPlayersTurn ? 'YOUR TURN' : 'OPPONENT\'S TURN'
 		},
 		waitingForOpponentToDiscard() {
 			return this.game.waitingForOpponentToDiscard;
