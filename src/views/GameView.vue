@@ -283,7 +283,7 @@
 					<span
 						id="turn-indicator"
 						class="text--darken-1 ml-2"
-						:class="{'white--text': isPlayersTurn, 'black--text': !isPlayersTurn}"
+						:class="{'black--text': isPlayersTurn, 'white--text': !isPlayersTurn}"
 					>
 						{{ turnText }}
 					</span>
