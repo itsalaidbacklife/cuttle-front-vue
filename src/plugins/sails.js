@@ -34,6 +34,7 @@ io.socket.on('game', function(evData) {
 			router.push(`/game/${store.state.game.id}`);
 			break;
 		case 'draw':
+		case 'pass':
 		case 'points':
 		case 'runes':
 		case 'scuttle':
