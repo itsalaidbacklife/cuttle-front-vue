@@ -69,7 +69,16 @@ export default {
 						if (jwres.statusCode === 200) {
 							return resolve(resData);
 						}
-						return reject(new Error('Error creating game'));
+
+						let message;
+						if (Object.prototype.hasOwnProperty.call(resData, 'message')) {
+							message = resData.message;
+						} else if (typeof resData === 'string') {
+							message = resData;
+						} else {
+							message = new Error('Unknown error creating game');
+						}
+						return reject(message);
 					}
 				);
 			});

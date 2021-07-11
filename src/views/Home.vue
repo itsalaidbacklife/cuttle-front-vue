@@ -98,6 +98,20 @@
 				</v-row>
 			</div>
 		</div>
+		<v-snackbar
+			v-model="showSnackBar"
+			color="error"
+			content-class="d-flex justify-space-between align-center"
+			data-cy="newgame-snackbar"
+		>
+			{{ snackBarMessage }}
+			<v-icon
+				data-cy="close-snackbar"
+				@click="clearSnackBar"
+			>
+				mdi-close
+			</v-icon>
+		</v-snackbar>
 	</div>
 </template>
 <script>
@@ -112,7 +126,9 @@ export default {
 	},
 	data() {
 		return {
-			newGameName: ''
+			newGameName: '',
+			showSnackBar:false,
+			snackBarMessage: '',
 		};
 	},
 	computed: {
@@ -130,9 +146,15 @@ export default {
 				.then(() => {
 					this.newGameName = '';
 				})
-				.catch(() => {
-					console.log('Error creating game');
-				});
+				.catch((this.handleError));
+		},
+		clearSnackBar() {
+			this.snackMessage = '';
+			this.showSnackBar = false;
+		},
+		handleError(message) {
+			this.showSnackBar = true;
+			this.snackBarMessage = message;
 		},
 		logout(){
 			this.$store
