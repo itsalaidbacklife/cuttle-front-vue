@@ -939,11 +939,13 @@ export default {
 				break;
 			}
 			if (this.resolvingSeven) {
+				const deckIndex = this.topCardIsSelected ? 0 : 1;
 				this.$store.dispatch('requestPlayTargetedOneOffSeven', {
 					cardId: this.cardSelectedFromDeck.id,
 					targetId: target.id,
 					pointId: jackedPointId,
 					targetType,
+					index: deckIndex,
 				})
 					.then(this.clearSelection())
 					.catch(this.handleError);
@@ -1107,7 +1109,7 @@ export default {
 				.then(this.clearSelection())
 				.catch(this.handleError)
 		},
-		resolveSevenDoubleJacks(cardId, index) {
+		resolveSevenDoubleJacks({cardId, index}) {
 			this.$store.dispatch('requestResolveSevenDoubleJacks', {cardId, index})
 				.then(this.clearSelection)
 				.catch(this.handleError);

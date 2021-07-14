@@ -323,6 +323,13 @@ function assertStoreMatchesFixture(fixture) {
 			if (fixture.scrap) {
 				expect(cardListsMatch(game.scrap, fixture.scrap)).to.eq(true, `Scrap should match fixture, but actual ${printCardList(game.scrap)} did not match fixture: ${printCardList(fixture.scrap)}`);
 			}
+			// Top Card if specified
+			if (fixture.topCard) {
+				expect(cardsMatch(game.topCard, fixture.topCard)).to.eq(true, `Expected top card ${printCard(game.topCard)} to match fixture topcard: ${printCard(fixture.topCard)}`);
+			}
+			if (fixture.secondCard) {
+				expect(cardsMatch(game.secondCard, fixture.secondCard)).to.eq(true, `Expected second card ${printCard(game.secondCard)} to match fixture second card: ${printCard(fixture.secondCard)}`);
+			}
 		});
 }
 /**
