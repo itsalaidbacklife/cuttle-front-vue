@@ -13,11 +13,6 @@ io.sails.reconnection = true;
 // Handles socket updates of game data
 io.socket.on('game', function(evData) {
 	switch (evData.verb) {
-	// New game was created
-	case 'created':
-		const newGame = _.cloneDeep(evData.data);
-		store.commit('addGameToList', newGame);
-		break;
 	case 'updated':
 		// Handle GameOver
 		if (evData.data.victory && evData.data.victory.gameOver) {
@@ -126,6 +121,11 @@ io.socket.on('game', function(evData) {
 	default:
 		break;
 	}
+});
+
+io.socket.on('gameCreated', function(evData) {
+	const newGame = _.cloneDeep(evData.data);
+	store.commit('addGameToList', newGame);
 });
 
 io.socket.on('join', function(evData) {
