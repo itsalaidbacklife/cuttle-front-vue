@@ -90,7 +90,10 @@ export default {
 		moveToScrap() {
 			const index = this.selectedJack.id === this.topCard.id ? 0 : 1;
 			const card = this.selectedJack;
-			this.$emit('resolveSevenDoubleJacks', card.id, index);
+			this.$emit('resolveSevenDoubleJacks', {
+				cardId: card.id,
+				index,
+			});
 			this.clearSelection();
 		},
 		selectCard(cardId) {

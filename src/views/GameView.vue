@@ -1109,7 +1109,7 @@ export default {
 				.then(this.clearSelection())
 				.catch(this.handleError)
 		},
-		resolveSevenDoubleJacks(cardId, index) {
+		resolveSevenDoubleJacks({cardId, index}) {
 			this.$store.dispatch('requestResolveSevenDoubleJacks', {cardId, index})
 				.then(this.clearSelection)
 				.catch(this.handleError);
