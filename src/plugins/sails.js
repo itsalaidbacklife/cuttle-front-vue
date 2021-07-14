@@ -124,7 +124,7 @@ io.socket.on('game', function(evData) {
 });
 
 io.socket.on('gameCreated', function(evData) {
-	const newGame = _.cloneDeep(evData.data);
+	const newGame = _.cloneDeep(evData);
 	store.commit('addGameToList', newGame);
 });
 
