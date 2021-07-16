@@ -441,7 +441,48 @@ describe('Reconnecting to a game', () => {
 			});
 		});
 		it('sevenTargetedOneOff -- Reconnect into counter dialog', () => {
-			expect(true).to.eq(false);
+			setupGameAsP1();
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.TWO_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_CLUBS],
+				topCard: Card.TWO_OF_CLUBS,
+			});
+			cy.get('[data-player-hand-card]')
+				.should('have.length', 1);
+			cy.log('Fixture loaded');
+
+			cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+			cy.get('#counter-dialog')
+				.should('be.visible')
+				.get('[data-cy=decline-counter-resolve]')
+				.click();
+			cy.playTargetedOneOffFromSevenOpponent(Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS, 'rune');
+			// Reconnect & proceed
+			cy.reload();
+			reconnect();
+			// Player counters
+			cy.get('#counter-dialog')
+				.should('be.visible')
+				.get('[data-cy=counter]')
+				.click();
+			cy.get('#choose-two-dialog')
+				.should('be.visible')
+				.get('[data-counter-dialog-card=2-2]')
+				.click();
+			
+			assertGameState(1, {
+				p0Hand: [],
+				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_CLUBS],
+				scrap: [Card.TWO_OF_DIAMONDS, Card.TWO_OF_CLUBS, Card.SEVEN_OF_CLUBS],
+			});
 		});
 	}); // End counter dialog describe
 
