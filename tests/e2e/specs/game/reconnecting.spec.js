@@ -487,15 +487,135 @@ describe('Reconnecting to a game', () => {
 	}); // End counter dialog describe
 
 
-	describe('Reconnecting into One-Off resolutions', () => {
+	describe.only('Reconnecting into One-Off resolutions', () => {
 		it('Resolve 3 after reconnect', () => {
-			expect(true).to.eq(false);
+			setupGameAsP0();
+			cy.loadGameFixture({
+				p0Hand: [Card.THREE_OF_CLUBS],
+				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.TWO_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_CLUBS],
+				scrap: [Card.TWO_OF_CLUBS],
+			});
+			cy.get('[data-player-hand-card]')
+				.should('have.length', 1);
+			cy.log('Fixture loaded');
+
+			cy.playOneOffAndResolveAsPlayer(Card.THREE_OF_CLUBS);
+			// Disconnect & Reconnect
+			cy.reload();
+			reconnect();
+			// Three dialog appears & functions correctly
+			cy.get('#three-dialog').should('be.visible');
+			// resolve button should be disabled
+			cy.get('[data-cy=three-resolve').should('be.disabled');
+			
+			// Player two of clubs from scrap
+			cy.get('[data-scrap-dialog-card=2-0]').click();
+			cy.get('[data-cy=three-resolve')
+				.should('not.be.disabled')
+				.click();
+
+			assertGameState(0, {
+				p0Hand: [Card.TWO_OF_CLUBS],
+				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.TWO_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [Card.KING_OF_CLUBS],
+				scrap: [Card.THREE_OF_CLUBS],
+			});
 		});
-		it('Resolve 4 after reconnect', () => {
-			expect(true).to.eq(false);
+		it('Resolve 4 after reconnect - Player discards', () => {
+			setupGameAsP1();
+			cy.loadGameFixture({
+				p0Hand: [Card.FOUR_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.THREE_OF_DIAMONDS, Card.THREE_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+			});
+			cy.get('[data-player-hand-card]')
+				.should('have.length', 2);
+			cy.log('Fixture loaded');
+
+			// Opponent plays four of clubs, player resolves
+			cy.playOneOffOpponent(Card.FOUR_OF_CLUBS);
+			cy.get('#cannot-counter-dialog')
+				.should('be.visible')
+				.get('[data-cy=cannot-counter-resolve]')
+				.click();
+			// Disconnect & Reconnect
+			cy.reload();
+			reconnect();
+			// Four dialog appears, player discards as normal
+			// Choosing cards to discard
+			cy.log('Choosing two cards to discard');
+			cy.get('[data-cy=submit-four-dialog]').should('be.disabled'); // can't prematurely submit
+			cy.get('[data-discard-card=3-1]').click(); // ace of diamonds
+			cy.get('[data-cy=submit-four-dialog]').should('be.disabled'); // can't prematurely submit
+			cy.get('[data-discard-card=3-0]').click(); // four of spades
+			cy.get('[data-cy=submit-four-dialog]').click(); // submit choice to discard
+
+			assertGameState(1, {
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [
+					Card.THREE_OF_DIAMONDS,
+					Card.THREE_OF_CLUBS,
+					Card.FOUR_OF_CLUBS,
+				],
+			});
 		});
-		it('Resolve 7 after reconnect', () => {
-			expect(true).to.eq(false);
+		it('Resolve 7 after reconnect - Player', () => {
+			setupGameAsP0();
+			cy.loadGameFixture({
+				p0Hand: [Card.SEVEN_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.THREE_OF_DIAMONDS, Card.THREE_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+				topCard: [Card.TEN_OF_SPADES],
+				secondCard: [Card.NINE_OF_CLUBS],
+			});
+			cy.get('[data-player-hand-card]')
+				.should('have.length', 1);
+			cy.log('Fixture loaded');
+
+			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+			// Disconnect & Reconnect
+			cy.reload();
+			reconnect();
+			// Play off top of deck as normal
+			cy.get('[data-top-card=10-3]')
+				.should('exist')
+				.and('be.visible');
+			cy.get('[data-second-card=9-0]')
+				.should('exist')
+				.and('be.visible')
+				.click();
+			cy.get('#player-field')
+				.should('have.class', 'valid-move')
+				.click();
+
+			assertGameState(0, {
+				p0Hand: [],
+				p0Points: [Card.TEN_OF_SPADES],
+				p0FaceCards: [],
+				p1Hand: [Card.THREE_OF_DIAMONDS, Card.THREE_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [],
+				topCard: [Card.NINE_OF_CLUBS],
+				scrap: [Card.SEVEN_OF_CLUBS],
+			});
 		});
 	});
 });
