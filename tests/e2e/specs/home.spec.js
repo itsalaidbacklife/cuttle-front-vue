@@ -1,3 +1,4 @@
+import { assertSnackbarError } from '../support/helpers';
 const playerEmail = 'myCustomEmail@gmail.com';
 const playerPassword = 'passwordLongerThanEight';
 const opponentEmail = 'yourMortalEnemy@cia.gov';
@@ -188,5 +189,6 @@ describe('Home - Create Game', () => {
 			expect(state.game.gameId).to.eq(undefined, 'Store game should not have id');
 			expect(state.gameList.games.length).to.eq(0, 'Game list should be empty in store, but is not');
 		});
+		assertSnackbarError('Game name cannot be blank','newgame');
 	});
 });
