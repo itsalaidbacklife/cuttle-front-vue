@@ -1044,7 +1044,7 @@ describe('Playing THREEs', () => {
 		cy.resolveThreeOpponent(Card.ACE_OF_SPADES);
 
 		cy.get('#waiting-for-opponent-resolve-three-scrim')
-			.should('not.be.visible');	
+			.should('not.be.visible');
 
 		assertGameState(
 			0,
