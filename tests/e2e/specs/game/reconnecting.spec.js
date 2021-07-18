@@ -487,47 +487,91 @@ describe('Reconnecting to a game', () => {
 	}); // End counter dialog describe
 
 
-	describe.only('Reconnecting into One-Off resolutions', () => {
-		it('Resolve 3 after reconnect', () => {
-			setupGameAsP0();
-			cy.loadGameFixture({
-				p0Hand: [Card.THREE_OF_CLUBS],
-				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
-				p0FaceCards: [],
-				p1Hand: [Card.TWO_OF_DIAMONDS],
-				p1Points: [],
-				p1FaceCards: [Card.KING_OF_CLUBS],
-				scrap: [Card.TWO_OF_CLUBS],
+	describe('Reconnecting into One-Off resolutions', () => {
+		describe('Reconnecting into 3s', () => {
+			it('Resolve 3 after reconnect -- Player fetches card', () => {
+				setupGameAsP0();
+				cy.loadGameFixture({
+					p0Hand: [Card.THREE_OF_CLUBS],
+					p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.TWO_OF_DIAMONDS],
+					p1Points: [],
+					p1FaceCards: [Card.KING_OF_CLUBS],
+					scrap: [Card.TWO_OF_CLUBS],
+				});
+				cy.get('[data-player-hand-card]')
+					.should('have.length', 1);
+				cy.log('Fixture loaded');
+	
+				cy.playOneOffAndResolveAsPlayer(Card.THREE_OF_CLUBS);
+				// Disconnect & Reconnect
+				cy.reload();
+				reconnect();
+				// Three dialog appears & functions correctly
+				cy.get('#three-dialog').should('be.visible');
+				// resolve button should be disabled
+				cy.get('[data-cy=three-resolve').should('be.disabled');
+				
+				// Player two of clubs from scrap
+				cy.get('[data-scrap-dialog-card=2-0]').click();
+				cy.get('[data-cy=three-resolve')
+					.should('not.be.disabled')
+					.click();
+	
+				assertGameState(0, {
+					p0Hand: [Card.TWO_OF_CLUBS],
+					p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.TWO_OF_DIAMONDS],
+					p1Points: [],
+					p1FaceCards: [Card.KING_OF_CLUBS],
+					scrap: [Card.THREE_OF_CLUBS],
+				});
 			});
-			cy.get('[data-player-hand-card]')
-				.should('have.length', 1);
-			cy.log('Fixture loaded');
-
-			cy.playOneOffAndResolveAsPlayer(Card.THREE_OF_CLUBS);
-			// Disconnect & Reconnect
-			cy.reload();
-			reconnect();
-			// Three dialog appears & functions correctly
-			cy.get('#three-dialog').should('be.visible');
-			// resolve button should be disabled
-			cy.get('[data-cy=three-resolve').should('be.disabled');
-			
-			// Player two of clubs from scrap
-			cy.get('[data-scrap-dialog-card=2-0]').click();
-			cy.get('[data-cy=three-resolve')
-				.should('not.be.disabled')
-				.click();
-
-			assertGameState(0, {
-				p0Hand: [Card.TWO_OF_CLUBS],
-				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
-				p0FaceCards: [],
-				p1Hand: [Card.TWO_OF_DIAMONDS],
-				p1Points: [],
-				p1FaceCards: [Card.KING_OF_CLUBS],
-				scrap: [Card.THREE_OF_CLUBS],
+			it('Resolve opponents three after reconnect', () => {
+				setupGameAsP1();
+				cy.loadGameFixture({
+					p0Hand: [Card.THREE_OF_CLUBS],
+					p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.FOUR_OF_DIAMONDS],
+					p1Points: [],
+					p1FaceCards: [],
+					scrap: [Card.TWO_OF_CLUBS],
+				});
+				cy.get('[data-player-hand-card]')
+					.should('have.length', 1);
+				cy.log('Fixture loaded');
+				// Opponent plays 3 of clubs & it resolves
+				cy.playOneOffOpponent(Card.THREE_OF_CLUBS);
+				cy.get('#cannot-counter-dialog')
+					.should('be.visible')
+					.get('[data-cy=cannot-counter-resolve]')
+					.click();
+				cy.get('#waiting-for-opponent-resolve-three-scrim')
+					.should('be.visible');
+				cy.reload();
+				reconnect();
+				cy.get('#waiting-for-opponent-resolve-three-scrim')
+					.should('be.visible');
+				// waiting for opponent to choose from scrap scrim
+				cy.resolveThreeOpponent(Card.TWO_OF_CLUBS);
+		
+				cy.get('#waiting-for-opponent-resolve-three-scrim')
+					.should('not.be.visible');
+				assertGameState(1, {
+					p0Hand: [Card.TWO_OF_CLUBS],
+					p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.FOUR_OF_DIAMONDS],
+					p1Points: [],
+					p1FaceCards: [],
+					scrap: [Card.THREE_OF_CLUBS],
+				});
 			});
-		});
+		}); // End 3's reconnect
+
 		it('Resolve 4 after reconnect - Player discards', () => {
 			setupGameAsP1();
 			cy.loadGameFixture({
