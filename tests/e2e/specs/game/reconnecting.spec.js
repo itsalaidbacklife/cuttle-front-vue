@@ -271,7 +271,7 @@ describe('Reconnecting to a game', () => {
 
 	describe('Reconnecting into Counter Dialog', () => {
 
-		it('oneOff -- Reconnect into Counter Dialog', () => {
+		it.only('oneOff -- Reconnect into Counter Dialog', () => {
 			setupGameAsP1();
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_CLUBS],
@@ -302,6 +302,9 @@ describe('Reconnecting to a game', () => {
 				.should('be.visible')
 				.get('[data-counter-dialog-card=2-0]')
 				.click();
+			
+			cy.resolveOpponent();
+			
 			assertGameState(1, {
 				p0Hand: [],
 				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
