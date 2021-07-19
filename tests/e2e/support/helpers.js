@@ -268,8 +268,13 @@ function assertDomMatchesFixture(pNum, fixture) {
 		fixture.p0Hand.forEach((card) => {
 			cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
 		});
-		cy.get('[data-opponent-hand-card]')
-			.should('have.length', fixture.p1Hand.length);
+		if (fixture.p0Hand.length > 0) {
+			cy.get('[data-opponent-hand-card]')
+				.should('have.length', fixture.p1Hand.length);
+		} else {
+			cy.get('[data-opponent-hand-card]')
+				.should('not.exist');
+		}
 		if (playerHasGlasses){
 			fixture.p1Hand.forEach((card) => {
 				cy.get(`[data-opponent-hand-card=${card.rank}-${card.suit}]`);
@@ -280,8 +285,13 @@ function assertDomMatchesFixture(pNum, fixture) {
 		fixture.p1Hand.forEach((card) => {
 			cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
 		});
-		cy.get('[data-opponent-hand-card]')
-			.should('have.length', fixture.p0Hand.length);
+		if (fixture.p1Hand.length > 0) {
+			cy.get('[data-opponent-hand-card]')
+				.should('have.length', fixture.p0Hand.length);
+		} else {
+			cy.get('[data-opponent-hand-card]')
+				.should('not.exist');
+		}
 		if (playerHasGlasses){
 			fixture.p0Hand.forEach((card) => {
 				cy.get(`[data-opponent-hand-card=${card.rank}-${card.suit}]`);
