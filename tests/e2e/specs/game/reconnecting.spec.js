@@ -91,22 +91,22 @@ describe('Reconnecting to a game', () => {
 			});
 		});
 
-		it('targetedOneOff -- reconnect into cannot counter dialog', () => {
+		it.only('targetedOneOff -- reconnect into cannot counter dialog', () => {
 			setupGameAsP1();
 
 			cy.loadGameFixture({
-				p0Hand: [Card.ACE_OF_CLUBS],
-				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
-				p0FaceCards: [Card.KING_OF_CLUBS],
-				p1Hand: [Card.TWO_OF_CLUBS],
-				p1Points: [],
-				p1FaceCards: [],
+				p0Hand: [Card.TWO_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_CLUBS],
+				p1Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+				p1FaceCards: [Card.KING_OF_CLUBS],
 			});
 			cy.get('[data-player-hand-card]')
 				.should('have.length', 1);
 			cy.log('Fixture loaded');
 
-			cy.playTargetedOneOffOpponent('playTargetedOneOffOpponent', Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS, 'rune');
+			cy.playTargetedOneOffOpponent(Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS, 'rune');
 
 			cy.get('#cannot-counter-dialog')
 				.should('be.visible');
@@ -123,11 +123,11 @@ describe('Reconnecting to a game', () => {
 				.click();
 			
 			assertGameState(1, {
-				p0Hand: [Card.ACE_OF_CLUBS],
-				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+				p0Hand: [],
+				p0Points: [],
 				p0FaceCards: [],
-				p1Hand: [],
-				p1Points: [],
+				p1Hand: [Card.ACE_OF_CLUBS],
+				p1Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
 				p1FaceCards: [],
 				scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS],
 			});
@@ -271,7 +271,7 @@ describe('Reconnecting to a game', () => {
 
 	describe('Reconnecting into Counter Dialog', () => {
 
-		it.only('oneOff -- Reconnect into Counter Dialog', () => {
+		it('oneOff -- Reconnect into Counter Dialog', () => {
 			setupGameAsP1();
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_CLUBS],
@@ -304,7 +304,7 @@ describe('Reconnecting to a game', () => {
 				.click();
 			
 			cy.resolveOpponent();
-			
+
 			assertGameState(1, {
 				p0Hand: [],
 				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
@@ -424,7 +424,7 @@ describe('Reconnecting to a game', () => {
 				.get('[data-cy=decline-counter-resolve]')
 				.click();
 			// Opponent plays the ace of clubs off top of deck
-			cy.playOneOffFromSevenOpponent(Car.ACE_OF_CLUBS);
+			cy.playOneOffFromSevenOpponent(Card.ACE_OF_CLUBS);
 			// Reconnect & proceed
 			cy.reload();
 			reconnect();
