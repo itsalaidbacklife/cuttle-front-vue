@@ -132,7 +132,7 @@ describe('Reconnecting to a game', () => {
 				scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS],
 			});
 		});
-		it.only('counter -- Reconnect into cannot counter dialog', () => {
+		it('counter -- Reconnect into cannot counter dialog', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_CLUBS],
@@ -185,7 +185,7 @@ describe('Reconnecting to a game', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
-				p0FaceCards: [Card.KING_OF_CLUBS],
+				p0FaceCards: [],
 				p1Hand: [],
 				p1Points: [],
 				p1FaceCards: [],
@@ -215,7 +215,7 @@ describe('Reconnecting to a game', () => {
 			assertGameState(1, {
 				p0Hand: [],
 				p0Points: [],
-				p0FaceCards: [Card.KING_OF_CLUBS],
+				p0FaceCards: [],
 				p1Hand: [],
 				p1Points: [],
 				p1FaceCards: [],
@@ -342,6 +342,8 @@ describe('Reconnecting to a game', () => {
 				.should('be.visible')
 				.get('[data-counter-dialog-card=2-0]')
 				.click();
+
+			cy.resolveOpponent();
 
 			assertGameState(1, {
 				p0Hand: [],
