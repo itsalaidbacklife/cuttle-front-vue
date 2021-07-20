@@ -333,10 +333,13 @@ describe('Reconnecting to a game', () => {
 			cy.log('Fixture loaded');
 
 			cy.playTargetedOneOffOpponent(Card.TWO_OF_SPADES, Card.KING_OF_CLUBS, 'rune');
+
+			cy.get('#counter-dialog')
+				.should('be.visible');
 			// Reload & counter
 			cy.reload();
 			reconnect();
-		
+
 			cy.get('#counter-dialog')
 				.should('be.visible')
 				.get('[data-cy=counter]')
@@ -346,7 +349,13 @@ describe('Reconnecting to a game', () => {
 				.get('[data-counter-dialog-card=2-0]')
 				.click();
 
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+
 			cy.resolveOpponent();
+
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('not.be.visible');
 
 			assertGameState(1, {
 				p0Hand: [],
