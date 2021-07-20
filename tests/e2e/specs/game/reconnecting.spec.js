@@ -649,7 +649,7 @@ describe('Reconnecting to a game', () => {
 				],
 			});
 		});
-		it('Resolve 7 after reconnect - Player', () => {
+		it.only('Resolve 7 after reconnect - Player', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -658,14 +658,18 @@ describe('Reconnecting to a game', () => {
 				p1Hand: [Card.THREE_OF_DIAMONDS, Card.THREE_OF_CLUBS],
 				p1Points: [],
 				p1FaceCards: [],
-				topCard: [Card.TEN_OF_SPADES],
-				secondCard: [Card.NINE_OF_CLUBS],
+				topCard: Card.TEN_OF_SPADES,
+				secondCard: Card.NINE_OF_CLUBS,
 			});
 			cy.get('[data-player-hand-card]')
 				.should('have.length', 1);
 			cy.log('Fixture loaded');
 
 			cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
+			
+			cy.get('[data-top-card=10-3]')
+				.should('exist')
+				.and('be.visible');
 			// Disconnect & Reconnect
 			cy.reload();
 			reconnect();
