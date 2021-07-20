@@ -151,6 +151,8 @@ describe('Reconnecting to a game', () => {
 			cy.get('#scrap')
 				.should('have.class', 'valid-move')
 				.click();
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
 			// Opponent counters
 			cy.counterOpponent(Card.TWO_OF_CLUBS);
 			// Reconnect & proceed
@@ -414,7 +416,7 @@ describe('Reconnecting to a game', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
-				p0FaceCards: [Card.KING_OF_CLUBS],
+				p0FaceCards: [],
 				p1Hand: [Card.TWO_OF_DIAMONDS],
 				p1Points: [],
 				p1FaceCards: [],
@@ -430,8 +432,13 @@ describe('Reconnecting to a game', () => {
 				.should('be.visible')
 				.get('[data-cy=decline-counter-resolve]')
 				.click();
+
+			cy.get('#counter-dialog')
+				.should('be.visible');
 			// Opponent plays the ace of clubs off top of deck
 			cy.playOneOffFromSevenOpponent(Card.ACE_OF_CLUBS);
+			cy.get('#counter-dialog')
+				.should('be.visible');
 			// Reconnect & proceed
 			cy.reload();
 			reconnect();
@@ -440,10 +447,13 @@ describe('Reconnecting to a game', () => {
 				.should('be.visible')
 				.get('[data-cy=decline-counter-resolve]')
 				.click();
+			
+			cy.resolveOpponent();
+
 			assertGameState(1, {
 				p0Hand: [],
 				p0Points: [],
-				p0FaceCards: [Card.KING_OF_CLUBS],
+				p0FaceCards: [],
 				p1Hand: [Card.TWO_OF_DIAMONDS],
 				p1Points: [],
 				p1FaceCards: [],
