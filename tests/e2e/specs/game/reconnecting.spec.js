@@ -91,7 +91,7 @@ describe('Reconnecting to a game', () => {
 			});
 		});
 
-		it.only('targetedOneOff -- reconnect into cannot counter dialog', () => {
+		it('targetedOneOff -- reconnect into cannot counter dialog', () => {
 			setupGameAsP1();
 
 			cy.loadGameFixture({
@@ -132,12 +132,12 @@ describe('Reconnecting to a game', () => {
 				scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS],
 			});
 		});
-		it('counter -- Reconnect into cannot counter dialog', () => {
+		it.only('counter -- Reconnect into cannot counter dialog', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_CLUBS],
 				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
-				p0FaceCards: [Card.KING_OF_CLUBS],
+				p0FaceCards: [],
 				p1Hand: [Card.TWO_OF_CLUBS],
 				p1Points: [],
 				p1FaceCards: [],
@@ -165,7 +165,10 @@ describe('Reconnecting to a game', () => {
 			
 			assertGameState(0, {
 				p0Hand: [],
-				p0Points: [],
+				p0Points: [
+					Card.SEVEN_OF_DIAMONDS,
+					Card.SEVEN_OF_HEARTS
+				],
 				p0FaceCards: [],
 				p1Hand: [],
 				p1Points: [],
@@ -173,9 +176,6 @@ describe('Reconnecting to a game', () => {
 				scrap: [
 					Card.ACE_OF_CLUBS,
 					Card.TWO_OF_CLUBS,
-					Card.KING_OF_CLUBS,
-					Card.SEVEN_OF_DIAMONDS,
-					Card.SEVEN_OF_HEARTS
 				],
 			});
 		});
