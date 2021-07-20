@@ -464,7 +464,7 @@ describe('Reconnecting to a game', () => {
 			cy.get('[data-player-hand-card]')
 				.should('have.length', 1);
 			cy.log('Fixture loaded');
-
+			// Opponent plays seven of clubs
 			cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
 			cy.get('#counter-dialog')
 				.should('be.visible')
@@ -481,9 +481,11 @@ describe('Reconnecting to a game', () => {
 				.click();
 			cy.get('#choose-two-dialog')
 				.should('be.visible')
-				.get('[data-counter-dialog-card=2-2]')
+				.get('[data-counter-dialog-card=2-1]')
 				.click();
 			
+			cy.resolveOpponent();
+
 			assertGameState(1, {
 				p0Hand: [],
 				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
