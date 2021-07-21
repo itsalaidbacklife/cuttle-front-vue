@@ -163,6 +163,10 @@ export default {
 		},
 	},
 	actions: {
+		updateGameThenResetPNumIfNull(context, game) {
+			context.commit('updateGame', game);
+			context.dispatch('resetPNumIfNull');
+		},
 		resetPNumIfNull(context) {
 			// Set my pNum if it is null
 			if (context.state.myPNum === null) {
