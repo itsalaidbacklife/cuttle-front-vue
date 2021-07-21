@@ -674,10 +674,10 @@ describe('Reconnecting to a game', () => {
 			cy.reload();
 			reconnect();
 			// Play off top of deck as normal
-			cy.get('[data-top-card=10-3]')
+			cy.get('[data-second-card=9-0]')
 				.should('exist')
 				.and('be.visible');
-			cy.get('[data-second-card=9-0]')
+			cy.get('[data-top-card=10-3]')
 				.should('exist')
 				.and('be.visible')
 				.click();
