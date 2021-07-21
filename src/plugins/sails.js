@@ -30,8 +30,7 @@ io.socket.on('game', function(evData) {
 			store.commit('updateReady', evData.data.pNum);
 			break;
 		case 'Initialize':
-			store.commit('updateGame', evData.data.game);
-			store.dispatch('resetPNumIfNull');
+			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);
 			router.push(`/game/${store.state.game.id}`);
 			break;
 		case 'draw':
@@ -41,24 +40,20 @@ io.socket.on('game', function(evData) {
 		case 'loadFixture':
 		case 'jack':
 		case 'deleteDeck':
-			store.commit('updateGame', evData.data.game);
-			store.dispatch('resetPNumIfNull');
+			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);
 			break;
 		case 'resolveThree':
-			store.commit('updateGame', evData.data.game);
-			store.dispatch('resetPNumIfNull');
+			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);
 			store.commit('setPickingFromScrap', false)
 			store.commit('setWaitingForOpponentToPickFromScrap', false);
 			break;
 		case 'resolveFour':
-			store.commit('updateGame', evData.data.game);
-			store.dispatch('resetPNumIfNull');
+			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);
 			store.commit('setWaitingForOpponentToDiscard', false);
 			store.commit('setDiscarding', false);
 			break;
 		case 'resolve':
-			store.commit('updateGame', evData.data.game);
-			store.dispatch('resetPNumIfNull');
+			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);
 			store.commit('setWaitingForOpponentToCounter', false);
 			if (evData.data.happened) {
 				switch (evData.data.oneOff.rank) {
@@ -91,8 +86,7 @@ io.socket.on('game', function(evData) {
 		case 'targetedOneOff':
 		case 'oneOff':
 		case 'counter':
-			store.commit('updateGame', evData.data.game);
-			store.dispatch('resetPNumIfNull');
+			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);
 			if (evData.data.pNum !== store.state.game.myPNum) {
 				store.commit('setWaitingForOpponentToCounter', false);
 				store.commit('setMyTurnToCounter', true);
@@ -103,15 +97,13 @@ io.socket.on('game', function(evData) {
 		case 'sevenRunes':
 		case 'sevenJack':
 		case 'sevenScuttle':
-			store.commit('updateGame', evData.data.game);
-			store.dispatch('resetPNumIfNull');
+			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);
 			store.commit('setPlayingFromDeck', false);
 			store.commit('setWaitingForOpponentToPlayFromDeck', false);
 			break;
 		case 'sevenOneOff':
 		case 'sevenTargetedOneOff':
-			store.commit('updateGame', evData.data.game);
-			store.dispatch('resetPNumIfNull');
+			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);
 			store.commit('setPlayingFromDeck', false);
 			store.commit('setWaitingForOpponentToPlayFromDeck', false);
 			if (evData.data.pNum !== store.state.game.myPNum) {
@@ -120,14 +112,7 @@ io.socket.on('game', function(evData) {
 			}
 			break;
 		case 'reLogin':
-			store.commit('updateGame', evData.data.game);
-			if (store.state.game.myPNum === null) {
-				let myPNum = store.state.game.players.findIndex((player) => player.userName === store.getters.myUserName);
-				if (myPNum === -1) {
-					myPNum = null;
-				}
-				store.commit('setMyPNum', myPNum);
-			}
+			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);
 			break;
 		}
 	default:
