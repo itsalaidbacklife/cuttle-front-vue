@@ -265,10 +265,12 @@ function assertDomMatchesFixture(pNum, fixture) {
 	});
 	// Test Hands
 	if (pNum === 0) {
+		// Player Hand
 		fixture.p0Hand.forEach((card) => {
 			cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
 		});
-		if (fixture.p0Hand.length > 0) {
+		// Opponent Hand
+		if (fixture.p1Hand.length > 0) {
 			cy.get('[data-opponent-hand-card]')
 				.should('have.length', fixture.p1Hand.length);
 		} else {
@@ -282,10 +284,12 @@ function assertDomMatchesFixture(pNum, fixture) {
 		}
 	}
 	else if (pNum === 1) {
+		// Player hand
 		fixture.p1Hand.forEach((card) => {
 			cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
 		});
-		if (fixture.p1Hand.length > 0) {
+		// Opponent Hand
+		if (fixture.p0Hand.length > 0) {
 			cy.get('[data-opponent-hand-card]')
 				.should('have.length', fixture.p0Hand.length);
 		} else {
