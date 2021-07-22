@@ -1,7 +1,7 @@
 export const validEmail = 'myCustomEmail@gmail.com';
 export const validPassword = 'passwordLongerThanEight';
-const opponentEmail = 'yourMortalEnemy@cia.gov';
-const opponentPassword = 'deviousTrickery';
+export const opponentEmail = 'yourMortalEnemy@cia.gov';
+export const opponentPassword = 'deviousTrickery';
 
 /**
  * Signs up two players, navigates home, creates game, subscribes, ready's up

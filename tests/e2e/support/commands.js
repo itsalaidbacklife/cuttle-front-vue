@@ -750,6 +750,18 @@ Cypress.Commands.add('concedeOpponent', () => {
 	});
 });
 
+Cypress.Commands.add('reconnectOpponent', (email, password) => {
+	cy.log('Opponent Reconnects');
+	io.socket.get('/user/reLogin', {
+		email,
+		password,
+	}, function handleResponse(res, jwres) {
+		if (jwres.statusCode !== 200) {
+			throw new Error(`Error reconnecting opponent: ${jwres.body.message}`);
+		}
+	});
+});
+
 /**
  * @param card: {suit: number, rank: number}
  */

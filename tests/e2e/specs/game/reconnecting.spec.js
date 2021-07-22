@@ -1,4 +1,4 @@
-import { setupGameAsP0, setupGameAsP1, validEmail, validPassword, assertGameState, Card } from '../../support/helpers';
+import { setupGameAsP0, setupGameAsP1, validEmail, validPassword, opponentEmail, opponentPassword, assertGameState, Card } from '../../support/helpers';
 
 function reconnect() {
 	cy.get('#reauthenticate-dialog')
@@ -267,6 +267,44 @@ describe('Reconnecting to a game', () => {
 					Card.TWO_OF_CLUBS,
 					Card.SEVEN_OF_CLUBS,
 				],
+			});
+		});
+		it.only('Opponent reconnects while player is in cannot-counter dialog', () => {
+			setupGameAsP1();
+
+			cy.loadGameFixture({
+				p0Hand: [Card.ACE_OF_CLUBS],
+				p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_DIAMONDS],
+				p1Points: [Card.SIX_OF_CLUBS],
+				p1FaceCards: [],
+			});
+			cy.get('[data-player-hand-card]')
+				.should('have.length', 1);
+			cy.log('Fixture loaded');
+
+			cy.playOneOffOpponent(Card.ACE_OF_CLUBS);
+
+			cy.get('#cannot-counter-dialog')
+				.should('be.visible');
+			
+			cy.reconnectOpponent(opponentEmail, opponentPassword);
+
+			// Cannot counter dialog appears again
+			cy.get('#cannot-counter-dialog')
+				.should('be.visible')
+				.get('[data-cy=cannot-counter-resolve]')
+				.click();
+
+			assertGameState(1, {
+				p0Hand: [],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_DIAMONDS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.ACE_OF_CLUBS, Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.SIX_OF_CLUBS],
 			});
 		});
 	}); // End cannot counter dialog describe
