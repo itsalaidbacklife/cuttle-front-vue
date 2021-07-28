@@ -1221,14 +1221,6 @@ export default {
 		}
 		&.my-turn {
 			border: 4px solid var(--v-accent-base);
-			// Video 1
-			// background-image: linear-gradient(-45deg, #fff, #ddd, var(--v-accent-darken2), var(--v-accent-darken4));
-			// background-size: 400% 400%;
-			// animation: animate-gradient 3.5s ease-in-out infinite;
-			// Video 2's
-			// background-image: linear-gradient(-45deg, #fff, #ddd, var(--v-accent-darken2), var(--v-accent-darken4));
-			// background-size: 400% 400%;
-			// animation: animate-gradient 5s ease-in-out infinite;
 		}
 	}
 	& #deck, & #scrap{
@@ -1350,11 +1342,6 @@ export default {
 	#turn-indicator {
 		&.my-turn {
 			color: #000;
-			// background-image: linear-gradient(-45deg, #000, #444, var(--v-accent-base), var(--v-accent-darken3));
-			// background-size: 400% 400%;
-			// background-clip: text;
-			// -webkit-text-fill-color: transparent;
-			// animation: animate-gradient 5s ease-in-out infinite;
 		}
 	}
 }
