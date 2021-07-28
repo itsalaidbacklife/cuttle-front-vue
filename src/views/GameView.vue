@@ -273,6 +273,7 @@
 			>
 				<h3
 					id="player-score"
+					class="d-flex align-center"
 				>
 					<span>POINTS: {{ playerPointTotal }}</span>
 					<score-goal-tool-tip
@@ -283,10 +284,13 @@
 					<span
 						id="turn-indicator"
 						class="text--darken-1 ml-2"
-						:class="{'black--text': isPlayersTurn, 'white--text': !isPlayersTurn}"
+						:class="{'my-turn': isPlayersTurn, 'white--text': !isPlayersTurn}"
 					>
 						{{ turnText }}
 					</span>
+					<v-card id="turn-token" rounded="circle" height="32" width="32" elevation="3" class="ml-2">
+						<v-img :src="require('@/assets/logo_head.svg')" />
+					</v-card>
 				</h3>
 
 				<div
@@ -1184,6 +1188,17 @@ export default {
 		}
 	}
 }
+@keyframes animate-gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
 #field {
 	display: flex;
 	flex-direction: row;
@@ -1202,7 +1217,15 @@ export default {
 			position: absolute;
 		}
 		&.my-turn {
-			border: 4px solid var(--v-accent-base);
+			border: 2px solid var(--v-accent-base);
+			// Video 1
+			// background-image: linear-gradient(-45deg, #fff, #ddd, var(--v-accent-darken2), var(--v-accent-darken4));
+			// background-size: 400% 400%;
+			// animation: animate-gradient 3.5s ease-in-out infinite;
+			// Video 2's
+			// background-image: linear-gradient(-45deg, #fff, #ddd, var(--v-accent-darken2), var(--v-accent-darken4));
+			// background-size: 400% 400%;
+			// animation: animate-gradient 5s ease-in-out infinite;
 		}
 	}
 	& #deck, & #scrap{
@@ -1320,5 +1343,18 @@ export default {
 			border: 4px solid transparent;
 		}
 	}
+
+	#turn-indicator {
+		&.my-turn {
+			background-image: linear-gradient(-45deg, #000, #444, var(--v-accent-base), var(--v-accent-darken3));
+			background-size: 400% 400%;
+			background-clip: text;
+			-webkit-text-fill-color: transparent;
+			animation: animate-gradient 5s ease-in-out infinite;
+		}
+	}
+}
+#turn-token {
+	display: inline-block;
 }
 </style>
