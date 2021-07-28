@@ -51,7 +51,7 @@
 				</div>
 				<h3
 					id="opponent-score"
-					class="mt-2"
+					class="d-flex align-center mt-2"
 				>
 					<span>POINTS: {{ opponentPointTotal }}</span>
 					<score-goal-tool-tip
@@ -59,6 +59,7 @@
 						:points-to-win="opponentPointsToWin"
 						:is-player="false"
 					/>
+					<turn-token :show="!isPlayersTurn" />
 				</h3>
 			</div>
 			<!-- Field -->
@@ -275,6 +276,8 @@
 					id="player-score"
 					class="d-flex align-center"
 				>
+					<!-- Turn Indicator -->
+					<!-- Player Score -->
 					<span>POINTS: {{ playerPointTotal }}</span>
 					<score-goal-tool-tip
 						:king-count="playerKingCount"
@@ -288,9 +291,7 @@
 					>
 						{{ turnText }}
 					</span>
-					<v-card id="turn-token" rounded="circle" height="32" width="32" elevation="3" class="ml-2">
-						<v-img :src="require('@/assets/logo_head.svg')" />
-					</v-card>
+					<turn-token :show="isPlayersTurn" />
 				</h3>
 
 				<div
@@ -432,6 +433,7 @@ import NineOverlay from '@/components/GameView/NineOverlay.vue';
 import GameOverDialog from '@/components/GameView/GameOverDialog.vue';
 import GameMenu from '@/components/GameView/GameMenu.vue';
 import ScoreGoalToolTip from '@/components/GameView/ScoreGoalToolTip.vue';
+import TurnToken from '@/components/GameView/TurnToken.vue';
 import ReauthenticateDialog from '@/components/GameView/ReauthenticateDialog.vue';
 import SevenDoubleJacksDialog from '../components/GameView/SevenDoubleJacksDialog.vue';
 
@@ -448,23 +450,24 @@ export default {
 		GameOverDialog,
 		GameMenu,
 		ScoreGoalToolTip,
+		TurnToken,
 		ReauthenticateDialog,
 		SevenDoubleJacksDialog,
 	},
 	data() {
 		return {
-			showSnack: false,
-			snackMessage: '',
-			snackColor: 'error',
-			selectionIndex: null, // when select a card set this value
-			showFourDialog: false,
-			showEightOverlay: false,
-			showNineOverlay: false,
-			nineTargetIndex: null,
-			targetType: null,
-			topCardIsSelected: false,
-			secondCardIsSelected: false,
-		}
+				showSnack: false,
+				snackMessage: '',
+				snackColor: 'error',
+				selectionIndex: null, // when select a card set this value
+				showFourDialog: false,
+				showEightOverlay: false,
+				showNineOverlay: false,
+				nineTargetIndex: null,
+				targetType: null,
+				topCardIsSelected: false,
+				secondCardIsSelected: false,
+			}
 	},
 	computed: {
 		//////////
@@ -976,7 +979,7 @@ export default {
 				})
 					.then(this.clearSelection())
 					.catch(this.handleError);
-			}else{
+			} else{
 				
 				this.$store.dispatch('requestPlayJack', {
 					cardId: this.selectedCard.id,
@@ -1217,7 +1220,7 @@ export default {
 			position: absolute;
 		}
 		&.my-turn {
-			border: 2px solid var(--v-accent-base);
+			border: 4px solid var(--v-accent-base);
 			// Video 1
 			// background-image: linear-gradient(-45deg, #fff, #ddd, var(--v-accent-darken2), var(--v-accent-darken4));
 			// background-size: 400% 400%;
@@ -1346,15 +1349,13 @@ export default {
 
 	#turn-indicator {
 		&.my-turn {
-			background-image: linear-gradient(-45deg, #000, #444, var(--v-accent-base), var(--v-accent-darken3));
-			background-size: 400% 400%;
-			background-clip: text;
-			-webkit-text-fill-color: transparent;
-			animation: animate-gradient 5s ease-in-out infinite;
+			color: #000;
+			// background-image: linear-gradient(-45deg, #000, #444, var(--v-accent-base), var(--v-accent-darken3));
+			// background-size: 400% 400%;
+			// background-clip: text;
+			// -webkit-text-fill-color: transparent;
+			// animation: animate-gradient 5s ease-in-out infinite;
 		}
 	}
-}
-#turn-token {
-	display: inline-block;
 }
 </style>
