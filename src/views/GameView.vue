@@ -287,7 +287,7 @@
 					<span
 						id="turn-indicator"
 						class="text--darken-1 ml-2"
-						:class="{'my-turn': isPlayersTurn, 'white--text': !isPlayersTurn}"
+						:class="{'black--text': isPlayersTurn, 'white--text': !isPlayersTurn}"
 					>
 						{{ turnText }}
 					</span>
@@ -1336,12 +1336,6 @@ export default {
 		}
 		&:not(.my-turn) {
 			border: 4px solid transparent;
-		}
-	}
-
-	#turn-indicator {
-		&.my-turn {
-			color: #000;
 		}
 	}
 }
