@@ -297,7 +297,6 @@
 				<div
 					id="player-hand-cards"
 					class="d-flex justify-center align-start"
-					:class="{'my-turn': isPlayersTurn}"
 				> 
 					<card
 						v-for="(card, index) in player.hand"
@@ -1329,14 +1328,6 @@ export default {
 		background: rgba(0, 0, 0, 0.46);
 		overflow-y: hidden;
 		border-radius: 4px;
-
-		&.my-turn {
-			border: 4px solid var(--v-accent-base);
-			
-		}
-		&:not(.my-turn) {
-			border: 4px solid transparent;
-		}
 	}
 }
 </style>
