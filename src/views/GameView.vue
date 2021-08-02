@@ -59,7 +59,7 @@
 						:points-to-win="opponentPointsToWin"
 						:is-player="false"
 					/>
-					<turn-token :show="!isPlayersTurn" />
+					<turn-token class="their-turn-token turn-token" :show="!isPlayersTurn" :is-players-turn="false" />
 				</h3>
 			</div>
 			<!-- Field -->
@@ -284,14 +284,14 @@
 						:points-to-win="playerPointsToWin"
 						:is-player="true"
 					/>
-					<span
+					<!-- <span
 						id="turn-indicator"
 						class="text--darken-1 ml-2"
 						:class="{'black--text': isPlayersTurn, 'white--text': !isPlayersTurn}"
 					>
 						{{ turnText }}
-					</span>
-					<turn-token :show="isPlayersTurn" />
+					</span> -->
+					<turn-token class="my-turn-token turn-token" :show="isPlayersTurn" />
 				</h3>
 
 				<div
@@ -455,18 +455,18 @@ export default {
 	},
 	data() {
 		return {
-				showSnack: false,
-				snackMessage: '',
-				snackColor: 'error',
-				selectionIndex: null, // when select a card set this value
-				showFourDialog: false,
-				showEightOverlay: false,
-				showNineOverlay: false,
-				nineTargetIndex: null,
-				targetType: null,
-				topCardIsSelected: false,
-				secondCardIsSelected: false,
-			}
+			showSnack: false,
+			snackMessage: '',
+			snackColor: 'error',
+			selectionIndex: null, // when select a card set this value
+			showFourDialog: false,
+			showEightOverlay: false,
+			showNineOverlay: false,
+			nineTargetIndex: null,
+			targetType: null,
+			topCardIsSelected: false,
+			secondCardIsSelected: false,
+		}
 	},
 	computed: {
 		//////////
@@ -1240,6 +1240,16 @@ export default {
 			z-index: 1;
 		}
 	}
+}
+.turn-token {
+	position: absolute;
+	right: 32px;
+}
+.my-turn-token {
+	bottom: 16px;
+}
+.their-turn-token {
+	top: 16px;
 }
 #field-center {
 	width: 60%;
