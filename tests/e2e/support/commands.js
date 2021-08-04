@@ -314,6 +314,7 @@ Cypress.Commands.add('playTargetedOneOffOpponent', (card, target, targetType) =>
 			if(targetType === 'jack' && !foundPointCard){
 				throw new Error('Error playing targeted one-off as opponent: could not find point card in player field');
 			}
+			const pointId = foundPointCard ? foundPointCard.id : undefined;
 			io.socket.get('/game/targetedOneOff', {
 				opId: playerId, // opponent's opponent is the player
 				targetId: foundTarget.id,
@@ -711,7 +712,7 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 		const playerId = player.id;
 		const cardId = foundCard.id;
 		const targetId = foundTarget.id;
-		const pointId = foundPointCard ? foundPointCard.id : null
+		const pointId = foundPointCard ? foundPointCard.id : null;
 		io.socket.get('/game/seven/targetedOneOff', {
 			cardId,
 			index,
@@ -746,6 +747,18 @@ Cypress.Commands.add('concedeOpponent', () => {
 			throw new Error(jwres.body.message);
 		}
 		return jwres;
+	});
+});
+
+Cypress.Commands.add('reconnectOpponent', (email, password) => {
+	cy.log('Opponent Reconnects');
+	io.socket.get('/user/reLogin', {
+		email,
+		password,
+	}, function handleResponse(res, jwres) {
+		if (jwres.statusCode !== 200) {
+			throw new Error(`Error reconnecting opponent: ${jwres.body.message}`);
+		}
 	});
 });
 

@@ -88,12 +88,13 @@ export default {
 		},
 		requestReauthenticate(context, {email, password}) {
 			return new Promise((resolve, reject) => {
+				// Assume successful login - cancel upon error
+				context.commit('authSuccess', email);
 				io.socket.get('/user/reLogin', {
 					email,
 					password
 				}, function handleResponse(res, jwres) {
 					if (jwres.statusCode === 200) {
-						context.commit('authSuccess', email);
 						context.commit('setMustReauthenticate', false);
 						let myPNum = context.rootState.game.players.findIndex((player) => player.userName === context.getters.myUserName);
 						if (myPNum === -1) {
@@ -102,6 +103,7 @@ export default {
 						context.commit('setMyPNum', myPNum);
 						return resolve();
 					}
+					context.commit('authFailure');
 					return reject(res.message);
 				});
 			});

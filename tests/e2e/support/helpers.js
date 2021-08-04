@@ -1,7 +1,7 @@
 export const validEmail = 'myCustomEmail@gmail.com';
 export const validPassword = 'passwordLongerThanEight';
-const opponentEmail = 'yourMortalEnemy@cia.gov';
-const opponentPassword = 'deviousTrickery';
+export const opponentEmail = 'yourMortalEnemy@cia.gov';
+export const opponentPassword = 'deviousTrickery';
 
 /**
  * Signs up two players, navigates home, creates game, subscribes, ready's up
@@ -265,11 +265,18 @@ function assertDomMatchesFixture(pNum, fixture) {
 	});
 	// Test Hands
 	if (pNum === 0) {
+		// Player Hand
 		fixture.p0Hand.forEach((card) => {
 			cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
 		});
-		cy.get('[data-opponent-hand-card]')
-			.should('have.length', fixture.p1Hand.length);
+		// Opponent Hand
+		if (fixture.p1Hand.length > 0) {
+			cy.get('[data-opponent-hand-card]')
+				.should('have.length', fixture.p1Hand.length);
+		} else {
+			cy.get('[data-opponent-hand-card]')
+				.should('not.exist');
+		}
 		if (playerHasGlasses){
 			fixture.p1Hand.forEach((card) => {
 				cy.get(`[data-opponent-hand-card=${card.rank}-${card.suit}]`);
@@ -277,11 +284,18 @@ function assertDomMatchesFixture(pNum, fixture) {
 		}
 	}
 	else if (pNum === 1) {
+		// Player hand
 		fixture.p1Hand.forEach((card) => {
 			cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
 		});
-		cy.get('[data-opponent-hand-card]')
-			.should('have.length', fixture.p0Hand.length);
+		// Opponent Hand
+		if (fixture.p0Hand.length > 0) {
+			cy.get('[data-opponent-hand-card]')
+				.should('have.length', fixture.p0Hand.length);
+		} else {
+			cy.get('[data-opponent-hand-card]')
+				.should('not.exist');
+		}
 		if (playerHasGlasses){
 			fixture.p0Hand.forEach((card) => {
 				cy.get(`[data-opponent-hand-card=${card.rank}-${card.suit}]`);

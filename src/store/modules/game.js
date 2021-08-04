@@ -100,6 +100,7 @@ export default {
 			
 			if (Object.hasOwnProperty.call(newGame, 'oneOffTarget')) state.oneOffTarget = _.cloneDeep(newGame.oneOffTarget);
 			else state.oneOffTarget = null;
+
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
@@ -162,6 +163,20 @@ export default {
 		},
 	},
 	actions: {
+		updateGameThenResetPNumIfNull(context, game) {
+			context.commit('updateGame', game);
+			context.dispatch('resetPNumIfNull');
+		},
+		resetPNumIfNull(context) {
+			// Set my pNum if it is null
+			if (context.state.myPNum === null) {
+				let myPNum = context.state.players.findIndex((player) => player.userName === context.rootGetters.myUserName);
+				if (myPNum === -1) {
+					myPNum = null;
+				}
+				context.commit('setMyPNum', myPNum);
+			}
+		},
 		async requestSubscribe(context, id) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/subscribe', {
