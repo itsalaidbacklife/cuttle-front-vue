@@ -464,8 +464,6 @@ describe('Playing SEVENS', () => {
 		
 		cy.playOneOffAndResolveAsPlayer(Card.SEVEN_OF_CLUBS);
 
-		// Opponent does not counter (resolves stack)
-		cy.resolveOpponent();
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('not.be.visible');
 		cy.get('[data-second-card=6-1]')
