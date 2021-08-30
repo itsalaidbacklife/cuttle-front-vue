@@ -481,7 +481,7 @@ describe('Reconnecting to a game', () => {
 				.click();
 
 			cy.get('#counter-dialog')
-				.should('be.visible');
+				.should('not.be.visible');
 			// Opponent plays the ace of clubs off top of deck
 			cy.playOneOffFromSevenOpponent(Card.ACE_OF_CLUBS);
 			cy.get('#counter-dialog')
@@ -494,8 +494,6 @@ describe('Reconnecting to a game', () => {
 				.should('be.visible')
 				.get('[data-cy=decline-counter-resolve]')
 				.click();
-			
-			cy.resolveOpponent();
 
 			assertGameState(1, {
 				p0Hand: [],
