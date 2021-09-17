@@ -169,9 +169,10 @@ describe('Lobby - P1 Perspective', () => {
 		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 	});
 	it('Shows when oppenent Readies/Unreadies', () => {
+		cy.contains('[data-cy=opponent-indicator]', opponentEmail.split('@')[0]);
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.readyOpponent();
-		cy.get('[data-cy=opponent-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=opponent-indicator]', {timeOut: 10000}).should('have.class', 'ready');
 		cy.get('[data-cy=my-indicator]').should('not.have.class', 'ready');
 		//Opponent un-readies
 		cy.readyOpponent();
