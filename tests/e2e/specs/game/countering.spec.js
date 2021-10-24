@@ -276,7 +276,7 @@ describe('Countering One-Offs', () => {
 		cy.log('Player counters again (3rd counter');	
 		cy.get('#counter-dialog')
 			.should('be.visible')
-			.should('contain', 'Your opponent has played 2 of Hearts to Counter your 2 of Clubs.')
+			.should('contain', 'Your opponent has played 2 of Clubs to Counter your 2 of Hearts.')
 			.get('[data-cy=counter]')
 			.click();
 		cy.get('#choose-two-dialog')
