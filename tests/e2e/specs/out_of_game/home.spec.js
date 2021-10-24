@@ -1,4 +1,4 @@
-import { assertSnackbarError } from '../support/helpers';
+import { assertSnackbarError } from '../../support/helpers';
 const playerEmail = 'myCustomEmail@gmail.com';
 const playerPassword = 'passwordLongerThanEight';
 const opponentEmail = 'yourMortalEnemy@cia.gov';
