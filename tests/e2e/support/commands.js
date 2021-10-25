@@ -376,7 +376,6 @@ Cypress.Commands.add('resolveThreeOpponent', (card) => {
 				cardId,
 				opId,
 			}, function handleResponse(res, jwres) {
-				console.log(res, jwres)
 				if (!jwres.statusCode === 200) {
 					throw new Error(jwres.body.message);
 				}
