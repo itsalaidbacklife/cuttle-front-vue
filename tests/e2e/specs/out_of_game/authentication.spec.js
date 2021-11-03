@@ -1,4 +1,4 @@
-import {  assertSnackbarError } from '../support/helpers';
+import {  assertSnackbarError } from '../../support/helpers';
 
 const validEmail = 'myCustomEmail@gmail.com';
 const validPassword = 'passwordLongerThanEight';

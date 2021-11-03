@@ -424,12 +424,21 @@ describe('Reconnecting to a game', () => {
 			cy.get('#scrap')
 				.should('have.class', 'valid-move')
 				.click();
+
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
 			// Opponent counters
 			cy.counterOpponent(Card.TWO_OF_CLUBS);
+			// Counter dialog should be visible
+			cy.get('#counter-dialog')
+				.should('be.visible')
+				.should('contain', 'Your opponent has played 2 of Clubs to Counter.')
+				.get('[data-cy=counter]')
+				.click();
 			// Reconnect & proceed
 			cy.reload();
 			reconnect();
-
+			// Counter dialog should become visible again
 			cy.get('#counter-dialog')
 				.should('be.visible')
 				.should('contain', 'Your opponent has played 2 of Clubs to Counter.')
@@ -481,7 +490,7 @@ describe('Reconnecting to a game', () => {
 				.click();
 
 			cy.get('#counter-dialog')
-				.should('be.visible');
+				.should('not.be.visible');
 			// Opponent plays the ace of clubs off top of deck
 			cy.playOneOffFromSevenOpponent(Card.ACE_OF_CLUBS);
 			cy.get('#counter-dialog')
@@ -494,8 +503,6 @@ describe('Reconnecting to a game', () => {
 				.should('be.visible')
 				.get('[data-cy=decline-counter-resolve]')
 				.click();
-			
-			cy.resolveOpponent();
 
 			assertGameState(1, {
 				p0Hand: [],

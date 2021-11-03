@@ -122,8 +122,6 @@ export default {
 						password: this.pw
 					})
 					.then(() => {
-						console.log('Success logging in');
-						console.log(this.$store.state.auth.authenticated);
 						this.username = '';
 						this.pw = '';
 						this.$router.push('/');
