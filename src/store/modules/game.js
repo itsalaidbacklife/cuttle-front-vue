@@ -246,7 +246,7 @@ export default {
 		},
 		async requestPlayFaceCard(context, cardId) {
 			return new Promise((resolve, reject) => {
-				io.socket.get('/game/runes', {
+				io.socket.get('/game/faceCard', {
 					cardId,
 				}, function handleResponse(res, jwres) {
 					return handleGameResponse(context, jwres, resolve, reject);
@@ -429,7 +429,7 @@ export default {
 		},
 		async requestPlayFaceCardSeven(context, {index, cardId}) {
 			return new Promise((resolve, reject) => {
-				io.socket.get('/game/seven/runes', {
+				io.socket.get('/game/seven/faceCard', {
 					cardId,
 					index
 				}, function handleResponse(res, jwres) {

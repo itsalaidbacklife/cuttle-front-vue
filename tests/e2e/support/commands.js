@@ -144,16 +144,16 @@ Cypress.Commands.add('playPointsOpponent', (card) => {
  */
 Cypress.Commands.add('playFaceCardOpponent', (card) => {
 	if (!hasValidSuitAndRank(card)) {
-		throw new Error('Cannot play opponent runes: Invalid card input');
+		throw new Error('Cannot play opponent Face Card: Invalid card input');
 	}
 	return cy.window().its('app.$store.getters.opponent')
 		.then((opponent) => {
 			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
 			if (!foundCard) {
-				throw new Error(`Error playing opponents runes: could not find ${card.rank} of ${card.suit} in opponent hand`)
+				throw new Error(`Error playing opponents Face Card: could not find ${card.rank} of ${card.suit} in opponent hand`)
 			}
 			const cardId = foundCard.id;
-			io.socket.get('/game/runes', {
+			io.socket.get('/game/faceCard', {
 				cardId
 			},
 			function handleResponse(res, jwres) {
@@ -170,7 +170,7 @@ Cypress.Commands.add('playFaceCardOpponent', (card) => {
  */
 Cypress.Commands.add('playJackOpponent', (card, target) => {
 	if (!hasValidSuitAndRank(card)) {
-		throw new Error('Cannot play opponent runes: Invalid card input');
+		throw new Error('Cannot play opponent face card: Invalid card input');
 	}
 	return cy
 		.window()
@@ -266,7 +266,7 @@ Cypress.Commands.add('playOneOffOpponent', (card) => {
 /**
  * @param card {suit: number, rank: number}
  * @param target {suit: number, rank: number}
- * @param targetType string 'rune' | 'point' | 'jack'
+ * @param targetType string 'faceCard' | 'point' | 'jack'
  */
 Cypress.Commands.add('playTargetedOneOffOpponent', (card, target, targetType) => {
 	if (!hasValidSuitAndRank(card)) {
@@ -289,8 +289,8 @@ Cypress.Commands.add('playTargetedOneOffOpponent', (card, target, targetType) =>
 			case 'point':
 				foundTarget = player.points.find((pointCard) => cardsMatch(pointCard, target));
 				break;
-			case 'rune':
-				foundTarget = player.runes.find((faceCard) => cardsMatch(faceCard, target));
+			case 'faceCard':
+				foundTarget = player.faceCards.find((faceCard) => cardsMatch(faceCard, target));
 				break;
 			case 'jack':
 				player.points.forEach((pointCard) => {
@@ -493,7 +493,7 @@ Cypress.Commands.add('playFaceCardFromSevenOpponent', (card) => {
 			}
 
 			const cardId = foundCard.id;
-			io.socket.get('/game/seven/runes', {
+			io.socket.get('/game/seven/faceCard', {
 				cardId,
 				index,
 			},
@@ -686,8 +686,8 @@ Cypress.Commands.add('playTargetedOneOffFromSevenOpponent', (card, target, targe
 		case 'point':
 			foundTarget = player.points.find((pointCard) => cardsMatch(pointCard, target));
 			break;
-		case 'rune':
-			foundTarget = player.runes.find((faceCard) => cardsMatch(faceCard, target));
+		case 'faceCard':
+			foundTarget = player.faceCards.find((faceCard) => cardsMatch(faceCard, target));
 			break;
 		case 'jack':
 			player.points.forEach((pointCard) => {

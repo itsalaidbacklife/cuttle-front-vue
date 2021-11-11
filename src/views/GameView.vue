@@ -172,7 +172,7 @@
 						</div>
 						<div class="field-effects">
 							<card 
-								v-for="(card, index) in opponent.runes"
+								v-for="(card, index) in opponent.faceCards"
 								:key="card.id"
 								:suit="card.suit"
 								:rank="card.rank"
@@ -223,7 +223,7 @@
 						</div>
 						<div class="field-effects">
 							<card
-								v-for="card in player.runes"
+								v-for="card in player.faceCards"
 								:key="card.id"
 								:suit="card.suit"
 								:rank="card.rank"
@@ -611,7 +611,7 @@ export default {
 			return this.twosInHand.length > 0;
 		},
 		hasGlassesEight() {
-			return this.player.runes
+			return this.player.faceCards
 				.filter((card) => card.rank === 8)
 				.length > 0;
 		},
@@ -653,16 +653,16 @@ export default {
 		validFaceCardTargetIds() {
 			switch (this.opponentQueenCount) {
 			case 0:
-				const opponentRuneIds = this.opponent.runes.map((card) => card.id);
+				const opponentFaceCardIds = this.opponent.faceCards.map((card) => card.id);
 				const opponentJackIds = []
 				this.opponent.points.forEach((card) => {
 					if (card.attachments.length > 0){
 						opponentJackIds.push(card.attachments[card.attachments.length - 1].id)
 					}
 				})
-				return [...opponentRuneIds, ...opponentJackIds];
+				return [...opponentFaceCardIds, ...opponentJackIds];
 			case 1:
-				return [this.opponent.runes.find((card) => card.rank === 12).id];
+				return [this.opponent.faceCards.find((card) => card.rank === 12).id];
 			default:
 				return [];
 			}
@@ -719,8 +719,8 @@ export default {
 			switch(this.targetType) {
 			case 'point':
 				return this.nineTargetIndex !== null ? this.opponent.points[this.nineTargetIndex] : null;
-			case 'rune':
-				this.nineTargetIndex !== null ? this.opponent.runes[this.nineTargetIndex] : null;
+			case 'faceCard':
+				this.nineTargetIndex !== null ? this.opponent.faceCards[this.nineTargetIndex] : null;
 			default:
 				return null;
 			}
@@ -804,21 +804,21 @@ export default {
 		 * @param player is the player object
 		 */
 		queenCount(player) {
-			return player.runes.reduce((queenCount, card) => queenCount + (card.rank === 12 ? 1 : 0), 0);
+			return player.faceCards.reduce((queenCount, card) => queenCount + (card.rank === 12 ? 1 : 0), 0);
 		},
 		/**
 		 * @returns number of kings a given player has
 		 * @param player is the player object
 		 */
 		kingCount(player) {
-			return player.runes.reduce((kingCount, card) => kingCount + (card.rank === 13 ? 1 : 0), 0);
+			return player.faceCards.reduce((kingCount, card) => kingCount + (card.rank === 13 ? 1 : 0), 0);
 		},
 		/** 
 		 * @returns number of queens a given player has
 		 * @param player is the player object
 		 */
 		twoCount(player) {
-			return player.runes.reduce((twoCOunt, card) => twoCOunt + (card.rank === 2 ? 1 : 0), 0);
+			return player.faceCards.reduce((twoCOunt, card) => twoCOunt + (card.rank === 2 ? 1 : 0), 0);
 		},
 		/**
 		 * Returns the number of points to win
@@ -923,8 +923,8 @@ export default {
 			let target;
 			let jackedPointId;
 			switch (targetType) {
-			case 'rune': 
-				target = this.opponent.runes[targetIndex];
+			case 'faceCard': 
+				target = this.opponent.faceCards[targetIndex];
 				break;
 			case 'point':
 				target = this.opponent.points[targetIndex];
@@ -1069,7 +1069,7 @@ export default {
 				cardToPlay = this.selectedCard;
 			}
 
-			const targetType = targetIndex < 0 ? 'jack' : 'rune'
+			const targetType = targetIndex < 0 ? 'jack' : 'faceCard'
 			switch(cardToPlay.rank) {
 			case 2:
 				this.playTargetedOneOff(targetIndex, targetType);

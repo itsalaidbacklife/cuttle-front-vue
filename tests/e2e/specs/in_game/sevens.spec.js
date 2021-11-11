@@ -1286,7 +1286,7 @@ describe('Opponent playing SEVENS', () => {
 				.should('be.visible');
 
 			// Opponent plays two of spades
-			cy.playTargetedOneOffFromSevenOpponent(Card.TWO_OF_SPADES, Card.QUEEN_OF_CLUBS, 'rune');
+			cy.playTargetedOneOffFromSevenOpponent(Card.TWO_OF_SPADES, Card.QUEEN_OF_CLUBS, 'faceCard');
 			cy.get('[data-cy=cannot-counter-resolve]')
 				.should('be.visible')
 				.click();
@@ -1390,7 +1390,7 @@ describe('Opponent playing SEVENS', () => {
 			cy.get('#waiting-for-opponent-play-from-deck-scrim')
 				.should('be.visible');
 
-			cy.playTargetedOneOffFromSevenOpponent(Card.NINE_OF_DIAMONDS, Card.QUEEN_OF_CLUBS, 'rune');
+			cy.playTargetedOneOffFromSevenOpponent(Card.NINE_OF_DIAMONDS, Card.QUEEN_OF_CLUBS, 'faceCard');
 			cy.get('[data-cy=cannot-counter-resolve]')
 				.should('be.visible')
 				.click();

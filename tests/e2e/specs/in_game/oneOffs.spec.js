@@ -1134,7 +1134,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		cy.log('Loaded fixture');
 
 		// Opponent plays NINE
-		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.QUEEN_OF_HEARTS, 'rune');
+		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.QUEEN_OF_HEARTS, 'faceCard');
 		
 		// Player resolves
 		cy.get('#cannot-counter-dialog')

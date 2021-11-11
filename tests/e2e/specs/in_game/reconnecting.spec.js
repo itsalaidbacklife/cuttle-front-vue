@@ -106,7 +106,7 @@ describe('Reconnecting to a game', () => {
 				.should('have.length', 1);
 			cy.log('Fixture loaded');
 
-			cy.playTargetedOneOffOpponent(Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS, 'rune');
+			cy.playTargetedOneOffOpponent(Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS, 'faceCard');
 
 			cy.get('#cannot-counter-dialog')
 				.should('be.visible');
@@ -246,7 +246,7 @@ describe('Reconnecting to a game', () => {
 				.get('[data-cy=cannot-counter-resolve]')
 				.click();
 			// Opponent plays two of clubs
-			cy.playTargetedOneOffFromSevenOpponent(Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS, 'rune');
+			cy.playTargetedOneOffFromSevenOpponent(Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS, 'faceCard');
 			// Player reconnects and cannot counter
 			cy.reload();
 			reconnect();
@@ -370,7 +370,7 @@ describe('Reconnecting to a game', () => {
 				.should('have.length', 1);
 			cy.log('Fixture loaded');
 
-			cy.playTargetedOneOffOpponent(Card.TWO_OF_SPADES, Card.KING_OF_CLUBS, 'rune');
+			cy.playTargetedOneOffOpponent(Card.TWO_OF_SPADES, Card.KING_OF_CLUBS, 'faceCard');
 
 			cy.get('#counter-dialog')
 				.should('be.visible');
@@ -534,7 +534,7 @@ describe('Reconnecting to a game', () => {
 				.should('be.visible')
 				.get('[data-cy=decline-counter-resolve]')
 				.click();
-			cy.playTargetedOneOffFromSevenOpponent(Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS, 'rune');
+			cy.playTargetedOneOffFromSevenOpponent(Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS, 'faceCard');
 			// Reconnect & proceed
 			cy.reload();
 			reconnect();
