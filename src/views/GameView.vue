@@ -1255,6 +1255,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+////////////////
+// Animations //
+////////////////
+@keyframes animate-gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
 /////////////////
 // Transitions //
 /////////////////
@@ -1377,14 +1391,17 @@ export default {
 		}
 		&.my-turn {
 			border: 4px solid var(--v-accent-base);
+			// background-image: linear-gradient(-45deg, #000, #FFF, var(--v-accent-base), var(--v-accent-darken3));
+			// background-size: 400% 400%;
+			// animation: animate-gradient 5s ease-in-out infinite;
 		}
 	}
 	& #deck, & #scrap{
 		position: relative;
 		margin: 10px;
-		border: 1px solid #FFF;
 		height: 29vh;
 		width: calc(29vh / 1.3);
+		border: 1px solid #FFF;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -1397,6 +1414,9 @@ export default {
 			z-index: 1;
 		}
 	}
+	// & #scrap {
+	// 	border: 1px solid #FFF;
+	// }
 }
 #field-center {
 	width: 60%;
@@ -1487,8 +1507,11 @@ export default {
 		border-radius: 4px;
 
 		&.my-turn {
-			border: 4px solid var(--v-accent-base);
-			
+			// background-image: linear-gradient(-45deg, rgba(0, 0, 0, .46), rgba(255, 255, 255, .46), var(--v-accent-lighten1), var(--v-accent-base));
+			// background-image: linear-gradient(-45deg, #000, #FFF, var(--v-accent-base), var(--v-accent-darken1));
+			background-image: linear-gradient(-45deg, rgba(0, 0, 0, .46), rgba(255, 255, 255, .46), rgba(33, 150, 83, .8), rgba(0, 123, 59, .8));
+			background-size: 400% 400%;
+			animation: animate-gradient 5s ease-in-out infinite;
 		}
 		&:not(.my-turn) {
 			border: 4px solid transparent;
