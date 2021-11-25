@@ -23,7 +23,7 @@
 						id="opponent-hand-glasses"
 						class="opponent-hand-wrapper"
 						tag="div"
-						name="opponent-hand"
+						name="opponent-hand-revealed"
 					>
 						<card
 							v-for="card in opponent.hand"
@@ -40,17 +40,21 @@
 						name="opponent-hand"
 						class="opponent-hand-wrapper"
 					>
-						<v-card
+						<div
 							v-for="card in opponent.hand"
 							:key="card.id"
-							class="opponent-card-back mx-2"
-							data-opponent-hand-card
+							class="opponent-card-back-wrapper mx-2"
 						>
-							<v-img
-								:src="require('../assets/logo_head.svg')"
-								contain
-							/>
-						</v-card>
+							<v-card
+								class="opponent-card-back"
+								data-opponent-hand-card
+							>
+								<v-img
+									:src="require('../assets/logo_head.svg')"
+									contain
+								/>
+							</v-card>
+						</div>
 					</transition-group>
 				</div>
 				<h3
@@ -1174,6 +1178,20 @@ export default {
 	cursor: pointer;
 }
 
+.opponent-hand-revealed-enter-active, .opponent-hand-revealed-leave-active {
+	transition: all 1s ease;
+}
+.opponent-hand-revealed-leave-active {
+	position: absolute;
+}
+.opponent-hand-revealed-enter, .opponent-hand-revealed-leave-to {
+	opacity: 0;
+	transform: translateY(32px);
+}
+
+.opponent-hand-revealed-move {
+	transition: transform 1s;
+}
 .opponent-hand-enter-active, .opponent-hand-leave-active {
 	transition: all 1s ease;
 }
@@ -1187,6 +1205,7 @@ export default {
 
 .opponent-hand-move {
 	transition: transform 1s;
+	// transform: rotate(180deg);
 }
 
 #opponent-hand {
@@ -1211,13 +1230,17 @@ export default {
 			position: relative;
 			height: 100%;
 
-			& .opponent-card-back {
+			& .opponent-card-back-wrapper {
 				height: 90%;
 				width: 10vw;
 				display: inline-block;
 				position: relative;
-				transform: rotate(180deg);
 				// background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
+				& .opponent-card-back {
+					height: 100%;
+					width: 100%;
+					transform: rotate(180deg);
+				}
 			}
 		}
 	}
