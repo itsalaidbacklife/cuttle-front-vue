@@ -143,7 +143,12 @@
 				</div>
 				<div id="field-center">
 					<div id="opponent-field">
-						<div class="field-points">
+						<v-fab-transition
+							group
+							tag="div"
+							name="opponent-point-card"
+							class="field-points"
+						>
 							<div 
 								v-for="(card, index) in opponent.points"
 								:key="card.id"
@@ -169,8 +174,13 @@
 									/>
 								</div>
 							</div>
-						</div>
-						<div class="field-effects">
+						</v-fab-transition>
+						<v-fab-transition
+							group
+							tag="div"
+							name="opponent-face-cards"
+							class="field-effects"
+						>
 							<card 
 								v-for="(card, index) in opponent.faceCards"
 								:key="card.id"
@@ -181,7 +191,7 @@
 								:data-opponent-face-card="`${card.rank}-${card.suit}`"
 								@click="targetOpponentFaceCard(index)"
 							/>
-						</div>
+						</v-fab-transition>
 					</div>
 					<v-divider light />
 					<div
@@ -197,7 +207,11 @@
 							color="accent lighten-1"
 							opacity=".6"
 						/>
-						<div class="field-points">
+						<v-fab-transition
+							group
+							tag="div"
+							class="field-points"
+						>
 							<div 
 								v-for="card in player.points"
 								:key="card.id"
@@ -220,8 +234,13 @@
 									/>
 								</div>
 							</div>
-						</div>
-						<div class="field-effects">
+						</v-fab-transition>
+						<v-fab-transition
+							group
+							tag="div"
+							name="player-face-cards"
+							class="field-effects"
+						>
 							<card
 								v-for="card in player.faceCards"
 								:key="card.id"
@@ -230,7 +249,7 @@
 								:is-glasses="card.rank === 8"
 								:data-player-face-card="`${card.rank}-${card.suit}`"
 							/>
-						</div>
+						</v-fab-transition>
 					</div>
 				</div>
 				<div id="field-right">
@@ -289,11 +308,14 @@
 					</span>
 				</h3>
 
-				<div
+				<v-fab-transition
 					id="player-hand-cards"
+					group
+					tag="div"
+					name="player-hand"
 					class="d-flex justify-center align-start"
 					:class="{'my-turn': isPlayersTurn}"
-				> 
+				>
 					<card
 						v-for="(card, index) in player.hand"
 						:key="card.id"
@@ -304,7 +326,7 @@
 						:data-player-hand-card="`${card.rank}-${card.suit}`"
 						@click="selectCard(index)"
 					/>
-				</div>
+				</v-fab-transition>
 			</div>
 			<v-snackbar
 				v-model="showSnack"
