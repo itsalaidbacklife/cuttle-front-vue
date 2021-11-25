@@ -18,10 +18,12 @@
 					id="opponent-hand-cards"
 					class="d-flex justify-center align-start"
 				>
-					<div
+					<transition-group
 						v-if="hasGlassesEight"
 						id="opponent-hand-glasses"
 						class="opponent-hand-wrapper"
+						tag="div"
+						name="opponent-hand"
 					>
 						<card
 							v-for="card in opponent.hand"
@@ -31,9 +33,11 @@
 							:data-opponent-hand-card="`${card.rank}-${card.suit}`"
 							class="opponent-hand-card-revealed"
 						/>
-					</div>
-					<div
+					</transition-group>
+					<transition-group
 						v-else
+						tag="div"
+						name="opponent-hand"
 						class="opponent-hand-wrapper"
 					>
 						<v-card
@@ -47,7 +51,7 @@
 								contain
 							/>
 						</v-card>
-					</div>
+					</transition-group>
 				</div>
 				<h3
 					id="opponent-score"
@@ -143,7 +147,7 @@
 				</div>
 				<div id="field-center">
 					<div id="opponent-field">
-						<v-fab-transition
+						<v-slide-y-transition
 							group
 							tag="div"
 							name="opponent-point-card"
@@ -174,8 +178,8 @@
 									/>
 								</div>
 							</div>
-						</v-fab-transition>
-						<v-fab-transition
+						</v-slide-y-transition>
+						<v-slide-y-transition
 							group
 							tag="div"
 							name="opponent-face-cards"
@@ -191,7 +195,7 @@
 								:data-opponent-face-card="`${card.rank}-${card.suit}`"
 								@click="targetOpponentFaceCard(index)"
 							/>
-						</v-fab-transition>
+						</v-slide-y-transition>
 					</div>
 					<v-divider light />
 					<div
@@ -207,7 +211,7 @@
 							color="accent lighten-1"
 							opacity=".6"
 						/>
-						<v-fab-transition
+						<v-slide-y-reverse-transition
 							group
 							tag="div"
 							class="field-points"
@@ -234,8 +238,8 @@
 									/>
 								</div>
 							</div>
-						</v-fab-transition>
-						<v-fab-transition
+						</v-slide-y-reverse-transition>
+						<v-slide-y-reverse-transition
 							group
 							tag="div"
 							name="player-face-cards"
@@ -249,7 +253,7 @@
 								:is-glasses="card.rank === 8"
 								:data-player-face-card="`${card.rank}-${card.suit}`"
 							/>
-						</v-fab-transition>
+						</v-slide-y-reverse-transition>
 					</div>
 				</div>
 				<div id="field-right">
@@ -308,7 +312,7 @@
 					</span>
 				</h3>
 
-				<v-fab-transition
+				<v-slide-y-transition
 					id="player-hand-cards"
 					group
 					tag="div"
@@ -326,7 +330,7 @@
 						:data-player-hand-card="`${card.rank}-${card.suit}`"
 						@click="selectCard(index)"
 					/>
-				</v-fab-transition>
+				</v-slide-y-transition>
 			</div>
 			<v-snackbar
 				v-model="showSnack"
@@ -1170,7 +1174,20 @@ export default {
 	cursor: pointer;
 }
 
+.opponent-hand-enter-active, .opponent-hand-leave-active {
+	transition: all 1s ease;
+}
+.opponent-hand-leave-active {
+	position: absolute;
+}
+.opponent-hand-enter, .opponent-hand-leave-to {
+	opacity: 0;
+	transform: translateY(32px);
+}
 
+.opponent-hand-move {
+	transition: transform 1s;
+}
 
 #opponent-hand {
 	min-width: 50%;
