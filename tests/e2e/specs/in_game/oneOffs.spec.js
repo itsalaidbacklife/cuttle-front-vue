@@ -89,17 +89,23 @@ describe('Untargeted One-Offs', () => {
 		// Setup
 		cy.loadGameFixture({
 			//Player is P0
-			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES, Card.SIX_OF_DIAMONDS],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES, Card.SIX_OF_DIAMONDS, Card.JACK_OF_CLUBS],
 			p0Points: [Card.THREE_OF_SPADES, Card.ACE_OF_SPADES],
 			p0FaceCards: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS],
 			// Opponent is P1
-			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.JACK_OF_DIAMONDS],
 			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [Card.KING_OF_HEARTS, Card.QUEEN_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.get('[data-player-hand-card]').should('have.length', 4);
 		cy.log('Loaded fixture');
 
+		// Player jacks opponent's Ace of diamonds
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-opponent-point-card=1-1]').click();
+		// Opponent jacks player's Three of spades
+		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.THREE_OF_SPADES);
+		// Player plays six
 		cy.playOneOffAndResolveAsPlayer(Card.SIX_OF_SPADES);
 
 		assertGameState(
@@ -118,7 +124,8 @@ describe('Untargeted One-Offs', () => {
 					Card.KING_OF_DIAMONDS,
 					Card.KING_OF_HEARTS,
 					Card.KING_OF_SPADES,
-					Card.QUEEN_OF_DIAMONDS,
+					Card.JACK_OF_CLUBS,
+					Card.JACK_OF_DIAMONDS,
 				]
 			}
 		);
