@@ -23,7 +23,7 @@
 						id="opponent-hand-glasses"
 						class="opponent-hand-wrapper"
 						tag="div"
-						name="opponent-hand"
+						name="slide-down"
 					>
 						<card
 							v-for="card in opponent.hand"
@@ -37,7 +37,7 @@
 					<transition-group
 						v-else
 						tag="div"
-						name="opponent-hand"
+						name="slide-down"
 						class="opponent-hand-wrapper"
 					>
 						<div
@@ -1179,16 +1179,12 @@ export default {
 }
 
 
-.opponent-hand-leave-active {
+.slide-down-leave-active {
 	position: absolute;
 }
-.opponent-hand-enter, .opponent-hand-leave-to {
+.slide-down-enter, .slide-down-leave-to {
 	opacity: 0;
 	transform: translateY(32px);
-}
-
-.opponent-hand-move {
-	transition: transform 1s;
 }
 
 #opponent-hand {
