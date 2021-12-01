@@ -151,10 +151,9 @@
 				</div>
 				<div id="field-center">
 					<div id="opponent-field">
-						<v-slide-y-transition
-							group
+						<transition-group
+							name="slide-up"
 							tag="div"
-							name="opponent-point-card"
 							class="field-points"
 						>
 							<div 
@@ -162,7 +161,7 @@
 								:key="card.id"
 								class="field-point-container"
 							>
-								<card 
+								<card
 									:suit="card.suit"
 									:rank="card.rank"
 									:is-valid-target="validMoves.includes(card.id)"
@@ -182,14 +181,13 @@
 									/>
 								</div>
 							</div>
-						</v-slide-y-transition>
-						<v-slide-y-transition
-							group
+						</transition-group>
+						<transition-group
+							name="slide-up"
 							tag="div"
-							name="opponent-face-cards"
 							class="field-effects"
 						>
-							<card 
+							<card
 								v-for="(card, index) in opponent.faceCards"
 								:key="card.id"
 								:suit="card.suit"
@@ -197,9 +195,10 @@
 								:is-glasses="card.rank === 8"
 								:is-valid-target="validMoves.includes(card.id)"
 								:data-opponent-face-card="`${card.rank}-${card.suit}`"
+								class="face-card"
 								@click="targetOpponentFaceCard(index)"
 							/>
-						</v-slide-y-transition>
+						</transition-group>
 					</div>
 					<v-divider light />
 					<div
@@ -215,8 +214,8 @@
 							color="accent lighten-1"
 							opacity=".6"
 						/>
-						<v-slide-y-reverse-transition
-							group
+						<transition-group
+							name="slide-down"
 							tag="div"
 							class="field-points"
 						>
@@ -242,11 +241,10 @@
 									/>
 								</div>
 							</div>
-						</v-slide-y-reverse-transition>
-						<v-slide-y-reverse-transition
-							group
+						</transition-group>
+						<transition-group
+							name="slide-down"
 							tag="div"
-							name="player-face-cards"
 							class="field-effects"
 						>
 							<card
@@ -256,8 +254,9 @@
 								:rank="card.rank"
 								:is-glasses="card.rank === 8"
 								:data-player-face-card="`${card.rank}-${card.suit}`"
+								class="face-card"
 							/>
-						</v-slide-y-reverse-transition>
+						</transition-group>
 					</div>
 				</div>
 				<div id="field-right">
@@ -316,11 +315,10 @@
 					</span>
 				</h3>
 
-				<v-slide-y-transition
+				<transition-group
 					id="player-hand-cards"
-					group
 					tag="div"
-					name="player-hand"
+					name="slide-up"
 					class="d-flex justify-center align-start"
 					:class="{'my-turn': isPlayersTurn}"
 				>
@@ -330,11 +328,11 @@
 						:suit="card.suit"
 						:rank="card.rank"
 						:is-selected="selectedCard && card.id === selectedCard.id"
-						class="mt-8"
+						class="mt-8 player-hand-card"
 						:data-player-hand-card="`${card.rank}-${card.suit}`"
 						@click="selectCard(index)"
 					/>
-				</v-slide-y-transition>
+				</transition-group>
 			</div>
 			<v-snackbar
 				v-model="showSnack"
@@ -1178,13 +1176,20 @@ export default {
 	cursor: pointer;
 }
 
-
-.slide-down-leave-active {
+// All card containers should generically transition all 1s
+.player-hand-card, .opponent-hand-card, .field-point-container, .face-card {
+	transition: all 1s;
+}
+.slide-down-leave-active, .slide-up-leave-active {
 	position: absolute;
 }
 .slide-down-enter, .slide-down-leave-to {
 	opacity: 0;
 	transform: translateY(32px);
+}
+.slide-up-enter, .slide-up-leave-to {
+	opacity: 0;
+	transform: translateY(-32px);
 }
 
 #opponent-hand {
@@ -1196,10 +1201,6 @@ export default {
 	& #opponent-hand-cards {
 		height: 80%;
 		background: rgba(0, 0, 0, 0.46);
-		// Animate transition for all opponent hand cards
-		& .opponent-hand-card {
-			transition: all 1s;
-		}
 
 		& #opponent-hand-glasses {
 			margin-top: -48px;
