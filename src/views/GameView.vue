@@ -215,7 +215,7 @@
 							opacity=".6"
 						/>
 						<transition-group
-							name="slide-below"
+							name="in-below-out-left"
 							tag="div"
 							class="field-points"
 						>
@@ -243,7 +243,7 @@
 							</div>
 						</transition-group>
 						<transition-group
-							name="slide-below"
+							name="in-below-out-left"
 							tag="div"
 							class="field-effects"
 						>
@@ -1180,7 +1180,7 @@ export default {
 .transition-all {
 	transition: all 1s;
 }
-.slide-below-leave-active, .slide-above-leave-active {
+.slide-below-leave-active, .slide-above-leave-active, .in-below-out-left {
 	position: absolute;
 }
 .slide-below-enter, .slide-below-leave-to {
@@ -1190,6 +1190,14 @@ export default {
 .slide-above-enter, .slide-above-leave-to {
 	opacity: 0;
 	transform: translateY(-32px);
+}
+.in-below-out-left-enter {
+	opacity: 0;
+	transform: translateY(32px);
+}
+.in-below-out-left-leave-to {
+	opacity: 0;
+	transform: translateX(-32px);
 }
 
 #opponent-hand {
