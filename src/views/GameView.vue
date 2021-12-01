@@ -31,7 +31,7 @@
 							:suit="card.suit"
 							:rank="card.rank"
 							:data-opponent-hand-card="`${card.rank}-${card.suit}`"
-							class="opponent-hand-card"
+							class="transition-all opponent-hand-card-revealed"
 						/>
 					</transition-group>
 					<transition-group
@@ -43,7 +43,7 @@
 						<div
 							v-for="(card, index) in opponent.hand"
 							:key="index + 0"
-							class="opponent-card-back-wrapper opponent-hand-card mx-2"
+							class="transition-all opponent-card-back-wrapper opponent-hand-card mx-2"
 						>
 							<v-card
 								class="opponent-card-back"
@@ -195,7 +195,7 @@
 								:is-glasses="card.rank === 8"
 								:is-valid-target="validMoves.includes(card.id)"
 								:data-opponent-face-card="`${card.rank}-${card.suit}`"
-								class="face-card"
+								class="transition-all"
 								@click="targetOpponentFaceCard(index)"
 							/>
 						</transition-group>
@@ -222,7 +222,7 @@
 							<div 
 								v-for="card in player.points"
 								:key="card.id"
-								class="field-point-container"
+								class="field-point-container transition-all"
 							>
 								<card
 									:suit="card.suit"
@@ -254,7 +254,7 @@
 								:rank="card.rank"
 								:is-glasses="card.rank === 8"
 								:data-player-face-card="`${card.rank}-${card.suit}`"
-								class="face-card"
+								class="transition-all"
 							/>
 						</transition-group>
 					</div>
@@ -328,7 +328,7 @@
 						:suit="card.suit"
 						:rank="card.rank"
 						:is-selected="selectedCard && card.id === selectedCard.id"
-						class="mt-8 player-hand-card"
+						class="mt-8 transition-all"
 						:data-player-hand-card="`${card.rank}-${card.suit}`"
 						@click="selectCard(index)"
 					/>
@@ -1177,7 +1177,7 @@ export default {
 }
 
 // All card containers should generically transition all 1s
-.player-hand-card, .opponent-hand-card, .field-point-container, .face-card {
+.transition-all {
 	transition: all 1s;
 }
 .slide-down-leave-active, .slide-up-leave-active {
