@@ -41,8 +41,8 @@
 						class="opponent-hand-wrapper"
 					>
 						<div
-							v-for="card in opponent.hand"
-							:key="card.id"
+							v-for="(card, index) in opponent.hand"
+							:key="index + 0"
 							class="opponent-card-back-wrapper mx-2"
 						>
 							<v-card
