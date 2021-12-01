@@ -1123,7 +1123,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 			.should('not.contain', 'targetting')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
-	})
+	});
 
 
 	it('ONE-OFF Target should be removed after one-off resolves - target is FACE CARD', () => {
@@ -1234,6 +1234,66 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [],
 				scrap: [Card.TWO_OF_SPADES, Card.JACK_OF_CLUBS],
+			}
+		);
+
+		// Player plays another point
+		cy.get('[data-player-hand-card=6-2]').click();
+		cy.get('#player-field').should('have.class', 'valid-move').click();
+
+		// Opponent plays UN-TARGETED ONE-OFF
+		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
+
+		// Cannot counter dialog should not have a target
+		
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.should('not.contain', 'targetting')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+	});
+
+	it('ONE-OFF Target should be removed after one-off is COUNTERED - target is POINTS', () => {
+		cy.loadGameFixture({
+			// Opponent is p0
+			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			//player is p1
+			p1Hand: [Card.SIX_OF_HEARTS, Card.TWO_OF_CLUBS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Opponent plays NINE
+		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.ACE_OF_DIAMONDS, 'point');
+		
+		// Player counters
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=counter]')
+			.click();
+		
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-0]')
+			.click();
+
+		cy.resolveOpponent();
+		assertGameState(
+			1,
+			{
+				// Opponent is p0
+				p0Hand: [Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				//player is p1
+				p1Hand: [Card.SIX_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_SPADES, Card.TWO_OF_CLUBS],
 			}
 		);
 
