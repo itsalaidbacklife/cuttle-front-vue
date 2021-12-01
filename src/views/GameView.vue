@@ -23,7 +23,7 @@
 						id="opponent-hand-glasses"
 						class="opponent-hand-wrapper"
 						tag="div"
-						name="slide-down"
+						name="slide-below"
 					>
 						<card
 							v-for="card in opponent.hand"
@@ -37,7 +37,7 @@
 					<transition-group
 						v-else
 						tag="div"
-						name="slide-down"
+						name="slide-below"
 						class="opponent-hand-wrapper"
 					>
 						<div
@@ -152,7 +152,7 @@
 				<div id="field-center">
 					<div id="opponent-field">
 						<transition-group
-							name="slide-up"
+							name="slide-above"
 							tag="div"
 							class="field-points"
 						>
@@ -183,7 +183,7 @@
 							</div>
 						</transition-group>
 						<transition-group
-							name="slide-up"
+							name="slide-above"
 							tag="div"
 							class="field-effects"
 						>
@@ -215,7 +215,7 @@
 							opacity=".6"
 						/>
 						<transition-group
-							name="slide-down"
+							name="slide-below"
 							tag="div"
 							class="field-points"
 						>
@@ -243,7 +243,7 @@
 							</div>
 						</transition-group>
 						<transition-group
-							name="slide-down"
+							name="slide-below"
 							tag="div"
 							class="field-effects"
 						>
@@ -318,7 +318,7 @@
 				<transition-group
 					id="player-hand-cards"
 					tag="div"
-					name="slide-up"
+					name="slide-above"
 					class="d-flex justify-center align-start"
 					:class="{'my-turn': isPlayersTurn}"
 				>
@@ -1180,14 +1180,14 @@ export default {
 .transition-all {
 	transition: all 1s;
 }
-.slide-down-leave-active, .slide-up-leave-active {
+.slide-below-leave-active, .slide-above-leave-active {
 	position: absolute;
 }
-.slide-down-enter, .slide-down-leave-to {
+.slide-below-enter, .slide-below-leave-to {
 	opacity: 0;
 	transform: translateY(32px);
 }
-.slide-up-enter, .slide-up-leave-to {
+.slide-above-enter, .slide-above-leave-to {
 	opacity: 0;
 	transform: translateY(-32px);
 }
