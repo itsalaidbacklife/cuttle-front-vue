@@ -23,7 +23,7 @@
 						id="opponent-hand-glasses"
 						class="opponent-hand-wrapper"
 						tag="div"
-						name="opponent-hand-revealed"
+						name="opponent-hand"
 					>
 						<card
 							v-for="card in opponent.hand"
@@ -31,7 +31,7 @@
 							:suit="card.suit"
 							:rank="card.rank"
 							:data-opponent-hand-card="`${card.rank}-${card.suit}`"
-							class="opponent-hand-card-revealed"
+							class="opponent-hand-card"
 						/>
 					</transition-group>
 					<transition-group
@@ -43,7 +43,7 @@
 						<div
 							v-for="(card, index) in opponent.hand"
 							:key="index + 0"
-							class="opponent-card-back-wrapper mx-2"
+							class="opponent-card-back-wrapper opponent-hand-card mx-2"
 						>
 							<v-card
 								class="opponent-card-back"
@@ -1178,23 +1178,7 @@ export default {
 	cursor: pointer;
 }
 
-.opponent-hand-revealed-enter-active, .opponent-hand-revealed-leave-active {
-	transition: all 1s ease;
-}
-.opponent-hand-revealed-leave-active {
-	position: absolute;
-}
-.opponent-hand-revealed-enter, .opponent-hand-revealed-leave-to {
-	opacity: 0;
-	transform: translateY(32px);
-}
 
-.opponent-hand-revealed-move {
-	transition: transform 1s;
-}
-.opponent-hand-enter-active, .opponent-hand-leave-active {
-	transition: all 1s ease;
-}
 .opponent-hand-leave-active {
 	position: absolute;
 }
@@ -1205,7 +1189,6 @@ export default {
 
 .opponent-hand-move {
 	transition: transform 1s;
-	// transform: rotate(180deg);
 }
 
 #opponent-hand {
@@ -1217,6 +1200,10 @@ export default {
 	& #opponent-hand-cards {
 		height: 80%;
 		background: rgba(0, 0, 0, 0.46);
+		// Animate transition for all opponent hand cards
+		& .opponent-hand-card {
+			transition: all 1s;
+		}
 
 		& #opponent-hand-glasses {
 			margin-top: -48px;
@@ -1224,7 +1211,6 @@ export default {
 				transform: scale(.8);
 			}
 		}
-
 		& .opponent-hand-wrapper {
 			display: flex;
 			position: relative;
