@@ -135,7 +135,7 @@ export default {
   }
 }
 .selected {
-	transform: scale(1.23);
+	// transform: scale(1.23);
 	img {
 		border: 3px solid var(--v-accent-lighten1);
 		border-radius: 5px;
