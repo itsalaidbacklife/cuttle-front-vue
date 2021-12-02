@@ -1165,17 +1165,21 @@ export default {
 .transition-all {
 	transition: all 1s;
 }
+// All list transitions leave with position absolute
 .slide-below-leave-active, .slide-above-leave-active, .in-below-out-left-active {
 	position: absolute;
 }
+// slide-below (enter and leave below)
 .slide-below-enter, .slide-below-leave-to {
 	opacity: 0;
 	transform: translateY(32px);
 }
+// slide-above (enter and leave above)
 .slide-above-enter, .slide-above-leave-to {
 	opacity: 0;
 	transform: translateY(-32px);
 }
+// in-below-out-left (enter from below, exit to left)
 .in-below-out-left-enter {
 	opacity: 0;
 	transform: translateY(32px);
