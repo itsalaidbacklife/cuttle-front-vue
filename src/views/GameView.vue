@@ -1188,7 +1188,24 @@ export default {
 	opacity: 0;
 	transform: translateX(-32px);
 }
-
+// in-above-out-below (enter from above, exit below)
+.in-below-out-above-enter {
+	opacity: 0;
+	transform: translateY(-32px);
+}
+.in-below-out-above-leave-to {
+	opacity: 0;
+	transform: translateY(32px);
+}
+// in-below-out-above (enter from below, exit above)
+.in-below-out-above-enter {
+	opacity: 0;
+	transform: translateY(32px);
+}
+.in-below-out-above-leave-to {
+	opacity: 0;
+	transform: translateY(-32px);
+}
 ////////////
 // Styles //
 ////////////
