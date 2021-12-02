@@ -1159,28 +1159,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#game-view-wrapper {
-	color: #FFF;
-	width: 100%;
-	height: 100%;
-	background: linear-gradient(180deg, #6202EE 14.61%, #FD6222 100%), #C4C4C4;
-}
-
-#game-menu-wrapper {
-	position: absolute;
-	display: inline-block;
-}
-
-.valid-move {
-	// background-color: var(--v-accent-lighten1);
-	cursor: pointer;
-}
-
-// All card containers should generically transition all 1s
+/////////////////
+// Transitions //
+/////////////////
 .transition-all {
 	transition: all 1s;
 }
-.slide-below-leave-active, .slide-above-leave-active, .in-below-out-left {
+.slide-below-leave-active, .slide-above-leave-active, .in-below-out-left-active {
 	position: absolute;
 }
 .slide-below-enter, .slide-below-leave-to {
@@ -1198,6 +1183,26 @@ export default {
 .in-below-out-left-leave-to {
 	opacity: 0;
 	transform: translateX(-32px);
+}
+
+////////////
+// Styles //
+////////////
+#game-view-wrapper {
+	color: #FFF;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(180deg, #6202EE 14.61%, #FD6222 100%), #C4C4C4;
+}
+
+#game-menu-wrapper {
+	position: absolute;
+	display: inline-block;
+}
+
+.valid-move {
+	// background-color: var(--v-accent-lighten1);
+	cursor: pointer;
 }
 
 #opponent-hand {
