@@ -630,10 +630,8 @@ export default {
 					return 'in-below-out-left';
 				}
 			case 'jack':
-				console.log('last change was jack');
 				return 'slide-above';
 			default:
-				console.log('default last event');
 				return 'in-below-out-left';
 			}
 		},
