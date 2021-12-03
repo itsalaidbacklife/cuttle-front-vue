@@ -1201,7 +1201,7 @@ export default {
 	transition: all 1s;
 }
 // All list transitions leave with position absolute
-.slide-below-leave-active, .slide-above-leave-active, .in-below-out-left-active {
+.slide-below-leave-active, .slide-above-leave-active, .in-below-out-left-leave-active {
 	position: absolute;
 }
 // slide-below (enter and leave below)
@@ -1224,11 +1224,11 @@ export default {
 	transform: translateX(-32px);
 }
 // in-above-out-below (enter from above, exit below)
-.in-below-out-above-enter {
+.in-above-out-below-enter {
 	opacity: 0;
 	transform: translateY(-32px);
 }
-.in-below-out-above-leave-to {
+.in-above-out-below-leave-to {
 	opacity: 0;
 	transform: translateY(32px);
 }
