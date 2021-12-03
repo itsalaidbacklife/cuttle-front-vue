@@ -243,7 +243,7 @@
 							</div>
 						</transition-group>
 						<transition-group
-							name="in-below-out-left"
+							:name="playerFaceCardsTransition"
 							tag="div"
 							class="field-effects"
 						>
@@ -636,6 +636,21 @@ export default {
 				console.log('default last event');
 				return 'in-below-out-left';
 			}
+		},
+		playerFaceCardsTransition() {
+			// Nine transitions depend on the target type
+			if (this.game.lastEventChange === 'resolve' && this.game.lastEventOneOffRank === 9) {
+				switch (this.game.lastEventTargetType) {
+				// Nine on face card moves it back to hand
+				case 'faceCard':
+					return 'slide-below';
+				// Other target types don't affect face cards
+				default:
+					return 'in-below-out-left';
+				}
+			}
+			// Defaults in below (from hand) out left (to scrap)
+			return 'in-below-out-left';
 		},
 		//////////////////
 		// Interactions //
