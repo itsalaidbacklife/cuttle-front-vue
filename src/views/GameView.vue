@@ -152,7 +152,7 @@
 				<div id="field-center">
 					<div id="opponent-field">
 						<transition-group
-							name="slide-above"
+							:name="opponentPointsTransition"
 							tag="div"
 							class="field-points"
 						>
@@ -651,6 +651,36 @@ export default {
 			}
 			// Defaults in below (from hand) out left (to scrap)
 			return 'in-below-out-left';
+		},
+		opponentPointsTransition() {
+			switch (this.game.lastEventChange) {
+			// Jacks cause point cards to switch control (from/towards player)
+			case 'jack':
+				return 'slide-below';
+			case 'oneOff':
+				// Different one-offs cause different direction transitions
+				switch (this.game.lastEventOneOffRank) {
+				// Twos and sixes caus point cards to switch control (from/towards player)
+				case 2:
+				case 6:
+					return 'slide-below';
+				// Nine transitions depend on the target type
+				case 9:
+					switch (this.game.lastEventTargetType) {
+					// Nine on a jack switches point card control
+					case 'jack':
+						return 'slide-below';
+					// Everything else returns cards to hand
+					default:
+						return 'slide-above';
+					}
+				default:
+					return 'in-above-out-below';
+				}
+			// Defaults to in above (opponent's hand) out below (to scrap)
+			default:
+				return 'in-above-out-below';
+			}
 		},
 		//////////////////
 		// Interactions //
