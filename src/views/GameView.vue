@@ -638,16 +638,13 @@ export default {
 			}
 		},
 		playerFaceCardsTransition() {
-			// Nine transitions depend on the target type
-			if (this.game.lastEventChange === 'resolve' && this.game.lastEventOneOffRank === 9) {
-				switch (this.game.lastEventTargetType) {
-				// Nine on face card moves it back to hand
-				case 'faceCard':
-					return 'slide-below';
-				// Other target types don't affect face cards
-				default:
-					return 'in-below-out-left';
-				}
+			// If a face card is bounced by a nine, slide down to player hand
+			if (
+				this.game.lastEventChange === 'resolve'
+				&& this.game.lastEventOneOffRank === 9
+				&& this.game.lastEventTargetType === 'faceCard'
+			) {
+				return 'slide-below';
 			}
 			// Defaults in below (from hand) out left (to scrap)
 			return 'in-below-out-left';
@@ -683,6 +680,7 @@ export default {
 			}
 		},
 		opponentFaceCardsTransition() {
+			// If a face card is bounced by a nine, slide up to opponent's hand
 			if (
 				this.game.lastEventChange === 'resolve'
 				&& this.game.lastEventOneOffRank === 9
@@ -690,6 +688,7 @@ export default {
 			) {
 				return 'slide-above';
 			}
+			// Otherwise in from opponent hand, out towards scrap
 			return 'in-above-out-below';
 		},
 		//////////////////
