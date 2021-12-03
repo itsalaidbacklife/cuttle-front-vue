@@ -159,7 +159,7 @@
 							<div 
 								v-for="(card, index) in opponent.points"
 								:key="card.id"
-								class="field-point-container"
+								class="field-point-container transition-all"
 							>
 								<card
 									:suit="card.suit"
