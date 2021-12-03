@@ -654,7 +654,7 @@ export default {
 			// Jacks cause point cards to switch control (from/towards player)
 			case 'jack':
 				return 'slide-below';
-			case 'oneOff':
+			case 'resolve':
 				// Different one-offs cause different direction transitions
 				switch (this.game.lastEventOneOffRank) {
 				// Twos and sixes caus point cards to switch control (from/towards player)
