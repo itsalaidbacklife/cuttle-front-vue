@@ -215,7 +215,7 @@
 							opacity=".6"
 						/>
 						<transition-group
-							name="in-below-out-left"
+							:name="playerPointsTransition"
 							tag="div"
 							class="field-points"
 						>
@@ -601,6 +601,41 @@ export default {
 		//////////
 		playerTwoCount() {
 			return this.twoCount(this.player);
+		},
+		///////////////////////////
+		// Transition Directions //
+		///////////////////////////
+		playerPointsTransition() {
+			switch(this.game.lastEventChange) {
+			case 'resolve':
+				// Different one-offs cause points to move in different directions
+				switch (this.game.lastEventOneOffRank) {
+				// Twos and Sixes swap control of points between players
+				case 2:
+				case 6:
+					return 'slide-above';
+				// For nines, transition direction depends on target type
+				case 9:
+					switch (this.game.lastEventTargetType) {
+					// Nine on jack causes points to swap control
+					case 'jack':
+						return 'slide-above';
+					// Everything else expect cards to move back to hand
+					case 'point':
+					case 'faceCard':
+					default:
+						return 'slide-below'
+					}
+				default:
+					return 'in-below-out-left';
+				}
+			case 'jack':
+				console.log('last change was jack');
+				return 'slide-above';
+			default:
+				console.log('default last event');
+				return 'in-below-out-left';
+			}
 		},
 		//////////////////
 		// Interactions //
