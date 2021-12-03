@@ -630,6 +630,7 @@ export default {
 					return 'in-below-out-left';
 				}
 			case 'jack':
+			case 'sevenJack':
 				return 'slide-above';
 			default:
 				return 'in-below-out-left';
@@ -651,6 +652,7 @@ export default {
 			switch (this.game.lastEventChange) {
 			// Jacks cause point cards to switch control (from/towards player)
 			case 'jack':
+			case 'sevenJack':
 				return 'slide-below';
 			case 'resolve':
 				// Different one-offs cause different direction transitions
