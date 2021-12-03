@@ -183,7 +183,7 @@
 							</div>
 						</transition-group>
 						<transition-group
-							name="slide-above"
+							:name="opponentFaceCardsTransition"
 							tag="div"
 							class="field-effects"
 						>
@@ -681,6 +681,16 @@ export default {
 			default:
 				return 'in-above-out-below';
 			}
+		},
+		opponentFaceCardsTransition() {
+			if (
+				this.game.lastEventChange === 'resolve'
+				&& this.game.lastEventOneOffRank === 9
+				&& this.game.lastEventTargetType === 'faceCard'
+			) {
+				return 'slide-above';
+			}
+			return 'in-above-out-below';
 		},
 		//////////////////
 		// Interactions //
