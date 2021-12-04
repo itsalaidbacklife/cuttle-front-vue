@@ -18,44 +18,51 @@
 					id="opponent-hand-cards"
 					class="d-flex justify-center align-start"
 				>
-					<transition-group
-						v-if="hasGlassesEight"
-						id="opponent-hand-glasses"
-						class="opponent-hand-wrapper"
-						tag="div"
+					<transition
 						name="slide-below"
+						mode="out-in"
 					>
-						<card
-							v-for="card in opponent.hand"
-							:key="card.id"
-							:suit="card.suit"
-							:rank="card.rank"
-							:data-opponent-hand-card="`${card.rank}-${card.suit}`"
-							class="transition-all opponent-hand-card-revealed"
-						/>
-					</transition-group>
-					<transition-group
-						v-else
-						tag="div"
-						name="slide-below"
-						class="opponent-hand-wrapper"
-					>
-						<div
-							v-for="(card, index) in opponent.hand"
-							:key="index + 0"
-							class="transition-all opponent-card-back-wrapper opponent-hand-card mx-2"
+						<transition-group
+							v-if="hasGlassesEight"
+							id="opponent-hand-glasses"
+							key="opponent-hand-glasses"
+							class="opponent-hand-wrapper transition-all"
+							tag="div"
+							name="slide-below"
 						>
-							<v-card
-								class="opponent-card-back"
-								data-opponent-hand-card
+							<card
+								v-for="card in opponent.hand"
+								:key="card.id"
+								:suit="card.suit"
+								:rank="card.rank"
+								:data-opponent-hand-card="`${card.rank}-${card.suit}`"
+								class="transition-all opponent-hand-card-revealed"
+							/>
+						</transition-group>
+						<transition-group
+							v-else
+							key="opponent-hand"
+							tag="div"
+							name="slide-below"
+							class="opponent-hand-wrapper transition-all"
+						>
+							<div
+								v-for="(card, index) in opponent.hand"
+								:key="index + 0"
+								class="transition-all opponent-card-back-wrapper opponent-hand-card mx-2"
 							>
-								<v-img
-									:src="require('../assets/logo_head.svg')"
-									contain
-								/>
-							</v-card>
-						</div>
-					</transition-group>
+								<v-card
+									class="opponent-card-back"
+									data-opponent-hand-card
+								>
+									<v-img
+										:src="require('../assets/logo_head.svg')"
+										contain
+									/>
+								</v-card>
+							</div>
+						</transition-group>
+					</transition>
 				</div>
 				<h3
 					id="opponent-score"
