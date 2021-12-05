@@ -770,7 +770,7 @@ describe('Playing NINES', ()=>{
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
-			cy.resolveOpponent()
+			cy.resolveOpponent();
 	
 			assertGameState(0, {
 				p0Hand: [],
@@ -781,6 +781,10 @@ describe('Playing NINES', ()=>{
 				p1FaceCards: [],
 				scrap: [Card.NINE_OF_CLUBS]
 			});
+
+			// Should no longer see jack of clubs on screen
+			cy.get('[data-player-face-card=11-0]')
+				.should('not.exist');
 		}); // End 9 on jack
 	
 		it('Cancels playing a nine', () => {
