@@ -122,7 +122,6 @@ export default {
 			if (Object.hasOwnProperty.call(newGame, 'oneOffTarget')) state.oneOffTarget = _.cloneDeep(newGame.oneOffTarget);
 			else state.oneOffTarget = null;
 
-
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
