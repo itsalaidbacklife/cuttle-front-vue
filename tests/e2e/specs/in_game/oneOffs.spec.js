@@ -441,7 +441,7 @@ describe('Play TWOS', () => {
 			cy.get('[data-player-hand-card=1-3]').click();
 			cy.get('#player-field')
 				.should('have.class', 'valid-move')
-				.click()
+				.click();
 
 			assertGameState(0, {
 				p0Hand: [Card.TWO_OF_CLUBS],
@@ -477,7 +477,7 @@ describe('Play TWOS', () => {
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
-			cy.resolveOpponent()
+			cy.resolveOpponent();
 
 			assertGameState(0, {
 				p0Hand: [],
@@ -488,6 +488,9 @@ describe('Play TWOS', () => {
 				p1FaceCards: [],
 				scrap: [Card.TWO_OF_CLUBS, Card.JACK_OF_CLUBS]
 			});
+			// Should no longer see jack of clubs on screen
+			cy.get('[data-player-face-card=11-0]')
+				.should('not.exist');
 		}); // End playing TWO to destroy jack
 
 		
