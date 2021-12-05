@@ -31,6 +31,10 @@ function resetState() {
 		// Sevens
 		playingFromDeck: false,
 		waitingForOpponentToPlayFromDeck: false,
+		// Last Event
+		lastEventChange: null,
+		lastEventOneOffRank: null,
+		lastEventTargetType: null,
 		// GameOver
 		gameIsOver: false,
 		winnerPNum: null,
@@ -76,6 +80,23 @@ export default {
 			state.id = val;
 		},
 		updateGame(state, newGame) {
+			if (Object.hasOwnProperty.call(newGame, 'lastEvent')) {
+				if (Object.hasOwnProperty.call(newGame.lastEvent, 'change')) {
+					state.lastEventChange = newGame.lastEvent.change;
+				} else {
+					state.lastEventChange = null;
+				}
+				if (Object.hasOwnProperty.call(newGame.lastEvent, 'oneOff')) {
+					state.lastEventOneOffRank = newGame.lastEvent.oneOff.rank;
+				} else {
+					state.lastEventOneOffRank = null;
+				}
+				if (Object.hasOwnProperty.call(newGame.lastEvent, 'oneOffTargetType')) {
+					state.lastEventTargetType = newGame.lastEvent.oneOffTargetType;
+				} else {
+					state.lastEventTargetType = null;
+				}
+			}
 			if (Object.hasOwnProperty.call(newGame, 'id')) state.id = newGame.id;
 			if (Object.hasOwnProperty.call(newGame, 'turn')) state.turn = newGame.turn;
 			if (Object.hasOwnProperty.call(newGame, 'chat')) state.chat = _.cloneDeep(newGame.chat);
