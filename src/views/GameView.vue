@@ -18,36 +18,51 @@
 					id="opponent-hand-cards"
 					class="d-flex justify-center align-start"
 				>
-					<div
-						v-if="hasGlassesEight"
-						id="opponent-hand-glasses"
-						class="opponent-hand-wrapper"
+					<transition
+						name="slide-below"
+						mode="out-in"
 					>
-						<card
-							v-for="card in opponent.hand"
-							:key="card.id"
-							:suit="card.suit"
-							:rank="card.rank"
-							:data-opponent-hand-card="`${card.rank}-${card.suit}`"
-							class="opponent-hand-card-revealed"
-						/>
-					</div>
-					<div
-						v-else
-						class="opponent-hand-wrapper"
-					>
-						<v-card
-							v-for="card in opponent.hand"
-							:key="card.id"
-							class="opponent-card-back mx-2"
-							data-opponent-hand-card
+						<transition-group
+							v-if="hasGlassesEight"
+							id="opponent-hand-glasses"
+							key="opponent-hand-glasses"
+							class="opponent-hand-wrapper transition-all"
+							tag="div"
+							name="slide-below"
 						>
-							<v-img
-								:src="require('../assets/logo_head.svg')"
-								contain
+							<card
+								v-for="card in opponent.hand"
+								:key="card.id"
+								:suit="card.suit"
+								:rank="card.rank"
+								:data-opponent-hand-card="`${card.rank}-${card.suit}`"
+								class="transition-all opponent-hand-card-revealed"
 							/>
-						</v-card>
-					</div>
+						</transition-group>
+						<transition-group
+							v-else
+							key="opponent-hand"
+							tag="div"
+							name="slide-below"
+							class="opponent-hand-wrapper transition-all"
+						>
+							<div
+								v-for="(card, index) in opponent.hand"
+								:key="index + 0"
+								class="transition-all opponent-card-back-wrapper opponent-hand-card mx-2"
+							>
+								<v-card
+									class="opponent-card-back"
+									data-opponent-hand-card
+								>
+									<v-img
+										:src="require('../assets/logo_head.svg')"
+										contain
+									/>
+								</v-card>
+							</div>
+						</transition-group>
+					</transition>
 				</div>
 				<h3
 					id="opponent-score"
@@ -143,13 +158,17 @@
 				</div>
 				<div id="field-center">
 					<div id="opponent-field">
-						<div class="field-points">
+						<transition-group
+							:name="opponentPointsTransition"
+							tag="div"
+							class="field-points"
+						>
 							<div 
 								v-for="(card, index) in opponent.points"
 								:key="card.id"
-								class="field-point-container"
+								class="field-point-container transition-all"
 							>
-								<card 
+								<card
 									:suit="card.suit"
 									:rank="card.rank"
 									:is-valid-target="validMoves.includes(card.id)"
@@ -169,19 +188,24 @@
 									/>
 								</div>
 							</div>
-						</div>
-						<div class="field-effects">
-							<card 
-								v-for="(card, index) in opponent.runes"
+						</transition-group>
+						<transition-group
+							:name="opponentFaceCardsTransition"
+							tag="div"
+							class="field-effects"
+						>
+							<card
+								v-for="(card, index) in opponent.faceCards"
 								:key="card.id"
 								:suit="card.suit"
 								:rank="card.rank"
 								:is-glasses="card.rank === 8"
 								:is-valid-target="validMoves.includes(card.id)"
 								:data-opponent-face-card="`${card.rank}-${card.suit}`"
+								class="transition-all"
 								@click="targetOpponentFaceCard(index)"
 							/>
-						</div>
+						</transition-group>
 					</div>
 					<v-divider light />
 					<div
@@ -197,11 +221,15 @@
 							color="accent lighten-1"
 							opacity=".6"
 						/>
-						<div class="field-points">
+						<transition-group
+							:name="playerPointsTransition"
+							tag="div"
+							class="field-points"
+						>
 							<div 
 								v-for="card in player.points"
 								:key="card.id"
-								class="field-point-container"
+								class="field-point-container transition-all"
 							>
 								<card
 									:suit="card.suit"
@@ -220,17 +248,22 @@
 									/>
 								</div>
 							</div>
-						</div>
-						<div class="field-effects">
+						</transition-group>
+						<transition-group
+							:name="playerFaceCardsTransition"
+							tag="div"
+							class="field-effects"
+						>
 							<card
-								v-for="card in player.runes"
+								v-for="card in player.faceCards"
 								:key="card.id"
 								:suit="card.suit"
 								:rank="card.rank"
 								:is-glasses="card.rank === 8"
 								:data-player-face-card="`${card.rank}-${card.suit}`"
+								class="transition-all"
 							/>
-						</div>
+						</transition-group>
 					</div>
 				</div>
 				<div id="field-right">
@@ -289,22 +322,24 @@
 					</span>
 				</h3>
 
-				<div
+				<transition-group
 					id="player-hand-cards"
+					tag="div"
+					name="slide-above"
 					class="d-flex justify-center align-start"
 					:class="{'my-turn': isPlayersTurn}"
-				> 
+				>
 					<card
 						v-for="(card, index) in player.hand"
 						:key="card.id"
 						:suit="card.suit"
 						:rank="card.rank"
 						:is-selected="selectedCard && card.id === selectedCard.id"
-						class="mt-8"
+						class="mt-8 transition-all"
 						:data-player-hand-card="`${card.rank}-${card.suit}`"
 						@click="selectCard(index)"
 					/>
-				</div>
+				</transition-group>
 			</div>
 			<v-snackbar
 				v-model="showSnack"
@@ -574,6 +609,95 @@ export default {
 		playerTwoCount() {
 			return this.twoCount(this.player);
 		},
+		///////////////////////////
+		// Transition Directions //
+		///////////////////////////
+		playerPointsTransition() {
+			switch(this.game.lastEventChange) {
+			case 'resolve':
+				// Different one-offs cause points to move in different directions
+				switch (this.game.lastEventOneOffRank) {
+				// Twos and Sixes swap control of points between players
+				case 2:
+				case 6:
+					return 'slide-above';
+				// For nines, transition direction depends on target type
+				case 9:
+					switch (this.game.lastEventTargetType) {
+					// Nine on jack causes points to swap control
+					case 'jack':
+						return 'slide-above';
+					// Everything else expect cards to move back to hand
+					case 'point':
+					case 'faceCard':
+					default:
+						return 'slide-below'
+					}
+				default:
+					return 'in-below-out-left';
+				}
+			case 'jack':
+			case 'sevenJack':
+				return 'slide-above';
+			default:
+				return 'in-below-out-left';
+			}
+		},
+		playerFaceCardsTransition() {
+			// If a face card is bounced by a nine, slide down to player hand
+			if (
+				this.game.lastEventChange === 'resolve'
+				&& this.game.lastEventOneOffRank === 9
+				&& this.game.lastEventTargetType === 'faceCard'
+			) {
+				return 'slide-below';
+			}
+			// Defaults in below (from hand) out left (to scrap)
+			return 'in-below-out-left';
+		},
+		opponentPointsTransition() {
+			switch (this.game.lastEventChange) {
+			// Jacks cause point cards to switch control (from/towards player)
+			case 'jack':
+			case 'sevenJack':
+				return 'slide-below';
+			case 'resolve':
+				// Different one-offs cause different direction transitions
+				switch (this.game.lastEventOneOffRank) {
+				// Twos and sixes caus point cards to switch control (from/towards player)
+				case 2:
+				case 6:
+					return 'slide-below';
+				// Nine transitions depend on the target type
+				case 9:
+					switch (this.game.lastEventTargetType) {
+					// Nine on a jack switches point card control
+					case 'jack':
+						return 'slide-below';
+					// Everything else returns cards to hand
+					default:
+						return 'slide-above';
+					}
+				default:
+					return 'in-above-out-below';
+				}
+			// Defaults to in above (opponent's hand) out below (to scrap)
+			default:
+				return 'in-above-out-below';
+			}
+		},
+		opponentFaceCardsTransition() {
+			// If a face card is bounced by a nine, slide up to opponent's hand
+			if (
+				this.game.lastEventChange === 'resolve'
+				&& this.game.lastEventOneOffRank === 9
+				&& this.game.lastEventTargetType === 'faceCard'
+			) {
+				return 'slide-above';
+			}
+			// Otherwise in from opponent hand, out towards scrap
+			return 'in-above-out-below';
+		},
 		//////////////////
 		// Interactions //
 		//////////////////
@@ -611,7 +735,7 @@ export default {
 			return this.twosInHand.length > 0;
 		},
 		hasGlassesEight() {
-			return this.player.runes
+			return this.player.faceCards
 				.filter((card) => card.rank === 8)
 				.length > 0;
 		},
@@ -653,16 +777,16 @@ export default {
 		validFaceCardTargetIds() {
 			switch (this.opponentQueenCount) {
 			case 0:
-				const opponentRuneIds = this.opponent.runes.map((card) => card.id);
+				const opponentFaceCardIds = this.opponent.faceCards.map((card) => card.id);
 				const opponentJackIds = []
 				this.opponent.points.forEach((card) => {
 					if (card.attachments.length > 0){
 						opponentJackIds.push(card.attachments[card.attachments.length - 1].id)
 					}
 				})
-				return [...opponentRuneIds, ...opponentJackIds];
+				return [...opponentFaceCardIds, ...opponentJackIds];
 			case 1:
-				return [this.opponent.runes.find((card) => card.rank === 12).id];
+				return [this.opponent.faceCards.find((card) => card.rank === 12).id];
 			default:
 				return [];
 			}
@@ -719,8 +843,8 @@ export default {
 			switch(this.targetType) {
 			case 'point':
 				return this.nineTargetIndex !== null ? this.opponent.points[this.nineTargetIndex] : null;
-			case 'rune':
-				this.nineTargetIndex !== null ? this.opponent.runes[this.nineTargetIndex] : null;
+			case 'faceCard':
+				this.nineTargetIndex !== null ? this.opponent.faceCards[this.nineTargetIndex] : null;
 			default:
 				return null;
 			}
@@ -804,21 +928,21 @@ export default {
 		 * @param player is the player object
 		 */
 		queenCount(player) {
-			return player.runes.reduce((queenCount, card) => queenCount + (card.rank === 12 ? 1 : 0), 0);
+			return player.faceCards.reduce((queenCount, card) => queenCount + (card.rank === 12 ? 1 : 0), 0);
 		},
 		/**
 		 * @returns number of kings a given player has
 		 * @param player is the player object
 		 */
 		kingCount(player) {
-			return player.runes.reduce((kingCount, card) => kingCount + (card.rank === 13 ? 1 : 0), 0);
+			return player.faceCards.reduce((kingCount, card) => kingCount + (card.rank === 13 ? 1 : 0), 0);
 		},
 		/** 
 		 * @returns number of queens a given player has
 		 * @param player is the player object
 		 */
 		twoCount(player) {
-			return player.runes.reduce((twoCOunt, card) => twoCOunt + (card.rank === 2 ? 1 : 0), 0);
+			return player.faceCards.reduce((twoCOunt, card) => twoCOunt + (card.rank === 2 ? 1 : 0), 0);
 		},
 		/**
 		 * Returns the number of points to win
@@ -923,8 +1047,8 @@ export default {
 			let target;
 			let jackedPointId;
 			switch (targetType) {
-			case 'rune': 
-				target = this.opponent.runes[targetIndex];
+			case 'faceCard': 
+				target = this.opponent.faceCards[targetIndex];
 				break;
 			case 'point':
 				target = this.opponent.points[targetIndex];
@@ -1069,7 +1193,7 @@ export default {
 				cardToPlay = this.selectedCard;
 			}
 
-			const targetType = targetIndex < 0 ? 'jack' : 'rune'
+			const targetType = targetIndex < 0 ? 'jack' : 'faceCard'
 			switch(cardToPlay.rank) {
 			case 2:
 				this.playTargetedOneOff(targetIndex, targetType);
@@ -1131,6 +1255,56 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/////////////////
+// Transitions //
+/////////////////
+.transition-all {
+	transition: all 1s;
+}
+// All list transitions leave with position absolute
+.slide-below-leave-active, .slide-above-leave-active, .in-below-out-left-leave-active {
+	position: absolute;
+}
+// slide-below (enter and leave below)
+.slide-below-enter, .slide-below-leave-to {
+	opacity: 0;
+	transform: translateY(32px);
+}
+// slide-above (enter and leave above)
+.slide-above-enter, .slide-above-leave-to {
+	opacity: 0;
+	transform: translateY(-32px);
+}
+// in-below-out-left (enter from below, exit to left)
+.in-below-out-left-enter {
+	opacity: 0;
+	transform: translateY(32px);
+}
+.in-below-out-left-leave-to {
+	opacity: 0;
+	transform: translateX(-32px);
+}
+// in-above-out-below (enter from above, exit below)
+.in-above-out-below-enter {
+	opacity: 0;
+	transform: translateY(-32px);
+}
+.in-above-out-below-leave-to {
+	opacity: 0;
+	transform: translateY(32px);
+}
+// in-below-out-above (enter from below, exit above)
+.in-below-out-above-enter {
+	opacity: 0;
+	transform: translateY(32px);
+}
+.in-below-out-above-leave-to {
+	opacity: 0;
+	transform: translateY(-32px);
+}
+////////////
+// Styles //
+////////////
 #game-view-wrapper {
 	color: #FFF;
 	width: 100%;
@@ -1148,8 +1322,6 @@ export default {
 	cursor: pointer;
 }
 
-
-
 #opponent-hand {
 	min-width: 50%;
 	height: 20vh;
@@ -1166,19 +1338,22 @@ export default {
 				transform: scale(.8);
 			}
 		}
-
 		& .opponent-hand-wrapper {
 			display: flex;
 			position: relative;
 			height: 100%;
 
-			& .opponent-card-back {
+			& .opponent-card-back-wrapper {
 				height: 90%;
 				width: 10vw;
 				display: inline-block;
 				position: relative;
-				transform: rotate(180deg);
 				// background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
+				& .opponent-card-back {
+					height: 100%;
+					width: 100%;
+					transform: rotate(180deg);
+				}
 			}
 		}
 	}

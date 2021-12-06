@@ -30,7 +30,7 @@ io.socket.on('game', function(evData) {
 		case 'draw':
 		case 'pass':
 		case 'points':
-		case 'runes':
+		case 'faceCard':
 		case 'scuttle':
 		case 'loadFixture':
 		case 'jack':
@@ -89,7 +89,7 @@ io.socket.on('game', function(evData) {
 			break;
 		// Sevens
 		case 'sevenPoints':
-		case 'sevenRunes':
+		case 'sevenFaceCard':
 		case 'sevenJack':
 		case 'sevenScuttle':
 			store.dispatch('updateGameThenResetPNumIfNull', evData.data.game);

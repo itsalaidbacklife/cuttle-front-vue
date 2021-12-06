@@ -1,4 +1,4 @@
-import { setupGameAsP1, setupGameAsP0, assertGameState, Card } from '../../support/helpers';
+import { setupGameAsP1, setupGameAsP0, assertGameState, Card, assertSnackbarError } from '../../support/helpers';
 
 describe('Countering One-Offs', () => {
 	beforeEach(() => {
@@ -413,6 +413,58 @@ describe('Countering One-Offs', () => {
 describe('Countering One-Offs P0 Perspective', () => {
 	beforeEach(() => {
 		setupGameAsP0();
+	});
+
+	it('Can counter a three', () => {
+		cy.loadGameFixture({
+			// Player is P0
+			p0Hand: [Card.FIVE_OF_CLUBS, Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [Card.KING_OF_SPADES],
+			// Opponent is P1
+			p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES, Card.SIX_OF_CLUBS],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+			scrap: [Card.QUEEN_OF_CLUBS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Player plays three of clubs as one-off
+		cy.get('[data-player-hand-card=5-0]').click();
+		cy.get('#scrap').should('have.class', 'valid-move').click();
+
+		// Opponent counters and player resolves
+		cy.counterOpponent(Card.TWO_OF_SPADES);
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+		// No longer player turn
+		cy.get('[data-player-hand-card=4-3]').click(); // king of clubs
+		cy.get('#player-field')
+			.should('not.have.class', 'valid-move')
+			.click();
+		assertSnackbarError('It\'s not your turn');
+
+		// Opponent plays a Five
+		cy.playOneOffOpponent(Card.SIX_OF_CLUBS);
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+
+		assertGameState(0, {
+			// Player is P0
+			p0Hand: [Card.FOUR_OF_SPADES],
+			p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
+			p0FaceCards: [],
+			// Opponent is P1
+			p1Hand: [Card.ACE_OF_HEARTS],
+			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+			scrap: [Card.QUEEN_OF_CLUBS, Card.FIVE_OF_CLUBS, Card.KING_OF_SPADES, Card.SIX_OF_CLUBS, Card.KING_OF_HEARTS, Card.TWO_OF_SPADES],
+		});
 	});
 
 	it('Quadruple counters successfully - P0 Perspective', () => {

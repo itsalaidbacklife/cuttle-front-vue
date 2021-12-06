@@ -81,22 +81,22 @@ describe('Winning the game', () =>  {
     
 	it('Shows when player wins game with 14 points and one king', () => {
 		cy.loadGameFixture({
-			p0Hand: [Card.SEVEN_OF_CLUBS],
+			p0Hand: [Card.JACK_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS],
 			p0FaceCards: [Card.KING_OF_SPADES],
 			p1Hand: [],
-			p1Points: [],
+			p1Points: [Card.SEVEN_OF_CLUBS],
 			p1FaceCards: [],
+			scrap: [Card.TEN_OF_SPADES],
 		});
 		cy.get('[data-player-hand-card]')
 			.should('have.length', 1);
 		cy.log('Fixture loaded');
         
-		// Play Seven of Clubs
-		cy.get('[data-player-hand-card=7-0]')
+		// Play Jack of Clubs
+		cy.get('[data-player-hand-card=11-0]')
 			.click();
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+		cy.get('[data-opponent-point-card=7-0]')
 			.click();
 		assertGameState(0, {
 			p0Hand: [],
@@ -105,8 +105,8 @@ describe('Winning the game', () =>  {
 			p1Hand: [],
 			p1Points: [],
 			p1FaceCards: [],
+			scrap: [Card.TEN_OF_SPADES]
 		});
-
 		assertVictory();
 		goHomeJoinNewGame();
 	});
