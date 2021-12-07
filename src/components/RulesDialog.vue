@@ -198,7 +198,7 @@
 						Where can I play Cuttle?
 					</h4>
 					<p>
-						You can play Cuttle anywhere you have a deck of cards and a friend! If you want to play online, there is only one place: <a href="www.cuttle.cards">www.cuttle.cards</a>
+						You can play Cuttle anywhere you have a deck of cards and a friend! If you want to play online, there is only one place: <a href="https://www.cuttle.cards" target="_blank">www.cuttle.cards</a>
 					</p>
 				</section>
 			</v-card-text>

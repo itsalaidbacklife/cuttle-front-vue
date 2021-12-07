@@ -1,7 +1,7 @@
 export const validEmail = 'myCustomEmail@gmail.com';
 export const validPassword = 'passwordLongerThanEight';
-const opponentEmail = 'yourMortalEnemy@cia.gov';
-const opponentPassword = 'deviousTrickery';
+export const opponentEmail = 'yourMortalEnemy@cia.gov';
+export const opponentPassword = 'deviousTrickery';
 
 /**
  * Signs up two players, navigates home, creates game, subscribes, ready's up
@@ -265,11 +265,18 @@ function assertDomMatchesFixture(pNum, fixture) {
 	});
 	// Test Hands
 	if (pNum === 0) {
+		// Player Hand
 		fixture.p0Hand.forEach((card) => {
 			cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
 		});
-		cy.get('[data-opponent-hand-card]')
-			.should('have.length', fixture.p1Hand.length);
+		// Opponent Hand
+		if (fixture.p1Hand.length > 0) {
+			cy.get('[data-opponent-hand-card]')
+				.should('have.length', fixture.p1Hand.length);
+		} else {
+			cy.get('[data-opponent-hand-card]')
+				.should('not.exist');
+		}
 		if (playerHasGlasses){
 			fixture.p1Hand.forEach((card) => {
 				cy.get(`[data-opponent-hand-card=${card.rank}-${card.suit}]`);
@@ -277,11 +284,18 @@ function assertDomMatchesFixture(pNum, fixture) {
 		}
 	}
 	else if (pNum === 1) {
+		// Player hand
 		fixture.p1Hand.forEach((card) => {
 			cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`);
 		});
-		cy.get('[data-opponent-hand-card]')
-			.should('have.length', fixture.p0Hand.length);
+		// Opponent Hand
+		if (fixture.p0Hand.length > 0) {
+			cy.get('[data-opponent-hand-card]')
+				.should('have.length', fixture.p0Hand.length);
+		} else {
+			cy.get('[data-opponent-hand-card]')
+				.should('not.exist');
+		}
 		if (playerHasGlasses){
 			fixture.p0Hand.forEach((card) => {
 				cy.get(`[data-opponent-hand-card=${card.rank}-${card.suit}]`);
@@ -314,14 +328,21 @@ function assertStoreMatchesFixture(fixture) {
 			// Player 0
 			expect(cardListsMatch(game.players[0].hand, fixture.p0Hand)).to.eq(true, `P0 Hand should match fixture, but actual: ${printCardList(game.players[0].hand)} did not match ficture: ${printCardList(fixture.p0Hand)}`);
 			expect(cardListsMatch(game.players[0].points, fixture.p0Points)).to.eq(true, `P0 Points should match fixture, but actual: ${printCardList(game.players[0].points)} did not match ficture: ${printCardList(fixture.p0Points)}`);
-			expect(cardListsMatch(game.players[0].runes, fixture.p0FaceCards)).to.eq(true, `P0 Face Cards should match fixture, but actual: ${printCardList(game.players[0].runes)} did not match ficture: ${printCardList(fixture.p0FaceCards)}`);
+			expect(cardListsMatch(game.players[0].faceCards, fixture.p0FaceCards)).to.eq(true, `P0 Face Cards should match fixture, but actual: ${printCardList(game.players[0].faceCards)} did not match ficture: ${printCardList(fixture.p0FaceCards)}`);
 			// Player 1
 			expect(cardListsMatch(game.players[1].hand, fixture.p1Hand)).to.eq(true, `P1 Hand should match fixture, but actual: ${printCardList(game.players[1].hand)} did not match ficture: ${printCardList(fixture.p1Hand)}`);
 			expect(cardListsMatch(game.players[1].points, fixture.p1Points)).to.eq(true, `P1 Points should match fixture, but actual: ${printCardList(game.players[1].points)} did not match ficture: ${printCardList(fixture.p1Points)}`);
-			expect(cardListsMatch(game.players[1].runes, fixture.p1FaceCards)).to.eq(true, `P1 Face Cards should match fixture, but actual: ${printCardList(game.players[1].runes)} did not match ficture: ${printCardList(fixture.p1FaceCards)}`);
+			expect(cardListsMatch(game.players[1].faceCards, fixture.p1FaceCards)).to.eq(true, `P1 Face Cards should match fixture, but actual: ${printCardList(game.players[1].faceCards)} did not match ficture: ${printCardList(fixture.p1FaceCards)}`);
 			// Scrap (if specified)
 			if (fixture.scrap) {
 				expect(cardListsMatch(game.scrap, fixture.scrap)).to.eq(true, `Scrap should match fixture, but actual ${printCardList(game.scrap)} did not match fixture: ${printCardList(fixture.scrap)}`);
+			}
+			// Top Card if specified
+			if (fixture.topCard) {
+				expect(cardsMatch(game.topCard, fixture.topCard)).to.eq(true, `Expected top card ${printCard(game.topCard)} to match fixture topcard: ${printCard(fixture.topCard)}`);
+			}
+			if (fixture.secondCard) {
+				expect(cardsMatch(game.secondCard, fixture.secondCard)).to.eq(true, `Expected second card ${printCard(game.secondCard)} to match fixture second card: ${printCard(fixture.secondCard)}`);
 			}
 		});
 }

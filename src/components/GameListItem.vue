@@ -85,8 +85,6 @@ export default {
 	},
 	methods: {
 		subscribeToGame() {
-			console.log(`click handler for subscribe to ${this.gameId}`);
-			console.log(this.gameId);
 			this.$store.dispatch('requestSubscribe', this.gameId)
 				.then(() => {
 					this.$router.push(`/lobby/${this.gameId}`);

@@ -11,22 +11,26 @@
 			<v-card-text>
 				<span>Oops, seems you cannot make a move. Select one of the jacks to scrap.</span>
 				<div class="d-flex flex-wrap justify-center align-center my-8">
-					<card 
-						class="mx-4 my-1"
-						:suit="topCard.suit"
-						:rank="topCard.rank"
-						:is-selected="selectedJack && topCard.id === selectedJack.id"
-						:data-seven-double-jacks-dialog-card="`${topCard.rank}-${topCard.suit}`"
-						@click="selectCard(topCard.id)"
-					/>
-					<card 
-						class="mx-4 my-1"
-						:suit="secondCard.suit"
-						:rank="secondCard.rank"
-						:is-selected="selectedJack && secondCard.id === selectedJack.id"
-						:data-seven-double-jacks-dialog-card="`${secondCard.rank}-${secondCard.suit}`"
-						@click="selectCard(secondCard.id)"
-					/>
+					<template v-if="topCard">
+						<card
+							class="mx-4 my-1"
+							:suit="topCard.suit"
+							:rank="topCard.rank"
+							:is-selected="selectedJack && topCard.id === selectedJack.id"
+							:data-seven-double-jacks-dialog-card="`${topCard.rank}-${topCard.suit}`"
+							@click="selectCard(topCard.id)"
+						/>
+					</template>
+					<template v-if="secondCard">
+						<card
+							class="mx-4 my-1"
+							:suit="secondCard.suit"
+							:rank="secondCard.rank"
+							:is-selected="selectedJack && secondCard.id === selectedJack.id"
+							:data-seven-double-jacks-dialog-card="`${secondCard.rank}-${secondCard.suit}`"
+							@click="selectCard(secondCard.id)"
+						/>
+					</template>
 				</div>
 			</v-card-text>
 			<v-card-actions
@@ -90,7 +94,10 @@ export default {
 		moveToScrap() {
 			const index = this.selectedJack.id === this.topCard.id ? 0 : 1;
 			const card = this.selectedJack;
-			this.$emit('resolveSevenDoubleJacks', card.id, index);
+			this.$emit('resolveSevenDoubleJacks', {
+				cardId: card.id,
+				index,
+			});
 			this.clearSelection();
 		},
 		selectCard(cardId) {

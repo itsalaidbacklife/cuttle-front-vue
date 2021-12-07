@@ -89,17 +89,31 @@ describe('Untargeted One-Offs', () => {
 		// Setup
 		cy.loadGameFixture({
 			//Player is P0
-			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES, Card.SIX_OF_DIAMONDS],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES, Card.SIX_OF_DIAMONDS, Card.JACK_OF_CLUBS, Card.JACK_OF_HEARTS],
 			p0Points: [Card.THREE_OF_SPADES, Card.ACE_OF_SPADES],
 			p0FaceCards: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS],
 			// Opponent is P1
-			p1Hand: [Card.ACE_OF_HEARTS],
-			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [Card.KING_OF_HEARTS, Card.QUEEN_OF_DIAMONDS],
+			p1Hand: [Card.ACE_OF_HEARTS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES],
+			p1Points: [Card.TWO_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.get('[data-player-hand-card]').should('have.length', 5);
 		cy.log('Loaded fixture');
 
+		// Double Jack (control will remain unchanged when 6 resolves)
+		// Player & Opponent jack then re-jack the TWO of Hearts
+		cy.get('[data-player-hand-card=11-2]').click();
+		cy.get('[data-opponent-point-card=2-2]').click();
+		cy.get('[data-player-point-card=2-2]');
+		cy.playJackOpponent(Card.JACK_OF_SPADES, Card.TWO_OF_HEARTS);
+
+		// Single Jacks (control will switch when 6 resolves)
+		// Player jacks opponent's Ace of diamonds
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-opponent-point-card=1-1]').click();
+		// Opponent jacks player's Three of spades
+		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.THREE_OF_SPADES);
+		// Player plays six
 		cy.playOneOffAndResolveAsPlayer(Card.SIX_OF_SPADES);
 
 		assertGameState(
@@ -110,7 +124,7 @@ describe('Untargeted One-Offs', () => {
 				p0FaceCards: [],
 				// Opponent is P1
 				p1Hand: [Card.ACE_OF_HEARTS],
-				p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				p1Points: [Card.TWO_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [],
 				scrap:[
 					Card.SIX_OF_SPADES,
@@ -118,7 +132,10 @@ describe('Untargeted One-Offs', () => {
 					Card.KING_OF_DIAMONDS,
 					Card.KING_OF_HEARTS,
 					Card.KING_OF_SPADES,
-					Card.QUEEN_OF_DIAMONDS,
+					Card.JACK_OF_CLUBS,
+					Card.JACK_OF_DIAMONDS,
+					Card.JACK_OF_HEARTS,
+					Card.JACK_OF_SPADES,
 				]
 			}
 		);
@@ -424,7 +441,7 @@ describe('Play TWOS', () => {
 			cy.get('[data-player-hand-card=1-3]').click();
 			cy.get('#player-field')
 				.should('have.class', 'valid-move')
-				.click()
+				.click();
 
 			assertGameState(0, {
 				p0Hand: [Card.TWO_OF_CLUBS],
@@ -460,7 +477,7 @@ describe('Play TWOS', () => {
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
-			cy.resolveOpponent()
+			cy.resolveOpponent();
 
 			assertGameState(0, {
 				p0Hand: [],
@@ -471,6 +488,9 @@ describe('Play TWOS', () => {
 				p1FaceCards: [],
 				scrap: [Card.TWO_OF_CLUBS, Card.JACK_OF_CLUBS]
 			});
+			// Should no longer see jack of clubs on screen
+			cy.get('[data-player-face-card=11-0]')
+				.should('not.exist');
 		}); // End playing TWO to destroy jack
 
 		
@@ -750,7 +770,7 @@ describe('Playing NINES', ()=>{
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
-			cy.resolveOpponent()
+			cy.resolveOpponent();
 	
 			assertGameState(0, {
 				p0Hand: [],
@@ -761,6 +781,10 @@ describe('Playing NINES', ()=>{
 				p1FaceCards: [],
 				scrap: [Card.NINE_OF_CLUBS]
 			});
+
+			// Should no longer see jack of clubs on screen
+			cy.get('[data-player-face-card=11-0]')
+				.should('not.exist');
 		}); // End 9 on jack
 	
 		it('Cancels playing a nine', () => {
@@ -1044,7 +1068,7 @@ describe('Playing THREEs', () => {
 		cy.resolveThreeOpponent(Card.ACE_OF_SPADES);
 
 		cy.get('#waiting-for-opponent-resolve-three-scrim')
-			.should('not.be.visible');	
+			.should('not.be.visible');
 
 		assertGameState(
 			0,
@@ -1116,7 +1140,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 			.should('not.contain', 'targetting')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
-	})
+	});
 
 
 	it('ONE-OFF Target should be removed after one-off resolves - target is FACE CARD', () => {
@@ -1134,7 +1158,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		cy.log('Loaded fixture');
 
 		// Opponent plays NINE
-		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.QUEEN_OF_HEARTS, 'rune');
+		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.QUEEN_OF_HEARTS, 'faceCard');
 		
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
@@ -1227,6 +1251,66 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [],
 				scrap: [Card.TWO_OF_SPADES, Card.JACK_OF_CLUBS],
+			}
+		);
+
+		// Player plays another point
+		cy.get('[data-player-hand-card=6-2]').click();
+		cy.get('#player-field').should('have.class', 'valid-move').click();
+
+		// Opponent plays UN-TARGETED ONE-OFF
+		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
+
+		// Cannot counter dialog should not have a target
+		
+		cy.get('#cannot-counter-dialog')
+			.should('be.visible')
+			.should('not.contain', 'targetting')
+			.get('[data-cy=cannot-counter-resolve]')
+			.click();
+	});
+
+	it('ONE-OFF Target should be removed after one-off is COUNTERED - target is POINTS', () => {
+		cy.loadGameFixture({
+			// Opponent is p0
+			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
+			p0Points: [Card.TEN_OF_HEARTS],
+			p0FaceCards: [],
+			//player is p1
+			p1Hand: [Card.SIX_OF_HEARTS, Card.TWO_OF_CLUBS],
+			p1Points: [Card.ACE_OF_DIAMONDS],
+			p1FaceCards: [],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.log('Loaded fixture');
+
+		// Opponent plays NINE
+		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.ACE_OF_DIAMONDS, 'point');
+		
+		// Player counters
+		cy.get('#counter-dialog')
+			.should('be.visible')
+			.get('[data-cy=counter]')
+			.click();
+		
+		cy.get('#choose-two-dialog')
+			.should('be.visible')
+			.get('[data-counter-dialog-card=2-0]')
+			.click();
+
+		cy.resolveOpponent();
+		assertGameState(
+			1,
+			{
+				// Opponent is p0
+				p0Hand: [Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
+				p0Points: [Card.TEN_OF_HEARTS],
+				p0FaceCards: [],
+				//player is p1
+				p1Hand: [Card.SIX_OF_HEARTS],
+				p1Points: [Card.ACE_OF_DIAMONDS],
+				p1FaceCards: [],
+				scrap: [Card.NINE_OF_SPADES, Card.TWO_OF_CLUBS],
 			}
 		);
 

@@ -31,6 +31,10 @@ function resetState() {
 		// Sevens
 		playingFromDeck: false,
 		waitingForOpponentToPlayFromDeck: false,
+		// Last Event
+		lastEventChange: null,
+		lastEventOneOffRank: null,
+		lastEventTargetType: null,
 		// GameOver
 		gameIsOver: false,
 		winnerPNum: null,
@@ -76,6 +80,23 @@ export default {
 			state.id = val;
 		},
 		updateGame(state, newGame) {
+			if (Object.hasOwnProperty.call(newGame, 'lastEvent')) {
+				if (Object.hasOwnProperty.call(newGame.lastEvent, 'change')) {
+					state.lastEventChange = newGame.lastEvent.change;
+				} else {
+					state.lastEventChange = null;
+				}
+				if (Object.hasOwnProperty.call(newGame.lastEvent, 'oneOff')) {
+					state.lastEventOneOffRank = newGame.lastEvent.oneOff.rank;
+				} else {
+					state.lastEventOneOffRank = null;
+				}
+				if (Object.hasOwnProperty.call(newGame.lastEvent, 'oneOffTargetType')) {
+					state.lastEventTargetType = newGame.lastEvent.oneOffTargetType;
+				} else {
+					state.lastEventTargetType = null;
+				}
+			}
 			if (Object.hasOwnProperty.call(newGame, 'id')) state.id = newGame.id;
 			if (Object.hasOwnProperty.call(newGame, 'turn')) state.turn = newGame.turn;
 			if (Object.hasOwnProperty.call(newGame, 'chat')) state.chat = _.cloneDeep(newGame.chat);
@@ -100,6 +121,7 @@ export default {
 			
 			if (Object.hasOwnProperty.call(newGame, 'oneOffTarget')) state.oneOffTarget = _.cloneDeep(newGame.oneOffTarget);
 			else state.oneOffTarget = null;
+
 		},
 		setMyPNum(state, val) {
 			state.myPNum = val;
@@ -162,6 +184,20 @@ export default {
 		},
 	},
 	actions: {
+		updateGameThenResetPNumIfNull(context, game) {
+			context.commit('updateGame', game);
+			context.dispatch('resetPNumIfNull');
+		},
+		resetPNumIfNull(context) {
+			// Set my pNum if it is null
+			if (context.state.myPNum === null) {
+				let myPNum = context.state.players.findIndex((player) => player.userName === context.rootGetters.myUserName);
+				if (myPNum === -1) {
+					myPNum = null;
+				}
+				context.commit('setMyPNum', myPNum);
+			}
+		},
 		async requestSubscribe(context, id) {
 			return new Promise((resolve, reject) => {
 				io.socket.get('/game/subscribe', {
@@ -231,7 +267,7 @@ export default {
 		},
 		async requestPlayFaceCard(context, cardId) {
 			return new Promise((resolve, reject) => {
-				io.socket.get('/game/runes', {
+				io.socket.get('/game/faceCard', {
 					cardId,
 				}, function handleResponse(res, jwres) {
 					return handleGameResponse(context, jwres, resolve, reject);
@@ -414,7 +450,7 @@ export default {
 		},
 		async requestPlayFaceCardSeven(context, {index, cardId}) {
 			return new Promise((resolve, reject) => {
-				io.socket.get('/game/seven/runes', {
+				io.socket.get('/game/seven/faceCard', {
 					cardId,
 					index
 				}, function handleResponse(res, jwres) {
