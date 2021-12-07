@@ -94,6 +94,15 @@
 						>
 							Play with AI
 						</v-btn>
+						<v-btn
+							outlined
+							class="mt-4"
+							:small="$vuetify.breakpoint.mdAndDown"
+							href="https://discord.gg/9vrAZ8xGyh"
+							target="_blank"
+						>
+							Discord
+						</v-btn>
 					</v-col>
 				</v-row>
 			</div>
