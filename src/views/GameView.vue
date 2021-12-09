@@ -1391,12 +1391,15 @@ export default {
 		}
 		&.my-turn {
 			border: 4px solid var(--v-accent-base);
+			// border: 4px solid #F9F92C;
+			// box-shadow: 0 15px 16px -7px rgba(0, 123, 59, .8),0 24px 32px 8px rgba(0, 123, 59, .8),0 10px 40px 11px rgba(33, 150, 83, .8) !important;
+			// box-shadow: 0 11px 15px -7px rgba(0,0,0,.2),0 24px 38px 3px rgba(0,0,0,.14),0 9px 46px 8px rgba(0,0,0,.12)!important;
 			// background-image: linear-gradient(-45deg, #000, #FFF, var(--v-accent-base), var(--v-accent-darken3));
 			// background-size: 400% 400%;
 			// animation: animate-gradient 5s ease-in-out infinite;
 		}
 	}
-	& #deck, & #scrap{
+	& #deck, & #scrap {
 		position: relative;
 		margin: 10px;
 		height: 29vh;
@@ -1415,7 +1418,7 @@ export default {
 		}
 	}
 	// & #scrap {
-	// 	border: 1px solid #FFF;
+		// border: 1px solid #FFF;
 	// }
 }
 #field-center {
@@ -1505,13 +1508,18 @@ export default {
 		background: rgba(0, 0, 0, 0.46);
 		overflow-y: hidden;
 		border-radius: 4px;
-
+		transition: all 1s;
 		&.my-turn {
 			// background-image: linear-gradient(-45deg, rgba(0, 0, 0, .46), rgba(255, 255, 255, .46), var(--v-accent-lighten1), var(--v-accent-base));
 			// background-image: linear-gradient(-45deg, #000, #FFF, var(--v-accent-base), var(--v-accent-darken1));
-			background-image: linear-gradient(-45deg, rgba(0, 0, 0, .46), rgba(255, 255, 255, .46), rgba(33, 150, 83, .8), rgba(0, 123, 59, .8));
-			background-size: 400% 400%;
-			animation: animate-gradient 5s ease-in-out infinite;
+			// background-image: linear-gradient(-45deg, rgba(0, 0, 0, .46), rgba(255, 255, 255, .46), rgba(33, 150, 83, .8), rgba(0, 123, 59, .8));
+			// background-size: 400% 400%;
+			// animation: animate-gradient 5s ease-in-out infinite;
+			border: 4px solid var(--v-accent-base);
+			// border: 4px solid #F9F92C;
+			// box-shadow: 0 15px 16px -12px rgba(197, 218, 10, 0.8),0 24px 38px 12px rgba(235, 220, 12, 0.8),0 10px 50px 16px rgba(215, 223, 111, 0.8)!important;
+			box-shadow: 0 15px 16px -12px rgba(0, 123, 59, .8),0 24px 38px 12px rgba(0, 123, 59, .8),0 10px 50px 16px rgba(33, 150, 83, .8)!important;
+			background: linear-gradient(0deg, rgba(253, 98, 34, 1), rgba(255, 255, 255, .3));
 		}
 		&:not(.my-turn) {
 			border: 4px solid transparent;
