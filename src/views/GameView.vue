@@ -1255,20 +1255,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-////////////////
-// Animations //
-////////////////
-@keyframes animate-gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
-}
 /////////////////
 // Transitions //
 /////////////////
@@ -1332,7 +1318,6 @@ export default {
 }
 
 .valid-move {
-	// background-color: var(--v-accent-lighten1);
 	cursor: pointer;
 }
 
@@ -1362,7 +1347,6 @@ export default {
 				width: 10vw;
 				display: inline-block;
 				position: relative;
-				// background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
 				& .opponent-card-back {
 					height: 100%;
 					width: 100%;
