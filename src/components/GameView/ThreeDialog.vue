@@ -3,6 +3,7 @@
 		v-model="show"
 		persistent
 		max-width="750"
+		scrollable
 	>
 		<v-card
 			v-if="oneOff"
