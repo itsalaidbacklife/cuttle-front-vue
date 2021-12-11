@@ -1318,7 +1318,6 @@ export default {
 }
 
 .valid-move {
-	// background-color: var(--v-accent-lighten1);
 	cursor: pointer;
 }
 
@@ -1348,7 +1347,6 @@ export default {
 				width: 10vw;
 				display: inline-block;
 				position: relative;
-				// background: conic-gradient(from 259.98deg at 49.41% 65.83%, #6020EE 0deg, #FD6222 360deg), #858585;
 				& .opponent-card-back {
 					height: 100%;
 					width: 100%;
@@ -1379,12 +1377,12 @@ export default {
 			border: 4px solid var(--v-accent-base);
 		}
 	}
-	& #deck, & #scrap{
+	& #deck, & #scrap {
 		position: relative;
 		margin: 10px;
-		border: 1px solid #FFF;
 		height: 29vh;
 		width: calc(29vh / 1.3);
+		border: 1px solid #FFF;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -1485,10 +1483,11 @@ export default {
 		background: rgba(0, 0, 0, 0.46);
 		overflow-y: hidden;
 		border-radius: 4px;
-
+		transition: all 1s;
 		&.my-turn {
 			border: 4px solid var(--v-accent-base);
-			
+			box-shadow: 0 15px 16px -12px rgba(0, 123, 59, .8),0 24px 38px 12px rgba(0, 123, 59, .8),0 10px 50px 16px rgba(33, 150, 83, .8)!important;
+			background: linear-gradient(0deg, rgba(253, 98, 34, 1), rgba(255, 255, 255, .3));
 		}
 		&:not(.my-turn) {
 			border: 4px solid transparent;
