@@ -450,6 +450,7 @@
 			<reauthenticate-dialog v-model="mustReauthenticate" />
 			<move-choice-overlay
 				:selected-card="selectedCard"
+				:is-players-turn="isPlayersTurn"
 				@cancel="clearSelection"
 			/>
 		</template>
