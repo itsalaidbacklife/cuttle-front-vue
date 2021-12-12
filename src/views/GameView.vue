@@ -454,6 +454,7 @@
 				:opponent-queen-count="opponentQueenCount"
 				@points="playPoints"
 				@faceCard="playFaceCard"
+				@oneOff="playOneOff"
 				@cancel="clearSelection"
 			/>
 		</template>
