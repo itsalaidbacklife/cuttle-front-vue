@@ -451,6 +451,7 @@
 			<move-choice-overlay
 				:selected-card="selectedCard"
 				:is-players-turn="isPlayersTurn"
+				:opponent-queen-count="opponentQueenCount"
 				@cancel="clearSelection"
 			/>
 		</template>

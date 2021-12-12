@@ -64,6 +64,10 @@ export default {
 			type: Boolean,
 			required: true,
 		},
+		opponentQueenCount: {
+			type: Number,
+			required: true,
+		},
 	},
 	computed: {
 		/**
@@ -94,11 +98,53 @@ export default {
 				res = [
 					{ moveName: 'Points', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
 					{ moveName:'One-Off', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
-					{ 
+					{
 						moveName: 'Scuttle', 
 						disabled: !this.isPlayersTurn || !this.hasValidScuttleTarget, 
 						disabledExplanation: this.isPlayersTurn ? 'You can only scuttle smaller point cards' : 'It\'s not your turn'
-					}
+					},
+				];
+				break;
+			case 8:
+				res = [
+					{ moveName: 'Points', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
+					{ moveName: 'Glasses', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
+					{
+						moveName: 'Scuttle', 
+						disabled: !this.isPlayersTurn || !this.hasValidScuttleTarget, 
+						disabledExplanation: this.isPlayersTurn ? 'You can only scuttle smaller point cards' : 'It\'s not your turn'
+					},
+				]
+				break;
+			case 10:
+				res = [
+					{ moveName: 'Points', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
+					{
+						moveName: 'Scuttle', 
+						disabled: !this.isPlayersTurn || !this.hasValidScuttleTarget, 
+						disabledExplanation: this.isPlayersTurn ? 'You can only scuttle smaller point cards' : 'It\'s not your turn'
+					},
+				];
+				break;
+			case 11:
+				let ableToJack = false;
+				let disabledExplanation = 'It\'s not your turn';
+				if (this.isPlayersTurn) {
+					ableToJack = this.opponentQueenCount === 0;
+					disabledExplanation = 'You cannot jack your opponent\'s points while they have a queen';
+				}
+				res = [
+					{
+						moveName: 'Royal',
+						disabled: !ableToJack,
+						disabledExplanation,
+					},
+				];
+				break;
+			case 12:
+			case 13:
+				res = [
+					{ moveName: 'Royal', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
 				];
 				break;
 			}
