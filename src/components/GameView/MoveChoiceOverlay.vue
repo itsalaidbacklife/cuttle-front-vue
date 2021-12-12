@@ -97,6 +97,34 @@ export default {
 			case 7:
 			case 9:
 				const pointsDescription =  cardRank === 1 ? 'Gain 1 point' : `Gain ${cardRank} points`;
+				let oneOffDisabled = !this.isPlayersTurn;
+				let oneOffDisabledExplanation = 'It\'s not your turn';
+				// Twos and nines depend on opponent queen count
+				if ([2, 9].includes(cardRank) && this.isPlayersTurn) {
+					if (this.opponentQueenCount >= 2) {
+						oneOffDisabled = true;
+						oneOffDisabledExplanation = `You can't play a ${cardRank} while your opponent has two or more queens`;
+					} else {
+						let validTargetExists;
+						switch (cardRank) {
+						case 2:
+							validTargetExists = this.$store.getters.opponent.faceCards.length >= 1;
+							if (!validTargetExists) {
+								oneOffDisabled = true;
+								oneOffDisabledExplanation = 'There are no Royals to target';
+							}
+							break;
+						case 9:
+							const validTargets = this.$store.getters.opponent.points.length + this.$store.getters.opponent.faceCards.length;
+							validTargetExists = validTargets >= 1;
+							if (!validTargetExists) {
+								oneOffDisabled = true;
+								oneOffDisabledExplanation = 'There are no point cards or Royals to target';
+							}
+							break;
+						}
+					}
+				}
 				res = [
 					// Points
 					{
@@ -116,8 +144,8 @@ export default {
 					{
 						moveName:'One-Off',
 						moveDescription: this.selectedCard.ruleText,
-						disabled: !this.isPlayersTurn,
-						disabledExplanation: 'It\'s not your turn'
+						disabled: oneOffDisabled,
+						disabledExplanation: oneOffDisabledExplanation,
 					},
 				];
 				break;
