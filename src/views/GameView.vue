@@ -448,6 +448,10 @@
 				:stalemate="stalemate"
 			/>
 			<reauthenticate-dialog v-model="mustReauthenticate" />
+			<move-choice-overlay
+				:selected-card="selectedCard"
+				@cancel="clearSelection"
+			/>
 		</template>
 	</div>
 </template>
@@ -465,6 +469,7 @@ import GameMenu from '@/components/GameView/GameMenu.vue';
 import ScoreGoalToolTip from '@/components/GameView/ScoreGoalToolTip.vue';
 import ReauthenticateDialog from '@/components/GameView/ReauthenticateDialog.vue';
 import SevenDoubleJacksDialog from '../components/GameView/SevenDoubleJacksDialog.vue';
+import MoveChoiceOverlay from '@/components/GameView/MoveChoiceOverlay.vue';
 
 export default {
 	name: 'GameView',
@@ -481,6 +486,8 @@ export default {
 		ScoreGoalToolTip,
 		ReauthenticateDialog,
 		SevenDoubleJacksDialog,
+		MoveChoiceOverlay,
+		MoveChoiceOverlay,
 	},
 	data() {
 		return {
