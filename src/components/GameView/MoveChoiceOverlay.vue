@@ -19,14 +19,20 @@
 				</v-icon>
 			</v-btn>
 		</div>
-		<div v-if="selectedCard" class="d-flex justify-center">
+		<div
+			v-if="selectedCard"
+			class="d-flex justify-center"
+		>
 			<card
 				:suit="selectedCard.suit"
 				:rank="selectedCard.rank"
 			/>
 		</div>
 		<!-- Move choices -->
-		<div id="options-wrapper" class="my-4">
+		<div
+			id="options-wrapper"
+			class="my-4"
+		>
 			<move-choice-card
 				move-name="Scuttle"
 			/>
