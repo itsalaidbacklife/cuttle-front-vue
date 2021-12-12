@@ -8,11 +8,16 @@
 			<h2>{{ moveName }}</h2>
 		</v-card-title>
 		<v-card-text class="d-flex flex-column justify-center align-center">
-			<v-icon x-large>
-				mdi-skull-crossbones
+			<v-icon v-if="iconName" x-large>
+				{{ iconName }}
 			</v-icon>
 			<p>Scrap a lower point card</p>
-			<p v-if="disabled && !!disabledExplanation" class="red--text">{{  disabledExplanation }}</p>
+			<p
+				v-if="disabled && !!disabledExplanation"
+				class="red--text"
+			>
+				{{ disabledExplanation }}
+			</p>
 		</v-card-text>
 	</v-card>
 </template>
@@ -31,6 +36,27 @@ export default {
 		disabledExplanation: {
 			type: String,
 			default: '',
+		},
+	},
+	computed: {
+		/**
+		 * Returns string name of which icon to display
+		 */
+		iconName() {
+			switch(this.moveName) {
+			case 'Points':
+				return 'mdi-numeric';
+			case 'Scuttle':
+				return 'mdi-skull-crossbones';
+			case 'One-Off':
+				return 'mdi-delete';
+			case 'Glasses':
+				return 'mdi-sunglasses';
+			case 'Royal':
+				return 'mdi-crown';
+			default:
+				return null;
+			}
 		},
 	}
 }
