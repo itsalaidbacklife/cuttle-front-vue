@@ -3,6 +3,7 @@
 		ripple
 		:disabled="disabled"
 		:class="{'pointer': !disabled}"
+		:width="cardWidth"
 	>
 		<v-card-title class="d-flex justify-center">
 			<h2>{{ moveName }}</h2>
@@ -40,6 +41,10 @@ export default {
 		disabledExplanation: {
 			type: String,
 			default: '',
+		},
+		cardWidth: {
+			type: String,
+			default: '30%',
 		},
 	},
 	computed: {

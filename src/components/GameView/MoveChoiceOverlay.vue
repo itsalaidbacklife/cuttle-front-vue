@@ -40,6 +40,7 @@
 				:move-description="move.moveDescription"
 				:disabled="move.disabled"
 				:disabled-explanation="move.disabledExplanation"
+				:card-width="cardWidth"
 				class="mx-4"
 			/>
 		</div>
@@ -236,6 +237,17 @@ export default {
 						this.selectedCard.suit > opponentPointCard.suit
 					);
 			});
+		},
+		cardWidth() {
+			switch (this.moveChoices.length) {
+			case 1:
+				return '100%';
+			case 2:
+				return '50%';
+			case 3:
+			default:
+				return '30%';
+			}
 		},
 	},
 }
