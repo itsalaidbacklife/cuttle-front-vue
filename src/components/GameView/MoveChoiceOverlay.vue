@@ -99,8 +99,6 @@ export default {
 				disabled: !this.isPlayersTurn,
 				disabledExplanation: 'It\'s not your turn',
 			};
-			let oneOffDisabled = !this.isPlayersTurn;
-			let oneOffDisabledExplanation = 'It\'s not your turn';
 			// Scuttling
 			const scuttleDisabled = !this.isPlayersTurn || !this.hasValidScuttleTarget;
 			let scuttleDisabledExplanation = 'You can only scuttle smaller point cards';
@@ -119,13 +117,11 @@ export default {
 			}
 			switch (cardRank) {
 			case 1:
-			case 2:
 			case 3:
 			case 4:
 			case 5:
 			case 6:
 			case 7:
-			case 9:
 				// Twos and nines depend on opponent queen count
 				if ([2, 9].includes(cardRank) && this.isPlayersTurn) {
 					if (this.opponentQueenCount >= 2) {
@@ -159,6 +155,46 @@ export default {
 					{
 						displayName:'One-Off',
 						eventName: 'oneOff',
+						moveDescription: this.selectedCard.ruleText,
+						disabled: !this.isPlayersTurn,
+						disabledExplanation: 'It\'s not your turn',
+					},
+				];
+				break;
+			case 2:
+			case 9:
+				let oneOffDisabled = !this.isPlayersTurn;
+				let oneOffDisabledExplanation = 'It\'s not your turn';
+				if (this.isPlayersTurn) {
+					if (this.opponentQueenCount >= 2) {
+						oneOffDisabled = true;
+						oneOffDisabledExplanation = `You can't play a ${cardRank} while your opponent has two or more queens`;
+					} else {
+						let validTargetExists;
+						// Twos
+						if (cardRank === 2) {
+							validTargetExists = this.$store.getters.opponent.faceCards.length >= 1;
+							if (!validTargetExists) {
+								oneOffDisabled = true;
+								oneOffDisabledExplanation = 'There are no Royals to target';
+							}
+						// Nines
+						} else {
+							const validTargets = this.$store.getters.opponent.points.length + this.$store.getters.opponent.faceCards.length;
+							validTargetExists = validTargets >= 1;
+							if (!validTargetExists) {
+								oneOffDisabled = true;
+								oneOffDisabledExplanation = 'There are no point cards or Royals to target';
+							}
+						}
+					}
+				}
+				res = [
+					pointsMove,
+					scuttleMove,
+					{
+						displayName: 'One-Off',
+						eventName: 'targetedOneOff',
 						moveDescription: this.selectedCard.ruleText,
 						disabled: oneOffDisabled,
 						disabledExplanation: oneOffDisabledExplanation,
