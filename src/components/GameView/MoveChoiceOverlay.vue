@@ -35,14 +35,14 @@
 		>
 			<move-choice-card
 				v-for="move in moveChoices"
-				:key="move.moveName"
-				:move-name="move.moveName"
+				:key="move.displayName"
+				:move-name="move.displayName"
 				:move-description="move.moveDescription"
 				:disabled="move.disabled"
 				:disabled-explanation="move.disabledExplanation"
 				:card-width="cardWidth"
 				class="mx-4"
-				@click="handleClick(move)"
+				@click="$emit(move.eventName)"
 			/>
 		</div>
 	</v-overlay>
@@ -93,7 +93,8 @@ export default {
 			// Points
 			const pointsDescription =  cardRank === 1 ? 'Gain 1 point' : `Gain ${cardRank} points`;
 			const pointsMove = {
-				moveName: 'Points',
+				displayName: 'Points',
+				eventName: 'points',
 				moveDescription: pointsDescription,
 				disabled: !this.isPlayersTurn,
 				disabledExplanation: 'It\'s not your turn',
@@ -110,7 +111,8 @@ export default {
 				scuttleDisabledExplanation = 'It\'s not your turn';
 			}
 			const scuttleMove = {
-				moveName: 'Scuttle',
+				displayName: 'Scuttle',
+				eventName: 'scuttle',
 				moveDescription: 'Scrap a lower point card',
 				disabled: scuttleDisabled,
 				disabledExplanation: scuttleDisabledExplanation,
@@ -155,7 +157,8 @@ export default {
 					scuttleMove,
 					// One-Off
 					{
-						moveName:'One-Off',
+						displayName:'One-Off',
+						eventName: 'oneOff',
 						moveDescription: this.selectedCard.ruleText,
 						disabled: oneOffDisabled,
 						disabledExplanation: oneOffDisabledExplanation,
@@ -168,7 +171,8 @@ export default {
 					scuttleMove,
 					// Glasses
 					{
-						moveName: 'Glasses',
+						displayName: 'Glasses',
+						eventName: 'faceCard',
 						moveDescription: 'Your opponent plays open handed',
 						disabled: !this.isPlayersTurn,
 						disabledExplanation: 'It\'s not your turn'
@@ -190,7 +194,8 @@ export default {
 				}
 				res = [
 					{
-						moveName: 'Royal',
+						displayName: 'Royal',
+						eventName: 'jack',
 						moveDescription: 'Steal an opponent\'s point card',
 						disabled: !ableToJack,
 						disabledExplanation,
@@ -201,7 +206,8 @@ export default {
 			case 13:
 				res = [
 					{
-						moveName: 'Royal',
+						displayName: 'Royal',
+						eventName: 'faceCard',
 						moveDescription: this.selectedCard.ruleText,
 						disabled: !this.isPlayersTurn,
 						disabledExplanation: 'It\'s not your turn'
@@ -238,24 +244,6 @@ export default {
 			}
 		},
 	}, // End computed{}
-	methods: {
-		handleClick(move) {
-			switch(move.moveName) {
-			case 'Points':
-				this.$emit('points');
-				break;
-			case 'Royal':
-			case 'Glasses':
-				this.$emit('faceCard');
-				break;
-			case 'Scuttle':
-				this.$emit('scuttle');
-			case 'OneOff':
-				this.$emit('one-off');
-				break;
-			}
-		}
-	},
 }
 </script>
 
