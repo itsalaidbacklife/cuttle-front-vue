@@ -11,7 +11,7 @@
 			<v-icon v-if="iconName" x-large>
 				{{ iconName }}
 			</v-icon>
-			<p>Scrap a lower point card</p>
+			<p>{{ moveDescription }}</p>
 			<p
 				v-if="disabled && !!disabledExplanation"
 				class="red--text"
@@ -28,6 +28,10 @@ export default {
 		moveName: {
 			type: String,
 			required: true,
+		},
+		moveDescription: {
+			type: String,
+			default: '',
 		},
 		disabled: {
 			type: Boolean,

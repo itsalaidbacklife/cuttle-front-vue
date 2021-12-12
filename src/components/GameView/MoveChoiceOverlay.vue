@@ -37,6 +37,7 @@
 				v-for="move in moveChoices"
 				:key="move.moveName"
 				:move-name="move.moveName"
+				:move-description="move.moveDescription"
 				:disabled="move.disabled"
 				:disabled-explanation="move.disabledExplanation"
 				class="mx-4"
@@ -95,32 +96,69 @@ export default {
 			case 6:
 			case 7:
 			case 9:
+				const pointsDescription =  cardRank === 1 ? 'Gain 1 point' : `Gain ${cardRank} points`;
 				res = [
-					{ moveName: 'Points', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
-					{ moveName:'One-Off', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
+					// Points
 					{
-						moveName: 'Scuttle', 
-						disabled: !this.isPlayersTurn || !this.hasValidScuttleTarget, 
-						disabledExplanation: this.isPlayersTurn ? 'You can only scuttle smaller point cards' : 'It\'s not your turn'
+						moveName: 'Points',
+						moveDescription: pointsDescription,
+						disabled: !this.isPlayersTurn,
+						disabledExplanation: 'It\'s not your turn'
+					},
+					// Scuttle
+					{
+						moveName: 'Scuttle',
+						moveDescription: 'Scrap a lower point card',
+						disabled: !this.isPlayersTurn || !this.hasValidScuttleTarget,
+						disabledExplanation: this.isPlayersTurn ? 'You can only scuttle smaller point cards' : 'It\'s not your turn',
+					},
+					// One-Off
+					{
+						moveName:'One-Off',
+						moveDescription: this.selectedCard.ruleText,
+						disabled: !this.isPlayersTurn,
+						disabledExplanation: 'It\'s not your turn'
 					},
 				];
 				break;
 			case 8:
 				res = [
-					{ moveName: 'Points', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
-					{ moveName: 'Glasses', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
+					// Points
 					{
-						moveName: 'Scuttle', 
+						moveName: 'Points',
+						moveDescription: `Gain ${cardRank} points`,
+						disabled: !this.isPlayersTurn,
+						disabledExplanation: 'It\'s not your turn'
+					},
+					// Scuttle
+					{
+						moveName: 'Scuttle',
+						moveDescription: 'Scrap a lower point card',
 						disabled: !this.isPlayersTurn || !this.hasValidScuttleTarget, 
 						disabledExplanation: this.isPlayersTurn ? 'You can only scuttle smaller point cards' : 'It\'s not your turn'
+					},
+					// Glasses
+					{
+						moveName: 'Glasses',
+						moveDescription: 'Your opponent plays open handed',
+						disabled: !this.isPlayersTurn,
+						disabledExplanation: 'It\'s not your turn'
 					},
 				]
 				break;
 			case 10:
 				res = [
-					{ moveName: 'Points', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
+					// Points
 					{
-						moveName: 'Scuttle', 
+						moveName: 'Points',
+						moveDescription: `Gain ${cardRank} points`,
+						disabled: !this.isPlayersTurn,
+						disabledExplanation: 'It\'s not your turn'
+					},
+					// Scuttle
+					{
+						moveName: 'Scuttle',
+						moveDescription: 'Scrap a lower point card',
 						disabled: !this.isPlayersTurn || !this.hasValidScuttleTarget, 
 						disabledExplanation: this.isPlayersTurn ? 'You can only scuttle smaller point cards' : 'It\'s not your turn'
 					},
@@ -136,6 +174,7 @@ export default {
 				res = [
 					{
 						moveName: 'Royal',
+						moveDescription: 'Steal an opponent\'s point card',
 						disabled: !ableToJack,
 						disabledExplanation,
 					},
@@ -144,7 +183,12 @@ export default {
 			case 12:
 			case 13:
 				res = [
-					{ moveName: 'Royal', disabled: !this.isPlayersTurn, disabledExplanation: 'It\'s not your turn' },
+					{
+						moveName: 'Royal',
+						moveDescription: this.selectedCard.ruleText,
+						disabled: !this.isPlayersTurn,
+						disabledExplanation: 'It\'s not your turn'
+					},
 				];
 				break;
 			}
