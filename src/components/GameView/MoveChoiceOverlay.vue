@@ -2,7 +2,7 @@
 	<v-overlay
 		id="move-choice-overlay"
 		class="d-flex flex-column justify-center align-center"
-		:value="!!selectedCard"
+		:value="value"
 	>
 		<!-- Cancel button -->
 		<div
@@ -59,6 +59,10 @@ export default {
 		Card,
 	},
 	props: {
+		value: {
+			type: Boolean,
+			required: true,
+		},
 		selectedCard: {
 			type: Object,
 			default: null,

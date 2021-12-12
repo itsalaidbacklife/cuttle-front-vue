@@ -323,6 +323,7 @@
 				</h3>
 
 				<transition-group
+					v-if="!scuttling"
 					id="player-hand-cards"
 					tag="div"
 					name="slide-above"
@@ -340,6 +341,15 @@
 						@click="selectCard(index)"
 					/>
 				</transition-group>
+				<target-selection-overlay
+					v-if="scuttling && selectedCard"
+					id="player-hand-targetting"
+					key="target-selection-overlay"
+					:value="scuttling"
+					:selected-card="selectedCard"
+					:is-players-turn="isPlayersTurn"
+					@cancel="clearSelection"
+				/>
 			</div>
 			<v-snackbar
 				v-model="showSnack"
@@ -449,12 +459,14 @@
 			/>
 			<reauthenticate-dialog v-model="mustReauthenticate" />
 			<move-choice-overlay
+				:value="!!selectedCard && !scuttling"
 				:selected-card="selectedCard"
 				:is-players-turn="isPlayersTurn"
 				:opponent-queen-count="opponentQueenCount"
 				@points="playPoints"
 				@faceCard="playFaceCard"
 				@oneOff="playOneOff"
+				@scuttle="scuttling = true"
 				@cancel="clearSelection"
 			/>
 		</template>
@@ -475,6 +487,7 @@ import ScoreGoalToolTip from '@/components/GameView/ScoreGoalToolTip.vue';
 import ReauthenticateDialog from '@/components/GameView/ReauthenticateDialog.vue';
 import SevenDoubleJacksDialog from '../components/GameView/SevenDoubleJacksDialog.vue';
 import MoveChoiceOverlay from '@/components/GameView/MoveChoiceOverlay.vue';
+import TargetSelectionOverlay from '@/components/GameView/TargetSelectionOverlay.vue';
 
 export default {
 	name: 'GameView',
@@ -492,7 +505,7 @@ export default {
 		ReauthenticateDialog,
 		SevenDoubleJacksDialog,
 		MoveChoiceOverlay,
-		MoveChoiceOverlay,
+		TargetSelectionOverlay,
 	},
 	data() {
 		return {
@@ -500,6 +513,7 @@ export default {
 			snackMessage: '',
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
+			scuttling: false,
 			showFourDialog: false,
 			showEightOverlay: false,
 			showNineOverlay: false,
@@ -911,6 +925,7 @@ export default {
 			this.showNineOverlay = false;
 			this.nineTargetIndex = null;
 			this.targetType = null;
+			this.scuttling = false;
 		},
 		clearSelection() {
 			this.selectionIndex = null;
@@ -1489,7 +1504,7 @@ export default {
 #player-hand {
 	min-width: 50%;
 	height: 30vh;
-	& #player-hand-cards {
+	& #player-hand-cards, #player-hand-targetting::v-deep {
 		width: 100%;
 		height: 80%;
 		background: rgba(0, 0, 0, 0.46);
@@ -1498,7 +1513,7 @@ export default {
 		transition: all 1s;
 		&.my-turn {
 			border: 4px solid var(--v-accent-base);
-			box-shadow: 0 15px 16px -12px rgba(0, 123, 59, .8),0 24px 38px 12px rgba(0, 123, 59, .8),0 10px 50px 16px rgba(33, 150, 83, .8)!important;
+			box-shadow: 0 15px 16px -12px rgba(0, 123, 59, .8),0 24px 38px 12px rgba(0, 123, 59, .8),0 10px 50px 16px rgba(33, 150, 83, .8) !important;
 			background: linear-gradient(0deg, rgba(253, 98, 34, 1), rgba(255, 255, 255, .3));
 		}
 		&:not(.my-turn) {
