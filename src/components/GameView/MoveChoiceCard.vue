@@ -1,0 +1,43 @@
+<template>
+	<v-card
+		ripple
+		:disabled="disabled"
+		:class="{'pointer': !disabled}"
+	>
+		<v-card-title class="d-flex justify-center">
+			<h2>{{ moveName }}</h2>
+		</v-card-title>
+		<v-card-text class="d-flex flex-column justify-center align-center">
+			<v-icon x-large>
+				mdi-skull-crossbones
+			</v-icon>
+			<p>Scrap a lower point card</p>
+			<p v-if="disabled && !!disabledExplanation" class="red--text">{{  disabledExplanation }}</p>
+		</v-card-text>
+	</v-card>
+</template>
+<script>
+export default {
+	name: 'MoveChoiceCard',
+	props: {
+		moveName: {
+			type: String,
+			required: true,
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
+		disabledExplanation: {
+			type: String,
+			default: '',
+		},
+	}
+}
+</script>
+
+<style scoped lang="scss">
+.pointer {
+	cursor: pointer;
+}
+</style>
