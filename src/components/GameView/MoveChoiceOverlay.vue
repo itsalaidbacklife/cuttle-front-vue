@@ -42,6 +42,7 @@
 				:disabled-explanation="move.disabledExplanation"
 				:card-width="cardWidth"
 				class="mx-4"
+				@click="handleClick(move)"
 			/>
 		</div>
 	</v-overlay>
@@ -249,6 +250,24 @@ export default {
 				return '30%';
 			}
 		},
+	}, // End computed{}
+	methods: {
+		handleClick(move) {
+			switch(move.moveName) {
+			case 'Points':
+				this.$emit('points');
+				break;
+			case 'Royal':
+			case 'Glasses':
+				this.$emit('faceCard');
+				break;
+			case 'Scuttle':
+				this.$emit('scuttle');
+			case 'OneOff':
+				this.$emit('one-off');
+				break;
+			}
+		}
 	},
 }
 </script>

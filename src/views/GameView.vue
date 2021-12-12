@@ -452,6 +452,8 @@
 				:selected-card="selectedCard"
 				:is-players-turn="isPlayersTurn"
 				:opponent-queen-count="opponentQueenCount"
+				@points="playPoints"
+				@faceCard="playFaceCard"
 				@cancel="clearSelection"
 			/>
 		</template>

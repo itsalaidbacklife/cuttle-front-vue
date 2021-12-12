@@ -4,12 +4,16 @@
 		:disabled="disabled"
 		:class="{'pointer': !disabled}"
 		:width="cardWidth"
+		@click="$emit('click')"
 	>
 		<v-card-title class="d-flex justify-center">
 			<h2>{{ moveName }}</h2>
 		</v-card-title>
 		<v-card-text class="d-flex flex-column justify-center align-center">
-			<v-icon v-if="iconName" x-large>
+			<v-icon
+				v-if="iconName"
+				x-large
+			>
 				{{ iconName }}
 			</v-icon>
 			<p>{{ moveDescription }}</p>
