@@ -1,6 +1,6 @@
 <template>
 	<div
-		id="player-hand-targetting"
+		id="player-hand-targeting"
 		class="d-flex justify-start"
 		:class="{'my-turn': isPlayersTurn}"
 	>
@@ -14,7 +14,7 @@
 			id="target-selection-header-wrapper"
 			class="d-flex flex-column align-center"
 		>
-			<h1>Choose Scuttle Target</h1>
+			<h1>Choose {{ moveDisplayName }} Target</h1>
 			<v-btn
 				text
 				color="primary"
@@ -47,12 +47,16 @@ export default {
 			type: Boolean,
 			required: true,
 		},
+		moveDisplayName: {
+			type: String,
+			required: true,
+		},
 	}
 }
 </script>
 
 <style scoped lang="scss">
-#player-hand-targetting {
+#player-hand-targeting {
 	padding: 32px;
 }
 #target-selection-header-wrapper {

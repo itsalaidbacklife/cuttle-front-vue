@@ -323,7 +323,7 @@
 				</h3>
 
 				<transition-group
-					v-if="!scuttling"
+					v-if="!targeting"
 					id="player-hand-cards"
 					tag="div"
 					name="slide-above"
@@ -342,12 +342,13 @@
 					/>
 				</transition-group>
 				<target-selection-overlay
-					v-if="scuttling && selectedCard"
-					id="player-hand-targetting"
+					v-if="targeting && selectedCard"
+					id="player-hand-targeting"
 					key="target-selection-overlay"
-					:value="scuttling"
+					:value="targeting"
 					:selected-card="selectedCard"
 					:is-players-turn="isPlayersTurn"
+					:move-display-name="targetingMoveDisplayName"
 					@cancel="clearSelection"
 				/>
 			</div>
@@ -459,14 +460,14 @@
 			/>
 			<reauthenticate-dialog v-model="mustReauthenticate" />
 			<move-choice-overlay
-				:value="!!selectedCard && !scuttling"
+				:value="!!selectedCard && !targeting"
 				:selected-card="selectedCard"
 				:is-players-turn="isPlayersTurn"
 				:opponent-queen-count="opponentQueenCount"
 				@points="playPoints"
 				@faceCard="playFaceCard"
 				@oneOff="playOneOff"
-				@scuttle="scuttling = true"
+				@scuttle="beginTargeting($event)"
 				@cancel="clearSelection"
 			/>
 		</template>
@@ -514,6 +515,8 @@ export default {
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
 			scuttling: false,
+			targeting: false,
+			targetingMoveName: null,
 			showFourDialog: false,
 			showEightOverlay: false,
 			showNineOverlay: false,
@@ -925,7 +928,7 @@ export default {
 			this.showNineOverlay = false;
 			this.nineTargetIndex = null;
 			this.targetType = null;
-			this.scuttling = false;
+			this.targeting = false;
 		},
 		clearSelection() {
 			this.selectionIndex = null;
@@ -950,6 +953,23 @@ export default {
 				this.secondCardIsSelected = !this.secondCardIsSelected;
 			}
 		},
+		/**
+		 * Sets page data to configuring targeting for scuttle or one-off
+		 * @param move
+		 * 	{
+		 *		displayName: String e.g. 'One-Off',
+		 *		eventName: String e.g. 'oneOff',
+		 *		moveDescription: String,
+		 *		disabled: Boolean,
+		 *		disabledExplanation: Boolean,
+		 *	}
+		 */
+		beginTargeting(move) {
+ 			this.targeting = true;
+			this.targetingMoveName = move.eventName;
+			this.targetingMoveDisplayName = move.displayName;
+		},
+
 		/**
 		 * @returns number of queens a given player has
 		 * @param player is the player object
@@ -1504,7 +1524,7 @@ export default {
 #player-hand {
 	min-width: 50%;
 	height: 30vh;
-	& #player-hand-cards, #player-hand-targetting::v-deep {
+	& #player-hand-cards, #player-hand-targeting::v-deep {
 		width: 100%;
 		height: 80%;
 		background: rgba(0, 0, 0, 0.46);

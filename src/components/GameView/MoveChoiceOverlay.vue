@@ -42,7 +42,7 @@
 				:disabled-explanation="move.disabledExplanation"
 				:card-width="cardWidth"
 				class="mx-4"
-				@click="$emit(move.eventName)"
+				@click="$emit(move.eventName, move)"
 			/>
 		</div>
 	</v-overlay>
