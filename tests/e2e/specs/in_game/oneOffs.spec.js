@@ -911,7 +911,7 @@ describe('Playing THREEs', () => {
 		setupGameAsP0();
 	});
 
-	it.only('Plays 3s with no cards in scrap', () => {
+	it('Plays 3s with no cards in scrap', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS],
@@ -929,7 +929,7 @@ describe('Playing THREEs', () => {
 		assertSnackbarError('You can only play a 3 as a one-off, if there are cards in the scrap pile');
 	});
 
-	it('Plays 3s successfully', () => {
+	it.only('Plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.THREE_OF_CLUBS],
@@ -944,9 +944,7 @@ describe('Playing THREEs', () => {
 
 		// Player plays three
 		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click(); // scrap
+		cy.get('[data-move-choice=oneOff]').click();
 
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
@@ -979,11 +977,7 @@ describe('Playing THREEs', () => {
 
 		// Player attempts to play out of turn
 		cy.get('[data-player-hand-card=10-2]').click(); // ten of hearts
-
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('points');
 
 		cy.playPointsOpponent(Card.TEN_OF_DIAMONDS);
 
