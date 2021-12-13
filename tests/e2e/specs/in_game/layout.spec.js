@@ -101,7 +101,7 @@ describe('Game View Layout', () => {
 			});
 	});
 
-	it.only('Triple jacks on a card with multiple other cards', () => {
+	it('Triple jacks on a card with multiple other cards', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
@@ -166,7 +166,7 @@ describe('Game View Layout', () => {
 			});
 	});
 
-	it('Four cards, each with a jack', () => {
+	it.only('Four cards, each with a jack', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.JACK_OF_CLUBS, Card.JACK_OF_HEARTS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES],
@@ -179,11 +179,10 @@ describe('Game View Layout', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 4);
 		cy.log('Loaded fixture');
 
-		// Play jack 
-		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
-
-		cy.get('[data-opponent-point-card=1-2]')
-			.click(); // target ace of hearts
+		// Play jack of clubs on ace of hearts
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=1-2]').click();
 
 		cy.playPointsOpponent(Card.ACE_OF_SPADES)
 
@@ -200,10 +199,9 @@ describe('Game View Layout', () => {
 		);
 
 		// Play jack 
-		cy.get('[data-player-hand-card=11-1]').click(); // jack of diamonds
-
-		cy.get('[data-opponent-point-card=1-3]')
-			.click(); // target ace of spades
+		cy.get('[data-player-hand-card=11-1]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=1-3]').click();
 
 		cy.playPointsOpponent(Card.ACE_OF_DIAMONDS)
 
@@ -220,10 +218,9 @@ describe('Game View Layout', () => {
 		);
 
 		// Play jack 
-		cy.get('[data-player-hand-card=11-2]').click(); // jack of hearts
-
-		cy.get('[data-opponent-point-card=1-1]')
-			.click(); // target ace of diamonds
+		cy.get('[data-player-hand-card=11-2]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=1-1]').click();
 
 		cy.playPointsOpponent(Card.ACE_OF_CLUBS)
 
@@ -239,11 +236,10 @@ describe('Game View Layout', () => {
 			}
 		);
 
-		// Play jack 
-		cy.get('[data-player-hand-card=11-3]').click(); // jack of spades
-
-		cy.get('[data-opponent-point-card=1-0]')
-			.click(); // target ace of clubs
+		// Play jack of spades on ace of clubs
+		cy.get('[data-player-hand-card=11-3]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=1-0]').click();
 
 		assertGameState(
 			0,
