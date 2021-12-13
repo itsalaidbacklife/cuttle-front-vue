@@ -995,7 +995,7 @@ describe('Playing THREEs', () => {
 		);
 	})
 
-	it.only('Opponent plays 3s successfully', () => {
+	it('Opponent plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES],
@@ -1057,7 +1057,7 @@ describe('Playing THREEs', () => {
 				scrap: [Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES, Card.THREE_OF_CLUBS],
 			}
 		);
-	})
+	});
 }); // End 3s description
 
 describe('ONE-OFF Target should be removed after one-off resolves', () => {
@@ -1065,7 +1065,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		setupGameAsP1();
 	});
 
-	it('ONE-OFF Target should be removed after one-off resolves - target is POINTS', () => {
+	it.only('ONE-OFF Target should be removed after one-off resolves - target is POINTS', () => {
 		cy.loadGameFixture({
 			// Opponent is p0
 			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
@@ -1103,13 +1103,13 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Player plays another point
 		cy.get('[data-player-hand-card=6-2]').click();
-		cy.get('#player-field').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=points]').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
 		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
-		
+
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('not.contain', 'targetting')
