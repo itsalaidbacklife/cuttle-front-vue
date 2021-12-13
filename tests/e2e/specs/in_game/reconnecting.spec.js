@@ -12,7 +12,7 @@ function reconnect() {
 }
 
 describe('Reconnecting to a game', () => {
-	it('Reconnects after refreshing the page', () => {
+	it.only('Reconnects after refreshing the page', () => {
 		setupGameAsP0();
 
 		cy.loadGameFixture({
@@ -31,12 +31,9 @@ describe('Reconnecting to a game', () => {
 		cy.reload();
 		reconnect();
 
-		// // Play Ace of Clubs for points
+		// Play Ace of Clubs for points
 		cy.get('[data-player-hand-card=1-0]').click();
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click()
-			.should('not.have.class', 'valid-move');
+		cy.get('[data-move-choice=points]').click();
         
 		assertGameState(0, {
 			p0Hand: [],
