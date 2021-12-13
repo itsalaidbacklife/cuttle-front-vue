@@ -3,6 +3,7 @@
 		ripple
 		:disabled="disabled"
 		:class="{'pointer': !disabled}"
+		class="move-choice-card"
 		:width="cardWidth"
 		@click="$emit('click')"
 	>
@@ -78,5 +79,8 @@ export default {
 <style scoped lang="scss">
 .pointer {
 	cursor: pointer;
+}
+.move-choice-card {
+	border: 2px solid #fff;
 }
 </style>
