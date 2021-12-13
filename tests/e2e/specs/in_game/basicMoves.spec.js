@@ -65,21 +65,34 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	it('Scuttles as P0', () => {
 		// Set Up
 		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_SPADES, Card.SEVEN_OF_CLUBS],
-			p0Points: [Card.TEN_OF_HEARTS],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.ACE_OF_SPADES, Card.SEVEN_OF_CLUBS],
+			p0Points: [Card.TWO_OF_CLUBS, Card.TEN_OF_HEARTS],
 			p0FaceCards: [Card.KING_OF_SPADES],
-			p1Hand: [Card.TEN_OF_SPADES],
+			p1Hand: [Card.TEN_OF_CLUBS, Card.TEN_OF_SPADES],
 			p1Points: [Card.SIX_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [Card.QUEEN_OF_HEARTS],
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Fixture loaded');
 
-		// Player attempts illegal scuttle
+		// Player attempst illegal scuttle -- using card too small to target anything on field
+		cy.get('[data-player-hand-card=1-0]').click();
+		cy.get('[data-move-choice=scuttle]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'You can only scuttle smaller point cards')
+			.click({force: true});
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('[data-opponent-point-card=1-1]').click();
+		assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit');;
+		cy.log('Could not scuttlewith point card too low to target anything');
+
+		// Player attempts illegal scuttle -- using card big enough to target something else
 		cy.get('[data-player-hand-card=1-3]').click(); // 7 of clubs
 		cy.get('[data-move-choice=scuttle]').click();
 		cy.get('[data-opponent-point-card=6-2]').click(); // 6 of hearts
 		assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit');;
+		cy.log('Could not scuttle invalid target with point card that had alternative valid target');
 
 		// Player scuttles 6 of diamonds with 7 of clubs
 		cy.get('[data-player-hand-card=7-0]').click(); // 7 of clubs
@@ -88,15 +101,17 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.ACE_OF_SPADES],
-				p0Points: [Card.TEN_OF_HEARTS],
+				p0Hand: [Card.ACE_OF_CLUBS, Card.ACE_OF_SPADES],
+				p0Points: [Card.TWO_OF_CLUBS, Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.KING_OF_SPADES],
-				p1Hand: [Card.TEN_OF_SPADES],
+				p1Hand: [Card.TEN_OF_CLUBS, Card.TEN_OF_SPADES],
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [Card.QUEEN_OF_HEARTS],
 				scrap: [Card.SEVEN_OF_CLUBS, Card.SIX_OF_HEARTS],
 			}
 		);
+		cy.log('Successfully scuttled as p0');
+
 		// Attempt to scuttle out of turn
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
 		cy.get('[data-move-choice=scuttle]')
@@ -106,20 +121,73 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
 		// Test that Error snackbar says its not your turn
 		assertSnackbarError('It\'s not your turn');
+		cy.log('Could not scuttle out of turn');
+
 		// Opponent scuttles 10 of hearts with 10 of spades
 		cy.scuttleOpponent(Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS);
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.ACE_OF_SPADES],
-				p0Points: [],
+				p0Hand: [Card.ACE_OF_CLUBS, Card.ACE_OF_SPADES],
+				p0Points: [Card.TWO_OF_CLUBS],
 				p0FaceCards: [Card.KING_OF_SPADES],
-				p1Hand: [],
+				p1Hand: [Card.TEN_OF_CLUBS],
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [Card.QUEEN_OF_HEARTS],
 				scrap: [Card.SEVEN_OF_CLUBS, Card.SIX_OF_HEARTS, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES],
 			}
 		);
+		cy.log('Opponent (p1) successfully scuttled');
+
+		// Player scuttles opponent's last point card
+		cy.get('[data-player-hand-card=1-3]').click();
+		cy.get('[data-move-choice=scuttle]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('[data-opponent-point-card=1-1]').click();
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.ACE_OF_CLUBS],
+				p0Points: [Card.TWO_OF_CLUBS],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.TEN_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [Card.QUEEN_OF_HEARTS],
+				scrap: [Card.SEVEN_OF_CLUBS, Card.SIX_OF_HEARTS, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.ACE_OF_DIAMONDS],
+			}
+		);
+		cy.log('Player (p0) scuttled opponent\'s last point card');
+
+		cy.scuttleOpponent(Card.TEN_OF_CLUBS, Card.TWO_OF_CLUBS);
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.ACE_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [Card.QUEEN_OF_HEARTS],
+				scrap: [
+					Card.SEVEN_OF_CLUBS,
+					Card.SIX_OF_HEARTS,
+					Card.TEN_OF_HEARTS,
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.ACE_OF_DIAMONDS,
+					Card.TWO_OF_CLUBS,
+					Card.TEN_OF_CLUBS,
+				],
+			}
+		);
+
+		// Now when player chooses a move, scuttle is disabled b/c there are no opponent points
+		cy.get('[data-player-hand-card=1-0]').click();
+		cy.get('[data-move-choice=scuttle]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'Your opponent has no point cards to scuttle');
+		cy.log('Scuttling is disabled with specific message when opponent has no points');
 	});
 
 	it('Plays Kings', () => {
