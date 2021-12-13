@@ -78,7 +78,7 @@ describe('Winning the game', () =>  {
 		goHomeJoinNewGame();
 	});
     
-	it.only('Shows when player wins game with 14 points and one king', () => {
+	it('Shows when player wins game with 14 points and one king', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.JACK_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS],
