@@ -810,7 +810,7 @@ describe('Playing NINES', ()=>{
 			setupGameAsP1();
 		});
 
-		it.only('Opponent plays a NINE on a jack to steal back point card', () => {
+		it('Opponent plays a NINE on a jack to steal back point card', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.NINE_OF_CLUBS, Card.ACE_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_SPADES],
@@ -911,7 +911,7 @@ describe('Playing THREEs', () => {
 		setupGameAsP0();
 	});
 
-	it('Plays 3s with no cards in scrap', () => {
+	it.only('Plays 3s with no cards in scrap', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS],
@@ -925,9 +925,7 @@ describe('Playing THREEs', () => {
 
 		// Player plays three
 		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click(); // scrap
+		cy.get('[data-move-choice=oneOff]').click();
 		assertSnackbarError('You can only play a 3 as a one-off, if there are cards in the scrap pile');
 	});
 
