@@ -18,7 +18,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	// 	cy.log('Loaded fixture');
 	// });
 
-	it.only('Plays Points', () => {
+	it('Plays Points', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.ACE_OF_CLUBS],
@@ -75,7 +75,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it('Scuttles as P0', () => {
+	it.only('Scuttles as P0', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.SEVEN_OF_CLUBS],
@@ -90,11 +90,13 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Player attempts illegal scuttle
 		cy.get('[data-player-hand-card=1-3]').click(); // 7 of clubs
+		cy.get('[data-move-choice=scuttle]').click();
 		cy.get('[data-opponent-point-card=6-2]').click(); // 6 of hearts
 		assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit');;
 
 		// Player scuttles 6 of diamonds with 7 of clubs
 		cy.get('[data-player-hand-card=7-0]').click(); // 7 of clubs
+		cy.get('[data-move-choice=scuttle]').click();
 		cy.get('[data-opponent-point-card=6-2]').click(); // 6 of hearts
 		assertGameState(
 			0,
@@ -110,6 +112,10 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 		// Attempt to scuttle out of turn
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
+		cy.get('[data-move-choice=scuttle]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'It\'s not your turn')
+			.click({force: true});
 		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
 		// Test that Error snackbar says its not your turn
 		assertSnackbarError('It\'s not your turn');
