@@ -18,7 +18,6 @@ describe('Game View Layout', () => {
 			p1FaceCards: [],
 		})
 		cy.get('[data-player-hand-card]').should('have.length', 2);
-		
 	});
 
 	it('Quadruple jacks with a few cards', () => {
@@ -34,11 +33,10 @@ describe('Game View Layout', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 4);
 		cy.log('Loaded fixture');
 
-		// Play jack 
-		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
-
-		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
+		// Play jack of clubs on ten of hearts
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=10-2]').click();
 
 		assertGameState(0,
 			{
@@ -52,13 +50,8 @@ describe('Game View Layout', () => {
 			});
 		
 		cy.get('[data-player-hand-card]').should('have.length', 3);
-		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of spades
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
-
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
 		
 		// opponent plays 2nd Jack
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
@@ -75,11 +68,10 @@ describe('Game View Layout', () => {
 			});
 
 		// Player plays 3rd jack 
-		cy.get('[data-player-hand-card=11-2]').click(); // jack of hearts
+		cy.get('[data-player-hand-card=11-2]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=10-2]').click();
 
-		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
-		
 		assertGameState(0,
 			{
 				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
@@ -91,14 +83,10 @@ describe('Game View Layout', () => {
 				scrap: []
 			});
 
-		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
 
-		// opponent plays 4th Jack
+		// Opponent plays 4th jack
 		cy.playJackOpponent(Card.JACK_OF_SPADES, Card.TEN_OF_HEARTS)
 
 		assertGameState(0,
