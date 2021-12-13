@@ -264,6 +264,77 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			}
 		);
 	});
+
+	it.only('Cancels selection and cancels decision to scuttle', () => {
+		cy.loadGameFixture({
+			p0Hand: [Card.TWO_OF_SPADES, Card.FOUR_OF_CLUBS, Card.NINE_OF_SPADES, Card.KING_OF_CLUBS, Card.JACK_OF_SPADES],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_CLUBS],
+			p1Points: [Card.ACE_OF_SPADES],
+			p1FaceCards: [Card.KING_OF_DIAMONDS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 5);
+		cy.log('Loaded fixture');
+
+		// Cancel selected card (close move-choice-overlay)
+		cy.get('[data-player-hand-card=2-3]').click(); // Two of spades
+		cy.get('#move-choice-overlay')
+			.should('be.visible');
+		// Should have 3 move options
+		cy.get('[data-move-choice]')
+			.should('have.length', 3);
+		cy.get('[data-cy=cancel-move]')
+			.click();
+		cy.get('#move-choice-overlay')
+			.should('not.be.visible');
+		cy.log('Successfully canceled card selection');
+
+		// Cancel decision to scuttle
+		cy.get('[data-player-hand-card=2-3]').click(); // Two of spades
+		cy.get('[data-move-choice=scuttle]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 1);
+		cy.get('[data-cy=cancel-target]')
+			.click();
+		cy.get('#player-hand-targeting')
+			.should('not.be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 0);
+		cy.log('Successfully canceled scuttle');
+
+		// Cancel targeted one-off
+		cy.get('[data-player-hand-card=9-3]').click(); // Nine of spades
+		cy.get('[data-move-choice=targetedOneOff]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 1);
+		cy.get('[data-cy=cancel-target]')
+			.click();
+		cy.get('#player-hand-targeting')
+			.should('not.be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 0);
+		cy.log('Successfully canceled targeted one-off');
+
+		// Cancel Jack
+		cy.get('[data-player-hand-card=11-3]').click(); // Nine of spades
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 1);
+		cy.get('[data-cy=cancel-target]')
+			.click();
+		cy.get('#player-hand-targeting')
+			.should('not.be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 0);
+		cy.log('Successfully canceled jack');
+	});
 });
 
 describe('Game Basic Moves - P1 Perspective', () => {
@@ -323,7 +394,7 @@ describe('Playing 8s', () => {
 		setupGameAsP0();
 	});
 
-	it.only('Plays eights for points', () => {
+	it('Plays eights for points', () => {
 		// Setup
 		cy.loadGameFixture({
 			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
@@ -378,14 +449,7 @@ describe('Playing 8s', () => {
 
 		// Player plays eight
 		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-		// Choose to play as glasses
-		cy.get('#eight-overlay')
-			.should('be.visible')
-			.get('[data-cy=eight-as-glasses]')
-			.click();
+		cy.get('[data-move-choice=faceCard]').click();
 		
 		assertGameState(
 			0,
@@ -402,9 +466,10 @@ describe('Playing 8s', () => {
 		// Attempt to play eight out of turn
 		// Player plays eight
 		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
+		cy.get('[data-move-choice=faceCard]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'It\'s not your turn')
+			.click({force: true});
 		assertSnackbarError('It\'s not your turn');
 
 		// Opponent plays glasses eight
@@ -422,43 +487,6 @@ describe('Playing 8s', () => {
 		);
 	}); // End play glasses 8
 
-	it('Cancels playing an 8 with close icon', () => {
-		// Setup
-		cy.loadGameFixture({
-			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 4);
-		cy.log('Loaded fixture');
-
-		// Player plays eight
-		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-		// Cancel decision to play eight
-		cy.get('#eight-overlay')
-			.should('be.visible')
-			.get('[data-cy=cancel-eight]')
-			.click();
-
-		// Overlay clears
-		cy.get('#eight-overlay')
-			.should('not.be.visible');
-		// State is unchanged
-		assertGameState(0, {
-			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [],
-		});
-	}); // End cancel playing an 8
 }); // End eights describe
 
 describe('Play Jacks', () => {

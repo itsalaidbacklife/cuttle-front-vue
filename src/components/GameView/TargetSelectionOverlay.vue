@@ -18,6 +18,7 @@
 			<v-btn
 				text
 				color="primary"
+				data-cy="cancel-target"
 				@click="$emit('cancel')"
 			>
 				Cancel
