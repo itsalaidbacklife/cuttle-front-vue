@@ -39,7 +39,7 @@ describe('Untargeted One-Offs', () => {
 		playOutOfTurn('points');
 	}); // End ace one-off
 
-	it.only('Plays a five to draw two cards', () => {
+	it('Plays a five to draw two cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			// Player is P0
@@ -79,7 +79,7 @@ describe('Untargeted One-Offs', () => {
 		playOutOfTurn('oneOff');
 	}); // End five one-off
 
-	it('Plays a six to destroy all face cards', () => {
+	it.only('Plays a six to destroy all face cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			//Player is P0
@@ -97,13 +97,15 @@ describe('Untargeted One-Offs', () => {
 		// Double Jack (control will remain unchanged when 6 resolves)
 		// Player & Opponent jack then re-jack the TWO of Hearts
 		cy.get('[data-player-hand-card=11-2]').click();
+		cy.get('[data-move-choice=jack').click();
 		cy.get('[data-opponent-point-card=2-2]').click();
-		cy.get('[data-player-point-card=2-2]');
+		cy.get('[data-player-point-card=2-2]'); // point card now controlled by player
 		cy.playJackOpponent(Card.JACK_OF_SPADES, Card.TWO_OF_HEARTS);
 
 		// Single Jacks (control will switch when 6 resolves)
 		// Player jacks opponent's Ace of diamonds
 		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
 		cy.get('[data-opponent-point-card=1-1]').click();
 		// Opponent jacks player's Three of spades
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.THREE_OF_SPADES);
@@ -135,10 +137,7 @@ describe('Untargeted One-Offs', () => {
 		);
 		// Attempt to plays six out of turn
 		cy.get('[data-player-hand-card=6-1]').click(); // six of diamonds
-		cy.get('#scrap')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('oneOff');
 	}); // End 6 one-off
 
 }); // End untargeted one-off describe
