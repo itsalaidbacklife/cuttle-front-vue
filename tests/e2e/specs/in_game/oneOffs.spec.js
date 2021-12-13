@@ -417,7 +417,7 @@ describe('Play TWOS', () => {
 				});
 		});
 
-		it.only('Plays TWO to Destroy Jacks', () => {
+		it('Plays TWO to Destroy Jacks', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES],
@@ -490,7 +490,7 @@ describe('Play TWOS', () => {
 			setupGameAsP1();
 		});
 
-		it('Opponent Plays TWO to Destroy Jacks', () => {
+		it.only('Opponent Plays TWO to Destroy Jacks', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES],
@@ -504,8 +504,9 @@ describe('Play TWOS', () => {
 
 			cy.playPointsOpponent(Card.ACE_OF_SPADES);
 
-			cy.get('[data-player-hand-card=11-0]').click()
-			cy.get('[data-opponent-point-card=1-3]').click()
+			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack').click();
+			cy.get('[data-opponent-point-card=1-3]').click();
 
 			assertGameState(1, {
 				p0Hand: [Card.TWO_OF_CLUBS],
