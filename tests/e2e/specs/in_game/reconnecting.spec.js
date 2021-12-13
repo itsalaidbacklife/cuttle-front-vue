@@ -563,7 +563,7 @@ describe('Reconnecting to a game', () => {
 
 	describe('Reconnecting into One-Off resolutions', () => {
 		describe('Reconnecting into 3s', () => {
-			it.only('Resolve 3 after reconnect -- Player fetches card', () => {
+			it('Resolve 3 after reconnect -- Player fetches card', () => {
 				setupGameAsP0();
 				cy.loadGameFixture({
 					p0Hand: [Card.THREE_OF_CLUBS],
@@ -603,6 +603,7 @@ describe('Reconnecting to a game', () => {
 					scrap: [Card.THREE_OF_CLUBS],
 				});
 			});
+
 			it('Resolve opponents three after reconnect', () => {
 				setupGameAsP1();
 				cy.loadGameFixture({
@@ -692,6 +693,7 @@ describe('Reconnecting to a game', () => {
 				],
 			});
 		});
+
 		it('Resolve 7 after reconnect - Player', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
