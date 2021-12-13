@@ -377,7 +377,7 @@ describe('Play TWOS', () => {
 			setupGameAsP0();
 		});
 
-		it.only('Plays Two to Destroy Face Card', () => {
+		it('Plays Two to Destroy Face Card', () => {
 			// Set Up
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
@@ -417,7 +417,7 @@ describe('Play TWOS', () => {
 				});
 		});
 
-		it('Plays TWO to Destroy Jacks', () => {
+		it.only('Plays TWO to Destroy Jacks', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES],
@@ -431,9 +431,7 @@ describe('Play TWOS', () => {
 
 			// player plays Ace of Spades
 			cy.get('[data-player-hand-card=1-3]').click();
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=points]').click();
 
 			assertGameState(0, {
 				p0Hand: [Card.TWO_OF_CLUBS],
@@ -444,11 +442,8 @@ describe('Play TWOS', () => {
 				p1FaceCards: []
 			});
 
-			cy.get('[data-player-hand-card]').should('have.length', 1);
-
-			// opponent plays jack
+			// Opponent plays jack
 			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_SPADES)
-
 
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 
@@ -461,10 +456,12 @@ describe('Play TWOS', () => {
 				p1FaceCards: []
 			});
 
-			// player plays TWO to destroy jack
-			cy.get('[data-player-hand-card=2-0]').click()
-			cy.get('[data-opponent-face-card=11-0]').click()
-
+			// Player plays TWO to destroy jack
+			cy.get('[data-player-hand-card=2-0]').click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-face-card=11-0]').click();
 
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
