@@ -200,6 +200,7 @@ function pointsToWin(kingCount) {
 		throw new Error(`Cannot count points to win for invalid kingcount: ${kingCount}`);
 	}
 }
+
 export function assertSnackbarError(message, snackName='game') {
 	cy.get(`[data-cy=${snackName}-snackbar] .v-snack__wrapper`)
 		.should('be.visible')
@@ -207,6 +208,22 @@ export function assertSnackbarError(message, snackName='game') {
 		.should('contain', message)
 		.get('[data-cy=close-snackbar]')
 		.click();
+}
+
+/**
+ * Attempts to make a move out of turn and confirms that controls are disabled etc
+ * Assumes a card is already selected and the move choice overlay is open
+ * @param moveName: String is the name of the move event (ex 'oneOff')
+ */
+export function playOutOfTurn(moveName) {
+	// Specified move choice should be disabled
+	cy.get(`[data-move-choice=${moveName}]`)
+		.should('have.class', 'v-card--disabled')
+		.should('contain', 'It\'s not your turn')
+		.click({force: true});
+	// Back end should fire error that move is illegal after click is forced
+	assertSnackbarError('It\'s not your turn');
+	cy.log(`Correctly prevented attempt to play ${moveName} out of turn`);
 }
 
 function assertDomMatchesFixture(pNum, fixture) {
