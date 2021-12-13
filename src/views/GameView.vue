@@ -442,6 +442,7 @@
 				@oneOff="playOneOff"
 				@scuttle="beginTargeting($event)"
 				@jack="beginTargeting($event)"
+				@targetedOneOff="beginTargeting($event)"
 				@cancel="clearSelection"
 			/>
 		</template>
@@ -808,6 +809,19 @@ export default {
 				return this.validScuttleIds;
 			case 'jack':
 				return this.opponent.points.map(validTarget => validTarget.id);
+			case 'targetedOneOff':
+				// Twos and nines can target face cards
+				let res = [
+					...this.validFaceCardTargetIds,
+				];
+				// Nines can additionally target points if opponent has no queens
+				if (selectedCard.rank === 9 && this.opponentQueenCount === 0) {
+					res = [
+						...res,
+						...this.opponent.points.map(validTarget => validTarget.id),
+					];
+				}
+				return res;
 			default:
 				return [];
 			}
@@ -1164,10 +1178,11 @@ export default {
 				this.playJack(targetIndex)
 				return;
 			case 9:
-				// Determine whether to scuttle or play as one-off
-				this.nineTargetIndex = targetIndex;
-				this.showNineOverlay = true;
-				this.targetType = 'point';
+				if (this.targetingMoveName === 'targetedOneOff') {
+					this.playTargetedOneOff(targetIndex, 'point');
+				} else {
+					this.scuttle(targetIndex);
+				}
 				return;
 			default:
 				return;
