@@ -265,7 +265,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it.only('Cancels selection and cancels decision to scuttle', () => {
+	it.only('Cancels selection and cancels decision to scuttle/targeted one-off/jack', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.TWO_OF_SPADES, Card.FOUR_OF_CLUBS, Card.NINE_OF_SPADES, Card.KING_OF_CLUBS, Card.JACK_OF_SPADES],
 			p0Points: [],
