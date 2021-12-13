@@ -578,7 +578,7 @@ describe('Playing NINES', ()=>{
 			);
 		}); // End 9 scuttle
 	
-		it.only('Plays a nine as ONE-OFF on lower point card to return it to owners hand', () => {
+		it('Plays a nine as ONE-OFF on lower point card to return it to owners hand', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -614,7 +614,7 @@ describe('Playing NINES', ()=>{
 			);		
 		}); // End 9 one-off low point card
 	
-		it('Plays a nine as ONE-OFF on a higher point card to return it to owners hand', () => {
+		it.only('Plays a nine as ONE-OFF on a higher point card to return it to owners hand', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_CLUBS, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -625,25 +625,25 @@ describe('Playing NINES', ()=>{
 			});
 			cy.get('[data-player-hand-card]').should('have.length', 2);
 			cy.log('Loaded fixture');
-	
-			// Player plays nine
-			cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts	
-			cy.get('[data-opponent-point-card=9-3]').click(); // nine of spades
-	
+
 			// Attempt illegal scuttle
-			cy.log('Attempting illegal scuttle');
-			cy.get('#nine-cannot-scuttle').should('be.visible');
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=nine-scuttle]')
-				.click();
-	
-			cy.log('Choosing to play nine as one-off');
-			// Chooses to play as one-off
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=nine-one-off]')
-				.click();
+			cy.get('[data-player-hand-card=9-0]').click();
+			cy.get('[data-move-choice=scuttle]')
+				.should('have.class', 'v-card--disabled')
+				.should('contain', 'You can only scuttle smaller point cards')
+				.click({force: true});
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-point-card=9-3]').click();
+			assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit. Suit order (low to high) is: Clubs < Diamonds < Hearts < Spades');
+
+			// Player plays nine
+			cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-point-card=9-3]').click(); // nine of spades
+			cy.log('Successfully played nine one-off on higher point card');
 	
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
