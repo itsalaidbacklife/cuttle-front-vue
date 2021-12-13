@@ -254,7 +254,7 @@ describe('Game View Layout', () => {
 		);
 	})
 
-	it.only('Three dialogs', ()=>{
+	it('Three dialogs', ()=>{
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.THREE_OF_CLUBS],
