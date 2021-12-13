@@ -614,7 +614,7 @@ describe('Playing NINES', ()=>{
 			);		
 		}); // End 9 one-off low point card
 	
-		it.only('Plays a nine as ONE-OFF on a higher point card to return it to owners hand', () => {
+		it('Plays a nine as ONE-OFF on a higher point card to return it to owners hand', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_CLUBS, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -664,7 +664,7 @@ describe('Playing NINES', ()=>{
 			);
 		}); // End 9 one-off high-point card
 	
-		it('Plays a nine as a ONE-OFF to return a face card to its owners hand', () => {
+		it.only('Plays a nine as a ONE-OFF to return a face card to its owners hand', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -677,10 +677,12 @@ describe('Playing NINES', ()=>{
 			cy.log('Loaded fixture');
 	
 			// Player plays nine
-			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
-			cy.get('[data-opponent-face-card=13-1]').click(); // ace of diamonds
-	
-	
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-face-card=13-1]').click(); // king of diamonds
+
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
