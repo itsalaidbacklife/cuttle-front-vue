@@ -129,7 +129,7 @@ describe('Reconnecting to a game', () => {
 				scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS],
 			});
 		});
-		it.only('counter -- Reconnect into cannot counter dialog', () => {
+		it('counter -- Reconnect into cannot counter dialog', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_CLUBS],
@@ -264,6 +264,7 @@ describe('Reconnecting to a game', () => {
 				],
 			});
 		});
+
 		it('Opponent reconnects while player is in cannot-counter dialog', () => {
 			setupGameAsP1();
 
@@ -400,7 +401,8 @@ describe('Reconnecting to a game', () => {
 				scrap: [Card.TWO_OF_CLUBS, Card.TWO_OF_SPADES],
 			});
 		});
-		it('counter -- Reconnect into counter dialog', () => {
+
+		it.only('counter -- Reconnect into counter dialog', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_SPADES],
@@ -416,9 +418,7 @@ describe('Reconnecting to a game', () => {
 
 			// Play ace of clubs
 			cy.get('[data-player-hand-card=1-0]').click();
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
@@ -433,6 +433,7 @@ describe('Reconnecting to a game', () => {
 			// Reconnect & proceed
 			cy.reload();
 			reconnect();
+
 			// Counter dialog should become visible again
 			cy.get('#counter-dialog')
 				.should('be.visible')
