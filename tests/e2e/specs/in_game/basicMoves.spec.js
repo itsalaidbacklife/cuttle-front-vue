@@ -4,19 +4,6 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	beforeEach(() => {
 		setupGameAsP0();
 	});
-	// it('All ranks in hand', () => {
-	// 	// Set Up
-	// 	cy.loadGameFixture({
-	// 		p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS, Card.NINE_OF_CLUBS, Card.EIGHT_OF_CLUBS, Card.TEN_OF_SPADES, Card.JACK_OF_SPADES, Card.KING_OF_CLUBS],
-	// 		p0Points: [Card.TEN_OF_CLUBS],
-	// 		p0FaceCards: [Card.KING_OF_SPADES],
-	// 		p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-	// 		p1Points: [Card.TEN_OF_HEARTS],
-	// 		p1FaceCards: [Card.KING_OF_HEARTS],
-	// 	});
-	// 	cy.get('[data-player-hand-card]').should('have.length', 7);
-	// 	cy.log('Loaded fixture');
-	// });
 
 	it('Plays Points', () => {
 		// Set Up
@@ -654,7 +641,7 @@ describe('Play Jacks', () => {
 			
 	});
 
-	it.only('Quadruple jacks successfully', () => {
+	it('Quadruple jacks successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
