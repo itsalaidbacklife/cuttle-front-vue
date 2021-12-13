@@ -1,4 +1,4 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
+import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, playOutOfTurn, Card } from '../../support/helpers';
 
 describe('Untargeted One-Offs', () => {
 	
@@ -6,7 +6,7 @@ describe('Untargeted One-Offs', () => {
 		setupGameAsP0();
 	});
     
-	it('Plays an Ace to destroy all point cards', () => {
+	it.only('Plays an Ace to destroy all point cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS],
@@ -36,10 +36,7 @@ describe('Untargeted One-Offs', () => {
 		);
 		// Attempt to plays ace out of turn
 		cy.get('[data-player-hand-card=1-1]').click(); // ace of diamonds
-		cy.get('#scrap')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('points');
 	}); // End ace one-off
 
 	it('Plays a five to draw two cards', () => {
