@@ -1169,7 +1169,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 	});
 
 
-	it.only('ONE-OFF Target should be removed after one-off resolves - target is JACK', () => {
+	it('ONE-OFF Target should be removed after one-off resolves - target is JACK', () => {
 		cy.loadGameFixture({
 			// Opponent is p0
 			p0Hand: [Card.TWO_OF_SPADES, Card.FIVE_OF_CLUBS, Card.TEN_OF_HEARTS],
@@ -1244,7 +1244,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 			.click();
 	});
 
-	it('ONE-OFF Target should be removed after one-off is COUNTERED - target is POINTS', () => {
+	it.only('ONE-OFF Target should be removed after one-off is COUNTERED - target is POINTS', () => {
 		cy.loadGameFixture({
 			// Opponent is p0
 			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
@@ -1266,7 +1266,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 			.should('be.visible')
 			.get('[data-cy=counter]')
 			.click();
-		
+
 		cy.get('#choose-two-dialog')
 			.should('be.visible')
 			.get('[data-counter-dialog-card=2-0]')
@@ -1290,13 +1290,12 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Player plays another point
 		cy.get('[data-player-hand-card=6-2]').click();
-		cy.get('#player-field').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=points]').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
 		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
-		
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('not.contain', 'targetting')
