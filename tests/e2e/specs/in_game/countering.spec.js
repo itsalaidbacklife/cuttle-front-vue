@@ -1,4 +1,4 @@
-import { setupGameAsP1, setupGameAsP0, assertGameState, Card, assertSnackbarError } from '../../support/helpers';
+import { setupGameAsP1, setupGameAsP0, assertGameState, Card, assertSnackbarError, playOutOfTurn } from '../../support/helpers';
 
 describe('Countering One-Offs', () => {
 	beforeEach(() => {
@@ -415,7 +415,7 @@ describe('Countering One-Offs P0 Perspective', () => {
 		setupGameAsP0();
 	});
 
-	it('Can counter a three', () => {
+	it.only('Can counter a three', () => {
 		cy.loadGameFixture({
 			// Player is P0
 			p0Hand: [Card.FIVE_OF_CLUBS, Card.FOUR_OF_SPADES],
@@ -432,7 +432,7 @@ describe('Countering One-Offs P0 Perspective', () => {
 
 		// Player plays three of clubs as one-off
 		cy.get('[data-player-hand-card=5-0]').click();
-		cy.get('#scrap').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=oneOff]').click();
 
 		// Opponent counters and player resolves
 		cy.counterOpponent(Card.TWO_OF_SPADES);
@@ -440,14 +440,12 @@ describe('Countering One-Offs P0 Perspective', () => {
 			.should('be.visible')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
+
 		// No longer player turn
 		cy.get('[data-player-hand-card=4-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('points');
 
-		// Opponent plays a Five
+		// Opponent plays a Six
 		cy.playOneOffOpponent(Card.SIX_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
