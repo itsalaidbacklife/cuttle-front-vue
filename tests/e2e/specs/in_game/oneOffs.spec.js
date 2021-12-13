@@ -664,7 +664,7 @@ describe('Playing NINES', ()=>{
 			);
 		}); // End 9 one-off high-point card
 	
-		it.only('Plays a nine as a ONE-OFF to return a face card to its owners hand', () => {
+		it('Plays a nine as a ONE-OFF to return a face card to its owners hand', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -703,7 +703,7 @@ describe('Playing NINES', ()=>{
 		}); // End 9 on face card
 	
 	
-		it('Plays a 9 on a jack to steal back point card', () => {
+		it.only('Plays a 9 on a jack to steal back point card', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.NINE_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES],
@@ -714,13 +714,11 @@ describe('Playing NINES', ()=>{
 			});
 			cy.get('[data-player-hand-card]').should('have.length', 2);
 			cy.log('Loaded fixture');
-	
-			// player plays Ace of Spades
+
+			// Player plays Ace of Spades
 			cy.get('[data-player-hand-card=1-3]').click();
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click()
-	
+			cy.get('[data-move-choice=points]').click();
+
 			assertGameState(0, {
 				p0Hand: [Card.NINE_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
@@ -729,15 +727,10 @@ describe('Playing NINES', ()=>{
 				p1Points: [],
 				p1FaceCards: []
 			});
-	
-			cy.get('[data-player-hand-card]').should('have.length', 1);
-	
-			// opponent plays jack
+		
+			// Opponent plays jack
 			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_SPADES)
-	
-	
-			cy.get('[data-player-hand-card]').should('have.length', 1);
-	
+
 			assertGameState(0, {
 				p0Hand: [Card.NINE_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES],
@@ -746,17 +739,19 @@ describe('Playing NINES', ()=>{
 				p1Points: [Card.ACE_OF_SPADES],
 				p1FaceCards: []
 			});
-	
-			// player plays TWO to destroy jack
-			cy.get('[data-player-hand-card=9-0]').click()
-			cy.get('[data-opponent-face-card=11-0]').click()
-	
-	
+
+			// Player plays NINE to destroy jack
+			cy.get('[data-player-hand-card=9-0]').click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-face-card=11-0]').click();
+
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
 			cy.resolveOpponent();
-	
+
 			assertGameState(0, {
 				p0Hand: [],
 				p0Points: [Card.ACE_OF_SPADES, Card.TEN_OF_SPADES],
