@@ -131,27 +131,7 @@
 					<div
 						id="scrap"
 						class="rounded"
-						:class="{'valid-move': validMoves.includes('scrap')}"
-						@click="playOneOff"
 					>
-						<v-overlay
-							v-ripple
-							:value="validMoves.includes('scrap')"
-							absolute
-							color="accent lighten-1"
-							opacity=".6"
-							class="d-flex flex-column align-center justify-center"
-						>
-							<p class="black--text">
-								Scrap
-							</p>
-							<p
-								class="black--text"
-								style="text-align: center"
-							>
-								({{ scrap.length }})
-							</p>
-						</v-overlay>
 						<p>Scrap</p>
 						<p>({{ scrap.length }})</p>
 					</div>
@@ -214,13 +194,6 @@
 						:class="{'valid-move': validMoves.includes('field')}"
 						@click="playToField"
 					>
-						<v-overlay
-							v-ripple
-							:value="validMoves.includes('field')"
-							absolute
-							color="accent lighten-1"
-							opacity=".6"
-						/>
 						<transition-group
 							:name="playerPointsTransition"
 							tag="div"
@@ -468,6 +441,7 @@
 				@faceCard="playFaceCard"
 				@oneOff="playOneOff"
 				@scuttle="beginTargeting($event)"
+				@jack="beginTargeting($event)"
 				@cancel="clearSelection"
 			/>
 		</template>
@@ -822,51 +796,21 @@ export default {
 		},
 		validMoves() {
 			if (!this.isPlayersTurn) return [];
-
-			let res = [];
-			let cardRank;
+			let selectedCard = null;
 			if (this.resolvingSeven) {
-				if (!this.cardSelectedFromDeck) return [];
-				cardRank = this.cardSelectedFromDeck.rank;
+				selectedCard = this.cardSelectedFromDeck;
+			} else {
+				selectedCard = this.selectedCard;
 			}
-			else {
-				if (!this.selectedCard) return [];
-				cardRank = this.selectedCard.rank;
+			if (!selectedCard) return [];
+			switch (this.targetingMoveName) {
+			case 'scuttle':
+				return this.validScuttleIds;
+			case 'jack':
+				return this.opponent.points.map(validTarget => validTarget.id);
+			default:
+				return [];
 			}
-
-			switch (cardRank) {
-			case 1:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-				res.push('field');
-				res.push('scrap');
-				res = [...res, ...this.validScuttleIds];
-				break;
-			case 8:
-			case 10:
-				res.push('field');
-				res = [...res, ...this.validScuttleIds];
-				break;
-			case 9:
-				res.push('field');
-				res = [...res, ...this.validScuttleIds, ...this.validFaceCardTargetIds];
-				break;
-			case 2:
-				res.push('field');
-				res = [...res, ...this.validScuttleIds, ...this.validFaceCardTargetIds];
-				break;
-			case 11:
-				res = this.opponent.points.map(validTarget => validTarget.id);
-				break;
-			case 12:
-			case 13:
-				res.push('field');
-				break;
-			}
-			return res;
 		},
 		nineTarget() {
 			switch(this.targetType) {
