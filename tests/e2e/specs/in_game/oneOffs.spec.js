@@ -1065,7 +1065,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		setupGameAsP1();
 	});
 
-	it.only('ONE-OFF Target should be removed after one-off resolves - target is POINTS', () => {
+	it('ONE-OFF Target should be removed after one-off resolves - target is POINTS', () => {
 		cy.loadGameFixture({
 			// Opponent is p0
 			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
@@ -1109,7 +1109,6 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
-
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('not.contain', 'targetting')
@@ -1117,8 +1116,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 			.click();
 	});
 
-
-	it('ONE-OFF Target should be removed after one-off resolves - target is FACE CARD', () => {
+	it.only('ONE-OFF Target should be removed after one-off resolves - target is FACE CARD', () => {
 		cy.loadGameFixture({
 			// Opponent is p0
 			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
@@ -1134,7 +1132,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Opponent plays NINE
 		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.QUEEN_OF_HEARTS, 'faceCard');
-		
+
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
@@ -1157,13 +1155,12 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Player plays another point
 		cy.get('[data-player-hand-card=6-2]').click();
-		cy.get('#player-field').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=points]').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
 		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
-		
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('not.contain', 'targetting')
