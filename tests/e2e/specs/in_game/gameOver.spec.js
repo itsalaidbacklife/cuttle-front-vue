@@ -48,7 +48,7 @@ describe('Winning the game', () =>  {
 		setupGameAsP0();
 	});
 
-	it('Shows when player wins game with 21 points', () => {
+	it.only('Shows when player wins game with 21 points', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
@@ -64,8 +64,7 @@ describe('Winning the game', () =>  {
 		// Play Seven of Clubs
 		cy.get('[data-player-hand-card=7-0]')
 			.click();
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=points]')
 			.click();
 		assertGameState(0, {
 			p0Hand: [],
