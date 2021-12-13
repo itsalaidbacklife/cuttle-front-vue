@@ -494,7 +494,7 @@ describe('Play Jacks', () => {
 		setupGameAsP0();
 	});
 
-	it.only('Player and Opponent plays Jacks on different cards', () => {
+	it('Player and Opponent plays Jacks on different cards', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES],
@@ -543,7 +543,7 @@ describe('Play Jacks', () => {
 			});
 	});
 
-	it('Double Jacks - Player and Opponent plays Jacks on the same card', () => {
+	it.only('Double Jacks - Player and Opponent plays Jacks on the same card', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES],
@@ -556,11 +556,11 @@ describe('Play Jacks', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Loaded fixture');
 
-		// Play jack 
-		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
-
+		// Play jack of clubs on ten of hearts
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
 		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
+			.click();
 
 		assertGameState(0,
 			{
@@ -574,15 +574,11 @@ describe('Play Jacks', () => {
 			});
 		
 		cy.get('[data-player-hand-card]').should('have.length', 2);
-		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
 		
-		// opponent plays Jack
-		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
+		// Opponent plays jack
+		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS);
 
 		assertGameState(0,
 			{
