@@ -268,14 +268,14 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	it('Plays Queens', () => {
 		// Setup
 		cy.loadGameFixture({
-			p0Hand: [Card.QUEEN_OF_SPADES, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+			p0Hand: [Card.QUEEN_OF_DIAMONDS, Card.QUEEN_OF_SPADES, Card.KING_OF_CLUBS, Card.JACK_OF_DIAMONDS],
 			p0Points: [Card.TEN_OF_HEARTS],
 			p0FaceCards: [],
 			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
 			p1Points: [Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [],
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.get('[data-player-hand-card]').should('have.length', 4);
 		cy.log('Loaded fixture');
 
 		// Player plays queen
@@ -286,7 +286,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Hand: [Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.QUEEN_OF_SPADES],
 				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
@@ -309,7 +309,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Hand: [Card.QUEEN_OF_DIAMONDS, Card.KING_OF_CLUBS, Card.JACK_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.QUEEN_OF_SPADES],
 				p1Hand: [Card.SIX_OF_HEARTS],
@@ -318,6 +318,19 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				scrap: [],
 			}
 		);
+
+		// Player is now prevented from playing a jack
+		cy.get('[data-player-hand-card=11-1]').click();
+		cy.get('[data-move-choice=jack]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'You cannot jack your opponent\'s points while they have a queen')
+			.click({force: true});
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('[data-opponent-point-card=1-1]')
+			.click();
+		assertSnackbarError('You cannot use a Jack while your opponent has a Queen');
+		cy.log('Cannot play jack now that opponent has queen');
 	});
 
 	it('Cancels selection and cancels decision to scuttle/targeted one-off/jack', () => {
