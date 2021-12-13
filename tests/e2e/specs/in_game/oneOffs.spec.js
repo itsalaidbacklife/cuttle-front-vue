@@ -248,7 +248,7 @@ describe('FOURS', () => {
 			});
 		});
 	
-		it.only('Prevents playing a 4 when opponent has no cards in hand', () => {
+		it('Prevents playing a 4 when opponent has no cards in hand', () => {
 			// Set Up
 			cy.loadGameFixture({
 				p0Hand: [Card.FOUR_OF_CLUBS],
@@ -377,7 +377,7 @@ describe('Play TWOS', () => {
 			setupGameAsP0();
 		});
 
-		it('Plays Two to Destroy Face Card', () => {
+		it.only('Plays Two to Destroy Face Card', () => {
 			// Set Up
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
@@ -391,15 +391,16 @@ describe('Play TWOS', () => {
 			cy.log('Loaded fixture');
 
 			// Play two as one off (two of clubs)
-			cy.get('[data-player-hand-card=2-0]').click(); // two of clubs
-				
+			cy.get('[data-player-hand-card=2-0]').click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
 			cy.get('[data-opponent-face-card=13-2]')
 				.click(); // target king of hearts
 
-			// opponent resolve
+			// Opponent resolves
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
-			// Opponent does not counter (resolves stack)
 			cy.resolveOpponent();
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('not.be.visible');
