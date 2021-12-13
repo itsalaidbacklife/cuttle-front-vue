@@ -1116,7 +1116,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 			.click();
 	});
 
-	it.only('ONE-OFF Target should be removed after one-off resolves - target is FACE CARD', () => {
+	it('ONE-OFF Target should be removed after one-off resolves - target is FACE CARD', () => {
 		cy.loadGameFixture({
 			// Opponent is p0
 			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
@@ -1169,7 +1169,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 	});
 
 
-	it('ONE-OFF Target should be removed after one-off resolves - target is JACK', () => {
+	it.only('ONE-OFF Target should be removed after one-off resolves - target is JACK', () => {
 		cy.loadGameFixture({
 			// Opponent is p0
 			p0Hand: [Card.TWO_OF_SPADES, Card.FIVE_OF_CLUBS, Card.TEN_OF_HEARTS],
@@ -1188,6 +1188,9 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Play plays JACK
 		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
 		cy.get('[data-opponent-point-card=10-2]').click();
 
 		assertGameState(
@@ -1205,7 +1208,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Opponent plays TWO
 		cy.playTargetedOneOffOpponent(Card.TWO_OF_SPADES, Card.JACK_OF_CLUBS, 'jack');
-		
+
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
@@ -1228,13 +1231,12 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Player plays another point
 		cy.get('[data-player-hand-card=6-2]').click();
-		cy.get('#player-field').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=points]').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
 		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
-		
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('not.contain', 'targetting')
