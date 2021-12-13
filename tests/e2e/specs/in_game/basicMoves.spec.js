@@ -342,7 +342,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		setupGameAsP1();
 	});
 
-	it.only('Draws from deck', () => {
+	it('Draws from deck', () => {
 		// Opponent draws card
 		cy.drawCardOpponent();
 		// Opponent now has 6 cards in hand
@@ -556,8 +556,7 @@ describe('Play Jacks', () => {
 		// Play jack of clubs on ten of hearts
 		cy.get('[data-player-hand-card=11-0]').click();
 		cy.get('[data-move-choice=jack]').click();
-		cy.get('[data-opponent-point-card=10-2]')
-			.click();
+		cy.get('[data-opponent-point-card=10-2]').click();
 
 		assertGameState(0,
 			{
@@ -590,7 +589,7 @@ describe('Play Jacks', () => {
 	});
 
 
-	it('Triple jacks successfully', () => {
+	it.only('Triple jacks successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
@@ -603,11 +602,10 @@ describe('Play Jacks', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 4);
 		cy.log('Loaded fixture');
 
-		// Play jack 
-		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
-
-		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
+		// Play jack of clubs on ten of hearts
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=10-2]').click();
 
 		assertGameState(0,
 			{
@@ -621,14 +619,10 @@ describe('Play Jacks', () => {
 			});
 		
 		cy.get('[data-player-hand-card]').should('have.length', 3);
-		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
 		
-		// opponent plays 2nd Jack
+		// Opponent plays 2nd Jack
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
 
 		assertGameState(0,
@@ -644,9 +638,8 @@ describe('Play Jacks', () => {
 
 		// Player plays 3rd jack 
 		cy.get('[data-player-hand-card=11-2]').click(); // jack of clubs
-
-		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=10-2]').click();
 		
 		assertGameState(0,
 			{
