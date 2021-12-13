@@ -1,6 +1,6 @@
 
 
-import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
+import { setupGameAsP0, setupGameAsP1, assertGameState, playOutOfTurn, Card } from '../../support/helpers';
 
 describe('Game View Layout', () => {
 	beforeEach(() => {
@@ -131,7 +131,6 @@ describe('Game View Layout', () => {
 			});
 
 		cy.get('[data-player-hand-card]').should('have.length', 3);
-		// Attempt to play king out of turn
 		cy.get('#turn-indicator')
 			.contains('OPPONENT\'S TURN');
 
@@ -302,11 +301,7 @@ describe('Game View Layout', () => {
 
 		// Player attempts to play out of turn
 		cy.get('[data-player-hand-card=10-2]').click(); // ten of hearts
-		cy.get('[data-move-choice=points]')
-			.should('have.class', 'v-card--disabled')
-			.should('contain', 'It\'s not your turn')
-			.click({force: true});
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('points');
 
 		cy.playPointsOpponent(Card.TEN_OF_DIAMONDS);
 
