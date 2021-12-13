@@ -265,7 +265,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it.only('Cancels selection and cancels decision to scuttle/targeted one-off/jack', () => {
+	it('Cancels selection and cancels decision to scuttle/targeted one-off/jack', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.TWO_OF_SPADES, Card.FOUR_OF_CLUBS, Card.NINE_OF_SPADES, Card.KING_OF_CLUBS, Card.JACK_OF_SPADES],
 			p0Points: [],
@@ -494,7 +494,7 @@ describe('Play Jacks', () => {
 		setupGameAsP0();
 	});
 
-	it('Player and Opponent plays Jacks on different cards', () => {
+	it.only('Player and Opponent plays Jacks on different cards', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES],
@@ -507,11 +507,11 @@ describe('Play Jacks', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Loaded fixture');
 
-		// Play jack 
-		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
-
+		// Play jack of clubs on ten of hearts
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
 		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
+			.click();
 
 		assertGameState(0,
 			{
@@ -525,15 +525,10 @@ describe('Play Jacks', () => {
 			});
 		
 		cy.get('[data-player-hand-card]').should('have.length', 2);
-		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
 
-		
-		// opponent plays Jack
+		// Opponent plays jack
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_SPADES)
 
 		assertGameState(0,
