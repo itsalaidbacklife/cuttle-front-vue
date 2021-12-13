@@ -166,7 +166,7 @@ describe('Game View Layout', () => {
 			});
 	});
 
-	it.only('Four cards, each with a jack', () => {
+	it('Four cards, each with a jack', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.JACK_OF_CLUBS, Card.JACK_OF_HEARTS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES],
@@ -254,7 +254,7 @@ describe('Game View Layout', () => {
 		);
 	})
 
-	it('Three dialogs', ()=>{
+	it.only('Three dialogs', ()=>{
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.THREE_OF_CLUBS],
@@ -269,9 +269,7 @@ describe('Game View Layout', () => {
 
 		// Player plays three
 		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click(); // scrap
+		cy.get('[data-move-choice=oneOff]').click();
 
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
@@ -304,10 +302,10 @@ describe('Game View Layout', () => {
 
 		// Player attempts to play out of turn
 		cy.get('[data-player-hand-card=10-2]').click(); // ten of hearts
-
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
+		cy.get('[data-move-choice=points]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'It\'s not your turn')
+			.click({force: true});
 		assertSnackbarError('It\'s not your turn');
 
 		cy.playPointsOpponent(Card.TEN_OF_DIAMONDS);
