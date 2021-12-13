@@ -48,7 +48,7 @@ describe('Winning the game', () =>  {
 		setupGameAsP0();
 	});
 
-	it.only('Shows when player wins game with 21 points', () => {
+	it('Shows when player wins game with 21 points', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS],
@@ -78,7 +78,7 @@ describe('Winning the game', () =>  {
 		goHomeJoinNewGame();
 	});
     
-	it('Shows when player wins game with 14 points and one king', () => {
+	it.only('Shows when player wins game with 14 points and one king', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.JACK_OF_CLUBS],
 			p0Points: [Card.SEVEN_OF_DIAMONDS],
@@ -93,10 +93,10 @@ describe('Winning the game', () =>  {
 		cy.log('Fixture loaded');
         
 		// Play Jack of Clubs
-		cy.get('[data-player-hand-card=11-0]')
-			.click();
-		cy.get('[data-opponent-point-card=7-0]')
-			.click();
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=7-0]').click();
+
 		assertGameState(0, {
 			p0Hand: [],
 			p0Points: [Card.SEVEN_OF_CLUBS, Card.SEVEN_OF_DIAMONDS],
