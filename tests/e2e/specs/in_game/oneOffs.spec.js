@@ -490,7 +490,7 @@ describe('Play TWOS', () => {
 			setupGameAsP1();
 		});
 
-		it.only('Opponent Plays TWO to Destroy Jacks', () => {
+		it('Opponent Plays TWO to Destroy Jacks', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES],
@@ -545,7 +545,7 @@ describe('Playing NINES', ()=>{
 			setupGameAsP0();
 		});
 	
-		it('Plays a nine to SCUTTLE a lower point card', () => {
+		it.only('Plays a nine to SCUTTLE a lower point card', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -559,13 +559,11 @@ describe('Playing NINES', ()=>{
 	
 			// Player plays nine
 			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
+			cy.get('[data-move-choice=scuttle]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
 			cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
-	
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=nine-scuttle]')
-				.click();
-			
+				
 			assertGameState(
 				0,
 				{
