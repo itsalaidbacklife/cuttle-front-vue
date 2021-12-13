@@ -4,8 +4,21 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	beforeEach(() => {
 		setupGameAsP0();
 	});
+	// it('All ranks in hand', () => {
+	// 	// Set Up
+	// 	cy.loadGameFixture({
+	// 		p0Hand: [Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS, Card.NINE_OF_CLUBS, Card.EIGHT_OF_CLUBS, Card.TEN_OF_SPADES, Card.JACK_OF_SPADES, Card.KING_OF_CLUBS],
+	// 		p0Points: [Card.TEN_OF_CLUBS],
+	// 		p0FaceCards: [Card.KING_OF_SPADES],
+	// 		p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+	// 		p1Points: [Card.TEN_OF_HEARTS],
+	// 		p1FaceCards: [Card.KING_OF_HEARTS],
+	// 	});
+	// 	cy.get('[data-player-hand-card]').should('have.length', 7);
+	// 	cy.log('Loaded fixture');
+	// });
 
-	it('Plays Points', () => {
+	it.only('Plays Points', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.ACE_OF_CLUBS],
@@ -20,15 +33,16 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Play points (ace of spades)
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click()
-			.should('not.have.class', 'valid-move');
+		cy.get('[data-move-choice=points]')
+			.click();
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
 		// Attempt to play out of turn
 		cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
-		cy.get('#player-field')
-			.click();
-		// Test that Error snackbar says its not your turn
+		cy.get('[data-move-choice=points]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'It\'s not your turn')
+			.click({force: true});
 		assertSnackbarError('It\'s not your turn');
 
 		assertGameState(
