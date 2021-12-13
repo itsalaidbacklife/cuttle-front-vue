@@ -545,7 +545,7 @@ describe('Playing NINES', ()=>{
 			setupGameAsP0();
 		});
 	
-		it.only('Plays a nine to SCUTTLE a lower point card', () => {
+		it('Plays a nine to SCUTTLE a lower point card', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -578,7 +578,7 @@ describe('Playing NINES', ()=>{
 			);
 		}); // End 9 scuttle
 	
-		it('Plays a nine as ONE-OFF on lower point card to return it to owners hand', () => {
+		it.only('Plays a nine as ONE-OFF on lower point card to return it to owners hand', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -591,14 +591,9 @@ describe('Playing NINES', ()=>{
 			cy.log('Loaded fixture');
 	
 			// Player plays nine
-			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades
+			cy.get('[data-move-choice=targetedOneOff').click();
 			cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
-			
-			// Chooses to play as one-off
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=nine-one-off]')
-				.click();
 	
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
