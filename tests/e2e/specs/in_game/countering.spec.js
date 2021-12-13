@@ -415,7 +415,7 @@ describe('Countering One-Offs P0 Perspective', () => {
 		setupGameAsP0();
 	});
 
-	it.only('Can counter a three', () => {
+	it('Can counter a three', () => {
 		cy.loadGameFixture({
 			// Player is P0
 			p0Hand: [Card.FIVE_OF_CLUBS, Card.FOUR_OF_SPADES],
@@ -480,7 +480,7 @@ describe('Countering One-Offs P0 Perspective', () => {
 		cy.log('Loaded fixture');
 		// Player plays ace of clubs as one-off
 		cy.get('[data-player-hand-card=1-0]').click();
-		cy.get('#scrap').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=oneOff]').click();
 
 		// Opponent counters (1st counter)
 		cy.log('Opponent counters (1st counter)');
@@ -561,7 +561,7 @@ describe('Countering One-Offs P0 Perspective', () => {
 		// Player plays ace of clubs as one-off
 		cy.log('Player plays ace of clubs as one-off');
 		cy.get('[data-player-hand-card=1-0]').click();
-		cy.get('#scrap').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=oneOff]').click();
 
 		// Opponent counters
 		cy.log('Opponent counters');
