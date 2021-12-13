@@ -38,6 +38,7 @@
 				:key="move.displayName"
 				:move-name="move.displayName"
 				:move-description="move.moveDescription"
+				:event-name="move.eventName"
 				:disabled="move.disabled"
 				:disabled-explanation="move.disabledExplanation"
 				:card-width="cardWidth"

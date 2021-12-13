@@ -5,6 +5,7 @@
 		:class="{'pointer': !disabled}"
 		class="move-choice-card"
 		:width="cardWidth"
+		:data-move-choice="eventName"
 		@click="$emit('click')"
 	>
 		<v-card-title class="d-flex justify-center">
@@ -38,6 +39,11 @@ export default {
 		moveDescription: {
 			type: String,
 			default: '',
+		},
+		// Under-the-hood name for the move e.g. oneOff
+		eventName: {
+			type: String,
+			required: true,
 		},
 		disabled: {
 			type: Boolean,
