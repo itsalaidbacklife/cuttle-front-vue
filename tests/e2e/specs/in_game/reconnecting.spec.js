@@ -402,7 +402,7 @@ describe('Reconnecting to a game', () => {
 			});
 		});
 
-		it.only('counter -- Reconnect into counter dialog', () => {
+		it('counter -- Reconnect into counter dialog', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_CLUBS, Card.TWO_OF_SPADES],
@@ -463,6 +463,7 @@ describe('Reconnecting to a game', () => {
 				]
 			});
 		});
+
 		it('sevenOneOff -- Reconnect into counter dialog', () => {
 			setupGameAsP1();
 			cy.loadGameFixture({
@@ -510,6 +511,7 @@ describe('Reconnecting to a game', () => {
 				scrap: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.ACE_OF_CLUBS, Card.SEVEN_OF_CLUBS],
 			});
 		});
+
 		it('sevenTargetedOneOff -- Reconnect into counter dialog', () => {
 			setupGameAsP1();
 			cy.loadGameFixture({
@@ -561,7 +563,7 @@ describe('Reconnecting to a game', () => {
 
 	describe('Reconnecting into One-Off resolutions', () => {
 		describe('Reconnecting into 3s', () => {
-			it('Resolve 3 after reconnect -- Player fetches card', () => {
+			it.only('Resolve 3 after reconnect -- Player fetches card', () => {
 				setupGameAsP0();
 				cy.loadGameFixture({
 					p0Hand: [Card.THREE_OF_CLUBS],

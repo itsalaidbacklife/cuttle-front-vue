@@ -778,8 +778,8 @@ Cypress.Commands.add('playOneOffAndResolveAsPlayer', (card) => {
 		if (!foundCard) throw new Error(`Cannot one-off & resolve: cannot find ${printCard(card)} in player's hand`);
 		// Play chosen card as one-off
 		cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`).click();
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=oneOff]')
+			.should('not.have.class', 'v-card--disabled')
 			.click();
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
