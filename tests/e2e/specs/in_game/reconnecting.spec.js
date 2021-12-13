@@ -12,7 +12,7 @@ function reconnect() {
 }
 
 describe('Reconnecting to a game', () => {
-	it.only('Reconnects after refreshing the page', () => {
+	it('Reconnects after refreshing the page', () => {
 		setupGameAsP0();
 
 		cy.loadGameFixture({
@@ -129,7 +129,7 @@ describe('Reconnecting to a game', () => {
 				scrap: [Card.TWO_OF_CLUBS, Card.KING_OF_CLUBS],
 			});
 		});
-		it('counter -- Reconnect into cannot counter dialog', () => {
+		it.only('counter -- Reconnect into cannot counter dialog', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_CLUBS],
@@ -145,9 +145,7 @@ describe('Reconnecting to a game', () => {
 
 			// Play ace of clubs
 			cy.get('[data-player-hand-card=1-0]').click();
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
 			// Opponent counters
