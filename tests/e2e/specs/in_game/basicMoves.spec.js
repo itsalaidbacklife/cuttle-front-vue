@@ -1,4 +1,4 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
+import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, playOutOfTurn, Card } from '../../support/helpers';
 
 describe('Game Basic Moves - P0 Perspective', () => {
 	beforeEach(() => {
@@ -24,13 +24,10 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			.click();
 		cy.get('#turn-indicator')
 			.contains('OPPONENT\'S TURN');
+
 		// Attempt to play out of turn
 		cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
-		cy.get('[data-move-choice=points]')
-			.should('have.class', 'v-card--disabled')
-			.should('contain', 'It\'s not your turn')
-			.click({force: true});
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('points');
 
 		assertGameState(
 			0,
@@ -224,11 +221,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Attempt to play king out of turn
 		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('[data-move-choice=faceCard]')
-			.should('have.class', 'v-card--disabled')
-			.should('contain', 'It\'s not your turn')
-			.click({force: true});
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('faceCard');
 
 		// Opponent plays king of diamonds
 		cy.playFaceCardOpponent(Card.KING_OF_DIAMONDS);
@@ -298,11 +291,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Attempt to play queen out of turn
 		cy.get('[data-player-hand-card=12-1]').click(); // queen of diamonds
-		cy.get('[data-move-choice=faceCard]')
-			.should('have.class', 'v-card--disabled')
-			.should('contain', 'It\'s not your turn')
-			.click({force: true});
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('faceCard');
 
 		// Opponent plays queen of hearts
 		cy.playFaceCardOpponent(Card.QUEEN_OF_HEARTS);
@@ -489,14 +478,9 @@ describe('Playing 8s', () => {
 			}
 		);
 		
-		// Attempt to play eight out of turn
-		// Player plays eight
-		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
-		cy.get('[data-move-choice=points]')
-			.should('have.class', 'v-card--disabled')
-			.should('contain', 'It\'s not your turn')
-			.click({force: true});
-		assertSnackbarError('It\'s not your turn');
+		// Attempt to play eight out of turn for points
+		cy.get('[data-player-hand-card=8-2]').click();
+		playOutOfTurn('points');
 	}); // End play 8 for points
 
 	it('Plays eights for glasses', () => {
@@ -528,14 +512,9 @@ describe('Playing 8s', () => {
 			}
 		);
 		
-		// Attempt to play eight out of turn
-		// Player plays eight
+		// Attempt to play glasses eight out of turn
 		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
-		cy.get('[data-move-choice=faceCard]')
-			.should('have.class', 'v-card--disabled')
-			.should('contain', 'It\'s not your turn')
-			.click({force: true});
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('faceCard');
 
 		// Opponent plays glasses eight
 		cy.playFaceCardOpponent(Card.EIGHT_OF_CLUBS);
