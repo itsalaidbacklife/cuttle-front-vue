@@ -79,7 +79,7 @@ describe('Untargeted One-Offs', () => {
 		playOutOfTurn('oneOff');
 	}); // End five one-off
 
-	it.only('Plays a six to destroy all face cards', () => {
+	it('Plays a six to destroy all face cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			//Player is P0
@@ -248,7 +248,7 @@ describe('FOURS', () => {
 			});
 		});
 	
-		it('Prevents playing a 4 when opponent has no cards in hand', () => {
+		it.only('Prevents playing a 4 when opponent has no cards in hand', () => {
 			// Set Up
 			cy.loadGameFixture({
 				p0Hand: [Card.FOUR_OF_CLUBS],
@@ -264,9 +264,7 @@ describe('FOURS', () => {
 			// Play the four of spades
 			cy.log('Attempting to playing Four of clubs as one off');
 			cy.get('[data-player-hand-card=4-0]').click(); // four of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 	
 			assertSnackbarError('You cannot play a 4 as a one-off while your opponent has no cards in hand');
 		
