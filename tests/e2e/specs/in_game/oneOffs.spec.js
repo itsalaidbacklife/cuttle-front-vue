@@ -1244,7 +1244,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 			.click();
 	});
 
-	it.only('ONE-OFF Target should be removed after one-off is COUNTERED - target is POINTS', () => {
+	it('ONE-OFF Target should be removed after one-off is COUNTERED - target is POINTS', () => {
 		cy.loadGameFixture({
 			// Opponent is p0
 			p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS, Card.FIVE_OF_CLUBS],
