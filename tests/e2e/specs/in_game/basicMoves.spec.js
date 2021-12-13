@@ -75,7 +75,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 
-	it.only('Scuttles as P0', () => {
+	it('Scuttles as P0', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.SEVEN_OF_CLUBS],
@@ -151,8 +151,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Player plays king
 		cy.get('[data-player-hand-card=13-0]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=faceCard]')
 			.click();
 
 		assertGameState(
@@ -170,9 +169,10 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Attempt to play king out of turn
 		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
+		cy.get('[data-move-choice=faceCard]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'It\'s not your turn')
+			.click({force: true});
 		assertSnackbarError('It\'s not your turn');
 
 		// Opponent plays king of diamonds
@@ -193,8 +193,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Player plays another king
 		cy.get('[data-player-hand-card=13-3]').click(); // king of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=faceCard]')
 			.click();
 
 		assertGameState(
@@ -211,7 +210,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 	
-	it('Plays Queens', () => {
+	it.only('Plays Queens', () => {
 		// Setup
 		cy.loadGameFixture({
 			p0Hand: [Card.QUEEN_OF_SPADES, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
@@ -226,9 +225,9 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Player plays queen
 		cy.get('[data-player-hand-card=12-3]').click(); // queen of clubs
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=faceCard]')
 			.click();
+
 		assertGameState(
 			0,
 			{
@@ -244,9 +243,10 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Attempt to play queen out of turn
 		cy.get('[data-player-hand-card=12-1]').click(); // queen of diamonds
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
+		cy.get('[data-move-choice=faceCard]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'It\'s not your turn')
+			.click({force: true});
 		assertSnackbarError('It\'s not your turn');
 
 		// Opponent plays queen of hearts
