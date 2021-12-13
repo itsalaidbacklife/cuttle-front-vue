@@ -703,7 +703,7 @@ describe('Playing NINES', ()=>{
 		}); // End 9 on face card
 	
 	
-		it.only('Plays a 9 on a jack to steal back point card', () => {
+		it('Plays a 9 on a jack to steal back point card', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.NINE_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES],
@@ -767,7 +767,7 @@ describe('Playing NINES', ()=>{
 				.should('not.exist');
 		}); // End 9 on jack
 	
-		it('Cancels playing a nine', () => {
+		it.only('Cancels playing a nine one off', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -780,17 +780,16 @@ describe('Playing NINES', ()=>{
 			cy.log('Loaded fixture');
 	
 			// Player plays nine
-			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
-			cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
-	
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=cancel-nine]')
-				.click();
-			
-			cy.get('#nine-overlay')
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+
+			// Cancels			
+			cy.get('[data-cy=cancel-target]').click();
+			cy.get('#player-hand-targeting')
 				.should('not.be.visible');
-	
+
 			assertGameState(
 				0,
 				{
