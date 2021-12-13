@@ -6,7 +6,7 @@ describe('Untargeted One-Offs', () => {
 		setupGameAsP0();
 	});
     
-	it.only('Plays an Ace to destroy all point cards', () => {
+	it('Plays an Ace to destroy all point cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_CLUBS, Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS],
@@ -39,7 +39,7 @@ describe('Untargeted One-Offs', () => {
 		playOutOfTurn('points');
 	}); // End ace one-off
 
-	it('Plays a five to draw two cards', () => {
+	it.only('Plays a five to draw two cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			// Player is P0
@@ -76,10 +76,7 @@ describe('Untargeted One-Offs', () => {
 		);
 		// Attempt to plays five out of turn
 		cy.get('[data-player-hand-card=5-2]').click(); // five of hearts
-		cy.get('#scrap')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('oneOff');
 	}); // End five one-off
 
 	it('Plays a six to destroy all face cards', () => {
