@@ -455,13 +455,11 @@ import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
 import CounterDialog from '@/components/GameView/CounterDialog.vue';
 import FourDialog from '@/components/GameView/FourDialog.vue';
 import ThreeDialog from '@/components/GameView/ThreeDialog.vue';
-import EightOverlay from '@/components/GameView/EightOverlay.vue';
-import NineOverlay from '@/components/GameView/NineOverlay.vue';
 import GameOverDialog from '@/components/GameView/GameOverDialog.vue';
 import GameMenu from '@/components/GameView/GameMenu.vue';
 import ScoreGoalToolTip from '@/components/GameView/ScoreGoalToolTip.vue';
 import ReauthenticateDialog from '@/components/GameView/ReauthenticateDialog.vue';
-import SevenDoubleJacksDialog from '../components/GameView/SevenDoubleJacksDialog.vue';
+import SevenDoubleJacksDialog from '@/components/GameView/SevenDoubleJacksDialog.vue';
 import MoveChoiceOverlay from '@/components/GameView/MoveChoiceOverlay.vue';
 import TargetSelectionOverlay from '@/components/GameView/TargetSelectionOverlay.vue';
 
@@ -473,8 +471,6 @@ export default {
 		CounterDialog,
 		FourDialog,
 		ThreeDialog,
-		EightOverlay,
-		NineOverlay,
 		GameOverDialog,
 		GameMenu,
 		ScoreGoalToolTip,
