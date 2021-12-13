@@ -929,7 +929,7 @@ describe('Playing THREEs', () => {
 		assertSnackbarError('You can only play a 3 as a one-off, if there are cards in the scrap pile');
 	});
 
-	it.only('Plays 3s successfully', () => {
+	it('Plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.THREE_OF_CLUBS],
@@ -995,7 +995,7 @@ describe('Playing THREEs', () => {
 		);
 	})
 
-	it('Opponent plays 3s successfully', () => {
+	it.only('Opponent plays 3s successfully', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES],
@@ -1009,9 +1009,7 @@ describe('Playing THREEs', () => {
 
 		// put some cards into scrap
 		cy.get('[data-player-hand-card=1-3]').click() // ace of space
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click(); // one-off
+		cy.get('[data-move-choice=oneOff]').click();
 
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
