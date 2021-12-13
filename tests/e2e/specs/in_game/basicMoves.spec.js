@@ -210,7 +210,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		);
 	});
 	
-	it.only('Plays Queens', () => {
+	it('Plays Queens', () => {
 		// Setup
 		cy.loadGameFixture({
 			p0Hand: [Card.QUEEN_OF_SPADES, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
@@ -323,7 +323,7 @@ describe('Playing 8s', () => {
 		setupGameAsP0();
 	});
 
-	it('Plays eights for points', () => {
+	it.only('Plays eights for points', () => {
 		// Setup
 		cy.loadGameFixture({
 			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
@@ -338,13 +338,7 @@ describe('Playing 8s', () => {
 
 		// Player plays eight
 		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-		// Choose to play for points
-		cy.get('#eight-overlay')
-			.should('be.visible')
-			.get('[data-cy=eight-for-points]')
+		cy.get('[data-move-choice=points]')
 			.click();
 		
 		assertGameState(
@@ -362,9 +356,10 @@ describe('Playing 8s', () => {
 		// Attempt to play eight out of turn
 		// Player plays eight
 		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
+		cy.get('[data-move-choice=points]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'It\'s not your turn')
+			.click({force: true});
 		assertSnackbarError('It\'s not your turn');
 	}); // End play 8 for points
 
