@@ -342,7 +342,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		setupGameAsP1();
 	});
 
-	it('Draws from deck', () => {
+	it.only('Draws from deck', () => {
 		// Opponent draws card
 		cy.drawCardOpponent();
 		// Opponent now has 6 cards in hand
@@ -375,10 +375,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Player attempts to draw with full hand
 		cy.get('#deck').click();
 		// Test that Error snackbar for hand limit
-		cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
-			.should('be.visible')
-			.should('have.class', 'error')
-			.should('contain', 'You are at the hand limit; you cannot draw.');
+		assertSnackbarError('You are at the hand limit; you cannot draw.');
 		// Player still has 8 cards in hand
 		cy.get('[data-player-hand-card]')
 			.should('have.length', 8);
@@ -543,7 +540,7 @@ describe('Play Jacks', () => {
 			});
 	});
 
-	it.only('Double Jacks - Player and Opponent plays Jacks on the same card', () => {
+	it('Double Jacks - Player and Opponent plays Jacks on the same card', () => {
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES],
