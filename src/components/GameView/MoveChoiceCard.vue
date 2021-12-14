@@ -1,32 +1,36 @@
 <template>
-	<v-card
-		ripple
-		:disabled="disabled"
-		:class="{'pointer': !disabled}"
-		class="move-choice-card"
-		:width="cardWidth"
-		:data-move-choice="eventName"
-		@click.stop="$emit('click')"
-	>
-		<v-card-title class="d-flex justify-center">
-			<h2>{{ moveName }}</h2>
-		</v-card-title>
-		<v-card-text class="d-flex flex-column justify-center align-center">
-			<v-icon
-				v-if="iconName"
-				x-large
-			>
-				{{ iconName }}
-			</v-icon>
-			<p>{{ moveDescription }}</p>
-			<p
-				v-if="disabled && !!disabledExplanation"
-				class="red--text"
-			>
-				{{ disabledExplanation }}
-			</p>
-		</v-card-text>
-	</v-card>
+	<v-hover v-slot="{ hover }">
+		<v-card
+			ripple
+			:disabled="disabled"
+			:class="{'pointer': !disabled}"
+			class="move-choice-card"
+			hover
+			:light="hover"
+			:width="cardWidth"
+			:data-move-choice="eventName"
+			@click.stop="$emit('click')"
+		>
+			<v-card-title class="d-flex justify-center">
+				<h2>{{ moveName }}</h2>
+			</v-card-title>
+			<v-card-text class="d-flex flex-column justify-center align-center">
+				<v-icon
+					v-if="iconName"
+					x-large
+				>
+					{{ iconName }}
+				</v-icon>
+				<p>{{ moveDescription }}</p>
+				<p
+					v-if="disabled && !!disabledExplanation"
+					class="red--text"
+				>
+					{{ disabledExplanation }}
+				</p>
+			</v-card-text>
+		</v-card>
+	</v-hover>
 </template>
 <script>
 export default {
@@ -88,5 +92,6 @@ export default {
 }
 .move-choice-card {
 	border: 2px solid #fff;
+	transition: all .5s ease;
 }
 </style>
