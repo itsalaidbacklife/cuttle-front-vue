@@ -397,7 +397,7 @@ describe('Playing SEVENS', () => {
 		}); // End seven glasses test
 	}); // End seven face card describe
 	
-	it.only('Scuttles from a seven', () => {
+	it('Scuttles from a seven', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [],
@@ -437,7 +437,7 @@ describe('Playing SEVENS', () => {
 		});
 	}); // End scuttle from seven
 
-	it('Scuttles using a NINE from a SEVEN', () => {
+	it.only('Scuttles using a NINE from a SEVEN', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [],
@@ -460,15 +460,11 @@ describe('Playing SEVENS', () => {
 			.and('be.visible');
 		cy.get('[data-top-card=9-1]')
 			.click();
+		cy.get('[data-move-choice=scuttle]').click();
 		// scuttles with nine of diamonds
 		cy.get('[data-opponent-point-card=9-0]')
 			.click();
-		
-		cy.get('#nine-overlay')
-			.should('be.visible')
-			.get('[data-cy=nine-scuttle]')
-			.click();
-		
+
 		assertGameState(0, {
 			p0Hand: [],
 			p0Points: [],
