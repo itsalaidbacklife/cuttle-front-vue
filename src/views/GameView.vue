@@ -191,8 +191,6 @@
 					<div
 						id="player-field"
 						class="mb-4"
-						:class="{'valid-move': validMoves.includes('field')}"
-						@click="playToField"
 					>
 						<transition-group
 							:name="playerPointsTransition"
@@ -1081,7 +1079,7 @@ export default {
 				})
 					.then(this.clearSelection())
 					.catch(this.handleError);
-			}else{
+			} else{
 				
 				this.$store.dispatch('requestPlayJack', {
 					cardId: this.selectedCard.id,
@@ -1092,46 +1090,6 @@ export default {
 			}
 			
 		},
-		playToField() {
-			let cardRank;
-			if (this.resolvingSeven) {
-				if (!this.cardSelectedFromDeck) return;
-				cardRank = this.cardSelectedFromDeck.rank;
-			}
-			else {
-				if (!this.selectedCard) return;
-				cardRank = this.selectedCard.rank;
-			}
-
-			switch (cardRank) {
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 9:
-			case 10:
-				this.playPoints();
-				return;
-			case 12:
-			case 13:
-				this.playFaceCard();
-				return;
-			case 8:
-				// Ask whether to play as points or face card
-				if (this.isPlayersTurn) {
-					this.showEightOverlay = true;
-				}
-				else {
-					this.handleError('It\'s not your turn!');
-				}
-				return;
-			default:
-				return;
-			}
-		}, // End playToField()
 		targetOpponentPointCard(targetIndex) {
 			if (!this.selectedCard && !this.topCardIsSelected && !this.secondCardIsSelected) return;
 			let cardRank;
