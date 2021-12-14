@@ -239,7 +239,6 @@
 				</div>
 				<div id="field-right">
 					<div 
-						v-if="selectedCard === null"
 						id="history"
 						class="rounded d-flex flex-column justify-start"
 					>
@@ -257,16 +256,6 @@
 								{{ log }}
 							</p>
 						</div>
-					</div>
-					<div 
-						v-if="selectedCard !== null"
-						id="card-preview"	
-					>
-						<card 
-							:suit="selectedCard.suit"
-							:rank="selectedCard.rank"
-						/>
-						<p>{{ selectedCard.ruleText }}</p>
 					</div>
 				</div>
 			</div>
