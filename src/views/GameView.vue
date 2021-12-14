@@ -433,8 +433,8 @@
 			/>
 			<reauthenticate-dialog v-model="mustReauthenticate" />
 			<move-choice-overlay
-				:value="!!selectedCard && !targeting"
-				:selected-card="selectedCard"
+				:value="!targeting && (!!selectedCard || !!cardSelectedFromDeck)"
+				:selected-card="selectedCard || cardSelectedFromDeck"
 				:is-players-turn="isPlayersTurn"
 				:opponent-queen-count="opponentQueenCount"
 				@points="playPoints"
@@ -886,6 +886,8 @@ export default {
 		},
 		clearSelection() {
 			this.selectionIndex = null;
+			this.secondCardIsSelected = false;
+			this.topCardIsSelected = false;
 			this.clearOverlays();
 		},
 		selectCard(index) {
