@@ -522,7 +522,7 @@ describe('Playing SEVENS', () => {
 			});
 		});
 
-		it.only('Cannot play 4 from seven when opponent has no cards in hand', () => {
+		it('Cannot play 4 from seven when opponent has no cards in hand', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -556,7 +556,7 @@ describe('Playing SEVENS', () => {
 	}); // End player seven one-off describe
 
 	describe('Playing targeted one-offs from a seven', () => {
-		it('Plays topCard TWO from a seven', () => {
+		it.only('Plays topCard TWO from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -577,6 +577,9 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
 			// target queen of clubs
 			cy.get('[data-opponent-face-card=12-0]')
 				.click();
