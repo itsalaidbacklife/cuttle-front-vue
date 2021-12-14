@@ -904,7 +904,8 @@ export default {
 		beginTargeting(move) {
  			this.targeting = true;
 			this.targetingMoveName = move.eventName;
-			this.targetingMoveDisplayName = move.displayName;
+			// Change targeting display name for Jack (instead of 'Royal')
+			this.targetingMoveDisplayName = move.eventName === 'jack' ? 'Jack' : move.displayName;
 		},
 
 		/**
