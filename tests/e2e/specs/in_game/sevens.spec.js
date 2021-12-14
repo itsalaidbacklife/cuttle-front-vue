@@ -731,6 +731,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
 			// target queen of clubs
 			cy.get('[data-opponent-face-card=12-0]')
 				.find('.valid-move')
@@ -1276,7 +1277,7 @@ describe('Opponent playing SEVENS', () => {
 			});
 		}); // End Opponent TWO from seven
 
-		it.only('Opponent plays TWO on jacks from seven (top card)',() => {
+		it('Opponent plays TWO on jacks from seven (top card)',() => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS, Card.ACE_OF_CLUBS],
 				p0Points: [],
@@ -1380,7 +1381,7 @@ describe('Opponent playing SEVENS', () => {
 			});
 		}) // End Opponent NINE from seven
 
-		it.only('Opponent plays NINE on jacks from seven (second card)',() => {
+		it('Opponent plays NINE on jacks from seven (second card)',() => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS, Card.ACE_OF_CLUBS, Card.TEN_OF_DIAMONDS],
 				p0Points: [],
