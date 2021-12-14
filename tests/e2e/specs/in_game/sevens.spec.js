@@ -437,7 +437,7 @@ describe('Playing SEVENS', () => {
 		});
 	}); // End scuttle from seven
 
-	it.only('Scuttles using a NINE from a SEVEN', () => {
+	it('Scuttles using a NINE from a SEVEN', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [],
@@ -478,7 +478,7 @@ describe('Playing SEVENS', () => {
 	}); // End scuttle from seven
 
 	describe('Playing untargeted one-offs from a seven', () => {
-		it('Plays an ACE from a seven', () => {
+		it.only('Plays an ACE from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -502,9 +502,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
 			// Opponent does not counter (resolves stack)
