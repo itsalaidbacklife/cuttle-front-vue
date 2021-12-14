@@ -94,4 +94,7 @@ export default {
 	border: 2px solid #fff;
 	transition: all .5s ease;
 }
+p {
+	text-align: center;
+}
 </style>
