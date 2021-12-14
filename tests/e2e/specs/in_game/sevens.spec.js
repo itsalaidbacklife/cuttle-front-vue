@@ -359,7 +359,7 @@ describe('Playing SEVENS', () => {
 			});
 		}); // End seven queen test
 	
-		it.only('Plays 8 as face card from a seven', () => {
+		it('Plays 8 as face card from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -397,7 +397,7 @@ describe('Playing SEVENS', () => {
 		}); // End seven glasses test
 	}); // End seven face card describe
 	
-	it('Scuttles from a seven', () => {
+	it.only('Scuttles from a seven', () => {
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
 			p0Points: [],
@@ -420,6 +420,7 @@ describe('Playing SEVENS', () => {
 			.and('be.visible');
 		cy.get('[data-top-card=10-0]')
 			.click();
+		cy.get('[data-move-choice=scuttle]').click();
 		// scuttles with 10 of clubs
 		cy.get('[data-opponent-point-card=9-0]')
 			.click();
