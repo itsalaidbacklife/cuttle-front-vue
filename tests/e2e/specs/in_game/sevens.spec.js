@@ -321,7 +321,7 @@ describe('Playing SEVENS', () => {
 			});
 		}); // End seven king test
 	
-		it.only('Plays queen from a seven', () => {
+		it('Plays queen from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -359,7 +359,7 @@ describe('Playing SEVENS', () => {
 			});
 		}); // End seven queen test
 	
-		it('Plays 8 as face card from a seven', () => {
+		it.only('Plays 8 as face card from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -382,15 +382,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
-			
-			// Choose to play for face card
-			cy.get('#eight-overlay')
-				.should('be.visible')
-				.get('[data-cy=eight-as-glasses]')
-				.click();
+			cy.get('[data-move-choice=faceCard]').click();
 			
 			assertGameState(0, {
 				p0Hand: [],
