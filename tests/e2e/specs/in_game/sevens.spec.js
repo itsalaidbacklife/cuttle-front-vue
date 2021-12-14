@@ -283,7 +283,7 @@ describe('Playing SEVENS', () => {
 	})
 
 	describe('Plays face cards from a seven', () => {
-		it.only('Plays king from a seven', () => {
+		it('Plays king from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -321,7 +321,7 @@ describe('Playing SEVENS', () => {
 			});
 		}); // End seven king test
 	
-		it('Plays queen from a seven', () => {
+		it.only('Plays queen from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -345,10 +345,8 @@ describe('Playing SEVENS', () => {
 				.and('be.visible')
 				.click();
 			
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
-	
+			cy.get('[data-move-choice=faceCard]').click();
+
 			assertGameState(0, {
 				p0Hand: [],
 				p0Points: [],
