@@ -726,9 +726,7 @@ describe('Reconnecting to a game', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=points]').click();
 
 			assertGameState(0, {
 				p0Hand: [],
