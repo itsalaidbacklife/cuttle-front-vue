@@ -755,7 +755,7 @@ describe('Playing SEVENS', () => {
 		}); // End playing NINE from seven
 
 
-		it.only('Plays NINE on jacks from a seven', () => {
+		it('Plays NINE on jacks from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS, Card.ACE_OF_CLUBS],
 				p0Points: [],
@@ -988,13 +988,9 @@ describe('Opponent playing SEVENS', () => {
 				.and('be.visible')
 				.click({ force: true })
 				.should('not.have.class', 'selected');
-			cy.get('#scrap')
-				.should('be.visible')
-				.and('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to scrap
-			cy.get('#player-field')
-				.should('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to field
+			// No move choices are available from deck on opponent's turn
+			cy.get('[data-move-choice]')
+				.should('have.length', 0);
 			
 			cy.playFaceCardFromSevenOpponent(Card.KING_OF_CLUBS);
 			assertGameState(1, {
@@ -1008,6 +1004,7 @@ describe('Opponent playing SEVENS', () => {
 				topCard: Card.SIX_OF_DIAMONDS,
 			});
 		}); // end opponent plays king from seven
+
 		it('Opponent plays queen from seven (Second Card)', () => {
 
 			cy.loadGameFixture({
@@ -1046,14 +1043,9 @@ describe('Opponent playing SEVENS', () => {
 				.and('be.visible')
 				.click({ force: true })
 				.should('not.have.class', 'selected');
-			cy.get('#scrap')
-				.should('be.visible')
-				.and('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to scrap
-			cy.get('#player-field')
-				.should('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to field
-	
+			// No move choices are available from deck on opponent's turn
+			cy.get('[data-move-choice]')
+				.should('have.length', 0);
 			
 			cy.playFaceCardFromSevenOpponent(Card.QUEEN_OF_CLUBS);
 	
@@ -1112,15 +1104,10 @@ describe('Opponent playing SEVENS', () => {
 				.and('be.visible')
 				.click({ force: true })
 				.should('not.have.class', 'selected');
-			cy.get('#scrap')
-				.should('be.visible')
-				.and('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to scrap
-			cy.get('#player-field')
-				.should('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to field
+			// No move choices are available from deck on opponent's turn
+			cy.get('[data-move-choice]')
+				.should('have.length', 0);
 	
-			
 			cy.playFaceCardFromSevenOpponent(Card.EIGHT_OF_CLUBS);
 	
 			// No longer waiting for opponent
@@ -1177,13 +1164,9 @@ describe('Opponent playing SEVENS', () => {
 			.and('be.visible')
 			.click({ force: true })
 			.should('not.have.class', 'selected');
-		cy.get('#scrap')
-			.should('be.visible')
-			.and('not.have.class', 'valid-move')
-			.click({ force: true }); // can't play to scrap
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click({ force: true }); // can't play to field
+		// No move choices are available from deck on opponent's turn
+		cy.get('[data-move-choice]')
+			.should('have.length', 0);
 
 		cy.scuttleFromSevenOpponent(Card.TEN_OF_CLUBS, Card.NINE_OF_CLUBS);
 
@@ -1203,6 +1186,7 @@ describe('Opponent playing SEVENS', () => {
 			topCard: Card.SIX_OF_DIAMONDS,
 		});
 	}); // End opponent scuttles from seven
+
 	describe('Opponent plays one-off from seven', () => {
 		it('Opponent plays SIX from seven (top card)', () => {
 			cy.loadGameFixture({
