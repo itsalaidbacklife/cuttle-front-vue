@@ -478,7 +478,7 @@ describe('Playing SEVENS', () => {
 	}); // End scuttle from seven
 
 	describe('Playing untargeted one-offs from a seven', () => {
-		it.only('Plays an ACE from a seven', () => {
+		it('Plays an ACE from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -522,7 +522,7 @@ describe('Playing SEVENS', () => {
 			});
 		});
 
-		it('Cannot play 4 from seven when opponent has no cards in hand', () => {
+		it.only('Cannot play 4 from seven when opponent has no cards in hand', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -544,9 +544,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 			
 			// Should not allow playing 4 as one-off
 			cy.get('#waiting-for-opponent-counter-scrim')
