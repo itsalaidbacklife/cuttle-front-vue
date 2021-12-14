@@ -6,7 +6,7 @@
 		class="move-choice-card"
 		:width="cardWidth"
 		:data-move-choice="eventName"
-		@click="$emit('click')"
+		@click.stop="$emit('click')"
 	>
 		<v-card-title class="d-flex justify-center">
 			<h2>{{ moveName }}</h2>

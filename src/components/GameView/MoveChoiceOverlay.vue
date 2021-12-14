@@ -3,6 +3,7 @@
 		id="move-choice-overlay"
 		class="d-flex flex-column justify-center align-center"
 		:value="value"
+		@click.native="$emit('cancel')"
 	>
 		<!-- Cancel button -->
 		<div
