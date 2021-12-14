@@ -5,7 +5,7 @@ describe('Playing SEVENS', () => {
 		setupGameAsP0();
 	});
 
-	it.only('Plays points from a seven', () => {
+	it('Plays points from a seven', () => {
 
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -44,7 +44,7 @@ describe('Playing SEVENS', () => {
 		});
 	});
 
-	it('Plays jack from a seven', () => {
+	it.only('Plays jack from a seven', () => {
 
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -68,7 +68,7 @@ describe('Playing SEVENS', () => {
 			.should('exist')
 			.and('be.visible')
 			.click();
-        
+		cy.get('[data-move-choice=jack]').click();
 		cy.get('[data-opponent-point-card=10-2]')
 			.click();
         

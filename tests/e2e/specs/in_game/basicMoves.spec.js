@@ -72,7 +72,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Fixture loaded');
 
-		// Player attempst illegal scuttle -- using card too small to target anything on field
+		// Player attempts illegal scuttle -- using card too small to target anything on field
 		cy.get('[data-player-hand-card=1-0]').click();
 		cy.get('[data-move-choice=scuttle]')
 			.should('have.class', 'v-card--disabled')
@@ -81,8 +81,8 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		cy.get('#player-hand-targeting')
 			.should('be.visible');
 		cy.get('[data-opponent-point-card=1-1]').click();
-		assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit');;
-		cy.log('Could not scuttlewith point card too low to target anything');
+		assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit');
+		cy.log('Could not scuttle with point card too low to target anything');
 
 		// Player attempts illegal scuttle -- using card big enough to target something else
 		cy.get('[data-player-hand-card=1-3]').click(); // 7 of clubs
