@@ -315,11 +315,11 @@
 					/>
 				</transition-group>
 				<target-selection-overlay
-					v-if="targeting && selectedCard"
+					v-if="targeting && (selectedCard || cardSelectedFromDeck)"
 					id="player-hand-targeting"
 					key="target-selection-overlay"
 					:value="targeting"
-					:selected-card="selectedCard"
+					:selected-card="selectedCard || cardSelectedFromDeck"
 					:is-players-turn="isPlayersTurn"
 					:move-display-name="targetingMoveDisplayName"
 					@cancel="clearSelection"
