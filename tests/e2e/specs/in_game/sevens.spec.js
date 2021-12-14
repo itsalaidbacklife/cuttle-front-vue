@@ -710,7 +710,7 @@ describe('Playing SEVENS', () => {
 			});
 		}) //End playing TWO on jacks from a seven
 
-		it('Plays a NINE from a seven', () => {
+		it.only('Plays a NINE from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -1276,7 +1276,7 @@ describe('Opponent playing SEVENS', () => {
 			});
 		}); // End Opponent TWO from seven
 
-		it('Opponent plays TWO on jacks from seven (top card)',() => {
+		it.only('Opponent plays TWO on jacks from seven (top card)',() => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS, Card.ACE_OF_CLUBS],
 				p0Points: [],
@@ -1287,14 +1287,14 @@ describe('Opponent playing SEVENS', () => {
 				topCard: Card.TWO_OF_CLUBS,
 				secondCard: Card.FOUR_OF_CLUBS,
 			});
-
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
 
 			cy.playPointsOpponent(Card.ACE_OF_CLUBS)
 
-			// player plays jack
+			// Player plays jack
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=1-0]').click();
 
 			assertGameState(1, {
@@ -1380,7 +1380,7 @@ describe('Opponent playing SEVENS', () => {
 			});
 		}) // End Opponent NINE from seven
 
-		it('Opponent plays NINE on jacks from seven (second card)',() => {
+		it.only('Opponent plays NINE on jacks from seven (second card)',() => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS, Card.ACE_OF_CLUBS, Card.TEN_OF_DIAMONDS],
 				p0Points: [],
@@ -1399,6 +1399,7 @@ describe('Opponent playing SEVENS', () => {
 
 			// player plays jack
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=1-0]').click();
 
 			assertGameState(1, {
@@ -1442,11 +1443,13 @@ describe('Opponent playing SEVENS', () => {
 
 			// player plays the returned jack immediately
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=1-0]').click();
-
 			assertSnackbarError('That card is frozen! You must wait a turn to play it')
+			cy.log('Successfully prevented player from playing the jack while it is frozen');
 
-			cy.get('#deck').click()
+			// Player draws
+			cy.get('#deck').click();
 
 			assertGameState(1, {
 				p0Hand: [Card.TEN_OF_DIAMONDS],
@@ -1461,8 +1464,9 @@ describe('Opponent playing SEVENS', () => {
 			cy.playPointsOpponent(Card.TEN_OF_DIAMONDS)
 			cy.get('[data-player-hand-card]').should('have.length', 2);
 
-			// player plays the returned jack immediately
+			// Player plays the returned jack 
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=1-0]').click();
 
 			assertGameState(1, {
