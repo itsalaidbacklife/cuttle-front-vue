@@ -138,7 +138,7 @@ describe('Playing SEVENS', () => {
 	});
 
 	describe('Plays jack from a seven - special case', () => {
-		it.only('Plays jack from a seven - special case - double jacks with some points to steal should work as normal', () => {
+		it('Plays jack from a seven - special case - double jacks with some points to steal should work as normal', () => {
 
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -283,7 +283,7 @@ describe('Playing SEVENS', () => {
 	})
 
 	describe('Plays face cards from a seven', () => {
-		it('Plays king from a seven', () => {
+		it.only('Plays king from a seven', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
 				p0Points: [],
@@ -307,10 +307,8 @@ describe('Playing SEVENS', () => {
 				.and('be.visible')
 				.click();
 			
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
-	
+			cy.get('[data-move-choice=faceCard]').click();
+
 			assertGameState(0, {
 				p0Hand: [],
 				p0Points: [],
