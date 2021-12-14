@@ -5,7 +5,7 @@ describe('Playing SEVENS', () => {
 		setupGameAsP0();
 	});
 
-	it('Plays points from a seven', () => {
+	it.only('Plays points from a seven', () => {
 
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -30,10 +30,8 @@ describe('Playing SEVENS', () => {
 			.and('be.visible')
 			.click();
         
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-        
+		cy.get('[data-move-choice=points]').click();
+
 		assertGameState(0, {
 			p0Hand: [],
 			p0Points: [Card.SIX_OF_DIAMONDS],
