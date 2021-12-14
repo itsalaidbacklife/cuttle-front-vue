@@ -466,12 +466,9 @@ export default {
 			snackMessage: '',
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
-			scuttling: false,
 			targeting: false,
 			targetingMoveName: null,
 			showFourDialog: false,
-			showEightOverlay: false,
-			showNineOverlay: false,
 			nineTargetIndex: null,
 			targetType: null,
 			topCardIsSelected: false,
@@ -859,8 +856,6 @@ export default {
 			this.clearSelection();
 		},
 		clearOverlays() {
-			this.showEightOverlay = false;
-			this.showNineOverlay = false;
 			this.nineTargetIndex = null;
 			this.targetType = null;
 			this.targeting = false;
