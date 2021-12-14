@@ -468,9 +468,10 @@ export default {
 			selectionIndex: null, // when select a card set this value
 			targeting: false,
 			targetingMoveName: null,
-			showFourDialog: false,
-			nineTargetIndex: null,
+			targetingMoveDisplayName: null,
 			targetType: null,
+			nineTargetIndex: null,
+			showFourDialog: false,
 			topCardIsSelected: false,
 			secondCardIsSelected: false,
 		}
@@ -864,6 +865,8 @@ export default {
 			this.selectionIndex = null;
 			this.secondCardIsSelected = false;
 			this.topCardIsSelected = false;
+			this.targetingMoveName = null;
+			this.targetingMoveDisplayName = null;
 			this.clearOverlays();
 		},
 		selectCard(index) {
