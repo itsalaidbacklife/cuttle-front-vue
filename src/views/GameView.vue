@@ -409,23 +409,6 @@
 				:second-card="secondCard"
 				@resolveSevenDoubleJacks="resolveSevenDoubleJacks($event)"
 			/>
-			<eight-overlay
-				v-if="(selectedCard && selectedCard.rank === 8) || (cardSelectedFromDeck && cardSelectedFromDeck.rank === 8)"
-				v-model="showEightOverlay"
-				:card="selectedCard || cardSelectedFromDeck"
-				@points="playPoints"
-				@glasses="playFaceCard"
-				@cancel="clearSelection"
-			/>
-			<nine-overlay
-				v-if="showNineOverlay"
-				v-model="showNineOverlay"
-				:nine="selectedCard || cardSelectedFromDeck"
-				:target="nineTarget"
-				@scuttle="scuttle(nineTargetIndex)"
-				@one-off="playTargetedOneOff(nineTargetIndex, targetType)"
-				@cancel="clearSelection"
-			/>
 			<game-over-dialog
 				v-model="gameIsOver"
 				:player-wins="playerWins"
