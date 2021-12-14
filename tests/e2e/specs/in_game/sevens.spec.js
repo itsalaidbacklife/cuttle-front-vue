@@ -84,7 +84,7 @@ describe('Playing SEVENS', () => {
 		});
 	});
 
-	it.only('Cannot play jack from a seven if opponent has queen', () => {
+	it('Cannot play jack from a seven if opponent has queen', () => {
 
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -138,7 +138,7 @@ describe('Playing SEVENS', () => {
 	});
 
 	describe('Plays jack from a seven - special case', () => {
-		it('Plays jack from a seven - special case - double jacks with some points to steal should work as normal', () => {
+		it.only('Plays jack from a seven - special case - double jacks with some points to steal should work as normal', () => {
 
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -162,7 +162,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-					
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=6-1]')
 				.click();
 					
