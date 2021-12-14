@@ -44,7 +44,7 @@ describe('Playing SEVENS', () => {
 		});
 	});
 
-	it.only('Plays jack from a seven', () => {
+	it('Plays jack from a seven', () => {
 
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -84,7 +84,7 @@ describe('Playing SEVENS', () => {
 		});
 	});
 
-	it('Cannot play jack from a seven if opponent has queen', () => {
+	it.only('Cannot play jack from a seven if opponent has queen', () => {
 
 		cy.loadGameFixture({
 			p0Hand: [Card.SEVEN_OF_CLUBS],
@@ -108,10 +108,14 @@ describe('Playing SEVENS', () => {
 			.should('exist')
 			.and('be.visible')
 			.click();
-        
+		cy.get('[data-move-choice=jack]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'You cannot jack your opponent\'s points while they have a queen')
+			.click({force: true});
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
 		cy.get('[data-opponent-point-card=10-2]')
 			.click();
-        
 		assertSnackbarError('Your opponent\'s queen prevents you from targeting their other cards');
 
 		cy.get('[data-second-card=6-1]')
@@ -119,9 +123,7 @@ describe('Playing SEVENS', () => {
 			.and('be.visible')
 			.click();
 
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
+		cy.get('[data-move-choice=points]').click();
 
 		assertGameState(0, {
 			p0Hand: [],
