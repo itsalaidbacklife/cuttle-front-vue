@@ -2,8 +2,9 @@ import {
 	setupGameAsP0,
 	setupGameAsP1,
 	assertGameState,
+	assertSnackbarError,
 	Card,
-	assertSnackbarError
+	SnackBarError,
 } from '../../support/helpers';
 
 describe('Playing SEVENS', () => {
@@ -1452,7 +1453,7 @@ describe('Opponent playing SEVENS', () => {
 			cy.get('[data-player-hand-card=11-0]').click();
 			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=1-0]').click();
-			assertSnackbarError('That card is frozen! You must wait a turn to play it')
+			assertSnackbarError(SnackBarError.FROZEN_CARD);
 			cy.log('Successfully prevented player from playing the jack while it is frozen');
 
 			// Player draws

@@ -222,7 +222,7 @@ export function playOutOfTurn(moveName) {
 		.should('contain', 'It\'s not your turn')
 		.click({force: true});
 	// Back end should fire error that move is illegal after click is forced
-	assertSnackbarError('It\'s not your turn');
+	assertSnackbarError(SnackBarError.NOT_YOUR_TURN);
 	cy.log(`Correctly prevented attempt to play ${moveName} out of turn`);
 }
 
@@ -390,6 +390,12 @@ export function assertGameState(pNum, fixture) {
 	assertStoreMatchesFixture(fixture);
 }
 
+export const SnackBarError = {
+	NOT_YOUR_TURN: 'It\'s not your turn',
+	ILLEGAL_SCUTTLE: 'You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit. Suit order (low to high) is: Clubs < Diamonds < Hearts < Spades',
+	FROZEN_CARD: 'That card is frozen! You must wait a turn to play it',
+};
+
 export const Card = {
 	// Clubs
 	ACE_OF_CLUBS: {rank: 1, suit: 0},
@@ -447,4 +453,4 @@ export const Card = {
 	JACK_OF_SPADES: {rank: 11, suit: 3},
 	QUEEN_OF_SPADES: {rank: 12, suit: 3},
 	KING_OF_SPADES: {rank: 13, suit: 3},
-}
+};

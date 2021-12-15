@@ -4,6 +4,7 @@ import {
 	assertGameState,
 	assertSnackbarError,
 	playOutOfTurn,
+	SnackBarError,
 	Card
 } from '../../support/helpers';
 
@@ -654,7 +655,7 @@ describe('Playing NINES', ()=>{
 			cy.get('#player-hand-targeting')
 				.should('be.visible');
 			cy.get('[data-opponent-point-card=9-3]').click();
-			assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit. Suit order (low to high) is: Clubs < Diamonds < Hearts < Spades');
+			assertSnackbarError(SnackBarError.ILLEGAL_SCUTTLE);
 
 			// Player plays nine
 			cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts
@@ -885,7 +886,7 @@ describe('Playing NINES', ()=>{
 			cy.get('#player-hand-targeting')
 				.should('be.visible');
 			cy.get('[data-opponent-point-card=1-3]').click();
-			assertSnackbarError('That card is frozen! You must wait a turn to play it')
+			assertSnackbarError(SnackBarError.FROZEN_CARD);
 			cy.log('Correctly prevented player from re-playing frozen jack next turn');
 
 			cy.get('[data-player-hand-card=10-1]').click();

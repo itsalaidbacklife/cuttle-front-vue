@@ -4,6 +4,7 @@ import {
 	assertGameState,
 	assertSnackbarError,
 	playOutOfTurn,
+	SnackBarError,
 	Card 
 } from '../../support/helpers';
 
@@ -88,14 +89,14 @@ describe('Game Basic Moves - P0 Perspective', () => {
 		cy.get('#player-hand-targeting')
 			.should('be.visible');
 		cy.get('[data-opponent-point-card=1-1]').click();
-		assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit');
+		assertSnackbarError(SnackBarError.ILLEGAL_SCUTTLE);
 		cy.log('Could not scuttle with point card too low to target anything');
 
 		// Player attempts illegal scuttle -- using card big enough to target something else
 		cy.get('[data-player-hand-card=1-3]').click(); // 7 of clubs
 		cy.get('[data-move-choice=scuttle]').click();
 		cy.get('[data-opponent-point-card=6-2]').click(); // 6 of hearts
-		assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit');;
+		assertSnackbarError(SnackBarError.ILLEGAL_SCUTTLE);
 		cy.log('Could not scuttle invalid target with point card that had alternative valid target');
 
 		// Player scuttles 6 of diamonds with 7 of clubs
@@ -124,7 +125,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 			.click({force: true});
 		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
 		// Test that Error snackbar says its not your turn
-		assertSnackbarError('It\'s not your turn');
+		assertSnackbarError(SnackBarError.NOT_YOUR_TURN);
 		cy.log('Could not scuttle out of turn');
 
 		// Opponent scuttles 10 of hearts with 10 of spades
@@ -433,7 +434,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Attempt to play out of turn
 		cy.get('#deck').click();
 		// Test that Error snackbar says its not your turn
-		assertSnackbarError('It\'s not your turn');
+		assertSnackbarError(SnackBarError.NOT_YOUR_TURN);
 		// Opponent draws 2nd time
 		cy.drawCardOpponent();
 		// Opponent now has 7 cards in hand
