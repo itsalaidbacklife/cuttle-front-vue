@@ -1,4 +1,11 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, playOutOfTurn, Card } from '../../support/helpers';
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	assertGameState,
+	assertSnackbarError,
+	playOutOfTurn,
+	Card
+} from '../../support/helpers';
 
 describe('Untargeted One-Offs', () => {
 	
@@ -31,7 +38,13 @@ describe('Untargeted One-Offs', () => {
 				p1Hand: [Card.ACE_OF_HEARTS],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TWO_OF_DIAMONDS, Card.ACE_OF_CLUBS],
+				scrap: [
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.TEN_OF_HEARTS,
+					Card.TWO_OF_DIAMONDS,
+					Card.ACE_OF_CLUBS
+				],
 			}
 		);
 		// Attempt to plays ace out of turn
@@ -83,7 +96,13 @@ describe('Untargeted One-Offs', () => {
 		// Setup
 		cy.loadGameFixture({
 			//Player is P0
-			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES, Card.SIX_OF_DIAMONDS, Card.JACK_OF_CLUBS, Card.JACK_OF_HEARTS],
+			p0Hand: [
+				Card.ACE_OF_CLUBS,
+				Card.SIX_OF_SPADES,
+				Card.SIX_OF_DIAMONDS,
+				Card.JACK_OF_CLUBS,
+				Card.JACK_OF_HEARTS
+			],
 			p0Points: [Card.THREE_OF_SPADES, Card.ACE_OF_SPADES],
 			p0FaceCards: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS],
 			// Opponent is P1

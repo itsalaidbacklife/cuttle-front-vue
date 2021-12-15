@@ -122,7 +122,13 @@ describe('Countering One-Offs', () => {
 				p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
+				scrap: [
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.TEN_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS,
+					Card.ACE_OF_CLUBS
+				],
 			}
 		);
 	});
@@ -169,7 +175,13 @@ describe('Countering One-Offs', () => {
 				p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.ACE_OF_CLUBS, Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				scrap: [
+					Card.ACE_OF_CLUBS,
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.TEN_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS
+				],
 			}
 		);
 	});
@@ -461,7 +473,14 @@ describe('Countering One-Offs P0 Perspective', () => {
 			p1Hand: [Card.ACE_OF_HEARTS],
 			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [],
-			scrap: [Card.QUEEN_OF_CLUBS, Card.FIVE_OF_CLUBS, Card.KING_OF_SPADES, Card.SIX_OF_CLUBS, Card.KING_OF_HEARTS, Card.TWO_OF_SPADES],
+			scrap: [
+				Card.QUEEN_OF_CLUBS,
+				Card.FIVE_OF_CLUBS,
+				Card.KING_OF_SPADES,
+				Card.SIX_OF_CLUBS,
+				Card.KING_OF_HEARTS,
+				Card.TWO_OF_SPADES
+			],
 		});
 	});
 

@@ -1,4 +1,11 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, playOutOfTurn, Card } from '../../support/helpers';
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	assertGameState,
+	assertSnackbarError,
+	playOutOfTurn,
+	Card 
+} from '../../support/helpers';
 
 describe('Game Basic Moves - P0 Perspective', () => {
 	beforeEach(() => {
@@ -151,7 +158,14 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				p1Hand: [Card.TEN_OF_CLUBS],
 				p1Points: [],
 				p1FaceCards: [Card.QUEEN_OF_HEARTS],
-				scrap: [Card.SEVEN_OF_CLUBS, Card.SIX_OF_HEARTS, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.ACE_OF_DIAMONDS],
+				scrap: [
+					Card.SEVEN_OF_CLUBS,
+					Card.SIX_OF_HEARTS,
+					Card.TEN_OF_HEARTS,
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.ACE_OF_DIAMONDS
+				],
 			}
 		);
 		cy.log('Player (p0) scuttled opponent\'s last point card');
@@ -324,7 +338,13 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 	it('Cancels selection and cancels decision to scuttle/targeted one-off/jack', () => {
 		cy.loadGameFixture({
-			p0Hand: [Card.TWO_OF_SPADES, Card.FOUR_OF_CLUBS, Card.NINE_OF_SPADES, Card.KING_OF_CLUBS, Card.JACK_OF_SPADES],
+			p0Hand: [
+				Card.TWO_OF_SPADES,
+				Card.FOUR_OF_CLUBS,
+				Card.NINE_OF_SPADES,
+				Card.KING_OF_CLUBS,
+				Card.JACK_OF_SPADES
+			],
 			p0Points: [],
 			p0FaceCards: [],
 			p1Hand: [Card.SIX_OF_CLUBS],
@@ -610,7 +630,12 @@ describe('Play Jacks', () => {
 				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
 				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
 				p0FaceCards: [],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES],
+				p1Hand: [
+					Card.ACE_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS,
+					Card.JACK_OF_DIAMONDS,
+					Card.JACK_OF_SPADES
+				],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
 				scrap: []

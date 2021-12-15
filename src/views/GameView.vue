@@ -708,13 +708,16 @@ export default {
 				.length > 0;
 		},
 		showCannotCounterDialog() {
-			return (this.myTurnToCounter && !this.hasTwoInHand) || (this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount > 0);
+			return (this.myTurnToCounter && !this.hasTwoInHand) || 
+				(this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount > 0);
 		},
 		showCounterDialog() {
 			return this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount === 0;
 		},
 		showSevenDoubleJacksDialog() {
-			return this.resolvingSeven && this.topCard.rank === 11 && this.secondCard.rank === 11 && (this.opponentPointTotal === 0 || this.opponentQueenCount > 0);
+			return this.resolvingSeven && this.topCard.rank === 11 && 
+				this.secondCard.rank === 11 && 
+				(this.opponentPointTotal === 0 || this.opponentQueenCount > 0);
 		},
 		discarding() {
 			return this.$store.state.game.discarding;
@@ -1176,7 +1179,7 @@ export default {
 				.catch(this.handleError);
 		},
 		discard(cardIds) {
-			const cardId1 = cardIds[0];
+			const [ cardId1 ] = cardIds;
 			const cardId2 = cardIds.length > 1 ? cardIds[1] : null;
 			this.$store.dispatch('requestDiscard', {
 				cardId1,

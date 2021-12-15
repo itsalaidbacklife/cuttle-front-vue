@@ -1,4 +1,10 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, Card, assertSnackbarError } from '../../support/helpers';
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	assertGameState,
+	Card,
+	assertSnackbarError
+} from '../../support/helpers';
 
 function assertVictory() {
 	cy.log('Asserting player victory');

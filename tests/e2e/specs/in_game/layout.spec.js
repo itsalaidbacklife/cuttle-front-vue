@@ -124,7 +124,12 @@ describe('Game View Layout', () => {
 				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
 				p0Points: [Card.ACE_OF_CLUBS, Card.TWO_OF_SPADES, Card.TEN_OF_HEARTS, Card.TWO_OF_CLUBS],
 				p0FaceCards: [],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES],
+				p1Hand: [
+					Card.ACE_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS,
+					Card.JACK_OF_DIAMONDS,
+					Card.JACK_OF_SPADES
+				],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
 				scrap: []

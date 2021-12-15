@@ -1,4 +1,13 @@
-import { setupGameAsP0, setupGameAsP1, validEmail, validPassword, opponentEmail, opponentPassword, assertGameState, Card } from '../../support/helpers';
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	validEmail,
+	validPassword,
+	opponentEmail,
+	opponentPassword,
+	assertGameState,
+	Card
+} from '../../support/helpers';
 
 function reconnect() {
 	cy.get('#reauthenticate-dialog')
