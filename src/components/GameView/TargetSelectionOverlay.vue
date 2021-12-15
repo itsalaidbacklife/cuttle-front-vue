@@ -16,8 +16,9 @@
 		>
 			<h1>Choose {{ moveDisplayName }} Target</h1>
 			<v-btn
-				text
+				outlined
 				color="primary"
+				class="mt-2"
 				data-cy="cancel-target"
 				@click="$emit('cancel')"
 			>
