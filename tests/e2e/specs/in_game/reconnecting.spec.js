@@ -1,4 +1,13 @@
-import { setupGameAsP0, setupGameAsP1, validEmail, validPassword, opponentEmail, opponentPassword, assertGameState, Card } from '../../support/helpers';
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	validEmail,
+	validPassword,
+	opponentEmail,
+	opponentPassword,
+	assertGameState,
+	Card
+} from '../../support/helpers';
 
 function reconnect() {
 	cy.get('#reauthenticate-dialog')
@@ -31,12 +40,9 @@ describe('Reconnecting to a game', () => {
 		cy.reload();
 		reconnect();
 
-		// // Play Ace of Clubs for points
+		// Play Ace of Clubs for points
 		cy.get('[data-player-hand-card=1-0]').click();
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click()
-			.should('not.have.class', 'valid-move');
+		cy.get('[data-move-choice=points]').click();
         
 		assertGameState(0, {
 			p0Hand: [],
@@ -148,9 +154,7 @@ describe('Reconnecting to a game', () => {
 
 			// Play ace of clubs
 			cy.get('[data-player-hand-card=1-0]').click();
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
 			// Opponent counters
@@ -269,6 +273,7 @@ describe('Reconnecting to a game', () => {
 				],
 			});
 		});
+
 		it('Opponent reconnects while player is in cannot-counter dialog', () => {
 			setupGameAsP1();
 
@@ -405,6 +410,7 @@ describe('Reconnecting to a game', () => {
 				scrap: [Card.TWO_OF_CLUBS, Card.TWO_OF_SPADES],
 			});
 		});
+
 		it('counter -- Reconnect into counter dialog', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
@@ -421,9 +427,7 @@ describe('Reconnecting to a game', () => {
 
 			// Play ace of clubs
 			cy.get('[data-player-hand-card=1-0]').click();
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
@@ -438,6 +442,7 @@ describe('Reconnecting to a game', () => {
 			// Reconnect & proceed
 			cy.reload();
 			reconnect();
+
 			// Counter dialog should become visible again
 			cy.get('#counter-dialog')
 				.should('be.visible')
@@ -467,6 +472,7 @@ describe('Reconnecting to a game', () => {
 				]
 			});
 		});
+
 		it('sevenOneOff -- Reconnect into counter dialog', () => {
 			setupGameAsP1();
 			cy.loadGameFixture({
@@ -514,6 +520,7 @@ describe('Reconnecting to a game', () => {
 				scrap: [Card.SEVEN_OF_DIAMONDS, Card.SEVEN_OF_HEARTS, Card.ACE_OF_CLUBS, Card.SEVEN_OF_CLUBS],
 			});
 		});
+
 		it('sevenTargetedOneOff -- Reconnect into counter dialog', () => {
 			setupGameAsP1();
 			cy.loadGameFixture({
@@ -605,6 +612,7 @@ describe('Reconnecting to a game', () => {
 					scrap: [Card.THREE_OF_CLUBS],
 				});
 			});
+
 			it('Resolve opponents three after reconnect', () => {
 				setupGameAsP1();
 				cy.loadGameFixture({
@@ -694,6 +702,7 @@ describe('Reconnecting to a game', () => {
 				],
 			});
 		});
+
 		it('Resolve 7 after reconnect - Player', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
@@ -726,9 +735,7 @@ describe('Reconnecting to a game', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=points]').click();
 
 			assertGameState(0, {
 				p0Hand: [],

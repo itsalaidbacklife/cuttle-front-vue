@@ -1,4 +1,4 @@
-import { setupGameAsP1, setupGameAsP0, assertGameState, Card, assertSnackbarError } from '../../support/helpers';
+import { setupGameAsP1, setupGameAsP0, assertGameState, Card, playOutOfTurn } from '../../support/helpers';
 
 describe('Countering One-Offs', () => {
 	beforeEach(() => {
@@ -122,7 +122,13 @@ describe('Countering One-Offs', () => {
 				p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.ACE_OF_CLUBS],
+				scrap: [
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.TEN_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS,
+					Card.ACE_OF_CLUBS
+				],
 			}
 		);
 	});
@@ -169,7 +175,13 @@ describe('Countering One-Offs', () => {
 				p1Hand: [Card.ACE_OF_HEARTS, Card.TWO_OF_SPADES],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.ACE_OF_CLUBS, Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
+				scrap: [
+					Card.ACE_OF_CLUBS,
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.TEN_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS
+				],
 			}
 		);
 	});
@@ -432,7 +444,7 @@ describe('Countering One-Offs P0 Perspective', () => {
 
 		// Player plays three of clubs as one-off
 		cy.get('[data-player-hand-card=5-0]').click();
-		cy.get('#scrap').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=oneOff]').click();
 
 		// Opponent counters and player resolves
 		cy.counterOpponent(Card.TWO_OF_SPADES);
@@ -440,14 +452,12 @@ describe('Countering One-Offs P0 Perspective', () => {
 			.should('be.visible')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
+
 		// No longer player turn
 		cy.get('[data-player-hand-card=4-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('points');
 
-		// Opponent plays a Five
+		// Opponent plays a Six
 		cy.playOneOffOpponent(Card.SIX_OF_CLUBS);
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
@@ -463,7 +473,14 @@ describe('Countering One-Offs P0 Perspective', () => {
 			p1Hand: [Card.ACE_OF_HEARTS],
 			p1Points: [Card.TEN_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [],
-			scrap: [Card.QUEEN_OF_CLUBS, Card.FIVE_OF_CLUBS, Card.KING_OF_SPADES, Card.SIX_OF_CLUBS, Card.KING_OF_HEARTS, Card.TWO_OF_SPADES],
+			scrap: [
+				Card.QUEEN_OF_CLUBS,
+				Card.FIVE_OF_CLUBS,
+				Card.KING_OF_SPADES,
+				Card.SIX_OF_CLUBS,
+				Card.KING_OF_HEARTS,
+				Card.TWO_OF_SPADES
+			],
 		});
 	});
 
@@ -482,7 +499,7 @@ describe('Countering One-Offs P0 Perspective', () => {
 		cy.log('Loaded fixture');
 		// Player plays ace of clubs as one-off
 		cy.get('[data-player-hand-card=1-0]').click();
-		cy.get('#scrap').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=oneOff]').click();
 
 		// Opponent counters (1st counter)
 		cy.log('Opponent counters (1st counter)');
@@ -563,7 +580,7 @@ describe('Countering One-Offs P0 Perspective', () => {
 		// Player plays ace of clubs as one-off
 		cy.log('Player plays ace of clubs as one-off');
 		cy.get('[data-player-hand-card=1-0]').click();
-		cy.get('#scrap').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=oneOff]').click();
 
 		// Opponent counters
 		cy.log('Opponent counters');

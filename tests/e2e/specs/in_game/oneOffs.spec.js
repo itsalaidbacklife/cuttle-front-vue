@@ -1,4 +1,12 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	assertGameState,
+	assertSnackbarError,
+	playOutOfTurn,
+	SnackBarError,
+	Card
+} from '../../support/helpers';
 
 describe('Untargeted One-Offs', () => {
 	
@@ -31,15 +39,18 @@ describe('Untargeted One-Offs', () => {
 				p1Hand: [Card.ACE_OF_HEARTS],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TWO_OF_DIAMONDS, Card.ACE_OF_CLUBS],
+				scrap: [
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.TEN_OF_HEARTS,
+					Card.TWO_OF_DIAMONDS,
+					Card.ACE_OF_CLUBS
+				],
 			}
 		);
 		// Attempt to plays ace out of turn
 		cy.get('[data-player-hand-card=1-1]').click(); // ace of diamonds
-		cy.get('#scrap')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('points');
 	}); // End ace one-off
 
 	it('Plays a five to draw two cards', () => {
@@ -79,17 +90,20 @@ describe('Untargeted One-Offs', () => {
 		);
 		// Attempt to plays five out of turn
 		cy.get('[data-player-hand-card=5-2]').click(); // five of hearts
-		cy.get('#scrap')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('oneOff');
 	}); // End five one-off
 
 	it('Plays a six to destroy all face cards', () => {
 		// Setup
 		cy.loadGameFixture({
 			//Player is P0
-			p0Hand: [Card.ACE_OF_CLUBS, Card.SIX_OF_SPADES, Card.SIX_OF_DIAMONDS, Card.JACK_OF_CLUBS, Card.JACK_OF_HEARTS],
+			p0Hand: [
+				Card.ACE_OF_CLUBS,
+				Card.SIX_OF_SPADES,
+				Card.SIX_OF_DIAMONDS,
+				Card.JACK_OF_CLUBS,
+				Card.JACK_OF_HEARTS
+			],
 			p0Points: [Card.THREE_OF_SPADES, Card.ACE_OF_SPADES],
 			p0FaceCards: [Card.KING_OF_SPADES, Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS],
 			// Opponent is P1
@@ -103,13 +117,15 @@ describe('Untargeted One-Offs', () => {
 		// Double Jack (control will remain unchanged when 6 resolves)
 		// Player & Opponent jack then re-jack the TWO of Hearts
 		cy.get('[data-player-hand-card=11-2]').click();
+		cy.get('[data-move-choice=jack').click();
 		cy.get('[data-opponent-point-card=2-2]').click();
-		cy.get('[data-player-point-card=2-2]');
+		cy.get('[data-player-point-card=2-2]'); // point card now controlled by player
 		cy.playJackOpponent(Card.JACK_OF_SPADES, Card.TWO_OF_HEARTS);
 
 		// Single Jacks (control will switch when 6 resolves)
 		// Player jacks opponent's Ace of diamonds
 		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
 		cy.get('[data-opponent-point-card=1-1]').click();
 		// Opponent jacks player's Three of spades
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.THREE_OF_SPADES);
@@ -141,10 +157,7 @@ describe('Untargeted One-Offs', () => {
 		);
 		// Attempt to plays six out of turn
 		cy.get('[data-player-hand-card=6-1]').click(); // six of diamonds
-		cy.get('#scrap')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('oneOff');
 	}); // End 6 one-off
 
 }); // End untargeted one-off describe
@@ -271,9 +284,7 @@ describe('FOURS', () => {
 			// Play the four of spades
 			cy.log('Attempting to playing Four of clubs as one off');
 			cy.get('[data-player-hand-card=4-0]').click(); // four of clubs
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 	
 			assertSnackbarError('You cannot play a 4 as a one-off while your opponent has no cards in hand');
 		
@@ -400,15 +411,16 @@ describe('Play TWOS', () => {
 			cy.log('Loaded fixture');
 
 			// Play two as one off (two of clubs)
-			cy.get('[data-player-hand-card=2-0]').click(); // two of clubs
-				
+			cy.get('[data-player-hand-card=2-0]').click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
 			cy.get('[data-opponent-face-card=13-2]')
 				.click(); // target king of hearts
 
-			// opponent resolve
+			// Opponent resolves
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
-			// Opponent does not counter (resolves stack)
 			cy.resolveOpponent();
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('not.be.visible');
@@ -439,9 +451,7 @@ describe('Play TWOS', () => {
 
 			// player plays Ace of Spades
 			cy.get('[data-player-hand-card=1-3]').click();
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=points]').click();
 
 			assertGameState(0, {
 				p0Hand: [Card.TWO_OF_CLUBS],
@@ -452,11 +462,8 @@ describe('Play TWOS', () => {
 				p1FaceCards: []
 			});
 
-			cy.get('[data-player-hand-card]').should('have.length', 1);
-
-			// opponent plays jack
+			// Opponent plays jack
 			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_SPADES)
-
 
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 
@@ -469,10 +476,12 @@ describe('Play TWOS', () => {
 				p1FaceCards: []
 			});
 
-			// player plays TWO to destroy jack
-			cy.get('[data-player-hand-card=2-0]').click()
-			cy.get('[data-opponent-face-card=11-0]').click()
-
+			// Player plays TWO to destroy jack
+			cy.get('[data-player-hand-card=2-0]').click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-face-card=11-0]').click();
 
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
@@ -515,8 +524,9 @@ describe('Play TWOS', () => {
 
 			cy.playPointsOpponent(Card.ACE_OF_SPADES);
 
-			cy.get('[data-player-hand-card=11-0]').click()
-			cy.get('[data-opponent-point-card=1-3]').click()
+			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack').click();
+			cy.get('[data-opponent-point-card=1-3]').click();
 
 			assertGameState(1, {
 				p0Hand: [Card.TWO_OF_CLUBS],
@@ -569,13 +579,11 @@ describe('Playing NINES', ()=>{
 	
 			// Player plays nine
 			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
+			cy.get('[data-move-choice=scuttle]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
 			cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
-	
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=nine-scuttle]')
-				.click();
-			
+				
 			assertGameState(
 				0,
 				{
@@ -603,14 +611,9 @@ describe('Playing NINES', ()=>{
 			cy.log('Loaded fixture');
 	
 			// Player plays nine
-			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades
+			cy.get('[data-move-choice=targetedOneOff').click();
 			cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
-			
-			// Chooses to play as one-off
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=nine-one-off]')
-				.click();
 	
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
@@ -642,25 +645,25 @@ describe('Playing NINES', ()=>{
 			});
 			cy.get('[data-player-hand-card]').should('have.length', 2);
 			cy.log('Loaded fixture');
-	
-			// Player plays nine
-			cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts	
-			cy.get('[data-opponent-point-card=9-3]').click(); // nine of spades
-	
+
 			// Attempt illegal scuttle
-			cy.log('Attempting illegal scuttle');
-			cy.get('#nine-cannot-scuttle').should('be.visible');
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=nine-scuttle]')
-				.click();
-	
-			cy.log('Choosing to play nine as one-off');
-			// Chooses to play as one-off
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=nine-one-off]')
-				.click();
+			cy.get('[data-player-hand-card=9-0]').click();
+			cy.get('[data-move-choice=scuttle]')
+				.should('have.class', 'v-card--disabled')
+				.should('contain', 'You can only scuttle smaller point cards')
+				.click({force: true});
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-point-card=9-3]').click();
+			assertSnackbarError(SnackBarError.ILLEGAL_SCUTTLE);
+
+			// Player plays nine
+			cy.get('[data-player-hand-card=9-2]').click(); // nine of hearts
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-point-card=9-3]').click(); // nine of spades
+			cy.log('Successfully played nine one-off on higher point card');
 	
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
@@ -694,10 +697,12 @@ describe('Playing NINES', ()=>{
 			cy.log('Loaded fixture');
 	
 			// Player plays nine
-			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
-			cy.get('[data-opponent-face-card=13-1]').click(); // ace of diamonds
-	
-	
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-face-card=13-1]').click(); // king of diamonds
+
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
@@ -729,13 +734,11 @@ describe('Playing NINES', ()=>{
 			});
 			cy.get('[data-player-hand-card]').should('have.length', 2);
 			cy.log('Loaded fixture');
-	
-			// player plays Ace of Spades
+
+			// Player plays Ace of Spades
 			cy.get('[data-player-hand-card=1-3]').click();
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click()
-	
+			cy.get('[data-move-choice=points]').click();
+
 			assertGameState(0, {
 				p0Hand: [Card.NINE_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
@@ -744,15 +747,10 @@ describe('Playing NINES', ()=>{
 				p1Points: [],
 				p1FaceCards: []
 			});
-	
-			cy.get('[data-player-hand-card]').should('have.length', 1);
-	
-			// opponent plays jack
+		
+			// Opponent plays jack
 			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_SPADES)
-	
-	
-			cy.get('[data-player-hand-card]').should('have.length', 1);
-	
+
 			assertGameState(0, {
 				p0Hand: [Card.NINE_OF_CLUBS],
 				p0Points: [Card.TEN_OF_SPADES],
@@ -761,17 +759,19 @@ describe('Playing NINES', ()=>{
 				p1Points: [Card.ACE_OF_SPADES],
 				p1FaceCards: []
 			});
-	
-			// player plays TWO to destroy jack
-			cy.get('[data-player-hand-card=9-0]').click()
-			cy.get('[data-opponent-face-card=11-0]').click()
-	
-	
+
+			// Player plays NINE to destroy jack
+			cy.get('[data-player-hand-card=9-0]').click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-face-card=11-0]').click();
+
 			// Wait for opponent to resolve
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
 			cy.resolveOpponent();
-	
+
 			assertGameState(0, {
 				p0Hand: [],
 				p0Points: [Card.ACE_OF_SPADES, Card.TEN_OF_SPADES],
@@ -787,7 +787,7 @@ describe('Playing NINES', ()=>{
 				.should('not.exist');
 		}); // End 9 on jack
 	
-		it('Cancels playing a nine', () => {
+		it('Cancels playing a nine one off', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.NINE_OF_SPADES, Card.NINE_OF_HEARTS],
 				p0Points: [Card.TEN_OF_HEARTS],
@@ -800,17 +800,16 @@ describe('Playing NINES', ()=>{
 			cy.log('Loaded fixture');
 	
 			// Player plays nine
-			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades	
-			cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
-	
-			cy.get('#nine-overlay')
-				.should('be.visible')
-				.get('[data-cy=cancel-nine]')
-				.click();
-			
-			cy.get('#nine-overlay')
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+
+			// Cancels			
+			cy.get('[data-cy=cancel-target]').click();
+			cy.get('#player-hand-targeting')
 				.should('not.be.visible');
-	
+
 			assertGameState(
 				0,
 				{
@@ -845,10 +844,13 @@ describe('Playing NINES', ()=>{
 			cy.log('Loaded fixture');
 
 			// opponent plays Ace of Spades
-			cy.playPointsOpponent(Card.ACE_OF_SPADES)
+			cy.playPointsOpponent(Card.ACE_OF_SPADES);
 
 			// player plays jack
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
 			cy.get('[data-opponent-point-card=1-3]').click();
 
 			assertGameState(1, {
@@ -862,7 +864,7 @@ describe('Playing NINES', ()=>{
 
 			cy.playTargetedOneOffOpponent(Card.NINE_OF_CLUBS, Card.JACK_OF_CLUBS, 'jack')
 
-			// player resolves
+			// Player resolves
 			cy.get('#cannot-counter-dialog')
 				.should('be.visible')
 				.get('[data-cy=cannot-counter-resolve]')
@@ -878,17 +880,18 @@ describe('Playing NINES', ()=>{
 				scrap: [Card.NINE_OF_CLUBS]
 			});
 
-			// player plays the returned jack immediately
+			// Player attempts plays the returned jack immediately
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
 			cy.get('[data-opponent-point-card=1-3]').click();
+			assertSnackbarError(SnackBarError.FROZEN_CARD);
+			cy.log('Correctly prevented player from re-playing frozen jack next turn');
 
-			assertSnackbarError('That card is frozen! You must wait a turn to play it')
+			cy.get('[data-player-hand-card=10-1]').click();
+			cy.get('[data-move-choice=points]').click();
 
-
-			cy.get('[data-player-hand-card=10-1]').click()
-			cy.get('#player-field').click()
-
-		
 			assertGameState(1, {
 				p0Hand: [Card.ACE_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_SPADES, Card.ACE_OF_SPADES],
@@ -902,10 +905,12 @@ describe('Playing NINES', ()=>{
 			cy.playPointsOpponent(Card.ACE_OF_DIAMONDS)
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 
-
-			// player plays jack after one turn
-			cy.get('[data-player-hand-card=11-0]').click()
-			cy.get('[data-opponent-point-card=1-1]').click()
+			// Player plays jack after one turn
+			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-point-card=1-1]').click();
 
 			assertGameState(1, {
 				p0Hand: [],
@@ -940,9 +945,7 @@ describe('Playing THREEs', () => {
 
 		// Player plays three
 		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click(); // scrap
+		cy.get('[data-move-choice=oneOff]').click();
 		assertSnackbarError('You can only play a 3 as a one-off, if there are cards in the scrap pile');
 	});
 
@@ -961,9 +964,7 @@ describe('Playing THREEs', () => {
 
 		// Player plays three
 		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click(); // scrap
+		cy.get('[data-move-choice=oneOff]').click();
 
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
@@ -996,11 +997,7 @@ describe('Playing THREEs', () => {
 
 		// Player attempts to play out of turn
 		cy.get('[data-player-hand-card=10-2]').click(); // ten of hearts
-
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('points');
 
 		cy.playPointsOpponent(Card.TEN_OF_DIAMONDS);
 
@@ -1032,9 +1029,7 @@ describe('Playing THREEs', () => {
 
 		// put some cards into scrap
 		cy.get('[data-player-hand-card=1-3]').click() // ace of space
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
-			.click(); // one-off
+		cy.get('[data-move-choice=oneOff]').click();
 
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');
@@ -1082,7 +1077,7 @@ describe('Playing THREEs', () => {
 				scrap: [Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES, Card.THREE_OF_CLUBS],
 			}
 		);
-	})
+	});
 }); // End 3s description
 
 describe('ONE-OFF Target should be removed after one-off resolves', () => {
@@ -1128,20 +1123,18 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Player plays another point
 		cy.get('[data-player-hand-card=6-2]').click();
-		cy.get('#player-field').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=points]').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
 		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
-		
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('not.contain', 'targetting')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 	});
-
 
 	it('ONE-OFF Target should be removed after one-off resolves - target is FACE CARD', () => {
 		cy.loadGameFixture({
@@ -1159,7 +1152,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Opponent plays NINE
 		cy.playTargetedOneOffOpponent(Card.NINE_OF_SPADES, Card.QUEEN_OF_HEARTS, 'faceCard');
-		
+
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
@@ -1182,13 +1175,12 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Player plays another point
 		cy.get('[data-player-hand-card=6-2]').click();
-		cy.get('#player-field').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=points]').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
 		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
-		
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('not.contain', 'targetting')
@@ -1216,6 +1208,9 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Play plays JACK
 		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
 		cy.get('[data-opponent-point-card=10-2]').click();
 
 		assertGameState(
@@ -1233,7 +1228,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Opponent plays TWO
 		cy.playTargetedOneOffOpponent(Card.TWO_OF_SPADES, Card.JACK_OF_CLUBS, 'jack');
-		
+
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
@@ -1256,13 +1251,12 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Player plays another point
 		cy.get('[data-player-hand-card=6-2]').click();
-		cy.get('#player-field').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=points]').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
 		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
-		
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('not.contain', 'targetting')
@@ -1292,7 +1286,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 			.should('be.visible')
 			.get('[data-cy=counter]')
 			.click();
-		
+
 		cy.get('#choose-two-dialog')
 			.should('be.visible')
 			.get('[data-counter-dialog-card=2-0]')
@@ -1316,13 +1310,12 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 
 		// Player plays another point
 		cy.get('[data-player-hand-card=6-2]').click();
-		cy.get('#player-field').should('have.class', 'valid-move').click();
+		cy.get('[data-move-choice=points]').click();
 
 		// Opponent plays UN-TARGETED ONE-OFF
 		cy.playOneOffOpponent(Card.FIVE_OF_CLUBS);
 
 		// Cannot counter dialog should not have a target
-		
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
 			.should('not.contain', 'targetting')

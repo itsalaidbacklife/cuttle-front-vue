@@ -175,7 +175,8 @@ describe('Home - Create Game', () => {
 		// Test store
 		cy.window().its('app.$store.state.gameList.games').then((games) => {
 			expect(games.length).to.eq(1, 'Expect exactly 1 game in store');
-			expect(games[0].numPlayers).to.eq(0, 'Expect no players in gameLists game in store, but found some');
+			expect(games[0].numPlayers)
+				.to.eq(0, 'Expect no players in gameLists game in store, but found some');
 			expect(games[0].status).to.eq(true, 'Expect game to have status true');
 		});
 	});

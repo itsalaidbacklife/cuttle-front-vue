@@ -124,7 +124,7 @@ Cypress.Commands.add('playPointsOpponent', (card) => {
 		.then((opponent) => {
 			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
 			if (!foundCard) {
-				throw new Error(`Error playing opponents points: could not find ${card.rank} of ${card.suit} in opponent hand`)
+				throw new Error(`Error playing opponents points: could not find ${card.rank} of ${card.suit} in opponent hand`);
 			}
 			const cardId = foundCard.id;
 			io.socket.get('/game/points', {
@@ -181,10 +181,10 @@ Cypress.Commands.add('playJackOpponent', (card, target) => {
 			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
 			const foundTarget = player.points.find((pointCard) => cardsMatch(target, pointCard))
 			if (!foundCard) {
-				throw new Error(`Error playing opponents jack: could not find ${card.rank} of ${card.suit} in opponent hand`)
+				throw new Error(`Error playing opponents jack: could not find ${card.rank} of ${card.suit} in opponent hand`);
 			}
 			if (!foundTarget) {
-				throw new Error(`Error playing opponents jack: could not find ${target.rank} of ${target.suit} in player points`)
+				throw new Error(`Error playing opponents jack: could not find ${target.rank} of ${target.suit} in player points`);
 			}
 			const cardId = foundCard.id;
 			const targetId = foundTarget.id
@@ -342,7 +342,7 @@ Cypress.Commands.add('counterOpponent', (card) => {
 			const playerId = game.players[game.myPNum].id
 			const foundCard = opponent.hand.find((handCard) => cardsMatch(card, handCard));
 			if (!foundCard) {
-				throw new Error(`Error countering as opponent: could not find ${card.rank} of ${card.suit} in opponent hand`)
+				throw new Error(`Error countering as opponent: could not find ${card.rank} of ${card.suit} in opponent hand`);
 			}
 			const cardId = foundCard.id;
 			io.socket.get('/game/counter', {
@@ -369,7 +369,7 @@ Cypress.Commands.add('resolveThreeOpponent', (card) => {
 			const opId = game.players[game.myPNum].id;
 			const foundCard = game.scrap.find((scrapCard) => cardsMatch(card, scrapCard));
 			if (!foundCard) {
-				throw new Error(`Error resolving three as opponent: could not find ${card.rank} of ${card.suit} in scrap`)
+				throw new Error(`Error resolving three as opponent: could not find ${card.rank} of ${card.suit} in scrap`);
 			}
 			const cardId = foundCard.id;
 			io.socket.get('/game/resolveThree', {
@@ -537,7 +537,7 @@ Cypress.Commands.add('scuttleFromSevenOpponent', (card, target) => {
 				throw new Error(`Error playing ${printCard(card)} for jack from seven as opponent: Could not find it in top two cards`);
 			}
 			if (!foundTarget) {
-				throw new Error(`Error playing opponents jack: could not find ${target.rank} of ${target.suit} in player points`)
+				throw new Error(`Error playing opponents jack: could not find ${target.rank} of ${target.suit} in player points`);
 			}
 
 			const cardId = foundCard.id;
@@ -592,7 +592,7 @@ Cypress.Commands.add('playJackFromSevenOpponent', (card, target) => {
 				throw new Error(`Error playing ${printCard(card)} for jack from seven as opponent: Could not find it in top two cards`);
 			}
 			if (!foundTarget) {
-				throw new Error(`Error playing opponents jack: could not find ${target.rank} of ${target.suit} in player points`)
+				throw new Error(`Error playing opponents jack: could not find ${target.rank} of ${target.suit} in player points`);
 			}
 
 			const cardId = foundCard.id;
@@ -775,11 +775,13 @@ Cypress.Commands.add('playOneOffAndResolveAsPlayer', (card) => {
 	});
 	cy.window().its('app.$store.state.game').then((game) => {
 		const foundCard = game.players[game.myPNum].hand.find((handCard) => cardsMatch(card, handCard));
-		if (!foundCard) throw new Error(`Cannot one-off & resolve: cannot find ${printCard(card)} in player's hand`);
+		if (!foundCard) {
+			throw new Error(`Cannot one-off & resolve: cannot find ${printCard(card)} in player's hand`);
+		}
 		// Play chosen card as one-off
 		cy.get(`[data-player-hand-card=${card.rank}-${card.suit}]`).click();
-		cy.get('#scrap')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=oneOff]')
+			.should('not.have.class', 'v-card--disabled')
 			.click();
 		cy.get('#waiting-for-opponent-counter-scrim')
 			.should('be.visible');

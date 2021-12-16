@@ -131,27 +131,7 @@
 					<div
 						id="scrap"
 						class="rounded"
-						:class="{'valid-move': validMoves.includes('scrap')}"
-						@click="playOneOff"
 					>
-						<v-overlay
-							v-ripple
-							:value="validMoves.includes('scrap')"
-							absolute
-							color="accent lighten-1"
-							opacity=".6"
-							class="d-flex flex-column align-center justify-center"
-						>
-							<p class="black--text">
-								Scrap
-							</p>
-							<p
-								class="black--text"
-								style="text-align: center"
-							>
-								({{ scrap.length }})
-							</p>
-						</v-overlay>
 						<p>Scrap</p>
 						<p>({{ scrap.length }})</p>
 					</div>
@@ -211,16 +191,7 @@
 					<div
 						id="player-field"
 						class="mb-4"
-						:class="{'valid-move': validMoves.includes('field')}"
-						@click="playToField"
 					>
-						<v-overlay
-							v-ripple
-							:value="validMoves.includes('field')"
-							absolute
-							color="accent lighten-1"
-							opacity=".6"
-						/>
 						<transition-group
 							:name="playerPointsTransition"
 							tag="div"
@@ -268,7 +239,6 @@
 				</div>
 				<div id="field-right">
 					<div 
-						v-if="selectedCard === null"
 						id="history"
 						class="rounded d-flex flex-column justify-start"
 					>
@@ -286,16 +256,6 @@
 								{{ log }}
 							</p>
 						</div>
-					</div>
-					<div 
-						v-if="selectedCard !== null"
-						id="card-preview"	
-					>
-						<card 
-							:suit="selectedCard.suit"
-							:rank="selectedCard.rank"
-						/>
-						<p>{{ selectedCard.ruleText }}</p>
 					</div>
 				</div>
 			</div>
@@ -323,6 +283,7 @@
 				</h3>
 
 				<transition-group
+					v-if="!targeting"
 					id="player-hand-cards"
 					tag="div"
 					name="slide-above"
@@ -340,6 +301,16 @@
 						@click="selectCard(index)"
 					/>
 				</transition-group>
+				<target-selection-overlay
+					v-if="targeting && (selectedCard || cardSelectedFromDeck)"
+					id="player-hand-targeting"
+					key="target-selection-overlay"
+					:value="targeting"
+					:selected-card="selectedCard || cardSelectedFromDeck"
+					:is-players-turn="isPlayersTurn"
+					:move-display-name="targetingMoveDisplayName"
+					@cancel="clearSelection"
+				/>
 			</div>
 			<v-snackbar
 				v-model="showSnack"
@@ -425,29 +396,25 @@
 				:second-card="secondCard"
 				@resolveSevenDoubleJacks="resolveSevenDoubleJacks($event)"
 			/>
-			<eight-overlay
-				v-if="(selectedCard && selectedCard.rank === 8) || (cardSelectedFromDeck && cardSelectedFromDeck.rank === 8)"
-				v-model="showEightOverlay"
-				:card="selectedCard || cardSelectedFromDeck"
-				@points="playPoints"
-				@glasses="playFaceCard"
-				@cancel="clearSelection"
-			/>
-			<nine-overlay
-				v-if="showNineOverlay"
-				v-model="showNineOverlay"
-				:nine="selectedCard || cardSelectedFromDeck"
-				:target="nineTarget"
-				@scuttle="scuttle(nineTargetIndex)"
-				@one-off="playTargetedOneOff(nineTargetIndex, targetType)"
-				@cancel="clearSelection"
-			/>
 			<game-over-dialog
 				v-model="gameIsOver"
 				:player-wins="playerWins"
 				:stalemate="stalemate"
 			/>
 			<reauthenticate-dialog v-model="mustReauthenticate" />
+			<move-choice-overlay
+				:value="!targeting && (!!selectedCard || !!cardSelectedFromDeck)"
+				:selected-card="selectedCard || cardSelectedFromDeck"
+				:is-players-turn="isPlayersTurn"
+				:opponent-queen-count="opponentQueenCount"
+				@points="playPoints"
+				@faceCard="playFaceCard"
+				@oneOff="playOneOff"
+				@scuttle="beginTargeting($event)"
+				@jack="beginTargeting($event)"
+				@targetedOneOff="beginTargeting($event)"
+				@cancel="clearSelection"
+			/>
 		</template>
 	</div>
 </template>
@@ -458,13 +425,13 @@ import CannotCounterDialog from '@/components/GameView/CannotCounterDialog.vue';
 import CounterDialog from '@/components/GameView/CounterDialog.vue';
 import FourDialog from '@/components/GameView/FourDialog.vue';
 import ThreeDialog from '@/components/GameView/ThreeDialog.vue';
-import EightOverlay from '@/components/GameView/EightOverlay.vue';
-import NineOverlay from '@/components/GameView/NineOverlay.vue';
 import GameOverDialog from '@/components/GameView/GameOverDialog.vue';
 import GameMenu from '@/components/GameView/GameMenu.vue';
 import ScoreGoalToolTip from '@/components/GameView/ScoreGoalToolTip.vue';
 import ReauthenticateDialog from '@/components/GameView/ReauthenticateDialog.vue';
-import SevenDoubleJacksDialog from '../components/GameView/SevenDoubleJacksDialog.vue';
+import SevenDoubleJacksDialog from '@/components/GameView/SevenDoubleJacksDialog.vue';
+import MoveChoiceOverlay from '@/components/GameView/MoveChoiceOverlay.vue';
+import TargetSelectionOverlay from '@/components/GameView/TargetSelectionOverlay.vue';
 
 export default {
 	name: 'GameView',
@@ -474,13 +441,13 @@ export default {
 		CounterDialog,
 		FourDialog,
 		ThreeDialog,
-		EightOverlay,
-		NineOverlay,
 		GameOverDialog,
 		GameMenu,
 		ScoreGoalToolTip,
 		ReauthenticateDialog,
 		SevenDoubleJacksDialog,
+		MoveChoiceOverlay,
+		TargetSelectionOverlay,
 	},
 	data() {
 		return {
@@ -488,11 +455,12 @@ export default {
 			snackMessage: '',
 			snackColor: 'error',
 			selectionIndex: null, // when select a card set this value
-			showFourDialog: false,
-			showEightOverlay: false,
-			showNineOverlay: false,
-			nineTargetIndex: null,
+			targeting: false,
+			targetingMoveName: null,
+			targetingMoveDisplayName: null,
 			targetType: null,
+			nineTargetIndex: null,
+			showFourDialog: false,
 			topCardIsSelected: false,
 			secondCardIsSelected: false,
 		}
@@ -740,13 +708,16 @@ export default {
 				.length > 0;
 		},
 		showCannotCounterDialog() {
-			return (this.myTurnToCounter && !this.hasTwoInHand) || (this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount > 0);
+			return (this.myTurnToCounter && !this.hasTwoInHand) || 
+				(this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount > 0);
 		},
 		showCounterDialog() {
 			return this.myTurnToCounter && this.hasTwoInHand && this.opponentQueenCount === 0;
 		},
 		showSevenDoubleJacksDialog() {
-			return this.resolvingSeven && this.topCard.rank === 11 && this.secondCard.rank === 11 && (this.opponentPointTotal === 0 || this.opponentQueenCount > 0);
+			return this.resolvingSeven && this.topCard.rank === 11 && 
+				this.secondCard.rank === 11 && 
+				(this.opponentPointTotal === 0 || this.opponentQueenCount > 0);
 		},
 		discarding() {
 			return this.$store.state.game.discarding;
@@ -793,51 +764,34 @@ export default {
 		},
 		validMoves() {
 			if (!this.isPlayersTurn) return [];
-
-			let res = [];
-			let cardRank;
+			let selectedCard = null;
 			if (this.resolvingSeven) {
-				if (!this.cardSelectedFromDeck) return [];
-				cardRank = this.cardSelectedFromDeck.rank;
+				selectedCard = this.cardSelectedFromDeck;
+			} else {
+				selectedCard = this.selectedCard;
 			}
-			else {
-				if (!this.selectedCard) return [];
-				cardRank = this.selectedCard.rank;
+			if (!selectedCard) return [];
+			switch (this.targetingMoveName) {
+			case 'scuttle':
+				return this.validScuttleIds;
+			case 'jack':
+				return this.opponent.points.map(validTarget => validTarget.id);
+			case 'targetedOneOff':
+				// Twos and nines can target face cards
+				let res = [
+					...this.validFaceCardTargetIds,
+				];
+				// Nines can additionally target points if opponent has no queens
+				if (selectedCard.rank === 9 && this.opponentQueenCount === 0) {
+					res = [
+						...res,
+						...this.opponent.points.map(validTarget => validTarget.id),
+					];
+				}
+				return res;
+			default:
+				return [];
 			}
-
-			switch (cardRank) {
-			case 1:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-				res.push('field');
-				res.push('scrap');
-				res = [...res, ...this.validScuttleIds];
-				break;
-			case 8:
-			case 10:
-				res.push('field');
-				res = [...res, ...this.validScuttleIds];
-				break;
-			case 9:
-				res.push('field');
-				res = [...res, ...this.validScuttleIds, ...this.validFaceCardTargetIds];
-				break;
-			case 2:
-				res.push('field');
-				res = [...res, ...this.validScuttleIds, ...this.validFaceCardTargetIds];
-				break;
-			case 11:
-				res = this.opponent.points.map(validTarget => validTarget.id);
-				break;
-			case 12:
-			case 13:
-				res.push('field');
-				break;
-			}
-			return res;
 		},
 		nineTarget() {
 			switch(this.targetType) {
@@ -895,13 +849,16 @@ export default {
 			this.clearSelection();
 		},
 		clearOverlays() {
-			this.showEightOverlay = false;
-			this.showNineOverlay = false;
 			this.nineTargetIndex = null;
 			this.targetType = null;
+			this.targeting = false;
 		},
 		clearSelection() {
 			this.selectionIndex = null;
+			this.secondCardIsSelected = false;
+			this.topCardIsSelected = false;
+			this.targetingMoveName = null;
+			this.targetingMoveDisplayName = null;
 			this.clearOverlays();
 		},
 		selectCard(index) {
@@ -923,6 +880,24 @@ export default {
 				this.secondCardIsSelected = !this.secondCardIsSelected;
 			}
 		},
+		/**
+		 * Sets page data to configuring targeting for scuttle or one-off
+		 * @param move
+		 * 	{
+		 *		displayName: String e.g. 'One-Off',
+		 *		eventName: String e.g. 'oneOff',
+		 *		moveDescription: String,
+		 *		disabled: Boolean,
+		 *		disabledExplanation: Boolean,
+		 *	}
+		 */
+		beginTargeting(move) {
+ 			this.targeting = true;
+			this.targetingMoveName = move.eventName;
+			// Change targeting display name for Jack (instead of 'Royal')
+			this.targetingMoveDisplayName = move.eventName === 'jack' ? 'Jack' : move.displayName;
+		},
+
 		/**
 		 * @returns number of queens a given player has
 		 * @param player is the player object
@@ -1095,7 +1070,7 @@ export default {
 				})
 					.then(this.clearSelection())
 					.catch(this.handleError);
-			}else{
+			} else{
 				
 				this.$store.dispatch('requestPlayJack', {
 					cardId: this.selectedCard.id,
@@ -1106,46 +1081,6 @@ export default {
 			}
 			
 		},
-		playToField() {
-			let cardRank;
-			if (this.resolvingSeven) {
-				if (!this.cardSelectedFromDeck) return;
-				cardRank = this.cardSelectedFromDeck.rank;
-			}
-			else {
-				if (!this.selectedCard) return;
-				cardRank = this.selectedCard.rank;
-			}
-
-			switch (cardRank) {
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 9:
-			case 10:
-				this.playPoints();
-				return;
-			case 12:
-			case 13:
-				this.playFaceCard();
-				return;
-			case 8:
-				// Ask whether to play as points or face card
-				if (this.isPlayersTurn) {
-					this.showEightOverlay = true;
-				}
-				else {
-					this.handleError('It\'s not your turn!');
-				}
-				return;
-			default:
-				return;
-			}
-		}, // End playToField()
 		targetOpponentPointCard(targetIndex) {
 			if (!this.selectedCard && !this.topCardIsSelected && !this.secondCardIsSelected) return;
 			let cardRank;
@@ -1173,10 +1108,11 @@ export default {
 				this.playJack(targetIndex)
 				return;
 			case 9:
-				// Determine whether to scuttle or play as one-off
-				this.nineTargetIndex = targetIndex;
-				this.showNineOverlay = true;
-				this.targetType = 'point';
+				if (this.targetingMoveName === 'targetedOneOff') {
+					this.playTargetedOneOff(targetIndex, 'point');
+				} else {
+					this.scuttle(targetIndex);
+				}
 				return;
 			default:
 				return;
@@ -1243,7 +1179,7 @@ export default {
 				.catch(this.handleError);
 		},
 		discard(cardIds) {
-			const cardId1 = cardIds[0];
+			const [ cardId1 ] = cardIds;
 			const cardId2 = cardIds.length > 1 ? cardIds[1] : null;
 			this.$store.dispatch('requestDiscard', {
 				cardId1,
@@ -1477,7 +1413,7 @@ export default {
 #player-hand {
 	min-width: 50%;
 	height: 30vh;
-	& #player-hand-cards {
+	& #player-hand-cards, #player-hand-targeting::v-deep {
 		width: 100%;
 		height: 80%;
 		background: rgba(0, 0, 0, 0.46);
@@ -1486,7 +1422,7 @@ export default {
 		transition: all 1s;
 		&.my-turn {
 			border: 4px solid var(--v-accent-base);
-			box-shadow: 0 15px 16px -12px rgba(0, 123, 59, .8),0 24px 38px 12px rgba(0, 123, 59, .8),0 10px 50px 16px rgba(33, 150, 83, .8)!important;
+			box-shadow: 0 15px 16px -12px rgba(0, 123, 59, .8),0 24px 38px 12px rgba(0, 123, 59, .8),0 10px 50px 16px rgba(33, 150, 83, .8) !important;
 			background: linear-gradient(0deg, rgba(253, 98, 34, 1), rgba(255, 255, 255, .3));
 		}
 		&:not(.my-turn) {

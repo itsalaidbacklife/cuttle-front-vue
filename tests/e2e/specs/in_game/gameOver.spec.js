@@ -1,4 +1,10 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, Card, assertSnackbarError } from '../../support/helpers';
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	assertGameState,
+	Card,
+	assertSnackbarError
+} from '../../support/helpers';
 
 function assertVictory() {
 	cy.log('Asserting player victory');
@@ -64,8 +70,7 @@ describe('Winning the game', () =>  {
 		// Play Seven of Clubs
 		cy.get('[data-player-hand-card=7-0]')
 			.click();
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=points]')
 			.click();
 		assertGameState(0, {
 			p0Hand: [],
@@ -94,10 +99,10 @@ describe('Winning the game', () =>  {
 		cy.log('Fixture loaded');
         
 		// Play Jack of Clubs
-		cy.get('[data-player-hand-card=11-0]')
-			.click();
-		cy.get('[data-opponent-point-card=7-0]')
-			.click();
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=7-0]').click();
+
 		assertGameState(0, {
 			p0Hand: [],
 			p0Points: [Card.SEVEN_OF_CLUBS, Card.SEVEN_OF_DIAMONDS],
