@@ -128,32 +128,6 @@ export default {
 			case 5:
 			case 6:
 			case 7:
-				// Twos and nines depend on opponent queen count
-				if ([2, 9].includes(cardRank) && this.isPlayersTurn) {
-					if (this.opponentQueenCount >= 2) {
-						oneOffDisabled = true;
-						oneOffDisabledExplanation = `You can't play a ${cardRank} while your opponent has two or more queens`;
-					} else {
-						let validTargetExists;
-						switch (cardRank) {
-						case 2:
-							validTargetExists = this.$store.getters.opponent.faceCards.length >= 1;
-							if (!validTargetExists) {
-								oneOffDisabled = true;
-								oneOffDisabledExplanation = 'There are no Royals to target';
-							}
-							break;
-						case 9:
-							const validTargets = this.$store.getters.opponent.points.length + this.$store.getters.opponent.faceCards.length;
-							validTargetExists = validTargets >= 1;
-							if (!validTargetExists) {
-								oneOffDisabled = true;
-								oneOffDisabledExplanation = 'There are no point cards or Royals to target';
-							}
-							break;
-						}
-					}
-				}
 				res = [
 					pointsMove,
 					scuttleMove,
