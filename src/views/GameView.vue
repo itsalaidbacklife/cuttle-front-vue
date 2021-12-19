@@ -128,13 +128,15 @@
 							</div>
 						</template>
 					</v-card>
-					<div
+					<v-card
 						id="scrap"
-						class="rounded"
+						@click="show = true"
 					>
-						<p>Scrap</p>
+						<h1 id="scrap-text">
+							Scrap
+						</h1>
 						<p>({{ scrap.length }})</p>
-					</div>
+					</v-card>
 				</div>
 				<div id="field-center">
 					<div id="opponent-field">
@@ -396,6 +398,9 @@
 				:second-card="secondCard"
 				@resolveSevenDoubleJacks="resolveSevenDoubleJacks($event)"
 			/>
+			<ScrapPile
+				:scrap="scrap"
+			/>
 			<game-over-dialog
 				v-model="gameIsOver"
 				:player-wins="playerWins"
@@ -432,6 +437,7 @@ import ReauthenticateDialog from '@/components/GameView/ReauthenticateDialog.vue
 import SevenDoubleJacksDialog from '@/components/GameView/SevenDoubleJacksDialog.vue';
 import MoveChoiceOverlay from '@/components/GameView/MoveChoiceOverlay.vue';
 import TargetSelectionOverlay from '@/components/GameView/TargetSelectionOverlay.vue';
+import ScrapPile from '@/components/GameView/ScrapPile';
 
 export default {
 	name: 'GameView',
@@ -448,6 +454,7 @@ export default {
 		SevenDoubleJacksDialog,
 		MoveChoiceOverlay,
 		TargetSelectionOverlay,
+		ScrapPile,
 	},
 	data() {
 		return {
@@ -557,10 +564,12 @@ export default {
 			return this.$store.state.game.gameIsOver;
 		},
 		playerWins() {
-			return this.$store.state.game.gameIsOver && this.$store.state.game.winnerPNum === this.$store.state.game.myPNum;
+			return this.$store.state.game.gameIsOver &&
+          this.$store.state.game.winnerPNum === this.$store.state.game.myPNum;
 		},
 		stalemate() {
-			return this.$store.state.game.gameIsOver && this.$store.state.game.winnerPNum === null;
+			return this.$store.state.game.gameIsOver &&
+          this.$store.state.game.winnerPNum === null;
 		},
 		////////////
 		// Queens //
@@ -726,15 +735,8 @@ export default {
 			return this.$store.state.game.pickingFromScrap;
 		},
 		validScuttleIds() {
-			let selectedCard;
-			if (this.resolvingSeven) {
-				if (!this.cardSelectedFromDeck) return [];
-				selectedCard = this.cardSelectedFromDeck;
-			}
-			else {
-				if (!this.selectedCard) return [];
-				selectedCard = this.selectedCard;
-			}
+			const selectedCard = this.resolvingSeven ? this.cardSelectedFromDeck : this.selectedCard;
+			if (!selectedCard) return []
 			return this.opponent.points
 				.filter((potentialTarget) => {
 					return selectedCard.rank > potentialTarget.rank || 
@@ -764,12 +766,7 @@ export default {
 		},
 		validMoves() {
 			if (!this.isPlayersTurn) return [];
-			let selectedCard = null;
-			if (this.resolvingSeven) {
-				selectedCard = this.cardSelectedFromDeck;
-			} else {
-				selectedCard = this.selectedCard;
-			}
+			const selectedCard = this.resolvingSeven ? this.cardSelectedFromDeck : this.selectedCard
 			if (!selectedCard) return [];
 			switch (this.targetingMoveName) {
 			case 'scuttle':
@@ -796,9 +793,13 @@ export default {
 		nineTarget() {
 			switch(this.targetType) {
 			case 'point':
-				return this.nineTargetIndex !== null ? this.opponent.points[this.nineTargetIndex] : null;
+				return this.nineTargetIndex !== null
+					? this.opponent.points[this.nineTargetIndex]
+					: null;
 			case 'faceCard':
-				this.nineTargetIndex !== null ? this.opponent.faceCards[this.nineTargetIndex] : null;
+				return this.nineTargetIndex !== null
+					?  this.opponent.faceCards[this.nineTargetIndex]
+					: null;
 			default:
 				return null;
 			}
@@ -947,7 +948,7 @@ export default {
 			if (!this.resolvingSeven) {
 				if (this.deckLength > 0) {
 					this.$store.dispatch('requestDrawCard')
-						.then(this.clearSelection())
+						.then(this.clearSelection)
 						.catch((err) => {
 							this.snackMessage = err;
 							this.snackColor = 'error';
@@ -956,7 +957,7 @@ export default {
 						});
 				} else {
 					this.$store.dispatch('requestPass')
-						.then(this.clearSelection())
+						.then(this.clearSelection)
 						.catch((err) => {
 							this.snackMessage = err;
 							this.snackColor = 'error';
@@ -974,12 +975,12 @@ export default {
 					cardId: this.cardSelectedFromDeck.id,
 					index: deckIndex,
 				})
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			}
 			else {
 				this.$store.dispatch('requestPlayPoints', this.selectedCard.id)
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			}
 		},
@@ -991,11 +992,11 @@ export default {
 					cardId: this.cardSelectedFromDeck.id,
 					index: deckIndex
 				})
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			}else{
 				this.$store.dispatch('requestPlayFaceCard', this.selectedCard.id)
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			}
 		},
@@ -1007,14 +1008,14 @@ export default {
 					targetId: this.opponent.points[targetIndex].id,
 					index: deckIndex
 				})
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			} else {
 				this.$store.dispatch('requestScuttle', {
 					cardId: this.selectedCard.id,
 					targetId: this.opponent.points[targetIndex].id,
 				})
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			}
 		},
@@ -1045,7 +1046,7 @@ export default {
 					targetType,
 					index: deckIndex,
 				})
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			}
 			else {
@@ -1055,7 +1056,7 @@ export default {
 					pointId: jackedPointId,
 					targetType,
 				})
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			}
 		},
@@ -1068,7 +1069,7 @@ export default {
 					index: deckIndex,
 					targetId: target.id
 				})
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			} else{
 				
@@ -1076,7 +1077,7 @@ export default {
 					cardId: this.selectedCard.id,
 					targetId: target.id,
 				})
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			}
 			
@@ -1149,23 +1150,23 @@ export default {
 					cardId: this.cardSelectedFromDeck.id,
 					index: deckIndex,
 				})
-					.then(this.clearSelection())
+					.then(this.clearSelection)
 					.catch(this.handleError);
 			}
 			if (!this.selectedCard) return;
 
 			this.$store.dispatch('requestPlayOneOff', this.selectedCard.id)
-				.then(this.clearSelection())
+				.then(this.clearSelection)
 				.catch(this.handleError);
 		},
 		resolve() {
 			this.$store.dispatch('requestResolve')
-				.then(this.clearSelection())
+				.then(this.clearSelection)
 				.catch(this.handleError);
 		},
 		resolveThree(cardId) {
 			this.$store.dispatch('requestResolveThree', cardId)
-				.then(this.clearSelection())
+				.then(this.clearSelection)
 				.catch(this.handleError)
 		},
 		resolveSevenDoubleJacks({cardId, index}) {
@@ -1175,7 +1176,7 @@ export default {
 		},
 		counter(twoId) {
 			this.$store.dispatch('requestCounter', twoId)
-				.then(this.clearSelection())
+				.then(this.clearSelection)
 				.catch(this.handleError);
 		},
 		discard(cardIds) {
@@ -1422,7 +1423,10 @@ export default {
 		transition: all 1s;
 		&.my-turn {
 			border: 4px solid var(--v-accent-base);
-			box-shadow: 0 15px 16px -12px rgba(0, 123, 59, .8),0 24px 38px 12px rgba(0, 123, 59, .8),0 10px 50px 16px rgba(33, 150, 83, .8) !important;
+			box-shadow: 0 15px 16px -12px
+      rgba(0, 123, 59, .8),0 24px 38px 12px
+      rgba(0, 123, 59, .8),0 10px 50px 16px
+      rgba(33, 150, 83, .8) !important;
 			background: linear-gradient(0deg, rgba(253, 98, 34, 1), rgba(255, 255, 255, .3));
 		}
 		&:not(.my-turn) {
