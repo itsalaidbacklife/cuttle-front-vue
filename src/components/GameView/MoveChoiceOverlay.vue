@@ -97,7 +97,7 @@ export default {
 			}
 			// Re-usable move-objects
 			// Points
-			const pointsDescription =  cardRank === 1 ? 'Gain 1 point' : `Gain ${cardRank} points`;
+			const pointsDescription =  `Gain ${cardRank} point` + (cardRank===1?null:'s');
 			const pointsMove = {
 				displayName: 'Points',
 				eventName: 'points',
@@ -154,22 +154,23 @@ export default {
 						// Twos
 						if (cardRank === 2) {
 							const numOpFaceCards = this.$store.getters.opponent.faceCards.length;
-							const numOpJacks = this.$store.getters.opponent.points.reduce((jackCount, pointCard) => {
-								return jackCount + pointCard.attachments.length;
-							}, 0);
+							const numOpJacks = this.$store.getters.opponent.points.reduce(
+								(jackCount, pointCard) => {
+									return jackCount + pointCard.attachments.length;
+								}, 0);
 							const numTotalTargets = numOpFaceCards + numOpJacks;
 							validTargetExists = numTotalTargets >= 1;
 							if (!validTargetExists) {
 								oneOffDisabled = true;
-								oneOffDisabledExplanation = 'There are no Royals to target';
+								oneOffDisabledExplanation = 'There are no face cards to target';
 							}
 						// Nines
 						} else {
-							const numValidTargets = this.$store.getters.opponent.points.length + this.$store.getters.opponent.faceCards.length;
-							validTargetExists = numValidTargets >= 1;
-							if (!validTargetExists) {
+							const numValidTargets = this.$store.getters.opponent.points.length +
+                  this.$store.getters.opponent.faceCards.length;
+							if (numValidTargets === 0) {
 								oneOffDisabled = true;
-								oneOffDisabledExplanation = 'There are no point cards or Royals to target';
+								oneOffDisabledExplanation = 'There are no point cards or face cards to target';
 							}
 						}
 					}

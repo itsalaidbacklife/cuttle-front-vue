@@ -13,7 +13,7 @@
 				<v-text-field
 					v-model="username"
 					outlined
-					:dense="$vuetify.breakpoint.mdAndDown ? true : false"
+					:dense="$vuetify.breakpoint.mdAndDown"
 					label="Email"
 					data-cy="username"
 					@keyup.enter="login"
@@ -22,7 +22,7 @@
 					v-model="password"
 					outlined
 					label="Password"
-					:dense="$vuetify.breakpoint.mdAndDown ? true : false"
+					:dense="$vuetify.breakpoint.mdAndDown"
 					type="password"
 					data-cy="password"
 					@keyup.enter="login"

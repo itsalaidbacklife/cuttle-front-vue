@@ -35,7 +35,7 @@
 					color="primary"
 					rounded
 					:disabled="!status"
-					:small="$vuetify.breakpoint.lg ? false : true"
+					:small="!$vuetify.breakpoint.lg"
 					@click="subscribeToGame"
 				>
 					JOIN
