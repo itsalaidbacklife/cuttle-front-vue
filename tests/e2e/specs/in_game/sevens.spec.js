@@ -1,4 +1,11 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, Card, assertSnackbarError } from '../../support/helpers';
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	assertGameState,
+	assertSnackbarError,
+	Card,
+	SnackBarError,
+} from '../../support/helpers';
 
 describe('Playing SEVENS', () => {
 	beforeEach(() => {
@@ -30,10 +37,8 @@ describe('Playing SEVENS', () => {
 			.and('be.visible')
 			.click();
         
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-        
+		cy.get('[data-move-choice=points]').click();
+
 		assertGameState(0, {
 			p0Hand: [],
 			p0Points: [Card.SIX_OF_DIAMONDS],
@@ -70,7 +75,7 @@ describe('Playing SEVENS', () => {
 			.should('exist')
 			.and('be.visible')
 			.click();
-        
+		cy.get('[data-move-choice=jack]').click();
 		cy.get('[data-opponent-point-card=10-2]')
 			.click();
         
@@ -110,10 +115,14 @@ describe('Playing SEVENS', () => {
 			.should('exist')
 			.and('be.visible')
 			.click();
-        
+		cy.get('[data-move-choice=jack]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'You cannot jack your opponent\'s points while they have a queen')
+			.click({force: true});
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
 		cy.get('[data-opponent-point-card=10-2]')
 			.click();
-        
 		assertSnackbarError('Your opponent\'s queen prevents you from targeting their other cards');
 
 		cy.get('[data-second-card=6-1]')
@@ -121,9 +130,7 @@ describe('Playing SEVENS', () => {
 			.and('be.visible')
 			.click();
 
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
+		cy.get('[data-move-choice=points]').click();
 
 		assertGameState(0, {
 			p0Hand: [],
@@ -162,7 +169,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-					
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=6-1]')
 				.click();
 					
@@ -307,10 +314,8 @@ describe('Playing SEVENS', () => {
 				.and('be.visible')
 				.click();
 			
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
-	
+			cy.get('[data-move-choice=faceCard]').click();
+
 			assertGameState(0, {
 				p0Hand: [],
 				p0Points: [],
@@ -347,10 +352,8 @@ describe('Playing SEVENS', () => {
 				.and('be.visible')
 				.click();
 			
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
-	
+			cy.get('[data-move-choice=faceCard]').click();
+
 			assertGameState(0, {
 				p0Hand: [],
 				p0Points: [],
@@ -386,15 +389,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			cy.get('#player-field')
-				.should('have.class', 'valid-move')
-				.click();
-			
-			// Choose to play for face card
-			cy.get('#eight-overlay')
-				.should('be.visible')
-				.get('[data-cy=eight-as-glasses]')
-				.click();
+			cy.get('[data-move-choice=faceCard]').click();
 			
 			assertGameState(0, {
 				p0Hand: [],
@@ -432,6 +427,7 @@ describe('Playing SEVENS', () => {
 			.and('be.visible');
 		cy.get('[data-top-card=10-0]')
 			.click();
+		cy.get('[data-move-choice=scuttle]').click();
 		// scuttles with 10 of clubs
 		cy.get('[data-opponent-point-card=9-0]')
 			.click();
@@ -471,15 +467,11 @@ describe('Playing SEVENS', () => {
 			.and('be.visible');
 		cy.get('[data-top-card=9-1]')
 			.click();
+		cy.get('[data-move-choice=scuttle]').click();
 		// scuttles with nine of diamonds
 		cy.get('[data-opponent-point-card=9-0]')
 			.click();
-		
-		cy.get('#nine-overlay')
-			.should('be.visible')
-			.get('[data-cy=nine-scuttle]')
-			.click();
-		
+
 		assertGameState(0, {
 			p0Hand: [],
 			p0Points: [],
@@ -517,9 +509,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 			cy.get('#waiting-for-opponent-counter-scrim')
 				.should('be.visible');
 			// Opponent does not counter (resolves stack)
@@ -561,9 +551,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
-			cy.get('#scrap')
-				.should('have.class', 'valid-move')
-				.click();
+			cy.get('[data-move-choice=oneOff]').click();
 			
 			// Should not allow playing 4 as one-off
 			cy.get('#waiting-for-opponent-counter-scrim')
@@ -596,6 +584,9 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
 			// target queen of clubs
 			cy.get('[data-opponent-face-card=12-0]')
 				.click();
@@ -639,6 +630,9 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
 			// target queen of clubs
 			cy.get('[data-opponent-face-card=12-0]')
 				.click();
@@ -677,11 +671,11 @@ describe('Playing SEVENS', () => {
 			cy.log('Loaded fixture');
 
 			cy.get('[data-player-hand-card=1-0]').click();
-			cy.get('#player-field').should('have.class', 'valid-move').click()
+			cy.get('[data-move-choice=points]').click();
 
 			cy.get('[data-player-hand-card]').should('have.length', 1);	
 
-			// opponent plays jack
+			// Opponent plays jack
 			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_CLUBS)
 
 			assertGameState(0, {
@@ -700,6 +694,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
 			// target jack of clubs
 			cy.get('[data-opponent-face-card=11-0]')
 				.click();
@@ -743,6 +738,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
 			// target queen of clubs
 			cy.get('[data-opponent-face-card=12-0]')
 				.find('.valid-move')
@@ -782,11 +778,11 @@ describe('Playing SEVENS', () => {
 			cy.log('Loaded fixture');
 
 			cy.get('[data-player-hand-card=1-0]').click();
-			cy.get('#player-field').should('have.class', 'valid-move').click()
+			cy.get('[data-move-choice=points]').click();
 
 			cy.get('[data-player-hand-card]').should('have.length', 1);	
 
-			// opponent plays jack
+			// Opponent plays jack
 			cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_CLUBS)
 
 			assertGameState(0, {
@@ -805,6 +801,7 @@ describe('Playing SEVENS', () => {
 				.should('exist')
 				.and('be.visible')
 				.click();
+			cy.get('[data-move-choice=targetedOneOff]').click();
 			// target jack of clubs
 			cy.get('[data-opponent-face-card=11-0]')
 				.find('.valid-move')
@@ -999,13 +996,9 @@ describe('Opponent playing SEVENS', () => {
 				.and('be.visible')
 				.click({ force: true })
 				.should('not.have.class', 'selected');
-			cy.get('#scrap')
-				.should('be.visible')
-				.and('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to scrap
-			cy.get('#player-field')
-				.should('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to field
+			// No move choices are available from deck on opponent's turn
+			cy.get('[data-move-choice]')
+				.should('have.length', 0);
 			
 			cy.playFaceCardFromSevenOpponent(Card.KING_OF_CLUBS);
 			assertGameState(1, {
@@ -1019,6 +1012,7 @@ describe('Opponent playing SEVENS', () => {
 				topCard: Card.SIX_OF_DIAMONDS,
 			});
 		}); // end opponent plays king from seven
+
 		it('Opponent plays queen from seven (Second Card)', () => {
 
 			cy.loadGameFixture({
@@ -1057,14 +1051,9 @@ describe('Opponent playing SEVENS', () => {
 				.and('be.visible')
 				.click({ force: true })
 				.should('not.have.class', 'selected');
-			cy.get('#scrap')
-				.should('be.visible')
-				.and('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to scrap
-			cy.get('#player-field')
-				.should('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to field
-	
+			// No move choices are available from deck on opponent's turn
+			cy.get('[data-move-choice]')
+				.should('have.length', 0);
 			
 			cy.playFaceCardFromSevenOpponent(Card.QUEEN_OF_CLUBS);
 	
@@ -1123,15 +1112,10 @@ describe('Opponent playing SEVENS', () => {
 				.and('be.visible')
 				.click({ force: true })
 				.should('not.have.class', 'selected');
-			cy.get('#scrap')
-				.should('be.visible')
-				.and('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to scrap
-			cy.get('#player-field')
-				.should('not.have.class', 'valid-move')
-				.click({ force: true }); // can't play to field
+			// No move choices are available from deck on opponent's turn
+			cy.get('[data-move-choice]')
+				.should('have.length', 0);
 	
-			
 			cy.playFaceCardFromSevenOpponent(Card.EIGHT_OF_CLUBS);
 	
 			// No longer waiting for opponent
@@ -1188,13 +1172,9 @@ describe('Opponent playing SEVENS', () => {
 			.and('be.visible')
 			.click({ force: true })
 			.should('not.have.class', 'selected');
-		cy.get('#scrap')
-			.should('be.visible')
-			.and('not.have.class', 'valid-move')
-			.click({ force: true }); // can't play to scrap
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click({ force: true }); // can't play to field
+		// No move choices are available from deck on opponent's turn
+		cy.get('[data-move-choice]')
+			.should('have.length', 0);
 
 		cy.scuttleFromSevenOpponent(Card.TEN_OF_CLUBS, Card.NINE_OF_CLUBS);
 
@@ -1214,6 +1194,7 @@ describe('Opponent playing SEVENS', () => {
 			topCard: Card.SIX_OF_DIAMONDS,
 		});
 	}); // End opponent scuttles from seven
+
 	describe('Opponent plays one-off from seven', () => {
 		it('Opponent plays SIX from seven (top card)', () => {
 			cy.loadGameFixture({
@@ -1314,14 +1295,14 @@ describe('Opponent playing SEVENS', () => {
 				topCard: Card.TWO_OF_CLUBS,
 				secondCard: Card.FOUR_OF_CLUBS,
 			});
-
 			cy.get('[data-player-hand-card]').should('have.length', 1);
 			cy.log('Loaded fixture');
 
 			cy.playPointsOpponent(Card.ACE_OF_CLUBS)
 
-			// player plays jack
+			// Player plays jack
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=1-0]').click();
 
 			assertGameState(1, {
@@ -1426,6 +1407,7 @@ describe('Opponent playing SEVENS', () => {
 
 			// player plays jack
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=1-0]').click();
 
 			assertGameState(1, {
@@ -1469,11 +1451,13 @@ describe('Opponent playing SEVENS', () => {
 
 			// player plays the returned jack immediately
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=1-0]').click();
+			assertSnackbarError(SnackBarError.FROZEN_CARD);
+			cy.log('Successfully prevented player from playing the jack while it is frozen');
 
-			assertSnackbarError('That card is frozen! You must wait a turn to play it')
-
-			cy.get('#deck').click()
+			// Player draws
+			cy.get('#deck').click();
 
 			assertGameState(1, {
 				p0Hand: [Card.TEN_OF_DIAMONDS],
@@ -1488,8 +1472,9 @@ describe('Opponent playing SEVENS', () => {
 			cy.playPointsOpponent(Card.TEN_OF_DIAMONDS)
 			cy.get('[data-player-hand-card]').should('have.length', 2);
 
-			// player plays the returned jack immediately
+			// Player plays the returned jack 
 			cy.get('[data-player-hand-card=11-0]').click();
+			cy.get('[data-move-choice=jack]').click();
 			cy.get('[data-opponent-point-card=1-0]').click();
 
 			assertGameState(1, {

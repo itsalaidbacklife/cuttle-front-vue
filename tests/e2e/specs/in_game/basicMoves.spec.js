@@ -1,4 +1,12 @@
-import { setupGameAsP0, setupGameAsP1, assertGameState, assertSnackbarError, Card } from '../../support/helpers';
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	assertGameState,
+	assertSnackbarError,
+	playOutOfTurn,
+	SnackBarError,
+	Card 
+} from '../../support/helpers';
 
 describe('Game Basic Moves - P0 Perspective', () => {
 	beforeEach(() => {
@@ -20,16 +28,14 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Play points (ace of spades)
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click()
-			.should('not.have.class', 'valid-move');
+		cy.get('[data-move-choice=points]')
+			.click();
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
+
 		// Attempt to play out of turn
 		cy.get('[data-player-hand-card=1-0]').click(); // ace of clubs
-		cy.get('#player-field')
-			.click();
-		// Test that Error snackbar says its not your turn
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('points');
 
 		assertGameState(
 			0,
@@ -64,55 +70,136 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	it('Scuttles as P0', () => {
 		// Set Up
 		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_SPADES, Card.SEVEN_OF_CLUBS],
-			p0Points: [Card.TEN_OF_HEARTS],
+			p0Hand: [Card.ACE_OF_CLUBS, Card.ACE_OF_SPADES, Card.SEVEN_OF_CLUBS],
+			p0Points: [Card.TWO_OF_CLUBS, Card.TEN_OF_HEARTS],
 			p0FaceCards: [Card.KING_OF_SPADES],
-			p1Hand: [Card.TEN_OF_SPADES],
+			p1Hand: [Card.TEN_OF_CLUBS, Card.TEN_OF_SPADES],
 			p1Points: [Card.SIX_OF_HEARTS, Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [Card.QUEEN_OF_HEARTS],
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 2);
+		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Fixture loaded');
 
-		// Player attempts illegal scuttle
+		// Player attempts illegal scuttle -- using card too small to target anything on field
+		cy.get('[data-player-hand-card=1-0]').click();
+		cy.get('[data-move-choice=scuttle]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'You can only scuttle smaller point cards')
+			.click({force: true});
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('[data-opponent-point-card=1-1]').click();
+		assertSnackbarError(SnackBarError.ILLEGAL_SCUTTLE);
+		cy.log('Could not scuttle with point card too low to target anything');
+
+		// Player attempts illegal scuttle -- using card big enough to target something else
 		cy.get('[data-player-hand-card=1-3]').click(); // 7 of clubs
+		cy.get('[data-move-choice=scuttle]').click();
 		cy.get('[data-opponent-point-card=6-2]').click(); // 6 of hearts
-		assertSnackbarError('You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit');;
+		assertSnackbarError(SnackBarError.ILLEGAL_SCUTTLE);
+		cy.log('Could not scuttle invalid target with point card that had alternative valid target');
 
 		// Player scuttles 6 of diamonds with 7 of clubs
 		cy.get('[data-player-hand-card=7-0]').click(); // 7 of clubs
+		cy.get('[data-move-choice=scuttle]').click();
 		cy.get('[data-opponent-point-card=6-2]').click(); // 6 of hearts
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.ACE_OF_SPADES],
-				p0Points: [Card.TEN_OF_HEARTS],
+				p0Hand: [Card.ACE_OF_CLUBS, Card.ACE_OF_SPADES],
+				p0Points: [Card.TWO_OF_CLUBS, Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.KING_OF_SPADES],
-				p1Hand: [Card.TEN_OF_SPADES],
+				p1Hand: [Card.TEN_OF_CLUBS, Card.TEN_OF_SPADES],
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [Card.QUEEN_OF_HEARTS],
 				scrap: [Card.SEVEN_OF_CLUBS, Card.SIX_OF_HEARTS],
 			}
 		);
+		cy.log('Successfully scuttled as p0');
+
 		// Attempt to scuttle out of turn
 		cy.get('[data-player-hand-card=1-3]').click(); // ace of spades
+		cy.get('[data-move-choice=scuttle]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'It\'s not your turn')
+			.click({force: true});
 		cy.get('[data-opponent-point-card=1-1]').click(); // ace of diamonds
 		// Test that Error snackbar says its not your turn
-		assertSnackbarError('It\'s not your turn');
+		assertSnackbarError(SnackBarError.NOT_YOUR_TURN);
+		cy.log('Could not scuttle out of turn');
+
 		// Opponent scuttles 10 of hearts with 10 of spades
 		cy.scuttleOpponent(Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS);
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.ACE_OF_SPADES],
-				p0Points: [],
+				p0Hand: [Card.ACE_OF_CLUBS, Card.ACE_OF_SPADES],
+				p0Points: [Card.TWO_OF_CLUBS],
 				p0FaceCards: [Card.KING_OF_SPADES],
-				p1Hand: [],
+				p1Hand: [Card.TEN_OF_CLUBS],
 				p1Points: [Card.ACE_OF_DIAMONDS],
 				p1FaceCards: [Card.QUEEN_OF_HEARTS],
 				scrap: [Card.SEVEN_OF_CLUBS, Card.SIX_OF_HEARTS, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES],
 			}
 		);
+		cy.log('Opponent (p1) successfully scuttled');
+
+		// Player scuttles opponent's last point card
+		cy.get('[data-player-hand-card=1-3]').click();
+		cy.get('[data-move-choice=scuttle]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('[data-opponent-point-card=1-1]').click();
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.ACE_OF_CLUBS],
+				p0Points: [Card.TWO_OF_CLUBS],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [Card.TEN_OF_CLUBS],
+				p1Points: [],
+				p1FaceCards: [Card.QUEEN_OF_HEARTS],
+				scrap: [
+					Card.SEVEN_OF_CLUBS,
+					Card.SIX_OF_HEARTS,
+					Card.TEN_OF_HEARTS,
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.ACE_OF_DIAMONDS
+				],
+			}
+		);
+		cy.log('Player (p0) scuttled opponent\'s last point card');
+
+		cy.scuttleOpponent(Card.TEN_OF_CLUBS, Card.TWO_OF_CLUBS);
+		assertGameState(
+			0,
+			{
+				p0Hand: [Card.ACE_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_SPADES],
+				p1Hand: [],
+				p1Points: [],
+				p1FaceCards: [Card.QUEEN_OF_HEARTS],
+				scrap: [
+					Card.SEVEN_OF_CLUBS,
+					Card.SIX_OF_HEARTS,
+					Card.TEN_OF_HEARTS,
+					Card.TEN_OF_SPADES,
+					Card.ACE_OF_SPADES,
+					Card.ACE_OF_DIAMONDS,
+					Card.TWO_OF_CLUBS,
+					Card.TEN_OF_CLUBS,
+				],
+			}
+		);
+
+		// Now when player chooses a move, scuttle is disabled b/c there are no opponent points
+		cy.get('[data-player-hand-card=1-0]').click();
+		cy.get('[data-move-choice=scuttle]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'Your opponent has no point cards to scuttle');
+		cy.log('Scuttling is disabled with specific message when opponent has no points');
 	});
 
 	it('Plays Kings', () => {
@@ -131,8 +218,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Player plays king
 		cy.get('[data-player-hand-card=13-0]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=faceCard]')
 			.click();
 
 		assertGameState(
@@ -150,10 +236,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Attempt to play king out of turn
 		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('faceCard');
 
 		// Opponent plays king of diamonds
 		cy.playFaceCardOpponent(Card.KING_OF_DIAMONDS);
@@ -173,8 +256,7 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Player plays another king
 		cy.get('[data-player-hand-card=13-3]').click(); // king of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=faceCard]')
 			.click();
 
 		assertGameState(
@@ -194,25 +276,25 @@ describe('Game Basic Moves - P0 Perspective', () => {
 	it('Plays Queens', () => {
 		// Setup
 		cy.loadGameFixture({
-			p0Hand: [Card.QUEEN_OF_SPADES, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+			p0Hand: [Card.QUEEN_OF_DIAMONDS, Card.QUEEN_OF_SPADES, Card.KING_OF_CLUBS, Card.JACK_OF_DIAMONDS],
 			p0Points: [Card.TEN_OF_HEARTS],
 			p0FaceCards: [],
 			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
 			p1Points: [Card.ACE_OF_DIAMONDS],
 			p1FaceCards: [],
 		});
-		cy.get('[data-player-hand-card]').should('have.length', 3);
+		cy.get('[data-player-hand-card]').should('have.length', 4);
 		cy.log('Loaded fixture');
 
 		// Player plays queen
 		cy.get('[data-player-hand-card=12-3]').click(); // queen of clubs
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
+		cy.get('[data-move-choice=faceCard]')
 			.click();
+
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Hand: [Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.QUEEN_OF_SPADES],
 				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
@@ -224,17 +306,14 @@ describe('Game Basic Moves - P0 Perspective', () => {
 
 		// Attempt to play queen out of turn
 		cy.get('[data-player-hand-card=12-1]').click(); // queen of diamonds
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('faceCard');
 
 		// Opponent plays queen of hearts
 		cy.playFaceCardOpponent(Card.QUEEN_OF_HEARTS);
 		assertGameState(
 			0,
 			{
-				p0Hand: [Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
+				p0Hand: [Card.QUEEN_OF_DIAMONDS, Card.KING_OF_CLUBS, Card.JACK_OF_DIAMONDS],
 				p0Points: [Card.TEN_OF_HEARTS],
 				p0FaceCards: [Card.QUEEN_OF_SPADES],
 				p1Hand: [Card.SIX_OF_HEARTS],
@@ -243,6 +322,96 @@ describe('Game Basic Moves - P0 Perspective', () => {
 				scrap: [],
 			}
 		);
+
+		// Player is now prevented from playing a jack
+		cy.get('[data-player-hand-card=11-1]').click();
+		cy.get('[data-move-choice=jack]')
+			.should('have.class', 'v-card--disabled')
+			.should('contain', 'You cannot jack your opponent\'s points while they have a queen')
+			.click({force: true});
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('[data-opponent-point-card=1-1]')
+			.click();
+		assertSnackbarError('You cannot use a Jack while your opponent has a Queen');
+		cy.log('Cannot play jack now that opponent has queen');
+	});
+
+	it('Cancels selection and cancels decision to scuttle/targeted one-off/jack', () => {
+		cy.loadGameFixture({
+			p0Hand: [
+				Card.TWO_OF_SPADES,
+				Card.FOUR_OF_CLUBS,
+				Card.NINE_OF_SPADES,
+				Card.KING_OF_CLUBS,
+				Card.JACK_OF_SPADES
+			],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.SIX_OF_CLUBS],
+			p1Points: [Card.ACE_OF_SPADES],
+			p1FaceCards: [Card.KING_OF_DIAMONDS],
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 5);
+		cy.log('Loaded fixture');
+
+		// Cancel selected card (close move-choice-overlay)
+		cy.get('[data-player-hand-card=2-3]').click(); // Two of spades
+		cy.get('#move-choice-overlay')
+			.should('be.visible');
+		// Should have 3 move options
+		cy.get('[data-move-choice]')
+			.should('have.length', 3);
+		cy.get('[data-cy=cancel-move]')
+			.click();
+		cy.get('#move-choice-overlay')
+			.should('not.be.visible');
+		cy.log('Successfully canceled card selection');
+
+		// Cancel decision to scuttle
+		cy.get('[data-player-hand-card=2-3]').click(); // Two of spades
+		cy.get('[data-move-choice=scuttle]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 1);
+		cy.get('[data-cy=cancel-target]')
+			.click();
+		cy.get('#player-hand-targeting')
+			.should('not.be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 0);
+		cy.log('Successfully canceled scuttle');
+
+		// Cancel targeted one-off
+		cy.get('[data-player-hand-card=9-3]').click(); // Nine of spades
+		cy.get('[data-move-choice=targetedOneOff]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 1);
+		cy.get('[data-cy=cancel-target]')
+			.click();
+		cy.get('#player-hand-targeting')
+			.should('not.be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 0);
+		cy.log('Successfully canceled targeted one-off');
+
+		// Cancel Jack
+		cy.get('[data-player-hand-card=11-3]').click(); // Nine of spades
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('#player-hand-targeting')
+			.should('be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 1);
+		cy.get('[data-cy=cancel-target]')
+			.click();
+		cy.get('#player-hand-targeting')
+			.should('not.be.visible');
+		cy.get('.player-card.selected')
+			.should('have.length', 0);
+		cy.log('Successfully canceled jack');
 	});
 });
 
@@ -265,7 +434,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Attempt to play out of turn
 		cy.get('#deck').click();
 		// Test that Error snackbar says its not your turn
-		assertSnackbarError('It\'s not your turn');
+		assertSnackbarError(SnackBarError.NOT_YOUR_TURN);
 		// Opponent draws 2nd time
 		cy.drawCardOpponent();
 		// Opponent now has 7 cards in hand
@@ -284,10 +453,7 @@ describe('Game Basic Moves - P1 Perspective', () => {
 		// Player attempts to draw with full hand
 		cy.get('#deck').click();
 		// Test that Error snackbar for hand limit
-		cy.get('[data-cy=game-snackbar] .v-snack__wrapper')
-			.should('be.visible')
-			.should('have.class', 'error')
-			.should('contain', 'You are at the hand limit; you cannot draw.');
+		assertSnackbarError('You are at the hand limit; you cannot draw.');
 		// Player still has 8 cards in hand
 		cy.get('[data-player-hand-card]')
 			.should('have.length', 8);
@@ -318,13 +484,7 @@ describe('Playing 8s', () => {
 
 		// Player plays eight
 		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-		// Choose to play for points
-		cy.get('#eight-overlay')
-			.should('be.visible')
-			.get('[data-cy=eight-for-points]')
+		cy.get('[data-move-choice=points]')
 			.click();
 		
 		assertGameState(
@@ -339,13 +499,9 @@ describe('Playing 8s', () => {
 			}
 		);
 		
-		// Attempt to play eight out of turn
-		// Player plays eight
-		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		// Attempt to play eight out of turn for points
+		cy.get('[data-player-hand-card=8-2]').click();
+		playOutOfTurn('points');
 	}); // End play 8 for points
 
 	it('Plays eights for glasses', () => {
@@ -363,14 +519,7 @@ describe('Playing 8s', () => {
 
 		// Player plays eight
 		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-		// Choose to play as glasses
-		cy.get('#eight-overlay')
-			.should('be.visible')
-			.get('[data-cy=eight-as-glasses]')
-			.click();
+		cy.get('[data-move-choice=faceCard]').click();
 		
 		assertGameState(
 			0,
@@ -384,13 +533,9 @@ describe('Playing 8s', () => {
 			}
 		);
 		
-		// Attempt to play eight out of turn
-		// Player plays eight
+		// Attempt to play glasses eight out of turn
 		cy.get('[data-player-hand-card=8-2]').click(); // eight of hearts
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		playOutOfTurn('faceCard');
 
 		// Opponent plays glasses eight
 		cy.playFaceCardOpponent(Card.EIGHT_OF_CLUBS);
@@ -407,43 +552,6 @@ describe('Playing 8s', () => {
 		);
 	}); // End play glasses 8
 
-	it('Cancels playing an 8 with close icon', () => {
-		// Setup
-		cy.loadGameFixture({
-			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 4);
-		cy.log('Loaded fixture');
-
-		// Player plays eight
-		cy.get('[data-player-hand-card=8-3]').click(); // eight of spades
-		cy.get('#player-field')
-			.should('have.class', 'valid-move')
-			.click();
-		// Cancel decision to play eight
-		cy.get('#eight-overlay')
-			.should('be.visible')
-			.get('[data-cy=cancel-eight]')
-			.click();
-
-		// Overlay clears
-		cy.get('#eight-overlay')
-			.should('not.be.visible');
-		// State is unchanged
-		assertGameState(0, {
-			p0Hand: [Card.EIGHT_OF_SPADES, Card.EIGHT_OF_HEARTS, Card.KING_OF_CLUBS, Card.QUEEN_OF_DIAMONDS],
-			p0Points: [Card.TEN_OF_HEARTS],
-			p0FaceCards: [],
-			p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
-			p1Points: [Card.ACE_OF_DIAMONDS],
-			p1FaceCards: [],
-		});
-	}); // End cancel playing an 8
 }); // End eights describe
 
 describe('Play Jacks', () => {
@@ -464,11 +572,11 @@ describe('Play Jacks', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 3);
 		cy.log('Loaded fixture');
 
-		// Play jack 
-		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
-
+		// Play jack of clubs on ten of hearts
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
 		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
+			.click();
 
 		assertGameState(0,
 			{
@@ -482,15 +590,10 @@ describe('Play Jacks', () => {
 			});
 		
 		cy.get('[data-player-hand-card]').should('have.length', 2);
-		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
 
-		
-		// opponent plays Jack
+		// Opponent plays jack
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_SPADES)
 
 		assertGameState(0,
@@ -503,131 +606,6 @@ describe('Play Jacks', () => {
 				p1FaceCards: [Card.KING_OF_HEARTS],
 				scrap: []
 			});
-	});
-
-	it('Double Jacks - Player and Opponent plays Jacks on the same card', () => {
-		// Set Up
-		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES],
-			p0Points: [Card.TEN_OF_SPADES],
-			p0FaceCards: [],
-			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
-			p1Points: [Card.TEN_OF_HEARTS],
-			p1FaceCards: [Card.KING_OF_HEARTS],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 3);
-		cy.log('Loaded fixture');
-
-		// Play jack 
-		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
-
-		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
-
-		assertGameState(0,
-			{
-				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
-				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
-				p0FaceCards: [],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
-				p1Points: [],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: []
-			});
-		
-		cy.get('[data-player-hand-card]').should('have.length', 2);
-		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
-		
-		// opponent plays Jack
-		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
-
-		assertGameState(0,
-			{
-				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
-				p0Points: [Card.TEN_OF_SPADES],
-				p0FaceCards: [],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-				p1Points: [Card.TEN_OF_HEARTS],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: []
-			});
-	});
-
-
-	it('Triple jacks successfully', () => {
-		// Set Up
-		cy.loadGameFixture({
-			p0Hand: [Card.ACE_OF_SPADES, Card.JACK_OF_CLUBS, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
-			p0Points: [Card.TEN_OF_SPADES],
-			p0FaceCards: [],
-			p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
-			p1Points: [Card.TEN_OF_HEARTS],
-			p1FaceCards: [Card.KING_OF_HEARTS],
-		});
-		cy.get('[data-player-hand-card]').should('have.length', 4);
-		cy.log('Loaded fixture');
-
-		// Play jack 
-		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
-
-		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
-
-		assertGameState(0,
-			{
-				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
-				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
-				p0FaceCards: [],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS],
-				p1Points: [],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: []
-			});
-		
-		cy.get('[data-player-hand-card]').should('have.length', 3);
-		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
-		
-		// opponent plays 2nd Jack
-		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
-
-		assertGameState(0,
-			{
-				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
-				p0Points: [Card.TEN_OF_SPADES],
-				p0FaceCards: [],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-				p1Points: [Card.TEN_OF_HEARTS],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: []
-			});
-
-		// Player plays 3rd jack 
-		cy.get('[data-player-hand-card=11-2]').click(); // jack of clubs
-
-		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
-		
-		assertGameState(0,
-			{
-				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES],
-				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
-				p0FaceCards: [],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS],
-				p1Points: [],
-				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: []
-			});
-			
 	});
 
 	it('Quadruple jacks successfully', () => {
@@ -643,18 +621,22 @@ describe('Play Jacks', () => {
 		cy.get('[data-player-hand-card]').should('have.length', 4);
 		cy.log('Loaded fixture');
 
-		// Play jack 
-		cy.get('[data-player-hand-card=11-0]').click(); // jack of clubs
-
-		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
+		// Play jack of clubs on ten of hearts
+		cy.get('[data-player-hand-card=11-0]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=10-2]').click();
 
 		assertGameState(0,
 			{
 				p0Hand: [Card.ACE_OF_SPADES, Card.KING_OF_SPADES, Card.JACK_OF_HEARTS],
 				p0Points: [Card.TEN_OF_SPADES, Card.TEN_OF_HEARTS],
 				p0FaceCards: [],
-				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.JACK_OF_DIAMONDS, Card.JACK_OF_SPADES],
+				p1Hand: [
+					Card.ACE_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS,
+					Card.JACK_OF_DIAMONDS,
+					Card.JACK_OF_SPADES
+				],
 				p1Points: [],
 				p1FaceCards: [Card.KING_OF_HEARTS],
 				scrap: []
@@ -662,14 +644,10 @@ describe('Play Jacks', () => {
 		
 		cy.get('[data-player-hand-card]').should('have.length', 3);
 		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of spades
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
-
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
 		
-		// opponent plays 2nd Jack
+		// Opponent plays 2nd jack
 		cy.playJackOpponent(Card.JACK_OF_DIAMONDS, Card.TEN_OF_HEARTS)
 
 		assertGameState(0,
@@ -684,10 +662,9 @@ describe('Play Jacks', () => {
 			});
 
 		// Player plays 3rd jack 
-		cy.get('[data-player-hand-card=11-2]').click(); // jack of hearts
-
-		cy.get('[data-opponent-point-card=10-2]')
-			.click(); // target ten of hearts
+		cy.get('[data-player-hand-card=11-2]').click();
+		cy.get('[data-move-choice=jack]').click();
+		cy.get('[data-opponent-point-card=10-2]').click();
 		
 		assertGameState(0,
 			{
@@ -700,15 +677,10 @@ describe('Play Jacks', () => {
 				scrap: []
 			});
 
-		// Attempt to play king out of turn
-		cy.get('[data-player-hand-card=13-3]').click(); // king of clubs
-		cy.get('#player-field')
-			.should('not.have.class', 'valid-move')
-			.click();
-		assertSnackbarError('It\'s not your turn');
+		cy.get('#turn-indicator')
+			.contains('OPPONENT\'S TURN');
 
-		
-		// opponent plays 4th Jack
+		// Opponent plays 4th jack
 		cy.playJackOpponent(Card.JACK_OF_SPADES, Card.TEN_OF_HEARTS)
 
 		assertGameState(0,

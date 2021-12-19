@@ -200,6 +200,7 @@ function pointsToWin(kingCount) {
 		throw new Error(`Cannot count points to win for invalid kingcount: ${kingCount}`);
 	}
 }
+
 export function assertSnackbarError(message, snackName='game') {
 	cy.get(`[data-cy=${snackName}-snackbar] .v-snack__wrapper`)
 		.should('be.visible')
@@ -207,6 +208,22 @@ export function assertSnackbarError(message, snackName='game') {
 		.should('contain', message)
 		.get('[data-cy=close-snackbar]')
 		.click();
+}
+
+/**
+ * Attempts to make a move out of turn and confirms that controls are disabled etc
+ * Assumes a card is already selected and the move choice overlay is open
+ * @param moveName: String is the name of the move event (ex 'oneOff')
+ */
+export function playOutOfTurn(moveName) {
+	// Specified move choice should be disabled
+	cy.get(`[data-move-choice=${moveName}]`)
+		.should('have.class', 'v-card--disabled')
+		.should('contain', 'It\'s not your turn')
+		.click({force: true});
+	// Back end should fire error that move is illegal after click is forced
+	assertSnackbarError(SnackBarError.NOT_YOUR_TURN);
+	cy.log(`Correctly prevented attempt to play ${moveName} out of turn`);
 }
 
 function assertDomMatchesFixture(pNum, fixture) {
@@ -326,23 +343,32 @@ function assertStoreMatchesFixture(fixture) {
 		.its('app.$store.state.game')
 		.then((game) => {
 			// Player 0
-			expect(cardListsMatch(game.players[0].hand, fixture.p0Hand)).to.eq(true, `P0 Hand should match fixture, but actual: ${printCardList(game.players[0].hand)} did not match ficture: ${printCardList(fixture.p0Hand)}`);
-			expect(cardListsMatch(game.players[0].points, fixture.p0Points)).to.eq(true, `P0 Points should match fixture, but actual: ${printCardList(game.players[0].points)} did not match ficture: ${printCardList(fixture.p0Points)}`);
-			expect(cardListsMatch(game.players[0].faceCards, fixture.p0FaceCards)).to.eq(true, `P0 Face Cards should match fixture, but actual: ${printCardList(game.players[0].faceCards)} did not match ficture: ${printCardList(fixture.p0FaceCards)}`);
+			expect(cardListsMatch(game.players[0].hand, fixture.p0Hand))
+				.to.eq(true, `P0 Hand should match fixture, but actual: ${printCardList(game.players[0].hand)} did not match ficture: ${printCardList(fixture.p0Hand)}`);
+			expect(cardListsMatch(game.players[0].points, fixture.p0Points))
+				.to.eq(true, `P0 Points should match fixture, but actual: ${printCardList(game.players[0].points)} did not match ficture: ${printCardList(fixture.p0Points)}`);
+			expect(cardListsMatch(game.players[0].faceCards, fixture.p0FaceCards))
+				.to.eq(true, `P0 Face Cards should match fixture, but actual: ${printCardList(game.players[0].faceCards)} did not match ficture: ${printCardList(fixture.p0FaceCards)}`);
 			// Player 1
-			expect(cardListsMatch(game.players[1].hand, fixture.p1Hand)).to.eq(true, `P1 Hand should match fixture, but actual: ${printCardList(game.players[1].hand)} did not match ficture: ${printCardList(fixture.p1Hand)}`);
-			expect(cardListsMatch(game.players[1].points, fixture.p1Points)).to.eq(true, `P1 Points should match fixture, but actual: ${printCardList(game.players[1].points)} did not match ficture: ${printCardList(fixture.p1Points)}`);
-			expect(cardListsMatch(game.players[1].faceCards, fixture.p1FaceCards)).to.eq(true, `P1 Face Cards should match fixture, but actual: ${printCardList(game.players[1].faceCards)} did not match ficture: ${printCardList(fixture.p1FaceCards)}`);
+			expect(cardListsMatch(game.players[1].hand, fixture.p1Hand))
+				.to.eq(true, `P1 Hand should match fixture, but actual: ${printCardList(game.players[1].hand)} did not match ficture: ${printCardList(fixture.p1Hand)}`);
+			expect(cardListsMatch(game.players[1].points, fixture.p1Points))
+				.to.eq(true, `P1 Points should match fixture, but actual: ${printCardList(game.players[1].points)} did not match ficture: ${printCardList(fixture.p1Points)}`);
+			expect(cardListsMatch(game.players[1].faceCards, fixture.p1FaceCards))
+				.to.eq(true, `P1 Face Cards should match fixture, but actual: ${printCardList(game.players[1].faceCards)} did not match ficture: ${printCardList(fixture.p1FaceCards)}`);
 			// Scrap (if specified)
 			if (fixture.scrap) {
-				expect(cardListsMatch(game.scrap, fixture.scrap)).to.eq(true, `Scrap should match fixture, but actual ${printCardList(game.scrap)} did not match fixture: ${printCardList(fixture.scrap)}`);
+				expect(cardListsMatch(game.scrap, fixture.scrap))
+					.to.eq(true, `Scrap should match fixture, but actual ${printCardList(game.scrap)} did not match fixture: ${printCardList(fixture.scrap)}`);
 			}
 			// Top Card if specified
 			if (fixture.topCard) {
-				expect(cardsMatch(game.topCard, fixture.topCard)).to.eq(true, `Expected top card ${printCard(game.topCard)} to match fixture topcard: ${printCard(fixture.topCard)}`);
+				expect(cardsMatch(game.topCard, fixture.topCard))
+					.to.eq(true, `Expected top card ${printCard(game.topCard)} to match fixture topcard: ${printCard(fixture.topCard)}`);
 			}
 			if (fixture.secondCard) {
-				expect(cardsMatch(game.secondCard, fixture.secondCard)).to.eq(true, `Expected second card ${printCard(game.secondCard)} to match fixture second card: ${printCard(fixture.secondCard)}`);
+				expect(cardsMatch(game.secondCard, fixture.secondCard))
+					.to.eq(true, `Expected second card ${printCard(game.secondCard)} to match fixture second card: ${printCard(fixture.secondCard)}`);
 			}
 		});
 }
@@ -363,6 +389,12 @@ export function assertGameState(pNum, fixture) {
 	assertDomMatchesFixture(pNum, fixture);
 	assertStoreMatchesFixture(fixture);
 }
+
+export const SnackBarError = {
+	NOT_YOUR_TURN: 'It\'s not your turn',
+	ILLEGAL_SCUTTLE: 'You can only scuttle an opponent\'s point card with a higher rank point card, or the same rank with a higher suit. Suit order (low to high) is: Clubs < Diamonds < Hearts < Spades',
+	FROZEN_CARD: 'That card is frozen! You must wait a turn to play it',
+};
 
 export const Card = {
 	// Clubs
@@ -421,4 +453,4 @@ export const Card = {
 	JACK_OF_SPADES: {rank: 11, suit: 3},
 	QUEEN_OF_SPADES: {rank: 12, suit: 3},
 	KING_OF_SPADES: {rank: 13, suit: 3},
-}
+};
