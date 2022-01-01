@@ -322,7 +322,56 @@ describe('Game View Layout', () => {
 				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES],
 			}
 		);
-	})
+	});
+
+	it('Click the scrap to view contents', ()=>{
+		cy.loadGameFixture({
+			p0Hand: [Card.THREE_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.TEN_OF_DIAMONDS],
+			p1Points: [Card.ACE_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+			scrap: [
+				Card.ACE_OF_SPADES,
+				Card.TEN_OF_HEARTS,
+				Card.TEN_OF_SPADES,
+			]
+		});
+
+		// Get the hand to make sure that there are cards in it and things have loaded
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+
+		// Step 1
+		// Get the scrap
+		// Click the scrap
+		cy.get('#scrap').click();
+
+		// Assert that the overlay that should show up does
+		cy.get('#scrap-dialog').should('be.visible');
+
+		// Make sure that the three cards in the scrap are shown
+		cy.get('[data-scrap-dialog-card]').should('have.length', 3);
+
+		// Add Ryan's fancy secret sauce on each card
+		cy.get('[data-scrap-dialog-card=1-3]').should('be.visible');
+		cy.get('[data-scrap-dialog-card=10-2]').should('be.visible');
+		cy.get('[data-scrap-dialog-card=10-3]').should('be.visible');
+
+		// Close it
+		cy.get('[data-cy=close-scrap-dialog-x]').click();
+		cy.get('#scrap-dialog').should('not.be.visible');
+
+		// Come back
+		cy.get('#scrap').click();
+		// Assert that the overlay that should show up does
+		cy.get('#scrap-dialog').should('be.visible');
+
+		// Close again
+		cy.get('[data-cy=close-scrap-dialog-button]').click();
+		cy.get('#scrap-dialog').should('not.be.visible');
+
+	});
 });
 
 describe('Four dialogs layout', () => {
