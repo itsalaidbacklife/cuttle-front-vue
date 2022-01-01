@@ -1,6 +1,6 @@
 <template>
 	<v-dialog
-		persistent
+		v-model="show"
 		max-width="750"
 		scrollable
 	>
@@ -11,16 +11,24 @@
 				v-bind="attrs"
 				v-on="on"
 			>
-				<slot name="activator">
-					<v-btn id="scrap-button">Scrap Pile </v-btn>
-				</slot>
+				<slot name="activator" />
 			</span>
 		</template>
 		<v-card
 			id="scrap-dialog"
 			@click="show=!show"
 		>
-			<v-card-title>Scrap Pile</v-card-title>
+			<v-card-title class="d-flex justify-space-between">
+				<h1>Scrap Pile</h1>
+				<v-btn
+					icon
+					data-cy="close-scrap-dialog-x"
+				>
+					<v-icon large>
+						mdi-close
+					</v-icon>
+				</v-btn>
+			</v-card-title>
 			<v-card-text>
 				<div class="d-flex flex-wrap justify-center align-center my-8">
 					<card
@@ -49,15 +57,6 @@ export default {
 		Card,
 	},
 	props: {
-		// value: {
-		// 	type: Boolean,
-		// 	required: true,
-		// },
-		// oneOff: {
-		// 	type: Object,
-		// 	default: null,
-		// },
-		// list of card objects for available twos
 		scrap: {
 			type: Array,
 			required: true,

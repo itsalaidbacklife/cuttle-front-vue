@@ -396,9 +396,6 @@
 				:second-card="secondCard"
 				@resolveSevenDoubleJacks="resolveSevenDoubleJacks($event)"
 			/>
-			<ScrapPile
-				:scrap="scrap"
-			/>
 			<game-over-dialog
 				v-model="gameIsOver"
 				:player-wins="playerWins"
