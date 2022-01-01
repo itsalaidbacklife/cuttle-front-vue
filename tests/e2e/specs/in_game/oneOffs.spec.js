@@ -1131,7 +1131,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		// Cannot counter dialog should not have a target
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
-			.should('not.contain', 'targetting')
+			.should('not.contain', 'targeting')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 	});
@@ -1156,7 +1156,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
-			.should('contain', 'targetting')
+			.should('contain', 'targeting')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 
@@ -1183,7 +1183,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		// Cannot counter dialog should not have a target
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
-			.should('not.contain', 'targetting')
+			.should('not.contain', 'targeting')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 	});
@@ -1232,7 +1232,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		// Player resolves
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
-			.should('contain', 'targetting')
+			.should('contain', 'targeting')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 
@@ -1259,7 +1259,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		// Cannot counter dialog should not have a target
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
-			.should('not.contain', 'targetting')
+			.should('not.contain', 'targeting')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 	});
@@ -1318,7 +1318,7 @@ describe('ONE-OFF Target should be removed after one-off resolves', () => {
 		// Cannot counter dialog should not have a target
 		cy.get('#cannot-counter-dialog')
 			.should('be.visible')
-			.should('not.contain', 'targetting')
+			.should('not.contain', 'targeting')
 			.get('[data-cy=cannot-counter-resolve]')
 			.click();
 	});

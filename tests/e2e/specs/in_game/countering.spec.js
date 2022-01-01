@@ -285,7 +285,7 @@ describe('Countering One-Offs', () => {
 		cy.log('Opponent counters back (2nd counter)');
 		cy.counterOpponent(Card.TWO_OF_CLUBS);
 		// Player counters again (3rd counter)
-		cy.log('Player counters again (3rd counter');	
+		cy.log('Player counters again (3rd counter');
 		cy.get('#counter-dialog')
 			.should('be.visible')
 			.should('contain', 'Your opponent has played 2 of Clubs to Counter your 2 of Hearts.')
