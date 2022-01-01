@@ -131,7 +131,8 @@
 					<scrap-pile :scrap="scrap">
 						<template #activator>
 							<v-card id="scrap">
-								Scrap
+								<h2>Scrap</h2>
+								({{ scrap.length }})
 							</v-card>
 						</template>
 					</scrap-pile>

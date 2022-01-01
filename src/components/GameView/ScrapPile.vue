@@ -16,13 +16,13 @@
 		</template>
 		<v-card
 			id="scrap-dialog"
-			@click="show=!show"
 		>
 			<v-card-title class="d-flex justify-space-between">
 				<h1>Scrap Pile</h1>
 				<v-btn
 					icon
 					data-cy="close-scrap-dialog-x"
+					@click="show=false"
 				>
 					<v-icon large>
 						mdi-close
@@ -43,6 +43,16 @@
 					/>
 				</div>
 			</v-card-text>
+			<v-card-actions class="d-flex justify-end my-2">
+				<v-btn
+					color="primary"
+					outlined
+					data-cy="close-scrap-dialog-button"
+					@click="show=false"
+				>
+					Close
+				</v-btn>
+			</v-card-actions>
 		</v-card>
 	</v-dialog>
 </template>
