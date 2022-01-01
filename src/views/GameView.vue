@@ -128,15 +128,13 @@
 							</div>
 						</template>
 					</v-card>
-					<v-card
-						id="scrap"
-						@click="show = true"
-					>
-						<h1 id="scrap-text">
-							Scrap
-						</h1>
-						<p>({{ scrap.length }})</p>
-					</v-card>
+					<scrap-pile :scrap="scrap">
+						<template #activator>
+							<v-card id="scrap">
+								Scrap
+							</v-card>
+						</template>
+					</scrap-pile>
 				</div>
 				<div id="field-center">
 					<div id="opponent-field">
