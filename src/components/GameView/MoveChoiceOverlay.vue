@@ -97,7 +97,7 @@ export default {
 			}
 			// Re-usable move-objects
 			// Points
-			const pointsDescription =  `Gain ${cardRank} point` + (cardRank===1?null:'s');
+			const pointsDescription =  `Gain ${cardRank} point` + (cardRank===1?'':'s');
 			const pointsMove = {
 				displayName: 'Points',
 				eventName: 'points',
@@ -162,7 +162,7 @@ export default {
 							validTargetExists = numTotalTargets >= 1;
 							if (!validTargetExists) {
 								oneOffDisabled = true;
-								oneOffDisabledExplanation = 'There are no face cards to target';
+								oneOffDisabledExplanation = 'There are no Royals to target';
 							}
 						// Nines
 						} else {
@@ -170,7 +170,7 @@ export default {
                   this.$store.getters.opponent.faceCards.length;
 							if (numValidTargets === 0) {
 								oneOffDisabled = true;
-								oneOffDisabledExplanation = 'There are no point cards or face cards to target';
+								oneOffDisabledExplanation = 'There are no point cards or Royals to target';
 							}
 						}
 					}
