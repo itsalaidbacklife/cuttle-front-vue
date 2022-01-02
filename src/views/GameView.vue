@@ -128,14 +128,14 @@
 							</div>
 						</template>
 					</v-card>
-					<scrap-pile :scrap="scrap">
+					<scrap-dialog :scrap="scrap">
 						<template #activator>
 							<v-card id="scrap">
 								<h2>Scrap</h2>
 								({{ scrap.length }})
 							</v-card>
 						</template>
-					</scrap-pile>
+					</scrap-dialog>
 				</div>
 				<div id="field-center">
 					<div id="opponent-field">
@@ -433,7 +433,7 @@ import ReauthenticateDialog from '@/components/GameView/ReauthenticateDialog.vue
 import SevenDoubleJacksDialog from '@/components/GameView/SevenDoubleJacksDialog.vue';
 import MoveChoiceOverlay from '@/components/GameView/MoveChoiceOverlay.vue';
 import TargetSelectionOverlay from '@/components/GameView/TargetSelectionOverlay.vue';
-import ScrapPile from '@/components/GameView/ScrapPile';
+import ScrapDialog from '@/components/GameView/ScrapDialog';
 
 export default {
 	name: 'GameView',
@@ -450,7 +450,7 @@ export default {
 		SevenDoubleJacksDialog,
 		MoveChoiceOverlay,
 		TargetSelectionOverlay,
-		ScrapPile,
+		ScrapDialog,
 	},
 	data() {
 		return {
@@ -732,7 +732,7 @@ export default {
 		},
 		validScuttleIds() {
 			const selectedCard = this.resolvingSeven ? this.cardSelectedFromDeck : this.selectedCard;
-			if (!selectedCard) return []
+			if (!selectedCard) return [];
 			return this.opponent.points
 				.filter((potentialTarget) => {
 					return selectedCard.rank > potentialTarget.rank || 
@@ -762,7 +762,7 @@ export default {
 		},
 		validMoves() {
 			if (!this.isPlayersTurn) return [];
-			const selectedCard = this.resolvingSeven ? this.cardSelectedFromDeck : this.selectedCard
+			const selectedCard = this.resolvingSeven ? this.cardSelectedFromDeck : this.selectedCard;
 			if (!selectedCard) return [];
 			switch (this.targetingMoveName) {
 			case 'scuttle':
@@ -794,7 +794,7 @@ export default {
 					: null;
 			case 'faceCard':
 				return this.nineTargetIndex !== null
-					?  this.opponent.faceCards[this.nineTargetIndex]
+					? this.opponent.faceCards[this.nineTargetIndex]
 					: null;
 			default:
 				return null;
@@ -1420,9 +1420,9 @@ export default {
 		&.my-turn {
 			border: 4px solid var(--v-accent-base);
 			box-shadow: 0 15px 16px -12px
-      rgba(0, 123, 59, .8),0 24px 38px 12px
-      rgba(0, 123, 59, .8),0 10px 50px 16px
-      rgba(33, 150, 83, .8) !important;
+									rgba(0, 123, 59, .8),0 24px 38px 12px
+									rgba(0, 123, 59, .8),0 10px 50px 16px
+									rgba(33, 150, 83, .8) !important;
 			background: linear-gradient(0deg, rgba(253, 98, 34, 1), rgba(255, 255, 255, .3));
 		}
 		&:not(.my-turn) {

@@ -87,11 +87,10 @@ export default {
 			}
 		},
 		selectedJack() {
-			return this.selectedCardId === null
-				? null
-				: (this.selectedCardId === this.topCard.id
-					? this.topCard
-					: this.secondCard);
+			if (this.selectedCardId === null) return null;
+			return this.selectedCardId === this.topCard.id
+				? this.topCard
+				: this.secondCard;
 		},
 	},
 	methods: {

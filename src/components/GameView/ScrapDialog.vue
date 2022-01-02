@@ -37,7 +37,6 @@
 						class="mx-1 my-1"
 						:suit="card.suit"
 						:rank="card.rank"
-						:is-selected="selectedScrapCard && card.id === selectedScrapCard.id"
 						:data-scrap-dialog-card="`${card.rank}-${card.suit}`"
 						@click="selectCard(index)"
 					/>
@@ -62,7 +61,7 @@
 import Card from '@/components/GameView/Card.vue';
 
 export default {
-	name: 'ScrapPile',
+	name: 'ScrapDialog',
 	components: {
 		Card,
 	},
@@ -76,25 +75,6 @@ export default {
 		return {
 			show: false,
 		}
-	},
-
-	computed: {
-		selectedScrapCard() {
-			return this.selectionIndex !== null ? this.scrap[this.selectionIndex] : null;
-		},
-	},
-
-	methods: {
-		selectCard(index) {
-			if (index === this.selectionIndex){
-				this.clearSelection();
-			} else {
-				this.selectionIndex = index;
-			}
-		},
-		clearSelection() {
-			this.selectionIndex = null;
-		},
 	}
 }
 </script>
