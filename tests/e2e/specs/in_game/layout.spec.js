@@ -270,6 +270,7 @@ describe('Game View Layout', () => {
 			scrap: [Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES]
 		});
 		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
 
 		// Player plays three
 		cy.get('[data-player-hand-card=3-0]').click(); // three of clubs
@@ -322,7 +323,81 @@ describe('Game View Layout', () => {
 				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES],
 			}
 		);
-	})
+	});
+
+	it('Click the scrap to view contents', ()=>{
+		// Given-- the initial game state with 3 cards in the scrap
+		cy.loadGameFixture({
+			p0Hand: [Card.THREE_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.TEN_OF_DIAMONDS],
+			p1Points: [Card.ACE_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+			scrap: [
+				Card.ACE_OF_SPADES,
+				Card.TEN_OF_HEARTS,
+				Card.TEN_OF_SPADES,
+			]
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+
+		// When-- Click the scrap
+		cy.log('Clicking scrap');
+		cy.get('#scrap').click();
+
+		// Then-- Assert that the overlay that should show up does
+		cy.get('#scrap-dialog').should('be.visible');
+
+		// Make sure that the three cards in the scrap are shown
+		cy.get('[data-scrap-dialog-card]').should('have.length', 3);
+		cy.get('[data-scrap-dialog-card=1-3]').should('be.visible');
+		cy.get('[data-scrap-dialog-card=10-2]').should('be.visible');
+		cy.get('[data-scrap-dialog-card=10-3]').should('be.visible');
+
+		// Given-- the scrap is currently open
+		// When-- Close it with X
+		cy.log('Closing scrap with X');
+		cy.get('[data-cy=close-scrap-dialog-x]').click();
+		// Then-- Scrap should be closed
+		cy.get('#scrap-dialog').should('not.be.visible');
+
+		// Given-- the scrap is currently open
+		cy.get('#scrap').click();
+		cy.get('#scrap-dialog').should('be.visible');
+		// When-- Close it with the close button
+		cy.log('Closing scrap with button');
+		cy.get('[data-cy=close-scrap-dialog-button]').click();
+		// Then-- Scrap should be closed
+		cy.get('#scrap-dialog').should('not.be.visible');
+
+	});
+
+	it('Clicking the scrap while empty shows that it is empty', ()=> {
+		// Given-- the initial game state with 3 cards in the scrap
+		cy.loadGameFixture({
+			p0Hand: [Card.THREE_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.TEN_OF_DIAMONDS],
+			p1Points: [Card.ACE_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+			scrap: []
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+
+		// When-- Click the scrap
+		cy.log('Clicking scrap');
+		cy.get('#scrap').click();
+
+		// Then-- Assert that the overlay that should show up does and that there are no cards in it
+		cy.get('#scrap-dialog')
+			.should('be.visible')
+			.should('contain', 'There are no cards in the scrap pile.');
+
+	});
 });
 
 describe('Four dialogs layout', () => {
