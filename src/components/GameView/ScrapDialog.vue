@@ -31,14 +31,23 @@
 			</v-card-title>
 			<v-card-text>
 				<div class="d-flex flex-wrap justify-center align-center my-8">
+					<!-- Empty Placeholder -->
+					<template v-if="scrap.length === 0">
+						<div class="d-flex flex-column">
+							<p>There are no cards in the scrap pile.</p>
+							<v-icon x-large>
+								mdi-cancel
+							</v-icon>
+						</div>
+					</template>
+					<!-- Cards in the scrap -->
 					<card
-						v-for="(card, index) in scrap"
+						v-for="(card) in scrap"
 						:key="card.id"
 						class="mx-1 my-1"
 						:suit="card.suit"
 						:rank="card.rank"
 						:data-scrap-dialog-card="`${card.rank}-${card.suit}`"
-						@click="selectCard(index)"
 					/>
 				</div>
 			</v-card-text>

@@ -167,7 +167,7 @@ export default {
 						// Nines
 						} else {
 							const numValidTargets = this.$store.getters.opponent.points.length +
-                  this.$store.getters.opponent.faceCards.length;
+              	this.$store.getters.opponent.faceCards.length;
 							if (numValidTargets === 0) {
 								oneOffDisabled = true;
 								oneOffDisabledExplanation = 'There are no point cards or Royals to target';
