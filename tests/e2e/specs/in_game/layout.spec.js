@@ -373,6 +373,31 @@ describe('Game View Layout', () => {
 		cy.get('#scrap-dialog').should('not.be.visible');
 
 	});
+
+	it('Clicking the scrap while empty shows that it is empty', ()=> {
+		// Given-- the initial game state with 3 cards in the scrap
+		cy.loadGameFixture({
+			p0Hand: [Card.THREE_OF_CLUBS],
+			p0Points: [],
+			p0FaceCards: [],
+			p1Hand: [Card.TEN_OF_DIAMONDS],
+			p1Points: [Card.ACE_OF_HEARTS],
+			p1FaceCards: [Card.KING_OF_HEARTS],
+			scrap: []
+		});
+		cy.get('[data-player-hand-card]').should('have.length', 1);
+		cy.log('Loaded fixture');
+
+		// When-- Click the scrap
+		cy.log('Clicking scrap');
+		cy.get('#scrap').click();
+
+		// Then-- Assert that the overlay that should show up does and that there are no cards in it
+		cy.get('#scrap-dialog')
+			.should('be.visible')
+			.should('contain', 'There are no cards in the scrap pile.');
+
+	});
 });
 
 describe('Four dialogs layout', () => {
