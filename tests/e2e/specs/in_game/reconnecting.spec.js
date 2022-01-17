@@ -208,8 +208,14 @@ describe('Reconnecting to a game', () => {
 				.get('[data-cy=cannot-counter-resolve]')
 				.click();
 			// Opponent plays Ace of clubs from seven
+			cy.get('#waiting-for-opponent-play-from-deck-scrim')
+				.should('be.visible');
+
 			cy.playOneOffFromSevenOpponent(Card.ACE_OF_CLUBS);
 
+			// Can't counter, again
+			cy.get('#cannot-counter-dialog')
+				.should('be.visible');
 			// Player reconnects and cannot counter
 			cy.reload();
 			reconnect();
