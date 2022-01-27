@@ -308,11 +308,12 @@ describe('FOURS', () => {
 				p0Hand: [Card.FOUR_OF_CLUBS, Card.FOUR_OF_DIAMONDS],
 				p0Points: [],
 				p0FaceCards: [],
-				p1Hand: [Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS, Card.SIX_OF_DIAMONDS],
+				p1Hand: [Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS ],
 				p1Points: [],
 				p1FaceCards: [],
+				topCard: Card.SIX_OF_DIAMONDS,
 			});
-			cy.get('[data-player-hand-card]').should('have.length', 4);
+			cy.get('[data-player-hand-card]').should('have.length', 3);
 			cy.log('Loaded fixture');
 	
 			// Opponent plays four
@@ -322,7 +323,8 @@ describe('FOURS', () => {
 				.should('be.visible')
 				.get('[data-cy=cannot-counter-resolve]')
 				.click();
-	
+			cy.log('Player resolves opponent\'s Four');
+
 			// Four Dialog appears (you must discard)
 			cy.get('#four-discard-dialog')
 				.should('be.visible');
@@ -339,14 +341,15 @@ describe('FOURS', () => {
 					p0Hand: [Card.FOUR_OF_DIAMONDS],
 					p0Points: [],
 					p0FaceCards: [],
-					p1Hand: [Card.TEN_OF_HEARTS, Card.SIX_OF_DIAMONDS],
+					p1Hand: [Card.TEN_OF_HEARTS],
 					p1Points: [],
 					p1FaceCards: [],
 					scrap: [Card.FOUR_OF_CLUBS, Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS],
+					topCard: Card.SIX_OF_DIAMONDS,
 				}
 			);
 
-			// Player draws
+			// Player draws the 6 of diamonds
 			cy.get('#deck')
 				.click();
 			
@@ -362,22 +365,27 @@ describe('FOURS', () => {
 			cy.log('Choosing two cards to discard');
 			cy.get('[data-cy=submit-four-dialog]')
 				.should('be.disabled') // can't prematurely submit
-				.click({force: true}); // and if you do, still should fail
+				// .click({force: true}); // and if you do, still should fail
 			// Assert Snackbar error
-			assertSnackbarError('You must select cards from your hand to discard');
+			// assertSnackbarError('You must select cards from your hand to discard');
 			// Discard dialog should still be open
 			cy.get('#four-discard-dialog')
 				.should('be.visible');
 			// Validate game state same as above
 			assertGameState(1,
 				{
-					p0Hand: [Card.FOUR_OF_DIAMONDS],
+					p0Hand: [],
 					p0Points: [],
 					p0FaceCards: [],
 					p1Hand: [Card.TEN_OF_HEARTS, Card.SIX_OF_DIAMONDS],
 					p1Points: [],
 					p1FaceCards: [],
-					scrap: [Card.FOUR_OF_CLUBS, Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS],
+					scrap: [
+						Card.FOUR_OF_CLUBS,
+						Card.ACE_OF_DIAMONDS,
+						Card.FOUR_OF_SPADES,
+						Card.FOUR_OF_DIAMONDS
+					],
 				}
 			);
 			// Properly discard as expected
@@ -389,7 +397,7 @@ describe('FOURS', () => {
 
 			assertGameState(1,
 				{
-					p0Hand: [Card.FOUR_OF_DIAMONDS],
+					p0Hand: [],
 					p0Points: [],
 					p0FaceCards: [],
 					p1Hand: [],
@@ -400,7 +408,8 @@ describe('FOURS', () => {
 						Card.FOUR_OF_SPADES,
 						Card.ACE_OF_DIAMONDS,
 						Card.TEN_OF_HEARTS,
-						Card.SIX_OF_DIAMONDS
+						Card.SIX_OF_DIAMONDS,
+						Card.FOUR_OF_DIAMONDS
 					],
 				}
 			);
