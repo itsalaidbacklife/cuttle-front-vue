@@ -303,16 +303,16 @@ describe('FOURS', () => {
 		beforeEach(() => {
 			setupGameAsP1();
 		});
-		it('Discards two cards when opponent plays a four', () => {
+		it.only('Discards two cards when opponent plays a four, repeated fours', () => {
 			cy.loadGameFixture({
-				p0Hand: [Card.FOUR_OF_CLUBS, Card.ACE_OF_HEARTS],
+				p0Hand: [Card.FOUR_OF_CLUBS, Card.FOUR_OF_DIAMONDS],
 				p0Points: [],
 				p0FaceCards: [],
-				p1Hand: [Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS],
+				p1Hand: [Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS, Card.SIX_OF_DIAMONDS],
 				p1Points: [],
 				p1FaceCards: [],
 			});
-			cy.get('[data-player-hand-card]').should('have.length', 3);
+			cy.get('[data-player-hand-card]').should('have.length', 4);
 			cy.log('Loaded fixture');
 	
 			// Opponent plays four
@@ -336,15 +336,74 @@ describe('FOURS', () => {
 	
 			assertGameState(1,
 				{
-					p0Hand: [Card.ACE_OF_HEARTS],
+					p0Hand: [Card.FOUR_OF_DIAMONDS],
 					p0Points: [],
 					p0FaceCards: [],
-					p1Hand: [Card.TEN_OF_HEARTS],
+					p1Hand: [Card.TEN_OF_HEARTS, Card.SIX_OF_DIAMONDS],
 					p1Points: [],
 					p1FaceCards: [],
 					scrap: [Card.FOUR_OF_CLUBS, Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS],
 				}
-			)
+			);
+
+			// Player draws
+			cy.get('#deck')
+				.click();
+			
+			// Opponent plays 2nd four
+			cy.playOneOffOpponent(Card.FOUR_OF_DIAMONDS);
+			// Player cannot counter
+			cy.get('#cannot-counter-dialog')
+				.should('be.visible')
+				.get('[data-cy=cannot-counter-resolve]')
+				.click();
+
+			// Choosing cards to discard
+			cy.log('Choosing two cards to discard');
+			cy.get('[data-cy=submit-four-dialog]')
+				.should('be.disabled') // can't prematurely submit
+				.click({force: true}); // and if you do, still should fail
+			// Assert Snackbar error
+			assertSnackbarError('You must select cards from your hand to discard');
+			// Discard dialog should still be open
+			cy.get('#four-discard-dialog')
+				.should('be.visible');
+			// Validate game state same as above
+			assertGameState(1,
+				{
+					p0Hand: [Card.FOUR_OF_DIAMONDS],
+					p0Points: [],
+					p0FaceCards: [],
+					p1Hand: [Card.TEN_OF_HEARTS, Card.SIX_OF_DIAMONDS],
+					p1Points: [],
+					p1FaceCards: [],
+					scrap: [Card.FOUR_OF_CLUBS, Card.FOUR_OF_SPADES, Card.ACE_OF_DIAMONDS],
+				}
+			);
+			// Properly discard as expected
+			cy.log('Choosing two cards to discard - second time');
+			cy.get('[data-discard-card=10-2]').click(); // 10 of hearts
+			cy.get('[data-cy=submit-four-dialog]').should('be.disabled'); // can't prematurely submit
+			cy.get('[data-discard-card=6-1]').click(); // six of diamonds
+			cy.get('[data-cy=submit-four-dialog]').click(); // submit choice to discard
+
+			assertGameState(1,
+				{
+					p0Hand: [Card.FOUR_OF_DIAMONDS],
+					p0Points: [],
+					p0FaceCards: [],
+					p1Hand: [],
+					p1Points: [],
+					p1FaceCards: [],
+					scrap: [
+						Card.FOUR_OF_CLUBS,
+						Card.FOUR_OF_SPADES,
+						Card.ACE_OF_DIAMONDS,
+						Card.TEN_OF_HEARTS,
+						Card.SIX_OF_DIAMONDS
+					],
+				}
+			);
 		});
 	
 		it('Discards last card when FOURd with one card in hand', () => {
