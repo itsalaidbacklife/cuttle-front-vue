@@ -297,13 +297,100 @@ describe('FOURS', () => {
 				p1FaceCards: [],
 			});
 		});
+
+		it('Prevents opponent from discarding illegally', () => {
+			// Set Up
+			cy.loadGameFixture({
+				p0Hand: [Card.FOUR_OF_SPADES, Card.FOUR_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+
+			cy.playOneOffAndResolveAsPlayer(Card.FOUR_OF_SPADES);
+			cy.get('#waiting-for-opponent-discard-scrim')
+				.should('be.visible');
+
+			// Illegal Discard 1: Only 1 card selected
+			cy.log('Opponent illegally discards: No cards selected');
+			cy.discardOpponent(); // Ten of spades not in hand
+			// assertSnackbarError('You must select two cards from your hand to discard');
+			cy.get('#waiting-for-opponent-discard-scrim')
+				.should('be.visible');
+			assertGameState(0, {
+				p0Hand: [Card.FOUR_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.FOUR_OF_SPADES]
+			});
+			cy.log('Successfully prevented discarding with no cards selected');
+
+			// Illegal Discard 2: Only 1 card selected
+			cy.log('Opponent illegally discards: Chooses only 1 card');
+			cy.discardOpponent(Card.ACE_OF_HEARTS); // Ten of spades not in hand
+			// assertSnackbarError('You must select two cards from your hand to discard');
+			cy.get('#waiting-for-opponent-discard-scrim')
+				.should('be.visible');
+			assertGameState(0, {
+				p0Hand: [Card.FOUR_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.FOUR_OF_SPADES]
+			});
+			cy.log('Successfully prevented discarding only 1 card');
+
+			// Illegal Discard 3: Card not in hand
+			cy.log('Opponent illegally discards: Chooses a card not in their hand');
+			cy.discardOpponent(Card.ACE_OF_HEARTS, Card.TEN_OF_SPADES); // Ten of spades not in hand
+			// assertSnackbarError('You must select two cards from your hand to discard');
+			cy.get('#waiting-for-opponent-discard-scrim')
+				.should('be.visible');
+			assertGameState(0, {
+				p0Hand: [Card.FOUR_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS, Card.TEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [Card.FOUR_OF_SPADES]
+			});
+			cy.log('Successfully prevented discarding a card not in hand');
+
+			// Legal Discard
+			cy.discardOpponent(Card.ACE_OF_HEARTS, Card.ACE_OF_DIAMONDS);
+			cy.get('#waiting-for-opponent-discard-scrim')
+				.should('not.be.visible');
+			assertGameState(0, {
+				p0Hand: [Card.FOUR_OF_CLUBS],
+				p0Points: [],
+				p0FaceCards: [],
+				p1Hand: [Card.TEN_OF_HEARTS],
+				p1Points: [],
+				p1FaceCards: [],
+				scrap: [
+					Card.FOUR_OF_SPADES,
+					Card.ACE_OF_HEARTS,
+					Card.ACE_OF_DIAMONDS,
+				],
+			});
+		});
 	});
 	
 	describe('Opponent playing FOURS', () => {
 		beforeEach(() => {
 			setupGameAsP1();
 		});
-		it.only('Discards two cards when opponent plays a four, repeated fours', () => {
+		it('Discards two cards when opponent plays a four, repeated fours', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.FOUR_OF_CLUBS, Card.FOUR_OF_DIAMONDS],
 				p0Points: [],
