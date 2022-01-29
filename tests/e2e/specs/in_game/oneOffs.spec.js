@@ -287,7 +287,7 @@ describe('FOURS', () => {
 			cy.get('[data-move-choice=oneOff]').click();
 	
 			assertSnackbarError('You cannot play a 4 as a one-off while your opponent has no cards in hand');
-		
+
 			assertGameState(0, {
 				p0Hand: [Card.FOUR_OF_CLUBS],
 				p0Points: [],
@@ -317,8 +317,7 @@ describe('FOURS', () => {
 
 			// Illegal Discard 1: Only 1 card selected
 			cy.log('Opponent illegally discards: No cards selected');
-			cy.discardOpponent(); // Ten of spades not in hand
-			// assertSnackbarError('You must select two cards from your hand to discard');
+			cy.discardOpponent(); // Discard with no selection
 			cy.get('#waiting-for-opponent-discard-scrim')
 				.should('be.visible');
 			assertGameState(0, {
@@ -334,8 +333,7 @@ describe('FOURS', () => {
 
 			// Illegal Discard 2: Only 1 card selected
 			cy.log('Opponent illegally discards: Chooses only 1 card');
-			cy.discardOpponent(Card.ACE_OF_HEARTS); // Ten of spades not in hand
-			// assertSnackbarError('You must select two cards from your hand to discard');
+			cy.discardOpponent(Card.ACE_OF_HEARTS); // Only 1 card selected (should have 2)
 			cy.get('#waiting-for-opponent-discard-scrim')
 				.should('be.visible');
 			assertGameState(0, {
@@ -352,7 +350,6 @@ describe('FOURS', () => {
 			// Illegal Discard 3: Card not in hand
 			cy.log('Opponent illegally discards: Chooses a card not in their hand');
 			cy.discardOpponent(Card.ACE_OF_HEARTS, Card.TEN_OF_SPADES); // Ten of spades not in hand
-			// assertSnackbarError('You must select two cards from your hand to discard');
 			cy.get('#waiting-for-opponent-discard-scrim')
 				.should('be.visible');
 			assertGameState(0, {
