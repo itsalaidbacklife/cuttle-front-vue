@@ -4,5 +4,6 @@
   "testFiles": [
     "out_of_game/**/*.js",
     "in_game/**/*.js"
-  ]
+  ],
+  "video": false
 }
