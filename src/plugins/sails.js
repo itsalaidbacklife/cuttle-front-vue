@@ -120,6 +120,10 @@ io.socket.on('gameCreated', function(evData) {
 	store.commit('addGameToList', newGame);
 });
 
+io.socket.on('gameStarting', function(evData) {
+	store.commit('removeGame', evData);
+});
+
 io.socket.on('join', function(evData) {
 	store.commit('joinGame', {
 		gameId: evData.gameId,
