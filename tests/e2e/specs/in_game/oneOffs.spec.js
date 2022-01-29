@@ -448,10 +448,7 @@ describe('FOURS', () => {
 			// Choosing cards to discard
 			cy.log('Choosing two cards to discard');
 			cy.get('[data-cy=submit-four-dialog]')
-				.should('be.disabled') // can't prematurely submit
-				// .click({force: true}); // and if you do, still should fail
-			// Assert Snackbar error
-			// assertSnackbarError('You must select cards from your hand to discard');
+				.should('be.disabled'); // can't prematurely submit
 			// Discard dialog should still be open
 			cy.get('#four-discard-dialog')
 				.should('be.visible');
