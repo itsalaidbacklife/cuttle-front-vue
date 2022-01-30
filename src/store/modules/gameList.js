@@ -24,6 +24,9 @@ export default {
 		addGameToList(state, newGame) {
 			state.games.push(new GameSummary(newGame));
 		},
+		removeGame(state, data) {
+			state.games = state.games.filter((game) => game.id !== data.gameId );
+		},
 		updateGameStatus(state, data) {
 			const updatedGame = state.games.find((game) => game.id === data.id);
 			if (updatedGame) {

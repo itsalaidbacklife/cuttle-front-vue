@@ -192,4 +192,29 @@ describe('Home - Create Game', () => {
 		});
 		assertSnackbarError('Game name cannot be blank', 'newgame');
 	});
+	it('Removes a game when both players are ready', () => {
+		cy.createGamePlayer('Test Game').then((gameData) => {
+			// Sign up 2 users and subscribe them to game
+			cy.signupOpponent('remotePlayer1@cuttle.cards', 'myNewPassword');
+			cy.subscribeOpponent(gameData.gameId);
+			cy.readyOpponent(gameData.gameId);
+
+			// The game should exist
+			cy.get('[data-cy=game-list-item]')
+				.should('have.length', 1);
+
+			cy.signupOpponent('remotePlayer2@cuttle.cards', 'anotherUserPw');
+			cy.subscribeOpponent(gameData.gameId);
+
+			// The game should still be there after the second player joins
+			cy.get('[data-cy=game-list-item]')
+				.should('have.length', 1);
+
+			cy.readyOpponent(gameData.gameId);
+
+			// The game should go away after the ready
+			cy.get('[data-cy=game-list-item]')
+				.should('have.length', 0);
+		});
+	});
 });
