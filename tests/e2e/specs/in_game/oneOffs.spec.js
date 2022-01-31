@@ -929,7 +929,7 @@ describe('Playing NINES', ()=>{
 
 		});
 
-		it.only('Plays a nine as a ONE-OFF, make sure that the bounced card is playable even if there is countering', ()=>{
+		it('Plays a nine as a ONE-OFF, make sure that the bounced card is playable even if there is countering', ()=>{
 			/*
 			1). P0 plays 9 one-off, targeting P1's Queen
 			2). P1 plays 6's one-off
