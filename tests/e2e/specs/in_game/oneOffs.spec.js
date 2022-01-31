@@ -871,7 +871,6 @@ describe('Playing NINES', ()=>{
 			);			
 		}); // End 9 on face card
 	
-	
 		it('Plays a 9 on a jack to steal back point card', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.ACE_OF_SPADES, Card.NINE_OF_CLUBS],
@@ -972,6 +971,223 @@ describe('Playing NINES', ()=>{
 				}
 			);
 		});
+
+		it('Plays a nine as a ONE-OFF, make sure that the bounced card is playable later', ()=>{
+			/*
+			1). P0 plays a 9, targeting an in-play Queen
+			2). P1 plays a 6's one-off, removing some cards
+			3). P0 plays a Jack, targeting an in-play 10
+			4). P1 can replay their bounced Queen
+			 */
+
+			// Initial state
+			cy.loadGameFixture({
+				p0Hand: [Card.NINE_OF_SPADES, Card.JACK_OF_SPADES],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_HEARTS],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.TEN_OF_HEARTS],
+				p1FaceCards: [Card.QUEEN_OF_DIAMONDS],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 2);
+			cy.log('Loaded fixture');
+
+			// STEP 1
+			cy.log('STEP 1- P0 plays nine, targeting the Queen in play');
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-face-card=12-1]').click(); // queen of diamonds
+
+			// Wait for opponent to resolve
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			cy.resolveOpponent();
+
+			assertGameState(
+				0,
+				{
+					p0Hand: [Card.JACK_OF_SPADES],
+					p0Points: [],
+					p0FaceCards: [Card.KING_OF_HEARTS],
+					p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.QUEEN_OF_DIAMONDS],
+					p1Points: [Card.TEN_OF_HEARTS],
+					p1FaceCards: [],
+					scrap: [Card.NINE_OF_SPADES],
+				}
+			);
+
+			// STEP 2
+			cy.log('STEP 2- P1 plays a six, removing face cards');
+			cy.playOneOffOpponent(Card.SIX_OF_HEARTS);
+
+			cy.get('#cannot-counter-dialog')
+				.should('be.visible')
+				.get('[data-cy=cannot-counter-resolve]')
+				.click();
+
+			assertGameState(
+				0,
+				{
+					p0Hand: [Card.JACK_OF_SPADES],
+					p0Points: [],
+					p0FaceCards: [],
+					p1Hand: [Card.QUEEN_OF_HEARTS, Card.QUEEN_OF_DIAMONDS],
+					p1Points: [Card.TEN_OF_HEARTS],
+					p1FaceCards: [],
+					scrap: [Card.NINE_OF_SPADES, Card.KING_OF_HEARTS, Card.SIX_OF_HEARTS],
+				}
+			);
+
+			// STEP 3
+			cy.log('STEP 3- P0 plays a Jack, targeting the Ten');
+			cy.get('[data-player-hand-card=11-3]').click();
+			cy.get('[data-move-choice=jack]').click();
+			cy.get('[data-opponent-point-card=10-2]')
+				.click();
+
+			assertGameState(0,
+				{
+					p0Hand: [],
+					p0Points: [Card.TEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.QUEEN_OF_HEARTS, Card.QUEEN_OF_DIAMONDS],
+					p1Points: [],
+					p1FaceCards: [],
+					scrap: [Card.NINE_OF_SPADES, Card.KING_OF_HEARTS, Card.SIX_OF_HEARTS],
+				});
+
+			// STEP 4
+			cy.log('STEP 4- P1 plays their previously bounced Queen');
+			cy.playFaceCardOpponent(Card.QUEEN_OF_DIAMONDS);
+
+			assertGameState(
+				0,
+				{
+					p0Hand: [],
+					p0Points: [Card.TEN_OF_HEARTS],
+					p0FaceCards: [],
+					p1Hand: [Card.QUEEN_OF_HEARTS],
+					p1Points: [],
+					p1FaceCards: [Card.QUEEN_OF_DIAMONDS],
+					scrap: [Card.NINE_OF_SPADES, Card.KING_OF_HEARTS, Card.SIX_OF_HEARTS],
+				}
+			);
+
+
+		});
+
+		it('Plays a nine as a ONE-OFF, make sure that the bounced card is playable even if there is countering', ()=>{
+			/*
+			1). P0 plays 9 one-off, targeting P1's Queen
+			2). P1 plays 6's one-off
+			3). P0 counters and it resolves
+			4). P0 plays their Jack, targeting P1's 10
+			5). P1 plays their Queen again (it should no longer be frozen)
+			 */
+
+			// Initial state
+			cy.loadGameFixture({
+				p0Hand: [Card.TWO_OF_SPADES, Card.NINE_OF_SPADES, Card.JACK_OF_SPADES],
+				p0Points: [],
+				p0FaceCards: [Card.KING_OF_HEARTS],
+				p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS],
+				p1Points: [Card.TEN_OF_HEARTS],
+				p1FaceCards: [Card.QUEEN_OF_DIAMONDS],
+			});
+			cy.get('[data-player-hand-card]').should('have.length', 3);
+			cy.log('Loaded fixture');
+
+			// STEP 1
+			cy.log('STEP 1- P0 plays nine, targeting the Queen in play');
+			cy.get('[data-player-hand-card=9-3]').click(); // nine of spades
+			cy.get('[data-move-choice=targetedOneOff]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-face-card=12-1]').click(); // queen of diamonds
+
+			// Wait for opponent to resolve
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			cy.resolveOpponent();
+
+			assertGameState(
+				0,
+				{
+					p0Hand: [Card.TWO_OF_SPADES, Card.JACK_OF_SPADES],
+					p0Points: [],
+					p0FaceCards: [Card.KING_OF_HEARTS],
+					p1Hand: [Card.SIX_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.QUEEN_OF_DIAMONDS],
+					p1Points: [Card.TEN_OF_HEARTS],
+					p1FaceCards: [],
+					scrap: [Card.NINE_OF_SPADES],
+				}
+			);
+
+			// STEP 2
+			cy.log('STEP 2- P1 tries to play a six');
+			cy.playOneOffOpponent(Card.SIX_OF_HEARTS);
+
+			// STEP 3
+			cy.log('STEP 3- P0 counters');
+
+			cy.get('#counter-dialog')
+				.should('be.visible')
+				.get('[data-cy=counter]')
+				.click();
+
+			cy.get('#choose-two-dialog')
+				.should('be.visible')
+				.get('[data-counter-dialog-card=2-3]')
+				.click();
+
+			// Wait for opponent to resolve
+			cy.get('#waiting-for-opponent-counter-scrim')
+				.should('be.visible');
+			cy.resolveOpponent();
+
+			assertGameState(
+				0,
+				{
+					p0Hand: [Card.JACK_OF_SPADES],
+					p0Points: [],
+					p0FaceCards: [Card.KING_OF_HEARTS],
+					p1Hand: [Card.QUEEN_OF_HEARTS, Card.QUEEN_OF_DIAMONDS],
+					p1Points: [Card.TEN_OF_HEARTS],
+					p1FaceCards: [],
+					scrap: [Card.NINE_OF_SPADES, Card.SIX_OF_HEARTS, Card.TWO_OF_SPADES],
+				}
+			);
+
+			// Step 4
+			cy.log('STEP 4- P0 Jacks P1\'s 10');
+			cy.get('[data-player-hand-card=11-3]').click(); // Jack of spades
+			cy.get('[data-move-choice=jack]').click();
+			cy.get('#player-hand-targeting')
+				.should('be.visible');
+			cy.get('[data-opponent-point-card=10-2]').click(); // Ten of hearts
+
+			// STEP 4
+			cy.log('STEP 5- P1 plays their previously bounced Queen');
+			cy.playFaceCardOpponent(Card.QUEEN_OF_DIAMONDS);
+
+			assertGameState(
+				0,
+				{
+					p0Hand: [],
+					p0Points: [Card.TEN_OF_HEARTS],
+					p0FaceCards: [Card.KING_OF_HEARTS],
+					p1Hand: [Card.QUEEN_OF_HEARTS],
+					p1Points: [],
+					p1FaceCards: [Card.QUEEN_OF_DIAMONDS],
+					scrap: [Card.NINE_OF_SPADES, Card.SIX_OF_HEARTS, Card.TWO_OF_SPADES],
+				}
+			);
+
+
+
+		})
 	}); // End Player playing 9s describe
 
 	describe('Opponent Playing NINES', () => {
