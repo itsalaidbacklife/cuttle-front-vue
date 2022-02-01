@@ -66,7 +66,7 @@ export default {
 			if (!getters.opponent) {
 				return null;
 			}
-			return getters.opponent.email.split('@')[0];
+			return getters.opponent.username;
 		},
 		opponentIsReady(state, getters) {
 			if (!getters.opponent) {
@@ -206,7 +206,7 @@ export default {
 					if (jwres.statusCode === 200) {
 						context.commit('updateGame', res.game);
 						context.commit('setMyPNum', res.pNum);
-						context.commit('successfullyJoined', {email: res.playerEmail, pNum: res.pNum});
+						context.commit('successfullyJoined', {username: res.playerUsername, pNum: res.pNum});
 						return resolve();
 					}
 					return reject(new Error('error subscribing'));

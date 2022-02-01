@@ -23,14 +23,14 @@
 		<v-row>
 			<v-col offset="1">
 				<lobby-player-indicator
-					:player-email="myUserName"
+					:player-username="myUserName"
 					:player-ready="iAmReady"
 					data-cy="my-indicator"
 				/>
 			</v-col>
 			<v-col offset="1">
 				<lobby-player-indicator
-					:player-email="opponentName"
+					:player-username="opponentName"
 					:player-ready="opponentIsReady"
 					data-cy="opponent-indicator"
 				/>

@@ -14,7 +14,7 @@
 					v-model="username"
 					outlined
 					:dense="$vuetify.breakpoint.mdAndDown"
-					label="Email"
+					label="Username"
 					data-cy="username"
 					@keyup.enter="login"
 				/>
@@ -73,7 +73,7 @@ export default {
 	},
 	data() {
 		return {
-			username: this.$store.state.auth.email,
+			username: this.$store.state.auth.username,
 			password: '',
 			isLoggingIn: true,
 			showSnackBar: false,
@@ -94,7 +94,7 @@ export default {
 		login() {
 			this.isLoggingIn = true;
 			this.$store.dispatch('requestReauthenticate', {
-				email: this.username,
+				username: this.username,
 				password: this.password,
 			}).then(() => {
 				this.clearSnackBar();

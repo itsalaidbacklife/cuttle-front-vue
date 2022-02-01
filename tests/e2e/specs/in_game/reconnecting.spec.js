@@ -1,9 +1,8 @@
 import {
 	setupGameAsP0,
 	setupGameAsP1,
-	validEmail,
 	validPassword,
-	opponentEmail,
+	opponentUsername,
 	opponentPassword,
 	assertGameState,
 	Card
@@ -12,7 +11,6 @@ import {
 function reconnect() {
 	cy.get('#reauthenticate-dialog')
 		.should('be.visible');
-	cy.get('[data-cy=username]').type(validEmail);
 	cy.get('[data-cy=password]').type(validPassword);
 	cy.get('[data-cy=login]').click();
 	cy.get('#reauthenticate-dialog')
@@ -300,7 +298,7 @@ describe('Reconnecting to a game', () => {
 			cy.get('#cannot-counter-dialog')
 				.should('be.visible');
 			
-			cy.reconnectOpponent(opponentEmail, opponentPassword);
+			cy.reconnectOpponent(opponentUsername, opponentPassword);
 
 			// Cannot counter dialog appears again
 			cy.get('#cannot-counter-dialog')

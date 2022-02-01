@@ -3,22 +3,22 @@ import { io } from '../../plugins/sails.js';
 export default {
 	state: {
 		authenticated: false,
-		email: null,
+		username: null,
 		mustReauthenticate: false,
 	},
 	getters: {
 		myUserName(state) {
-			return state.email ? state.email.split('@')[0] : null;
+			return state.username ? state.username : null;
 		},
 	},
 	mutations: {
-		authSuccess(state, email) {
+		authSuccess(state, username) {
 			state.authenticated = true;
-			state.email = email;
+			state.username = username;
 		},
 		authFailure(state) {
 			state.authenticated = false;
-			state.email = null;
+			state.username = null;
 		},
 		setMustReauthenticate(state, val) {
 			state.mustReauthenticate = val;
@@ -30,12 +30,12 @@ export default {
 				io.socket.post(
 					'/user/login',
 					{
-						email: data.email,
+						username: data.username,
 						password: data.password,
 					},
 					function handleResponse(resData, jwres) {
 						if (jwres.statusCode === 200) {
-							context.commit('authSuccess', data.email);
+							context.commit('authSuccess', data.username);
 							return resolve();
 						}
 						context.commit('authFailure');
@@ -50,12 +50,12 @@ export default {
 				io.socket.put(
 					'/user/signup',
 					{
-						email: data.email,
+						username: data.username,
 						password: data.password,
 					},
 					function handleResponse(resData, jwres) {
 						if (jwres.statusCode === 200) {
-							context.commit('authSuccess', data.email);
+							context.commit('authSuccess', data.username);
 							return resolve();
 						}
 						let message;
@@ -86,12 +86,12 @@ export default {
 				});
 			});
 		},
-		requestReauthenticate(context, {email, password}) {
+		requestReauthenticate(context, {username, password}) {
 			return new Promise((resolve, reject) => {
 				// Assume successful login - cancel upon error
-				context.commit('authSuccess', email);
+				context.commit('authSuccess', username);
 				io.socket.get('/user/reLogin', {
-					email,
+					username,
 					password
 				}, function handleResponse(res, jwres) {
 					if (jwres.statusCode === 200) {
