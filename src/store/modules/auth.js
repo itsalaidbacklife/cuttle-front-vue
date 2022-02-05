@@ -96,7 +96,7 @@ export default {
 				}, function handleResponse(res, jwres) {
 					if (jwres.statusCode === 200) {
 						context.commit('setMustReauthenticate', false);
-						let myPNum = context.rootState.game.players.findIndex((player) => player.userName === context.getters.myUserName);
+						let myPNum = context.rootState.game.players.findIndex((player) => player.username === context.state.username);
 						if (myPNum === -1) {
 							myPNum = null;
 						}
