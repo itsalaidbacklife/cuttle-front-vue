@@ -1,6 +1,7 @@
 import {
 	setupGameAsP0,
 	setupGameAsP1,
+	username,
 	validPassword,
 	opponentUsername,
 	opponentPassword,
@@ -11,6 +12,7 @@ import {
 function reconnect() {
 	cy.get('#reauthenticate-dialog')
 		.should('be.visible');
+	cy.get('[data-cy=username]').type(username);
 	cy.get('[data-cy=password]').type(validPassword);
 	cy.get('[data-cy=login]').click();
 	cy.get('#reauthenticate-dialog')
