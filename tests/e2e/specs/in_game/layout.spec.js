@@ -325,7 +325,7 @@ describe('Game View Layout', () => {
 		);
 	});
 
-	it('Click the scrap to view contents', ()=>{
+	it.only('Click the scrap to view contents', ()=>{
 		// Given-- the initial game state with 3 cards in the scrap
 		cy.loadGameFixture({
 			p0Hand: [Card.THREE_OF_CLUBS],
@@ -338,6 +338,12 @@ describe('Game View Layout', () => {
 				Card.ACE_OF_SPADES,
 				Card.TEN_OF_HEARTS,
 				Card.TEN_OF_SPADES,
+				Card.FOUR_OF_CLUBS,
+				Card.TWO_OF_HEARTS,
+				Card.EIGHT_OF_SPADES,
+				Card.TWO_OF_CLUBS,
+				Card.ACE_OF_CLUBS,
+				Card.TWO_OF_DIAMONDS,
 			]
 		});
 		cy.get('[data-player-hand-card]').should('have.length', 1);
@@ -351,7 +357,7 @@ describe('Game View Layout', () => {
 		cy.get('#scrap-dialog').should('be.visible');
 
 		// Make sure that the three cards in the scrap are shown
-		cy.get('[data-scrap-dialog-card]').should('have.length', 3);
+		cy.get('[data-scrap-dialog-card]').should('have.length', 9);
 		cy.get('[data-scrap-dialog-card=1-3]').should('be.visible');
 		cy.get('[data-scrap-dialog-card=10-2]').should('be.visible');
 		cy.get('[data-scrap-dialog-card=10-3]').should('be.visible');
