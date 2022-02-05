@@ -30,25 +30,28 @@
 				</v-btn>
 			</v-card-title>
 			<v-card-text>
-				<div class="d-flex flex-wrap justify-center align-center my-8">
-					<!-- Empty Placeholder -->
-					<template v-if="scrap.length === 0">
-						<div class="d-flex flex-column">
-							<p>There are no cards in the scrap pile.</p>
-							<v-icon x-large>
-								mdi-cancel
-							</v-icon>
-						</div>
-					</template>
-					<!-- Cards in the scrap -->
-					<card
-						v-for="(card) in scrap"
-						:key="card.id"
-						class="mx-1 my-1"
-						:suit="card.suit"
-						:rank="card.rank"
-						:data-scrap-dialog-card="`${card.rank}-${card.suit}`"
-					/>
+				<div class="mt-2">
+					<v-btn color="primary" @click="sortByRank = !sortByRank">Sort {{ sortButtonText }}</v-btn>
+					<div class="d-flex flex-wrap justify-center align-center my-8">
+						<!-- Empty Placeholder -->
+						<template v-if="scrap.length === 0">
+							<div class="d-flex flex-column">
+								<p>There are no cards in the scrap pile.</p>
+								<v-icon x-large>
+									mdi-cancel
+								</v-icon>
+							</div>
+						</template>
+						<!-- Cards in the scrap -->
+						<card
+							v-for="(card) in sortedScrap"
+							:key="card.id"
+							class="mx-1 my-1"
+							:suit="card.suit"
+							:rank="card.rank"
+							:data-scrap-dialog-card="`${card.rank}-${card.suit}`"
+						/>
+					</div>
 				</div>
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end my-2">
@@ -68,6 +71,7 @@
 <script>
 
 import Card from '@/components/GameView/Card.vue';
+import { sortBy } from 'lodash';
 
 export default {
 	name: 'ScrapDialog',
@@ -83,7 +87,16 @@ export default {
 	data() {
 		return {
 			show: false,
+			sortByRank: false,
 		}
+	},
+	computed: {
+		sortButtonText() {
+			return this.sortByRank ? 'Chronologically' : 'By Rank';
+		},
+		sortedScrap() {
+			return this.sortByRank ? sortBy(this.scrap, 'rank') : this.scrap;
+		},
 	}
 }
 </script>
