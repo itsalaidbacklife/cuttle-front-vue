@@ -30,13 +30,16 @@
 				</v-btn>
 			</v-card-title>
 			<v-card-text>
-				<div class="mt-4 d-flex flex-column">
-					<v-btn
-						color="primary"
-						@click="sortByRank = !sortByRank"
-					>
-						Sort {{ sortButtonText }}
-					</v-btn>
+				<div class="mt-4">
+					<div id="select-wrapper">
+						<v-select
+							v-model="sortByRank"
+							:items="sortOptions"
+							label="Sort"
+							outlined
+							hide-details
+						/>
+					</div>
 					<div class="d-flex flex-wrap justify-center align-center mb-4 mt-2">
 						<!-- Empty Placeholder -->
 						<template v-if="scrap.length === 0">
@@ -93,6 +96,10 @@ export default {
 		return {
 			show: false,
 			sortByRank: false,
+			sortOptions: [
+				{text: 'Chronologically', value: false},
+				{text: 'By Rank', value: true},
+			]
 		}
 	},
 	computed: {
@@ -106,4 +113,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#select-wrapper {
+	max-width: 300px;
+}
+</style>
