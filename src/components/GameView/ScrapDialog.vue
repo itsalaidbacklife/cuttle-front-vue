@@ -30,9 +30,14 @@
 				</v-btn>
 			</v-card-title>
 			<v-card-text>
-				<div class="mt-2">
-					<v-btn color="primary" @click="sortByRank = !sortByRank">Sort {{ sortButtonText }}</v-btn>
-					<div class="d-flex flex-wrap justify-center align-center my-8">
+				<div class="mt-4 d-flex flex-column">
+					<v-btn
+						color="primary"
+						@click="sortByRank = !sortByRank"
+					>
+						Sort {{ sortButtonText }}
+					</v-btn>
+					<div class="d-flex flex-wrap justify-center align-center mb-4 mt-2">
 						<!-- Empty Placeholder -->
 						<template v-if="scrap.length === 0">
 							<div class="d-flex flex-column">
