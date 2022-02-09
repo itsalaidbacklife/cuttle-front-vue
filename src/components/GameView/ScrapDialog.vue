@@ -33,7 +33,9 @@
 				<div class="mt-4">
 					<div id="select-wrapper">
 						<v-select
+							id="scrap-sort-dropdown"
 							v-model="sortByRank"
+							data-cy="scrap-sort-dropdown"
 							:items="sortOptions"
 							label="Sort"
 							outlined
