@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import { sortBy } from 'lodash';
 import CardListSortable from '@/components/GameView/CardListSortable.vue';
 
 export default {
@@ -68,26 +67,9 @@ export default {
 	data() {
 		return {
 			show: false,
-			sortByRank: false,
-			sortOptions: [
-				{text: 'Chronologically', value: false},
-				{text: 'By Rank', value: true},
-			]
 		}
 	},
-	computed: {
-		sortButtonText() {
-			return this.sortByRank ? 'Chronologically' : 'By Rank';
-		},
-		sortedScrap() {
-			return this.sortByRank ? sortBy(this.scrap, 'rank') : this.scrap;
-		},
-	}
 }
 </script>
 
-<style lang="scss" scoped>
-#select-wrapper {
-	max-width: 300px;
-}
-</style>
+<style lang="scss" scoped></style>
