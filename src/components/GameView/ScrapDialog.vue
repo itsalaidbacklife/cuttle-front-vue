@@ -31,37 +31,9 @@
 			</v-card-title>
 			<v-card-text>
 				<div class="mt-4">
-					<div id="select-wrapper">
-						<v-select
-							id="scrap-sort-dropdown"
-							v-model="sortByRank"
-							data-cy="scrap-sort-dropdown"
-							:items="sortOptions"
-							label="Sort"
-							outlined
-							hide-details
-						/>
-					</div>
-					<div class="d-flex flex-wrap justify-center align-center mb-4 mt-2">
-						<!-- Empty Placeholder -->
-						<template v-if="scrap.length === 0">
-							<div class="d-flex flex-column">
-								<p>There are no cards in the scrap pile.</p>
-								<v-icon x-large>
-									mdi-cancel
-								</v-icon>
-							</div>
-						</template>
-						<!-- Cards in the scrap -->
-						<card
-							v-for="(card) in sortedScrap"
-							:key="card.id"
-							class="mx-1 my-1"
-							:suit="card.suit"
-							:rank="card.rank"
-							:data-scrap-dialog-card="`${card.rank}-${card.suit}`"
-						/>
-					</div>
+					<card-list-sortable
+						:cards="scrap"
+					/>
 				</div>
 			</v-card-text>
 			<v-card-actions class="d-flex justify-end my-2">
@@ -79,14 +51,13 @@
 </template>
 
 <script>
-
-import Card from '@/components/GameView/Card.vue';
 import { sortBy } from 'lodash';
+import CardListSortable from '@/components/GameView/CardListSortable.vue';
 
 export default {
 	name: 'ScrapDialog',
 	components: {
-		Card,
+		CardListSortable
 	},
 	props: {
 		scrap: {
