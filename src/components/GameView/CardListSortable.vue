@@ -15,7 +15,7 @@
 			<!-- Empty Placeholder -->
 			<template v-if="cards.length === 0">
 				<div class="d-flex flex-column">
-					<p>There are no cards in the scrap pile.</p>
+					<p>{{ emptyText }}</p>
 					<v-icon x-large>
 						mdi-cancel
 					</v-icon>
@@ -28,7 +28,7 @@
 				class="mx-1 my-1"
 				:suit="card.suit"
 				:rank="card.rank"
-				:data-scrap-dialog-card="`${card.rank}-${card.suit}`"
+				v-bind="dataSelectorObject(card)"
 			/>
 		</div>
 	</div>
@@ -48,6 +48,21 @@ export default {
 			type: Array,
 			required: true,
 		},
+		emptyText: {
+			type: String,
+			default: 'No Cards Yet',
+		},
+		/**
+		 * Prefix used to identify where this card is in UI
+		 * Used to generate data-* selectors for e2e testing
+		 * @example 'scrap-dialog' for this prop 
+		 * results in labeling cards like
+		 *     data-scrap-dialog-card="<suite>-<rank>"
+		 */
+		dataSelectorPrefix: {
+			type: String,
+			default: '',
+		},
 	},
 	data() {
 		return {
@@ -61,6 +76,22 @@ export default {
 	computed: {
 		sortedCards() {
 			return this.sortByRank ? sortBy(this.cards, 'rank') : this.cards;
+		},
+		// Used to dynamically generate data-cy selectors for each card
+		dataSelectorName() {
+			return `data-${this.dataSelectorPrefix}-card`;
+		},
+	},
+	methods: {
+		/**
+		 * Format data selector for a specific card into object for v-bind
+		 * @example result: {'data-scrap-dialog-card': '1-3'} 
+		 * ^^^ the ace of spades in the scrap dialog
+		 **/
+		dataSelectorObject(card) {
+			const res = {};
+			res[this.dataSelectorName] = `${card.rank}-${card.suit}`;
+			return res;
 		},
 	}
 }

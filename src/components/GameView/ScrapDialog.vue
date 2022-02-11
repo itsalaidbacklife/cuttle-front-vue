@@ -33,6 +33,8 @@
 				<div class="mt-4">
 					<card-list-sortable
 						:cards="scrap"
+						empty-text="There are no cards in the scrap pile."
+						data-selector-prefix="scrap-dialog"
 					/>
 				</div>
 			</v-card-text>
