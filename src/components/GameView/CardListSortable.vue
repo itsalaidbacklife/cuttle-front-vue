@@ -29,6 +29,8 @@
 				:suit="card.suit"
 				:rank="card.rank"
 				v-bind="dataSelectorObject(card)"
+				:is-selected="selectedIds.includes(card.id)"
+				@click="$emit('click', card)"
 			/>
 		</div>
 	</div>
@@ -63,6 +65,13 @@ export default {
 			type: String,
 			default: '',
 		},
+		/**
+		 * List of ids of cards in list that are selected
+		 */
+		selectedIds: {
+			type: Array,
+			default: () => [],
+		}
 	},
 	data() {
 		return {

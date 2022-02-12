@@ -12,15 +12,11 @@
 			<v-card-title>Select a Card from Scrap</v-card-title>
 			<v-card-text>
 				<div class="d-flex flex-wrap justify-center align-center my-8">
-					<card 
-						v-for="(card, index) in scrap"
-						:key="card.id"
-						class="mx-1 my-1"
-						:suit="card.suit"
-						:rank="card.rank"
-						:is-selected="selectedScrapCard && card.id === selectedScrapCard.id"
-						:data-scrap-dialog-card="`${card.rank}-${card.suit}`"
-						@click="selectCard(index)"
+					<card-list-sortable
+						:cards="scrap"
+						data-selector-prefix="scrap-dialog"
+						:selected-ids="selectedIds"
+						@click="selectCard($event)"
 					/>
 				</div>
 			</v-card-text>
@@ -30,7 +26,7 @@
 				<v-btn
 					data-cy="three-resolve"
 					color="primary"
-					:disabled="selectedScrapCard === null"
+					:disabled="selectedCard === null"
 					outlined
 					@click="moveToHand"
 				>
@@ -42,12 +38,13 @@
 </template>
 
 <script>
-import Card from '@/components/GameView/Card.vue';
+// import Card from '@/components/GameView/Card.vue';
+import CardListSortable from '@/components/GameView/CardListSortable.vue';
 
 export default {
 	name: 'ThreeDialog',
 	components: {
-		Card,
+		CardListSortable
 	},
 	props: {
 		value: {
@@ -67,7 +64,7 @@ export default {
 	data() {
 		return {
 			choseToCounter: false,
-			selectionIndex: null, // when select a card set this value
+			selectedCard: null,
 		}
 	},
 	computed: {
@@ -79,25 +76,28 @@ export default {
 				this.$emit('input', val);
 			}
 		},
-		selectedScrapCard() {
-			return this.selectionIndex !== null ? this.scrap[this.selectionIndex] : null;
-		},
+		selectedIds() {
+			const res = [];
+			if (this.selectedCard) {
+				res.push(this.selectedCard.id);
+			}
+			return res;
+		}
 	},
 	methods: {
 		moveToHand() {
-			const card = this.selectedScrapCard
-			this.$emit('resolveThree', card.id);
+			this.$emit('resolveThree', this.selectedCard.id);
 			this.clearSelection();
 		},
-		selectCard(index) {
-			if (index === this.selectionIndex){
+		selectCard(card) {
+			if (this.selectedCard && card.id === this.selectedCard.id){
 				this.clearSelection();
 			} else {
-				this.selectionIndex = index;
+				this.selectedCard = card;
 			}
 		},
 		clearSelection() {
-			this.selectionIndex = null;
+			this.selectedCard = null;
 		},
 	}
 }
