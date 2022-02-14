@@ -1136,10 +1136,10 @@ describe('Playing THREEs', () => {
 		cy.contains('By Rank').click();
 		const mapElementsToRank = (elements => {
 			return _.map(elements, (element) => {
-				return Number(element.attributes['data-scrap-dialog-card'].value.split('-')[0]);
+				return Number(element.attributes['data-three-dialog-card'].value.split('-')[0]);
 			});
 		});
-		cy.get('[data-scrap-dialog-card]')
+		cy.get('[data-three-dialog-card]')
 			.then(mapElementsToRank)
 			.then((elementRanks) => {
 				const sortedScrapRanksFromFixture = _.sortBy(scrap, 'rank').map((card => card.rank));
@@ -1147,7 +1147,7 @@ describe('Playing THREEs', () => {
 			});
 
 		// Player selects a card from scrap
-		cy.get('[data-scrap-dialog-card=10-2]').click();
+		cy.get('[data-three-dialog-card=10-2]').click();
 		cy.get('[data-cy=three-resolve').should('not.be.disabled').click();
 
 		assertGameState(

@@ -290,7 +290,7 @@ describe('Game View Layout', () => {
 		cy.get('[data-cy=three-resolve').should('be.disabled');
 		
 		// Player selects a card from scrap
-		cy.get('[data-scrap-dialog-card=10-2]').click();
+		cy.get('[data-three-dialog-card=10-2]').click();
 		cy.get('[data-cy=three-resolve').should('not.be.disabled').click();
 
 		assertGameState(

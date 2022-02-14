@@ -14,7 +14,7 @@
 				<div class="d-flex flex-wrap justify-center align-center my-8">
 					<card-list-sortable
 						:cards="scrap"
-						data-selector-prefix="scrap-dialog"
+						data-selector-prefix="three-dialog"
 						:selected-ids="selectedIds"
 						@click="selectCard($event)"
 					/>
