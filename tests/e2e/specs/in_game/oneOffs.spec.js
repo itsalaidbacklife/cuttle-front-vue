@@ -8,6 +8,8 @@ import {
 	Card
 } from '../../support/helpers';
 
+const { _ } = Cypress;
+
 describe('Untargeted One-Offs', () => {
 	
 	beforeEach(() => {
@@ -1315,6 +1317,13 @@ describe('Playing THREEs', () => {
 	});
 
 	it('Plays 3s successfully', () => {
+		const scrap = [
+			Card.ACE_OF_SPADES,
+			Card.TEN_OF_HEARTS,
+			Card.TEN_OF_SPADES,
+			Card.FOUR_OF_CLUBS
+		];
+
 		// Set Up
 		cy.loadGameFixture({
 			p0Hand: [Card.THREE_OF_CLUBS],
@@ -1323,7 +1332,7 @@ describe('Playing THREEs', () => {
 			p1Hand: [Card.TEN_OF_DIAMONDS],
 			p1Points: [Card.ACE_OF_HEARTS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
-			scrap: [Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES]
+			scrap,
 		});
 		cy.get('[data-player-hand-card]').should('have.length', 1);
 
@@ -1342,9 +1351,24 @@ describe('Playing THREEs', () => {
 		cy.get('#three-dialog').should('be.visible');
 		// resolve button should be disabled
 		cy.get('[data-cy=three-resolve').should('be.disabled');
-		
+
+		// Confirm able to sort scrap by rank
+		cy.get('[data-cy=scrap-sort-dropdown]').click({force: true});
+		cy.contains('By Rank').click();
+		const mapElementsToRank = (elements => {
+			return _.map(elements, (element) => {
+				return Number(element.attributes['data-three-dialog-card'].value.split('-')[0]);
+			});
+		});
+		cy.get('[data-three-dialog-card]')
+			.then(mapElementsToRank)
+			.then((elementRanks) => {
+				const sortedScrapRanksFromFixture = _.sortBy(scrap, 'rank').map((card => card.rank));
+				expect(elementRanks).to.deep.equal(sortedScrapRanksFromFixture);
+			});
+
 		// Player selects a card from scrap
-		cy.get('[data-scrap-dialog-card=10-2]').click();
+		cy.get('[data-three-dialog-card=10-2]').click();
 		cy.get('[data-cy=three-resolve').should('not.be.disabled').click();
 
 		assertGameState(
@@ -1356,7 +1380,7 @@ describe('Playing THREEs', () => {
 				p1Hand: [Card.TEN_OF_DIAMONDS],
 				p1Points: [Card.ACE_OF_HEARTS],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES],
+				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES, Card.FOUR_OF_CLUBS],
 			}
 		);
 
@@ -1375,10 +1399,15 @@ describe('Playing THREEs', () => {
 				p1Hand: [],
 				p1Points: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES],
+				scrap: [
+					Card.ACE_OF_SPADES,
+					Card.THREE_OF_CLUBS,
+					Card.TEN_OF_SPADES,
+					Card.FOUR_OF_CLUBS
+				],
 			}
 		);
-	})
+	});
 
 	it('Opponent plays 3s successfully', () => {
 		// Set Up

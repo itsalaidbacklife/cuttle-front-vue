@@ -30,24 +30,11 @@
 				</v-btn>
 			</v-card-title>
 			<v-card-text>
-				<div class="d-flex flex-wrap justify-center align-center my-8">
-					<!-- Empty Placeholder -->
-					<template v-if="scrap.length === 0">
-						<div class="d-flex flex-column">
-							<p>There are no cards in the scrap pile.</p>
-							<v-icon x-large>
-								mdi-cancel
-							</v-icon>
-						</div>
-					</template>
-					<!-- Cards in the scrap -->
-					<card
-						v-for="(card) in scrap"
-						:key="card.id"
-						class="mx-1 my-1"
-						:suit="card.suit"
-						:rank="card.rank"
-						:data-scrap-dialog-card="`${card.rank}-${card.suit}`"
+				<div class="mt-4">
+					<card-list-sortable
+						:cards="scrap"
+						empty-text="There are no cards in the scrap pile."
+						data-selector-prefix="scrap-dialog"
 					/>
 				</div>
 			</v-card-text>
@@ -66,13 +53,12 @@
 </template>
 
 <script>
-
-import Card from '@/components/GameView/Card.vue';
+import CardListSortable from '@/components/GameView/CardListSortable.vue';
 
 export default {
 	name: 'ScrapDialog',
 	components: {
-		Card,
+		CardListSortable
 	},
 	props: {
 		scrap: {
@@ -84,7 +70,7 @@ export default {
 		return {
 			show: false,
 		}
-	}
+	},
 }
 </script>
 

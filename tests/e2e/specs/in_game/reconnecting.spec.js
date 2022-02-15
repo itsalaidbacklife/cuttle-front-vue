@@ -603,7 +603,7 @@ describe('Reconnecting to a game', () => {
 				cy.get('[data-cy=three-resolve').should('be.disabled');
 				
 				// Player two of clubs from scrap
-				cy.get('[data-scrap-dialog-card=2-0]').click();
+				cy.get('[data-three-dialog-card=2-0]').click();
 				cy.get('[data-cy=three-resolve')
 					.should('not.be.disabled')
 					.click();

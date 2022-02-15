@@ -1,6 +1,7 @@
 
 
 import { setupGameAsP0, setupGameAsP1, assertGameState, playOutOfTurn, Card } from '../../support/helpers';
+const { _ } = Cypress;
 
 describe('Game View Layout', () => {
 	beforeEach(() => {
@@ -289,7 +290,7 @@ describe('Game View Layout', () => {
 		cy.get('[data-cy=three-resolve').should('be.disabled');
 		
 		// Player selects a card from scrap
-		cy.get('[data-scrap-dialog-card=10-2]').click();
+		cy.get('[data-three-dialog-card=10-2]').click();
 		cy.get('[data-cy=three-resolve').should('not.be.disabled').click();
 
 		assertGameState(
@@ -327,6 +328,17 @@ describe('Game View Layout', () => {
 
 	it('Click the scrap to view contents', ()=>{
 		// Given-- the initial game state with 3 cards in the scrap
+		const scrap = [
+			Card.ACE_OF_SPADES,
+			Card.TEN_OF_HEARTS,
+			Card.TEN_OF_SPADES,
+			Card.FOUR_OF_CLUBS,
+			Card.TWO_OF_HEARTS,
+			Card.EIGHT_OF_SPADES,
+			Card.TWO_OF_CLUBS,
+			Card.ACE_OF_CLUBS,
+			Card.TWO_OF_DIAMONDS,
+		];
 		cy.loadGameFixture({
 			p0Hand: [Card.THREE_OF_CLUBS],
 			p0Points: [],
@@ -334,11 +346,7 @@ describe('Game View Layout', () => {
 			p1Hand: [Card.TEN_OF_DIAMONDS],
 			p1Points: [Card.ACE_OF_HEARTS],
 			p1FaceCards: [Card.KING_OF_HEARTS],
-			scrap: [
-				Card.ACE_OF_SPADES,
-				Card.TEN_OF_HEARTS,
-				Card.TEN_OF_SPADES,
-			]
+			scrap,
 		});
 		cy.get('[data-player-hand-card]').should('have.length', 1);
 		cy.log('Loaded fixture');
@@ -351,7 +359,7 @@ describe('Game View Layout', () => {
 		cy.get('#scrap-dialog').should('be.visible');
 
 		// Make sure that the three cards in the scrap are shown
-		cy.get('[data-scrap-dialog-card]').should('have.length', 3);
+		cy.get('[data-scrap-dialog-card]').should('have.length', 9);
 		cy.get('[data-scrap-dialog-card=1-3]').should('be.visible');
 		cy.get('[data-scrap-dialog-card=10-2]').should('be.visible');
 		cy.get('[data-scrap-dialog-card=10-3]').should('be.visible');
@@ -372,6 +380,24 @@ describe('Game View Layout', () => {
 		// Then-- Scrap should be closed
 		cy.get('#scrap-dialog').should('not.be.visible');
 
+		// Given -- the scrap is currently open
+		cy.get('#scrap').click();
+		cy.get('#scrap-dialog').should('be.visible');
+		// When -- Click sort by rank
+		cy.get('[data-cy=scrap-sort-dropdown]').click({force: true});
+		cy.contains('By Rank').click();
+		// Then-- All cards should be in ascending rank order
+		const mapElementsToRank = (elements => {
+			return _.map(elements, (element) => {
+				return Number(element.attributes['data-scrap-dialog-card'].value.split('-')[0]);
+			});
+		});
+		cy.get('[data-scrap-dialog-card]')
+			.then(mapElementsToRank)
+			.then((elementRanks) => {
+				const sortedScrapRanksFromFixture = _.sortBy(scrap, 'rank').map((card => card.rank));
+				expect(elementRanks).to.deep.equal(sortedScrapRanksFromFixture);
+			});
 	});
 
 	it('Clicking the scrap while empty shows that it is empty', ()=> {
