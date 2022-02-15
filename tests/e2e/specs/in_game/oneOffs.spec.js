@@ -1101,7 +1101,12 @@ describe('Playing THREEs', () => {
 	});
 
 	it('Plays 3s successfully', () => {
-		const scrap = [Card.ACE_OF_SPADES, Card.TEN_OF_HEARTS, Card.TEN_OF_SPADES, Card.FOUR_OF_CLUBS];
+		const scrap = [
+			Card.ACE_OF_SPADES,
+			Card.TEN_OF_HEARTS,
+			Card.TEN_OF_SPADES,
+			Card.FOUR_OF_CLUBS
+		];
 
 		// Set Up
 		cy.loadGameFixture({
@@ -1178,7 +1183,12 @@ describe('Playing THREEs', () => {
 				p1Hand: [],
 				p1Points: [Card.ACE_OF_HEARTS, Card.TEN_OF_DIAMONDS],
 				p1FaceCards: [Card.KING_OF_HEARTS],
-				scrap: [Card.ACE_OF_SPADES, Card.THREE_OF_CLUBS, Card.TEN_OF_SPADES, Card.FOUR_OF_CLUBS],
+				scrap: [
+					Card.ACE_OF_SPADES,
+					Card.THREE_OF_CLUBS,
+					Card.TEN_OF_SPADES,
+					Card.FOUR_OF_CLUBS
+				],
 			}
 		);
 	});

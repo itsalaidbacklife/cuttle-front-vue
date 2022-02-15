@@ -38,7 +38,6 @@
 </template>
 
 <script>
-// import Card from '@/components/GameView/Card.vue';
 import CardListSortable from '@/components/GameView/CardListSortable.vue';
 
 export default {
