@@ -389,6 +389,7 @@ describe('FOURS', () => {
 		beforeEach(() => {
 			setupGameAsP1();
 		});
+
 		it('Discards two cards when opponent plays a four, repeated fours', () => {
 			cy.loadGameFixture({
 				p0Hand: [Card.FOUR_OF_CLUBS, Card.FOUR_OF_DIAMONDS],
@@ -1353,7 +1354,7 @@ describe('Playing THREEs', () => {
 		cy.get('[data-cy=three-resolve').should('be.disabled');
 
 		// Confirm able to sort scrap by rank
-		cy.get('[data-cy=scrap-sort-dropdown]').click({force: true});
+		cy.get('[data-cy=three-dialog-sort-dropdown]').click({force: true});
 		cy.contains('By Rank').click();
 		const mapElementsToRank = (elements => {
 			return _.map(elements, (element) => {

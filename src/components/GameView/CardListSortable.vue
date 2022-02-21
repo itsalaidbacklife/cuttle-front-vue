@@ -4,8 +4,9 @@
 			<v-select
 				id="scrap-sort-dropdown"
 				v-model="sortByRank"
-				data-cy="scrap-sort-dropdown"
+				:data-cy="`${dataSelectorPrefix}-sort-dropdown`"
 				:items="sortOptions"
+				:menu-props="{'contentClass': `${dataSelectorPrefix}-sort-menu`}"
 				label="Sort"
 				outlined
 				hide-details
@@ -84,7 +85,7 @@ export default {
 	},
 	computed: {
 		sortedCards() {
-			return this.sortByRank ? sortBy(this.cards, 'rank') : this.cards;
+			return this.sortByRank ? sortBy(this.cards, 'rank') : [...this.cards];
 		},
 		// Used to dynamically generate data-cy selectors for each card
 		dataSelectorName() {
