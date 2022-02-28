@@ -1,7 +1,9 @@
-const validUsername = 'fooBarTheBazBuzz';
-const validPassword = 'passwordLongerThanEight';
-const opponentUsername = 'definitelyNotTheGovernment6969';
-const opponentPassword = 'deviousTrickery';
+import {
+	username as validUsername,
+	validPassword,
+	opponentUsername,
+	opponentPassword
+} from '../../support/helpers';
 
 function setup() {
 	cy.wipeDatabase();

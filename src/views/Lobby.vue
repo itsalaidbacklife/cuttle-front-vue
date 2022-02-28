@@ -23,7 +23,7 @@
 		<v-row>
 			<v-col offset="1">
 				<lobby-player-indicator
-					:player-username="myUserName"
+					:player-username="$store.state.username"
 					:player-ready="iAmReady"
 					data-cy="my-indicator"
 				/>
@@ -79,7 +79,6 @@ export default {
 		...mapGetters([
 			'opponentName',
 			'opponentIsReady',
-			'myUserName'
 		]),
 		gameId() {
 			return this.$store.state.game.id;
@@ -92,9 +91,6 @@ export default {
 		},
 		readyButtonText() {
 			return this.iAmReady ? 'UNREADY' : 'READY';
-		},
-		opponentIsHere() {
-			return this.$store.state.game.players.length == 2;
 		},
 	},
 	mounted() {

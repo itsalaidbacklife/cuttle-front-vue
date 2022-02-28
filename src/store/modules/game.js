@@ -191,7 +191,7 @@ export default {
 		resetPNumIfNull(context) {
 			// Set my pNum if it is null
 			if (context.state.myPNum === null) {
-				let myPNum = context.state.players.findIndex((player) => player.username === context.rootGetters.myUserName);
+				let myPNum = context.state.players.findIndex((player) => player.username === context.rootState.auth.username);
 				if (myPNum === -1) {
 					myPNum = null;
 				}

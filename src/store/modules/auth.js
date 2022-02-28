@@ -6,11 +6,6 @@ export default {
 		username: null,
 		mustReauthenticate: false,
 	},
-	getters: {
-		myUserName(state) {
-			return state.username ? state.username : null;
-		},
-	},
 	mutations: {
 		authSuccess(state, username) {
 			state.authenticated = true;
@@ -97,6 +92,7 @@ export default {
 					if (jwres.statusCode === 200) {
 						context.commit('setMustReauthenticate', false);
 						let myPNum = context.rootState.game.players.findIndex((player) => player.username === context.state.username);
+						console.log('a', myPNum);
 						if (myPNum === -1) {
 							myPNum = null;
 						}

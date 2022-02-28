@@ -1,7 +1,8 @@
 import {  assertSnackbarError } from '../../support/helpers';
-
-const validUsername = 'fooBarTheBazBuzz';
-const validPassword = 'passwordLongerThanEight';
+import {
+	username as validUsername,
+	validPassword,
+} from '../../support/helpers';
 
 function assertSuccessfulAuth(username) {
 	// Confirm we have navigated to home
@@ -130,7 +131,7 @@ describe('Signing Up', () => {
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
-		assertSnackbarError('Please provide a valid username', 'auth');
+		assertSnackbarError('Please provide a non-empty username', 'auth');
 	});
 	it('Rejects signup if username already exists', () => {
 		cy.signupOpponent(validUsername, validPassword);

@@ -1,8 +1,10 @@
 import { assertSnackbarError } from '../../support/helpers';
-const playerUsername = 'fooBarTheBazBuzz';
-const playerPassword = 'passwordLongerThanEight';
-const opponentUsername = 'definitelyNotTheGovernment6969';
-const opponentPassword = 'deviousTrickery';
+import {
+	username as playerUsername,
+	validPassword as playerPassword,
+	opponentUsername,
+	opponentPassword
+} from '../../support/helpers';
 
 function setup() {
 	cy.wipeDatabase();
