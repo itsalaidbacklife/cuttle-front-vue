@@ -1,4 +1,10 @@
-import { setupGameAsP1, setupGameAsP0, assertGameState, Card, playOutOfTurn } from '../../support/helpers';
+import {
+	setupGameAsP1,
+	setupGameAsP0,
+	assertGameState,
+	Card,
+	playOutOfTurn
+} from '../../support/helpers';
 
 describe('Countering One-Offs', () => {
 	beforeEach(() => {

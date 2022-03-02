@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="player-indicator"
-		:class="{'ready': playerReady, 'player-in': playerEmail != null}"
+		:class="{'ready': playerReady, 'player-in': playerUsername != null}"
 		:style="{'padding': playerPadding}"
 		elevation="1"
 	>
@@ -24,7 +24,7 @@
 export default {
 	name: 'LobbyPlayerIndicator',
 	props: {
-		playerEmail: {
+		playerUsername: {
 			type: String,
 			default: null,
 		},
@@ -35,7 +35,7 @@ export default {
 	},
 	computed: {
 		message() {
-			return this.playerEmail || 'Invite'
+			return this.playerUsername || 'Invite'
 		},
 		playerPadding() {
 			return this.$vuetify.breakpoint.mdAndUp ? '72px' : '32px';

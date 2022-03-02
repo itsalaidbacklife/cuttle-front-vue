@@ -3,7 +3,6 @@ import {
 	setupGameAsP1,
 	assertGameState,
 	Card,
-	assertSnackbarError
 } from '../../support/helpers';
 
 function assertVictory() {
