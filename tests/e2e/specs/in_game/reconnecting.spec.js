@@ -709,7 +709,7 @@ describe('Reconnecting to a game', () => {
 			});
 		});
 
-		it.only('Resolve 7 after reconnect - Player', () => {
+		it('Resolve 7 after reconnect - Player', () => {
 			setupGameAsP0();
 			cy.loadGameFixture({
 				p0Hand: [Card.SEVEN_OF_CLUBS],
