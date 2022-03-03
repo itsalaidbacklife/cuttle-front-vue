@@ -1,6 +1,6 @@
-export const validEmail = 'myCustomEmail@gmail.com';
+export const username = 'myUsername';
 export const validPassword = 'passwordLongerThanEight';
-export const opponentEmail = 'yourMortalEnemy@cia.gov';
+export const opponentUsername = 'definitelyNotTheGovernment6969';
 export const opponentPassword = 'deviousTrickery';
 
 /**
@@ -11,7 +11,7 @@ export function setupGameAsP0(alreadyAuthenticated = false) {
 	if (!alreadyAuthenticated) {
 		cy.wipeDatabase();
 		cy.visit('/');
-		cy.signupPlayer(validEmail, validPassword);
+		cy.signupPlayer(username, validPassword);
 	}
 	cy.createGamePlayer('Test Game')
 		.then((gameSummary) => {
@@ -20,7 +20,7 @@ export function setupGameAsP0(alreadyAuthenticated = false) {
 			cy.wrap(gameSummary).as('gameSummary');
 			cy.get('[data-cy=ready-button]').click();
 			if (!alreadyAuthenticated) {
-				cy.signupOpponent(opponentEmail, opponentPassword);
+				cy.signupOpponent(opponentUsername, opponentPassword);
 			}
 			cy.subscribeOpponent(gameSummary.gameId);
 			cy.readyOpponent();
@@ -34,10 +34,10 @@ export function setupGameAsP0(alreadyAuthenticated = false) {
 export function setupGameAsP1() {
 	cy.wipeDatabase();
 	cy.visit('/');
-	cy.signupPlayer(validEmail, validPassword);
+	cy.signupPlayer(username, validPassword);
 	cy.createGamePlayer('Test Game')
 		.then((gameSummary) => {
-			cy.signupOpponent(opponentEmail, opponentPassword);
+			cy.signupOpponent(opponentUsername, opponentPassword);
 			cy.subscribeOpponent(gameSummary.gameId);
 			cy.readyOpponent();
 			cy.window().its('app.$store').invoke('dispatch', 'requestSubscribe', gameSummary.gameId);

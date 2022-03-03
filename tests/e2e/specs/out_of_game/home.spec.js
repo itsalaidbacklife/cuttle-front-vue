@@ -1,13 +1,15 @@
 import { assertSnackbarError } from '../../support/helpers';
-const playerEmail = 'myCustomEmail@gmail.com';
-const playerPassword = 'passwordLongerThanEight';
-const opponentEmail = 'yourMortalEnemy@cia.gov';
-const opponentPassword = 'deviousTrickery';
+import {
+	username as playerUsername,
+	validPassword as playerPassword,
+	opponentUsername,
+	opponentPassword
+} from '../../support/helpers';
 
 function setup() {
 	cy.wipeDatabase();
 	cy.visit('/');
-	cy.signupPlayer(playerEmail, playerPassword);
+	cy.signupPlayer(playerUsername, playerPassword);
 	cy.vueRoute('/');
 }
 function assertSuccessfulJoin(gameState) {
@@ -60,7 +62,7 @@ describe('Home - Game List', () => {
 		cy.createGamePlayer('33');
 		cy.get('[data-cy=game-list-item]')
 			.should('have.length', 2);
-		cy.signupOpponent(opponentEmail, opponentPassword);
+		cy.signupOpponent(opponentUsername, opponentPassword);
 		cy.createGameOpponent('Game made by other player');
 		cy.get('[data-cy=game-list-item]')
 			.should('have.length', 3)

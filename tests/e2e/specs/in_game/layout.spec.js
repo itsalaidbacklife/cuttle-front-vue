@@ -1,6 +1,11 @@
+import {
+	setupGameAsP0,
+	setupGameAsP1,
+	assertGameState,
+	playOutOfTurn,
+	Card
+} from '../../support/helpers';
 
-
-import { setupGameAsP0, setupGameAsP1, assertGameState, playOutOfTurn, Card } from '../../support/helpers';
 const { _ } = Cypress;
 
 describe('Game View Layout', () => {

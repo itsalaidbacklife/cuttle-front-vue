@@ -20,9 +20,9 @@ git clone https://github.com/itsalaidbacklife/cuttle-front-vue
 #### Install Front-End Dependencies
 Open a terminal in the root directory of this project and run
 ```
-npm install
+npm ci
 ```
-
+(note that `ci` as opposed to `install` is a 'clean install' which ensures versions exactly match package-lock.json).
 #### Boot Front-End server
 ```
 npm run serve

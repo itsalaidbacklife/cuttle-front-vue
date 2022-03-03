@@ -9,12 +9,12 @@ io.sails.useCORSRouteToGetCookie = false;
 Cypress.Commands.add('wipeDatabase', () => {
 	cy.request('localhost:1337/test/wipeDatabase');
 });
-Cypress.Commands.add('signupOpponent', (email, password) => {
+Cypress.Commands.add('signupOpponent', (username, password) => {
 	return new Promise((resolve, reject) => {
 		io.socket.get(
 			'localhost:1337/user/signup',
 			{
-				email,
+				username,
 				password,
 			},
 			function(res, jwres) {
@@ -26,15 +26,15 @@ Cypress.Commands.add('signupOpponent', (email, password) => {
 		);
 	});
 });
-Cypress.Commands.add('signupPlayer', (email, password) => {
+Cypress.Commands.add('signupPlayer', (username, password) => {
 	cy.window()
 		.its('app.$store')
-		.invoke('dispatch', 'requestSignup', { email, password });
+		.invoke('dispatch', 'requestSignup', { username, password });
 });
-Cypress.Commands.add('loginPlayer', (email, password) => {
+Cypress.Commands.add('loginPlayer', (username, password) => {
 	cy.window()
 		.its('app.$store')
-		.invoke('dispatch', 'requestLogin', { email, password });
+		.invoke('dispatch', 'requestLogin', { username, password });
 });
 Cypress.Commands.add('createGameOpponent', (name) => {
 	return new Promise((resolve, reject) => {
@@ -754,10 +754,10 @@ Cypress.Commands.add('concedeOpponent', () => {
 	});
 });
 
-Cypress.Commands.add('reconnectOpponent', (email, password) => {
+Cypress.Commands.add('reconnectOpponent', (username, password) => {
 	cy.log('Opponent Reconnects');
 	io.socket.get('/user/reLogin', {
-		email,
+		username,
 		password,
 	}, function handleResponse(res, jwres) {
 		if (jwres.statusCode !== 200) {
@@ -875,15 +875,3 @@ Cypress.Commands.add('loadGameFixture', (fixture) => {
 				});
 		});
 });
-
-
-
-/**
- * Did not work -- reequest.body was undefined on server
- */
-// Cypress.Commands.add('signup', (email, password) => {
-//		 cy.request({
-//				 url: 'localhost:1337/user/signup',
-//				 body: {email, password}
-//		 });
-// });

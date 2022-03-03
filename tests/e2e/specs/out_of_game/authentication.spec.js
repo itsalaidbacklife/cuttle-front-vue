@@ -1,16 +1,17 @@
 import {  assertSnackbarError } from '../../support/helpers';
+import {
+	username as validUsername,
+	validPassword,
+} from '../../support/helpers';
 
-const validEmail = 'myCustomEmail@gmail.com';
-const validPassword = 'passwordLongerThanEight';
-
-function assertSuccessfulAuth(email) {
+function assertSuccessfulAuth(username) {
 	// Confirm we have navigated to home
 	cy.hash().should('eq', '#/');
 	// Check store auth data
 	cy.window().its('app.$store.state.auth').as('authState')
 		.then((authState) => {
 			expect(authState.authenticated).to.eq(true);
-			expect(authState.email).to.eq(email);
+			expect(authState.username).to.eq(username);
 		});
 }
 
@@ -21,7 +22,7 @@ function assertFailedAuth() {
 	cy.window().its('app.$store.state.auth').as('authState')
 		.then((authState) => {
 			expect(authState.authenticated).to.eq(false);
-			expect(authState.email).to.eq(null);
+			expect(authState.username).to.eq(null);
 		});
 }
 
@@ -29,7 +30,7 @@ describe('Auth - Page Content', () => {
 	beforeEach(() => {
 		cy.wipeDatabase();
 		cy.visit('#/login');
-		cy.signupOpponent(validEmail, validPassword);
+		cy.signupOpponent(validUsername, validPassword);
 	});
 
 	it('Displays logo', () => {
@@ -41,41 +42,41 @@ describe('Logging In', () => {
 	beforeEach(() => {
 		cy.wipeDatabase();
 		cy.visit('#/login');
-		cy.signupOpponent(validEmail, validPassword);
+		cy.signupOpponent(validUsername, validPassword);
 	});
 
 	/**
      * Successful Logins
      */
 	it('Can log into existing account with submit button', () => {
-		cy.get('[data-cy=username]').type(validEmail);
+		cy.get('[data-cy=username]').type(validUsername);
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
-		assertSuccessfulAuth(validEmail);
+		assertSuccessfulAuth(validUsername);
 	});
-	it('Can login via enter key in email', () => {
+	it('Can login via enter key in username', () => {
 		cy.get('[data-cy=password]').type(validPassword);
-		cy.get('[data-cy=username]').type(validEmail + '{enter}');
-		assertSuccessfulAuth(validEmail);
+		cy.get('[data-cy=username]').type(validUsername + '{enter}');
+		assertSuccessfulAuth(validUsername);
 	});
 	it('Can login via enter key in password', () => {
-		cy.get('[data-cy=username]').type(validEmail);
+		cy.get('[data-cy=username]').type(validUsername);
 		cy.get('[data-cy=password]').type(validPassword + '{enter}');
-		assertSuccessfulAuth(validEmail);
+		assertSuccessfulAuth(validUsername);
 	});
 
 	/**
      * Rejected logins
      */
 	it('Rejects login before signup', () => {
-		cy.get('[data-cy=username]').type('unRegisteredEmail@aol.gov');
+		cy.get('[data-cy=username]').type('unRegisteredUsername');
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
-		assertSnackbarError('Could not find that User with that Username. Try signing up!', 'auth');
+		assertSnackbarError('Could not find that user with that username. Try signing up!', 'auth');
 		assertFailedAuth();
 	});
 	it('Rejects incorrect password', () => {
-		cy.get('[data-cy=username]').type(validEmail);
+		cy.get('[data-cy=username]').type(validUsername);
 		cy.get('[data-cy=password]').type('incorrectPw');
 		cy.get('[data-cy=submit]').click();
 		assertSnackbarError('Username and password do not match', 'auth');
@@ -94,57 +95,50 @@ describe('Signing Up', () => {
      * Successful Signups
      */
 	it('Successfully signs up and navigates to home page', () => {
-		cy.get('[data-cy=username]').type(validEmail);
+		cy.get('[data-cy=username]').type(validUsername);
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
-		assertSuccessfulAuth(validEmail);
+		assertSuccessfulAuth(validUsername);
 	});
-	it('Signs up by pressing enter on the email field', () => {
+	it('Signs up by pressing enter on the username field', () => {
 		cy.get('[data-cy=password]').type(validPassword);
-		cy.get('[data-cy=username]').type(validEmail + '{enter}');
-		assertSuccessfulAuth(validEmail);
+		cy.get('[data-cy=username]').type(validUsername + '{enter}');
+		assertSuccessfulAuth(validUsername);
 	});
 	it('Signs up by pressing enter on the password field', () => {
-		cy.get('[data-cy=username]').type(validEmail);
+		cy.get('[data-cy=username]').type(validUsername);
 		cy.get('[data-cy=password]').type(validPassword + '{enter}');
-		assertSuccessfulAuth(validEmail);
+		assertSuccessfulAuth(validUsername);
 	});
 
 	/**
      * Rejected Signups
      */
 	it('Requires password to be at least eight characters', () => {
-		cy.get('[data-cy=username]').type(validEmail);
+		cy.get('[data-cy=username]').type(validUsername);
 		cy.get('[data-cy=password]').type('sh0rt');
 		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
 		assertSnackbarError('Your password must contain at least eight characters', 'auth');
 	});
-	it('Requires valid email', () => {
-		cy.get('[data-cy=username]').type('incompleteEmail');
-		cy.get('[data-cy=password]').type(validPassword);
-		cy.get('[data-cy=submit]').click();
-		assertFailedAuth();
-		assertSnackbarError('Please provide a valid email address', 'auth');
-	});
 	it('Password is required', () => {
-		cy.get('[data-cy=username]').type(validEmail);
+		cy.get('[data-cy=username]').type(validUsername);
 		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
 		assertSnackbarError('Password is required', 'auth');
 	});
-	it('Email is required', () => {
+	it('Username is required', () => {
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
-		assertSnackbarError('Please provide a valid email address', 'auth');
+		assertSnackbarError('Please provide a non-empty username', 'auth');
 	});
 	it('Rejects signup if username already exists', () => {
-		cy.signupOpponent(validEmail, validPassword);
-		cy.get('[data-cy=username]').type(validEmail);
+		cy.signupOpponent(validUsername, validPassword);
+		cy.get('[data-cy=username]').type(validUsername);
 		cy.get('[data-cy=password]').type(validPassword);
 		cy.get('[data-cy=submit]').click();
 		assertFailedAuth();
-		assertSnackbarError('That email is already registered to another user; try logging in!', 'auth');
+		assertSnackbarError('That username is already registered to another user; try logging in!', 'auth');
 	});
 });

@@ -11,7 +11,7 @@
 		<v-row>
 			<!-- Left side form -->
 			<v-col
-				id="email-login-form"
+				id="username-login-form"
 				sm="9"
 				lg="5"
 			>
@@ -21,7 +21,7 @@
 						v-model="username"
 						outlined
 						:dense="$vuetify.breakpoint.mdAndDown ? true : false"
-						hint="Email"
+						hint="Username"
 						data-cy="username"
 					/>
 					<v-text-field
@@ -106,7 +106,7 @@ export default {
 			if (this.isLoggingIn) {
 				this.$store
 					.dispatch('requestLogin', {
-						email: this.username,
+						username: this.username,
 						password: this.pw
 					})
 					.then(() => {
@@ -118,7 +118,7 @@ export default {
 			} else {
 				this.$store
 					.dispatch('requestSignup', {
-						email: this.username,
+						username: this.username,
 						password: this.pw
 					})
 					.then(() => {
@@ -160,7 +160,7 @@ export default {
 }
 
 
-#email-login-form {
+#username-login-form {
 	margin: 10px auto;
 
 	h1 {
