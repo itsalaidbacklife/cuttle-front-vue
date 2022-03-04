@@ -23,7 +23,7 @@
 		<v-row>
 			<v-col offset="1">
 				<lobby-player-indicator
-					:player-username="$store.state.username"
+					:player-username="$store.state.auth.username"
 					:player-ready="iAmReady"
 					data-cy="my-indicator"
 				/>
