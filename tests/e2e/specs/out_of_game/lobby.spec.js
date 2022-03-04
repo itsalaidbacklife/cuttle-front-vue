@@ -62,6 +62,8 @@ describe('Lobby - P0 Perspective', () => {
 		setup();
 	});
 	it('Exits the Lobby', () => {
+		cy.get('[data-cy=my-indicator]')
+			.contains(validUsername);
 		cy.get('[data-cy=exit-button]').click();
 		// Confirm navigation back to home
 		cy.hash().should('eq', '#/');
@@ -82,7 +84,9 @@ describe('Lobby - P0 Perspective', () => {
 			.click()
 			.contains('UNREADY');
 		// Test: player indicator classes
-		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=my-indicator]')
+			.should('have.class', 'ready')
+			.contains(validUsername);;
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.window().its('app.$store')
 			.then((store) => {
@@ -197,7 +201,9 @@ describe('Lobby - P1 Perspective', () => {
 			.click()
 			.contains('UNREADY');
 		// Test: player indicator classes
-		cy.get('[data-cy=my-indicator]').should('have.class', 'ready');
+		cy.get('[data-cy=my-indicator]')
+			.should('have.class', 'ready')
+			.contains(validUsername);
 		cy.get('[data-cy=opponent-indicator]').should('not.have.class', 'ready');
 		cy.window().its('app.$store')
 			.then((store) => {
