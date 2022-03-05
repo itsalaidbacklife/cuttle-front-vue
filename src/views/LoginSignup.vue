@@ -35,7 +35,7 @@
 					<div id="login-button-container">
 						<v-btn
 							color="primary"
-							rounded
+							block
 							type="submit"
 							data-cy="submit"
 						>
@@ -68,6 +68,29 @@
 					</v-icon>
 				</v-snackbar>
 			</v-col>
+		</v-row>
+		<v-row>
+			<h1>What is Cuttle?</h1>
+			<p>
+				Cuttle is a 2 player battle card game played with a standard 52-card deck of cards. 
+				It has the strategic nuance of trading card games like Magic, with the elegant balance of a standard deck--and you can play it for free! 
+				Test your mettle in the deepest cardgame under the sea!
+			</p>
+			<div class="full-width row d-flex flex-column align-center">
+				<v-img
+					src="../assets/game_images/cuttle_ace_one_off.png"
+					alt="Cuttle Game Ace One-Off"
+					max-width="600px"
+				/>
+				<v-btn
+					text
+					color="primary"
+					to="rules"
+					class="mt-2"
+				>
+					Learn the Rules
+				</v-btn>
+			</div>
 		</v-row>
 	</v-container>
 </template>
@@ -160,15 +183,15 @@ export default {
 }
 
 
+h1 {
+	background: linear-gradient(268.89deg, rgba(98, 2, 238, 0.87) 73.76%, rgba(253, 98, 34, 0.87) 99.59%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
 #username-login-form {
 	margin: 10px auto;
 
-	h1 {
-		background: linear-gradient(268.89deg, rgba(98, 2, 238, 0.87) 73.76%, rgba(253, 98, 34, 0.87) 99.59%);
-		background-clip: text;
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-	}
 }
 
 
@@ -190,7 +213,9 @@ export default {
 	justify-content: center;
 	margin-top: 16px;;
 }
-
+.full-width-row {
+	width: 100%;
+}
 @media (orientation: landscape) and (max-width: 979px){
 	#logo {
 		width: 64px;
