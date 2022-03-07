@@ -38,9 +38,13 @@
 		<v-row>
 			<h1>Play</h1>
 		</v-row>
-		<v-row align="end">
+		<v-row
+			v-for="(ruleRow, rowIndex) in rules"
+			:key="rowIndex"
+			align="end"
+		>
 			<v-col
-				v-for="rule in rules"
+				v-for="rule in ruleRow"
 				:key="rule.title"
 				md="4"
 			>
@@ -62,24 +66,69 @@ export default {
 	data() {
 		return {
 			rules: [
-				{
-					title: 'Draw',
-					icon: 'cards-playing-spade-multiple',
-					description: 'Take one card from the Deck',
-					staticImg: 'cuttle_ace_one_off.png',
-				},
-				{
-					title: 'Points',
-					icon: 'numeric',
-					description: 'Play a number card from your hand. Worth its rank in points, lasts until scrapped',
-					staticImg: 'cuttle_ace_one_off.png',
-				},
-				{
-					title: 'Scuttle',
-					icon: 'skull-crossbones',
-					description: 'Scrap an opponent’s point card with a bigger one from your hand',
-					staticImg: 'cuttle_ace_one_off.png',
-				}
+				// First Row
+				[
+					{
+						title: 'Draw',
+						icon: 'cards-playing-spade-multiple',
+						description: 'Take one card from the Deck',
+						staticImg: 'cuttle_ace_one_off.png',
+					},
+					{
+						title: 'Points',
+						icon: 'numeric',
+						description: 'Play a number card from your hand. Worth its rank in points, lasts until scrapped',
+						staticImg: 'cuttle_ace_one_off.png',
+					},
+					{
+						title: 'Scuttle',
+						icon: 'skull-crossbones',
+						description: 'Scrap an opponent’s point card with a bigger one from your hand',
+						staticImg: 'cuttle_ace_one_off.png',
+					}
+				],
+				// Second Row
+				[
+					{
+						title: 'Draw',
+						icon: 'cards-playing-spade-multiple',
+						description: 'Take one card from the Deck',
+						staticImg: 'cuttle_ace_one_off.png',
+					},
+					{
+						title: 'Points',
+						icon: 'numeric',
+						description: 'Play a number card from your hand. Worth its rank in points, lasts until scrapped',
+						staticImg: 'cuttle_ace_one_off.png',
+					},
+					{
+						title: 'Scuttle',
+						icon: 'skull-crossbones',
+						description: 'Scrap an opponent’s point card with a bigger one from your hand',
+						staticImg: 'cuttle_ace_one_off.png',
+					}
+				],
+				// Third Row
+				[
+					{
+						title: 'Draw',
+						icon: 'cards-playing-spade-multiple',
+						description: 'Take one card from the Deck',
+						staticImg: 'cuttle_ace_one_off.png',
+					},
+					{
+						title: 'Points',
+						icon: 'numeric',
+						description: 'Play a number card from your hand. Worth its rank in points, lasts until scrapped',
+						staticImg: 'cuttle_ace_one_off.png',
+					},
+					{
+						title: 'Scuttle',
+						icon: 'skull-crossbones',
+						description: 'Scrap an opponent’s point card with a bigger one from your hand',
+						staticImg: 'cuttle_ace_one_off.png',
+					}
+				],
 			],
 		};
 	}
