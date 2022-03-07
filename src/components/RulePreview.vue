@@ -12,8 +12,6 @@
 			{{ description }}
 		</p>
 		<v-img v-if="!animate" :src="require(`../assets/game_images/${staticImg}`)" />
-		<!-- <v-img :src="require(staticImg)"></v-img> -->
-		<!-- {{staticImg2}} -->
 	</div>
 </template>
 <script>
@@ -45,10 +43,5 @@ export default {
 			default: '',
 		},
 	},
-	computed: {
-		// staticImg2() {
-		// 	return require(this.staticImg);
-		// }
-	}
 }
 </script>
