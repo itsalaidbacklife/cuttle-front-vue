@@ -38,40 +38,15 @@
 		<v-row>
 			<h1>Play</h1>
 		</v-row>
-		<v-row>
-			<v-col md="4">
+		<v-row align="end">
+			<v-col
+				v-for="rule in rules"
+				:key="rule.title"
+				md="4"
+			>
 				<rule-preview
-					icon="cards-playing-spade-multiple"
-					title="Draw"
-					description="Take one card from the Deck"
-					static-img="cuttle_ace_one_off.png"
+					v-bind="rule"
 				/>
-			</v-col>
-			<v-col md="4">
-				<div>
-					<div>
-						<p>
-							<v-icon color="black">
-								mdi-cards-playing-spade-multiple
-							</v-icon>
-							<strong class="ml-2">Ace:</strong>
-						</p>
-						<v-img src="../assets/game_images/cuttle_ace_one_off.png" />
-					</div>
-				</div>
-			</v-col>
-			<v-col md="4">
-				<div>
-					<div>
-						<p>
-							<v-icon color="black">
-								mdi-cards-playing-spade-multiple
-							</v-icon>
-							<strong class="ml-2">Ace:</strong>
-						</p>
-						<v-img src="../assets/game_images/cuttle_ace_one_off.png" />
-					</div>
-				</div>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -84,6 +59,30 @@ export default {
 	components: {
 		RulePreview,
 	},
+	data() {
+		return {
+			rules: [
+				{
+					title: 'Draw',
+					icon: 'cards-playing-spade-multiple',
+					description: 'Take one card from the Deck',
+					staticImg: 'cuttle_ace_one_off.png',
+				},
+				{
+					title: 'Points',
+					icon: 'numeric',
+					description: 'Play a number card from your hand. Worth its rank in points, lasts until scrapped',
+					staticImg: 'cuttle_ace_one_off.png',
+				},
+				{
+					title: 'Scuttle',
+					icon: 'skull-crossbones',
+					description: 'Scrap an opponent’s point card with a bigger one from your hand',
+					staticImg: 'cuttle_ace_one_off.png',
+				}
+			],
+		};
+	}
 }
 </script>
 <style scoped>
