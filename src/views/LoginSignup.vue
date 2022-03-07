@@ -179,7 +179,7 @@ export default {
 
 #logo {
 	height: 20vh;
-  margin: 0 auto;
+	margin: 0 auto;
 }
 
 
