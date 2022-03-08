@@ -35,13 +35,19 @@
 			</p>
 		</v-row>
 		<!-- Play -->
-		<v-row>
-			<h1>Play</h1>
+		<v-row class="flex-column">
+			<h1 class="d-block">
+				Play
+			</h1>
+			<p class="d-block">
+				On your turn you must perform exactly one of the following actions:
+			</p>
 		</v-row>
 		<v-row
 			v-for="(ruleRow, rowIndex) in rules"
 			:key="rowIndex"
 			align="end"
+			class="my-6"
 		>
 			<v-col
 				v-for="rule in ruleRow"
@@ -90,42 +96,21 @@ export default {
 				// Second Row
 				[
 					{
-						title: 'Draw',
-						icon: 'cards-playing-spade-multiple',
-						description: 'Take one card from the Deck',
+						title: 'Royal',
+						icon: 'crown',
+						description: 'Play a face card for a persistent benefit based on rank (lasts until scrapped)',
 						staticImg: 'cuttle_ace_one_off.png',
 					},
 					{
-						title: 'Points',
-						icon: 'numeric',
-						description: 'Play a number card from your hand. Worth its rank in points, lasts until scrapped',
+						title: 'One-Off',
+						icon: 'delete',
+						description: 'Scrap a number card for an effect based on the rank of the card.',
 						staticImg: 'cuttle_ace_one_off.png',
 					},
 					{
-						title: 'Scuttle',
-						icon: 'skull-crossbones',
-						description: 'Scrap an opponent’s point card with a bigger one from your hand',
-						staticImg: 'cuttle_ace_one_off.png',
-					}
-				],
-				// Third Row
-				[
-					{
-						title: 'Draw',
-						icon: 'cards-playing-spade-multiple',
-						description: 'Take one card from the Deck',
-						staticImg: 'cuttle_ace_one_off.png',
-					},
-					{
-						title: 'Points',
-						icon: 'numeric',
-						description: 'Play a number card from your hand. Worth its rank in points, lasts until scrapped',
-						staticImg: 'cuttle_ace_one_off.png',
-					},
-					{
-						title: 'Scuttle',
-						icon: 'skull-crossbones',
-						description: 'Scrap an opponent’s point card with a bigger one from your hand',
+						title: 'Glasses',
+						icon: 'sunglasses',
+						description: 'Play an Eight to reveal your opponent’s hand (lasts until scrapped)',
 						staticImg: 'cuttle_ace_one_off.png',
 					}
 				],
