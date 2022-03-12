@@ -121,7 +121,7 @@ export default {
 						icon: 'sunglasses',
 						description: 'Play an Eight to reveal your opponent’s hand (lasts until scrapped)',
 						staticImg: 'cuttle_glasses.png',
-						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/glasses.gif?raw=true',
 					}
 				],
 			],
