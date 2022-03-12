@@ -53,6 +53,7 @@
 				v-for="(rule, colIndex) in ruleRow"
 				:key="rule.title"
 				md="6"
+				sm="12"
 			>
 				<rule-preview
 					v-bind="rule"
@@ -92,16 +93,16 @@ export default {
 						staticImg: 'cuttle_points.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					},
+				],
+				// Second Row
+				[
 					{
 						title: 'Scuttle',
 						icon: 'skull-crossbones',
 						description: 'Scrap an opponent’s point card with a bigger one from your hand',
 						staticImg: 'cuttle_scuttle.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/scuttling.gif?raw=true',
-					}
-				],
-				// Second Row
-				[
+					},
 					{
 						title: 'Royal',
 						icon: 'crown',
@@ -109,6 +110,9 @@ export default {
 						staticImg: 'cuttle_king.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/kings.gif?raw=true',
 					},
+				],
+				// Third Row
+				[
 					{
 						title: 'One-Off',
 						icon: 'delete',
