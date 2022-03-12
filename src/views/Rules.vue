@@ -52,7 +52,7 @@
 			<v-col
 				v-for="(rule, colIndex) in ruleRow"
 				:key="rule.title"
-				md="4"
+				md="6"
 			>
 				<rule-preview
 					v-bind="rule"
@@ -83,7 +83,7 @@ export default {
 						icon: 'cards-playing-spade-multiple',
 						description: 'Take one card from the Deck',
 						staticImg: 'cuttle_board.png',
-						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/draw.gif?raw=true',
 					},
 					{
 						title: 'Points',

@@ -8,6 +8,7 @@
 		<v-img
 			v-else
 			:src="animatedImg"
+			aspect-ratio="1.7778"
 			:alt="`Animated preview of ${title} in Cuttle`"
 		/>
 		<p class="mt-2">
