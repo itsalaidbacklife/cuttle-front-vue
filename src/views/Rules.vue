@@ -10,7 +10,9 @@
 		</v-row>
 		<!-- Rules -->
 		<div>
-			<h1 class="gradient-text">Rules of Cuttle</h1>
+			<h1 class="gradient-text">
+				Rules of Cuttle
+			</h1>
 			<p class="d-block">
 				Cuttle is a 2 player battle card game played with a standard 52-card deck of cards. 
 				It has the strategic nuance of trading card games like Magic, with the elegant balance of a standard deck--and you can play it for free! 
@@ -28,7 +30,9 @@
 		</div>
 		<!-- Goal -->
 		<v-row class="flex-column align-start mt-10">
-			<h1 class="gradient-text">Goal</h1>
+			<h1 class="gradient-text">
+				Goal
+			</h1>
 			<p class="d-block">
 				The goal is to be the first player to have 21 or more points worth of point cards on your field. 
 				The first player to reach the goal wins immediately.
@@ -62,6 +66,42 @@
 				/>
 			</v-col>
 		</v-row>
+		<!-- Royals -->
+		<v-row class="flex-column">
+			<div class="d-flex">
+				<v-icon x-large color="black" class="mr-4">mdi-crown</v-icon>
+				<h1 class="gradient-text">Royals</h1>
+			</div>
+			<p class="d-block">
+				Number cards (except 8’s and 10’s) can be played for a One-Off effect, 
+				which scraps the card for an effect based on the rank of the card played. 
+				Whenever a one-off is played, the other player may 
+				<strong>
+					counter 
+				</strong>
+				it using a two to cancel the effect.
+			</p>
+		</v-row>
+		<v-row
+			v-for="(ruleRow, rowIndex) in royals"
+			:key="rowIndex"
+			align="start"
+			class="my-6"
+		>
+			<v-col
+				v-for="(rule, colIndex) in ruleRow"
+				:key="rule.title"
+				md="6"
+				sm="12"
+			>
+				<rule-preview
+					v-bind="rule"
+					:animate="isRuleSelected(rowIndex, colIndex)"
+					@click="selectRule(rowIndex, colIndex)"
+				/>
+			</v-col>
+		</v-row>
+		<!-- One-Offs -->
 	</v-container>
 </template>
 <script>
@@ -76,6 +116,7 @@ export default {
 		return {
 			// Indices in 2d array of rules for active rule
 			activeRuleIndices: [],
+			// 2D array of rule objects
 			rules: [
 				// First Row
 				[
@@ -129,6 +170,18 @@ export default {
 					}
 				],
 			],
+			activeRoyalIndices: [],
+			royals: [
+				[
+					{
+						title: 'King',
+						icon: 'crown',
+						description: 'Reduce the number of points you need to win (21, 14, 10, 7, 5 points with 0, 1, 2, 3, 4 kings) ',
+						staticImg: 'cuttle_king.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/kings.gif?raw=true',
+					},
+				]
+			]
 		};
 	},
 	methods: {
