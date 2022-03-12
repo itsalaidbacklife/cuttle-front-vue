@@ -6,7 +6,7 @@
 		/>
 		<v-img
 			v-else
-			src="https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true"
+			:src="animatedImg"
 		/>
 		<p class="mt-2">
 			<v-icon

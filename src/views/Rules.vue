@@ -83,18 +83,21 @@ export default {
 						icon: 'cards-playing-spade-multiple',
 						description: 'Take one card from the Deck',
 						staticImg: 'cuttle_ace_one_off.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					},
 					{
 						title: 'Points',
 						icon: 'numeric',
 						description: 'Play a number card from your hand. Worth its rank in points, lasts until scrapped',
 						staticImg: 'cuttle_ace_one_off.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					},
 					{
 						title: 'Scuttle',
 						icon: 'skull-crossbones',
 						description: 'Scrap an opponent’s point card with a bigger one from your hand',
 						staticImg: 'cuttle_ace_one_off.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/scuttling.gif?raw=true',
 					}
 				],
 				// Second Row
@@ -104,18 +107,21 @@ export default {
 						icon: 'crown',
 						description: 'Play a face card for a persistent benefit based on rank (lasts until scrapped)',
 						staticImg: 'cuttle_ace_one_off.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					},
 					{
 						title: 'One-Off',
 						icon: 'delete',
 						description: 'Scrap a number card for an effect based on the rank of the card.',
 						staticImg: 'cuttle_ace_one_off.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					},
 					{
 						title: 'Glasses',
 						icon: 'sunglasses',
 						description: 'Play an Eight to reveal your opponent’s hand (lasts until scrapped)',
 						staticImg: 'cuttle_ace_one_off.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					}
 				],
 			],
