@@ -3,10 +3,12 @@
 		<v-img
 			v-if="!animate"
 			:src="require(`../assets/game_images/${staticImg}`)"
+			:alt="`How to play ${title} in Cuttle`"
 		/>
 		<v-img
 			v-else
 			:src="animatedImg"
+			:alt="`Animated preview of ${title} in Cuttle`"
 		/>
 		<p class="mt-2">
 			<v-icon
