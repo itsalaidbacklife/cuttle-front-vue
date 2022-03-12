@@ -82,14 +82,14 @@ export default {
 						title: 'Draw',
 						icon: 'cards-playing-spade-multiple',
 						description: 'Take one card from the Deck',
-						staticImg: 'cuttle_ace_one_off.png',
+						staticImg: 'cuttle_board.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					},
 					{
 						title: 'Points',
 						icon: 'numeric',
 						description: 'Play a number card from your hand. Worth its rank in points, lasts until scrapped',
-						staticImg: 'cuttle_ace_one_off.png',
+						staticImg: 'cuttle_points.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					},
 					{
@@ -106,7 +106,7 @@ export default {
 						title: 'Royal',
 						icon: 'crown',
 						description: 'Play a face card for a persistent benefit based on rank (lasts until scrapped)',
-						staticImg: 'cuttle_ace_one_off.png',
+						staticImg: 'cuttle_king.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					},
 					{
@@ -120,7 +120,7 @@ export default {
 						title: 'Glasses',
 						icon: 'sunglasses',
 						description: 'Play an Eight to reveal your opponent’s hand (lasts until scrapped)',
-						staticImg: 'cuttle_ace_one_off.png',
+						staticImg: 'cuttle_glasses.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
 					}
 				],
