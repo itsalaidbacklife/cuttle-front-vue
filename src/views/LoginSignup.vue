@@ -15,7 +15,7 @@
 				sm="9"
 				lg="5"
 			>
-				<h1>{{ buttonText }}</h1>
+				<h1 clas="gradient-text">{{ buttonText }}</h1>
 				<form @submit.prevent="submitLogin">
 					<v-text-field
 						v-model="username"
@@ -70,7 +70,7 @@
 			</v-col>
 		</v-row>
 		<v-row>
-			<h1>What is Cuttle?</h1>
+			<h1 class="gradient-text">What is Cuttle?</h1>
 			<p>
 				Cuttle is a 2 player battle card game played with a standard 52-card deck of cards. 
 				It has the strategic nuance of trading card games like Magic, with the elegant balance of a standard deck--and you can play it for free! 
@@ -182,19 +182,9 @@ export default {
 	margin: 0 auto;
 }
 
-
-h1 {
-	background: linear-gradient(268.89deg, rgba(98, 2, 238, 0.87) 73.76%, rgba(253, 98, 34, 0.87) 99.59%);
-	background-clip: text;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-}
 #username-login-form {
 	margin: 10px auto;
-
 }
-
-
 
 #login-container button.v-btn {
   padding: 0 32px 0;

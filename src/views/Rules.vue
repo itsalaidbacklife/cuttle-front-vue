@@ -10,7 +10,7 @@
 		</v-row>
 		<!-- Rules -->
 		<div>
-			<h1>Rules of Cuttle</h1>
+			<h1 class="gradient-text">Rules of Cuttle</h1>
 			<p class="d-block">
 				Cuttle is a 2 player battle card game played with a standard 52-card deck of cards. 
 				It has the strategic nuance of trading card games like Magic, with the elegant balance of a standard deck--and you can play it for free! 
@@ -28,7 +28,7 @@
 		</div>
 		<!-- Goal -->
 		<v-row class="flex-column align-start mt-10">
-			<h1>Goal</h1>
+			<h1 class="gradient-text">Goal</h1>
 			<p class="d-block">
 				The goal is to be the first player to have 21 or more points worth of point cards on your field. 
 				The first player to reach the goal wins immediately.
@@ -36,7 +36,7 @@
 		</v-row>
 		<!-- Play -->
 		<v-row class="flex-column">
-			<h1 class="d-block">
+			<h1 class="d-block gradient-text">
 				Play
 			</h1>
 			<p class="d-block">
