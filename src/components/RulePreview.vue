@@ -1,6 +1,14 @@
 <template>
 	<div class="rule-preview">
-		<p>
+		<v-img
+			v-if="!animate"
+			:src="require(`../assets/game_images/${staticImg}`)"
+		/>
+		<v-img
+			v-else
+			src="https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true"
+		/>
+		<p class="mt-2">
 			<v-icon
 				v-if="icon"
 				color="black"
@@ -11,7 +19,15 @@
 			<strong>{{ title }}:</strong>
 			{{ description }}
 		</p>
-		<v-img v-if="!animate" :src="require(`../assets/game_images/${staticImg}`)" />
+		<div class="d-flex justify-center">
+			<v-btn
+				outlined
+				@click="$emit('click', !animate)"
+			>
+				<v-icon>mdi-play</v-icon>
+				Preview Move
+			</v-btn>
+		</div>
 	</div>
 </template>
 <script>

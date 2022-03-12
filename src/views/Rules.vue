@@ -46,16 +46,18 @@
 		<v-row
 			v-for="(ruleRow, rowIndex) in rules"
 			:key="rowIndex"
-			align="end"
+			align="start"
 			class="my-6"
 		>
 			<v-col
-				v-for="rule in ruleRow"
+				v-for="(rule, colIndex) in ruleRow"
 				:key="rule.title"
 				md="4"
 			>
 				<rule-preview
 					v-bind="rule"
+					:animate="isRuleSelected(rowIndex, colIndex)"
+					@click="selectRule(rowIndex, colIndex)"
 				/>
 			</v-col>
 		</v-row>
@@ -71,6 +73,8 @@ export default {
 	},
 	data() {
 		return {
+			// Indices in 2d array of rules for active rule
+			activeRuleIndices: [],
 			rules: [
 				// First Row
 				[
@@ -116,6 +120,24 @@ export default {
 				],
 			],
 		};
+	},
+	methods: {
+		selectRule(rowIndex, colIndex) {
+			if (this.isRuleSelected(rowIndex, colIndex)) {
+				this.activeRuleIndices = [];
+			}
+			else {
+				this.activeRuleIndices = [rowIndex, colIndex];
+			}
+		},
+		isRuleSelected(rowIndex, colIndex) {
+			if (this.activeRuleIndices.length ===2
+			&& rowIndex === this.activeRuleIndices[0]
+			&& colIndex === this.activeRuleIndices[1]) {
+				return true;
+			}
+			return false;
+		}
 	}
 }
 </script>
