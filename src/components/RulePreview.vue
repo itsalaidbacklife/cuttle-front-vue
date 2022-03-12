@@ -25,12 +25,12 @@
 		</p>
 		<div class="d-flex justify-center">
 			<v-btn
-				color="primary"
+				:color="buttonColor"
 				outlined
 				@click="$emit('click', !animate)"
 			>
-				<v-icon>mdi-play</v-icon>
-				Preview Move
+				<v-icon>{{ buttonIcon }}</v-icon>
+				{{ buttonText }}
 			</v-btn>
 		</div>
 	</div>
@@ -64,5 +64,16 @@ export default {
 			default: '',
 		},
 	},
+	computed: {
+		buttonText() {
+			return this.animate ? 'Stop Preview' : 'Preview Move';
+		},
+		buttonIcon() {
+			return this.animate ? 'mdi-stop' : 'mdi-play';
+		},
+		buttonColor() {
+			return this.animate ? 'secondary': 'primary';
+		}
+	}
 }
 </script>
