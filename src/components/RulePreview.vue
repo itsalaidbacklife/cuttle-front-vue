@@ -66,7 +66,7 @@ export default {
 	},
 	computed: {
 		buttonText() {
-			return this.animate ? 'Stop Preview' : 'Preview Move';
+			return this.animate ? 'Stop Preview' : `Preview ${this.title}`;
 		},
 		buttonIcon() {
 			return this.animate ? 'mdi-stop' : 'mdi-play';
