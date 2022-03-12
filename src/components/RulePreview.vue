@@ -4,12 +4,13 @@
 			v-if="!animate"
 			:src="require(`../assets/game_images/${staticImg}`)"
 			:alt="`How to play ${title} in Cuttle`"
+			aspect-ratio="1.7778"
 		/>
 		<v-img
 			v-else
 			:src="animatedImg"
-			aspect-ratio="1.7778"
 			:alt="`Animated preview of ${title} in Cuttle`"
+			aspect-ratio="1.7778"
 		/>
 		<p class="mt-2">
 			<v-icon
@@ -24,6 +25,7 @@
 		</p>
 		<div class="d-flex justify-center">
 			<v-btn
+				color="primary"
 				outlined
 				@click="$emit('click', !animate)"
 			>

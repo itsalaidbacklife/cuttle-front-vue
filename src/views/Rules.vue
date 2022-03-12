@@ -96,7 +96,7 @@ export default {
 						title: 'Scuttle',
 						icon: 'skull-crossbones',
 						description: 'Scrap an opponent’s point card with a bigger one from your hand',
-						staticImg: 'cuttle_ace_one_off.png',
+						staticImg: 'cuttle_scuttle.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/scuttling.gif?raw=true',
 					}
 				],
@@ -107,14 +107,14 @@ export default {
 						icon: 'crown',
 						description: 'Play a face card for a persistent benefit based on rank (lasts until scrapped)',
 						staticImg: 'cuttle_king.png',
-						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/kings.gif?raw=true',
 					},
 					{
 						title: 'One-Off',
 						icon: 'delete',
 						description: 'Scrap a number card for an effect based on the rank of the card.',
-						staticImg: 'cuttle_ace_one_off.png',
-						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/points.gif?raw=true',
+						staticImg: 'cuttle_one_off_six.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/six.gif?raw=true',
 					},
 					{
 						title: 'Glasses',
