@@ -184,7 +184,7 @@ export default {
 					{
 						title: 'King',
 						icon: 'crown',
-						description: 'Reduce the number of points you need to win (21, 14, 10, 7, 5 points with 0, 1, 2, 3, 4 kings) ',
+						description: 'Reduce the number of points you need to win (21, 14, 10, 7, 5 points with 0, 1, 2, 3, 4 kings)',
 						staticImg: 'cuttle_king.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/kings.gif?raw=true',
 					},
@@ -194,6 +194,15 @@ export default {
 						description: 'Protects your other cards from being targeted by the effects of other cards. This protects your cards against 2’s (both effects), 9’s, and Jacks, but not scuttling.',
 						staticImg: 'cuttle_queen.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/queen.gif?raw=true',
+					},
+				],
+				[
+					{
+						title: 'Jack',
+						icon: 'crown',
+						description: 'Play on an opponent’s point card to steal it. Point card returns to opponent if the jack is scrapped or if another jack is used to steal it back.',
+						staticImg: 'cuttle_jack.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/jack.gif?raw=true',
 					},
 				]
 			]
