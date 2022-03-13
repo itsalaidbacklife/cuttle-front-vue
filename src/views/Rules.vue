@@ -49,7 +49,7 @@
 		</v-row>
 		<v-row
 			v-for="(ruleRow, rowIndex) in rules"
-			:key="rowIndex"
+			:key="`rule-row-${rowIndex}`"
 			align="start"
 			class="my-6"
 		>
@@ -92,7 +92,7 @@
 		</v-row>
 		<v-row
 			v-for="(ruleRow, rowIndex) in royals"
-			:key="rowIndex"
+			:key="`royal-row-${rowIndex}`"
 			align="start"
 			class="my-6"
 		>
@@ -104,8 +104,8 @@
 			>
 				<rule-preview
 					v-bind="rule"
-					:animate="isRuleSelected(rowIndex, colIndex)"
-					@click="selectRule(rowIndex, colIndex)"
+					:animate="isRoyalSelected(rowIndex, colIndex)"
+					@click="selectRoyal(rowIndex, colIndex)"
 				/>
 			</v-col>
 		</v-row>
@@ -205,7 +205,13 @@ export default {
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/jack.gif?raw=true',
 					},
 				]
-			]
+			],
+			activeOneOffIndices: [],
+			oneOffs: [
+				[
+
+				],
+			],
 		};
 	},
 	methods: {
@@ -218,12 +224,28 @@ export default {
 			}
 		},
 		isRuleSelected(rowIndex, colIndex) {
-			if (this.activeRuleIndices.length ===2
+			if (this.activeRuleIndices.length === 2
 			&& rowIndex === this.activeRuleIndices[0]
 			&& colIndex === this.activeRuleIndices[1]) {
 				return true;
 			}
 			return false;
+		},
+		isRoyalSelected(rowIndex, colIndex) {
+			if (this.activeRoyalIndices.length === 2
+			&& rowIndex === this.activeRoyalIndices[0]
+			&& colIndex === this.activeRoyalIndices[1]) {
+				return true;
+			}
+			return false;
+		},
+		selectRoyal(rowIndex, colIndex) {
+			if (this.isRoyalSelected(rowIndex, colIndex)) {
+				this.activeRoyalIndices = [];
+			}
+			else {
+				this.activeRoyalIndices = [rowIndex, colIndex];
+			}
 		}
 	}
 }
