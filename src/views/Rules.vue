@@ -69,8 +69,16 @@
 		<!-- Royals -->
 		<v-row class="flex-column">
 			<div class="d-flex">
-				<v-icon x-large color="black" class="mr-4">mdi-crown</v-icon>
-				<h1 class="gradient-text">Royals</h1>
+				<v-icon
+					x-large
+					color="black"
+					class="mr-4"
+				>
+					mdi-crown
+				</v-icon>
+				<h1 class="gradient-text">
+					Royals
+				</h1>
 			</div>
 			<p class="d-block">
 				Number cards (except 8’s and 10’s) can be played for a One-Off effect, 
@@ -179,6 +187,13 @@ export default {
 						description: 'Reduce the number of points you need to win (21, 14, 10, 7, 5 points with 0, 1, 2, 3, 4 kings) ',
 						staticImg: 'cuttle_king.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/kings.gif?raw=true',
+					},
+					{
+						title: 'Queen',
+						icon: 'crown',
+						description: 'Protects your other cards from being targeted by the effects of other cards. This protects your cards against 2’s (both effects), 9’s, and Jacks, but not scuttling.',
+						staticImg: 'cuttle_queen.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/queen.gif?raw=true',
 					},
 				]
 			]
