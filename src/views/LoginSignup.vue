@@ -78,7 +78,7 @@
 			</p>
 			<div class="full-width row d-flex flex-column align-center">
 				<v-img
-					src="../assets/game_images/cuttle_ace_one_off.png"
+					src="../assets/game_images/cuttle_one_off_ace.png"
 					alt="Cuttle Game Ace One-Off"
 					max-width="600px"
 				/>

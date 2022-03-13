@@ -110,6 +110,39 @@
 			</v-col>
 		</v-row>
 		<!-- One-Offs -->
+		<v-row>
+			<div class="d-flex">
+				<v-icon
+					x-large
+					color="black"
+					class="mr-4"
+				>
+					mdi-delete
+				</v-icon>
+				<h1 class="gradient-text">
+					One-Offs
+				</h1>
+			</div>
+		</v-row>
+		<v-row
+			v-for="(ruleRow, rowIndex) in oneOffs"
+			:key="`one-off-row-${rowIndex}`"
+			align="start"
+			class="my-6"
+		>
+			<v-col
+				v-for="(rule, colIndex) in ruleRow"
+				:key="rule.title"
+				md="6"
+				sm="12"
+			>
+				<rule-preview
+					v-bind="rule"
+					:animate="isOneOffSelected(rowIndex, colIndex)"
+					@click="selectOneOff(rowIndex, colIndex)"
+				/>
+			</v-col>
+		</v-row>
 	</v-container>
 </template>
 <script>
@@ -209,7 +242,13 @@ export default {
 			activeOneOffIndices: [],
 			oneOffs: [
 				[
-
+					{
+						title: 'Ace',
+						icon: 'delete',
+						description: 'Play on an opponent’s point card to steal it. Point card returns to opponent if the jack is scrapped or if another jack is used to steal it back.',
+						staticImg: 'cuttle_one_off_ace.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/jack.gif?raw=true',
+					},
 				],
 			],
 		};
@@ -224,20 +263,14 @@ export default {
 			}
 		},
 		isRuleSelected(rowIndex, colIndex) {
-			if (this.activeRuleIndices.length === 2
+			return this.activeRuleIndices.length === 2
 			&& rowIndex === this.activeRuleIndices[0]
-			&& colIndex === this.activeRuleIndices[1]) {
-				return true;
-			}
-			return false;
+			&& colIndex === this.activeRuleIndices[1];
 		},
 		isRoyalSelected(rowIndex, colIndex) {
-			if (this.activeRoyalIndices.length === 2
+			return this.activeRoyalIndices.length === 2
 			&& rowIndex === this.activeRoyalIndices[0]
-			&& colIndex === this.activeRoyalIndices[1]) {
-				return true;
-			}
-			return false;
+			&& colIndex === this.activeRoyalIndices[1]
 		},
 		selectRoyal(rowIndex, colIndex) {
 			if (this.isRoyalSelected(rowIndex, colIndex)) {
@@ -245,6 +278,19 @@ export default {
 			}
 			else {
 				this.activeRoyalIndices = [rowIndex, colIndex];
+			}
+		},
+		isOneOffSelected(rowIndex, colIndex) {
+			return this.activeOneOffIndices.length === 2
+			&& rowIndex === this.activeOneOffIndices[0]
+			&& colIndex == this.activeOneOffIndices[1];
+		},
+		selectOneOff(rowIndex, colIndex) {
+			if (this.isOneOffSelected(rowIndex, colIndex)) {
+				this.activeOneOffIndices = [];
+			}
+			else {
+				this.activeOneOffIndices = [rowIndex, colIndex];
 			}
 		}
 	}
