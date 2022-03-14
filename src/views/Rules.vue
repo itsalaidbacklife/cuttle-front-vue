@@ -249,6 +249,29 @@ export default {
 						staticImg: 'cuttle_one_off_ace.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/ace.gif?raw=true',
 					},
+					{
+						title: 'Two - Effect 1',
+						icon: 'delete',
+						description: 'Twos have two alternative one-off effects: Scrap target Royal',
+						staticImg: 'cuttle_one_off_ace.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/two.gif?raw=true',
+					},
+				],
+				[
+					{
+						title: 'Two - Effect 2',
+						icon: 'delete',
+						description: 'Twos have two alternative one-off effects: Counter target One-Off Effect',
+						staticImg: 'cuttle_one_off_ace.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/counter.gif?raw=true',
+					},
+					{
+						title: 'Three',
+						icon: 'delete',
+						description: 'Choose a card in the scrap pile and put it in your hand.',
+						staticImg: 'cuttle_one_off_ace.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/three.gif?raw=true',
+					},
 				],
 			],
 		};
