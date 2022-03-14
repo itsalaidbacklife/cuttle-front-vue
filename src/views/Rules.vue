@@ -268,9 +268,50 @@ export default {
 					{
 						title: 'Three',
 						icon: 'delete',
-						description: 'Choose a card in the scrap pile and put it in your hand.',
+						description: 'Choose a card in the scrap pile and put it in your hand',
 						staticImg: 'cuttle_one_off_ace.png',
 						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/three.gif?raw=true',
+					},
+				],
+				[
+					{
+						title: 'Four',
+						icon: 'delete',
+						description: 'Your opponent discards two cards of their choice',
+						staticImg: 'cuttle_one_off_ace.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/four.gif?raw=true',
+					},
+					{
+						title: 'Five',
+						icon: 'delete',
+						description: 'Draw two cards from the deck',
+						staticImg: 'cuttle_one_off_ace.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/five.gif?raw=true',
+					},
+				],
+				[
+					{
+						title: 'Six',
+						icon: 'delete',
+						description: 'Scrap all Royals and Glasses Eights on the field',
+						staticImg: 'cuttle_one_off_ace.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/six.gif?raw=true',
+					},
+					{
+						title: 'Seven',
+						icon: 'delete',
+						description: 'Choose one of the top two cards from the deck and play it however you choose.',
+						staticImg: 'cuttle_one_off_ace.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/seven.gif?raw=true',
+					},
+				],
+				[
+					{
+						title: 'Nine',
+						icon: 'delete',
+						description: 'Return a card from your opponent’s field to their hand. They cannot play it next turn.',
+						staticImg: 'cuttle_one_off_ace.png',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/nine.gif?raw=true',
 					},
 				],
 			],
