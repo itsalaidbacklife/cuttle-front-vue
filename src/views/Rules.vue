@@ -58,6 +58,7 @@
 				:key="rule.title"
 				md="6"
 				sm="12"
+				class="my-4"
 			>
 				<rule-preview
 					v-bind="rule"
@@ -101,6 +102,7 @@
 				:key="rule.title"
 				md="6"
 				sm="12"
+				class="my-4"
 			>
 				<rule-preview
 					v-bind="rule"
@@ -135,6 +137,7 @@
 				:key="rule.title"
 				md="6"
 				sm="12"
+				class="my-4"
 			>
 				<rule-preview
 					v-bind="rule"
