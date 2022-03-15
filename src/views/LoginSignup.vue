@@ -15,7 +15,9 @@
 				sm="9"
 				lg="5"
 			>
-				<h1 clas="gradient-text">{{ buttonText }}</h1>
+				<h1 class="gradient-text">
+					{{ buttonText }}
+				</h1>
 				<form @submit.prevent="submitLogin">
 					<v-text-field
 						v-model="username"
@@ -70,18 +72,26 @@
 			</v-col>
 		</v-row>
 		<v-row>
-			<h1 class="gradient-text">What is Cuttle?</h1>
-			<p>
-				Cuttle is a 2 player battle card game played with a standard 52-card deck of cards. 
-				It has the strategic nuance of trading card games like Magic, with the elegant balance of a standard deck--and you can play it for free! 
-				Test your mettle in the deepest cardgame under the sea!
-			</p>
-			<div class="full-width row d-flex flex-column align-center">
-				<v-img
-					src="../assets/game_images/cuttle_one_off_ace.png"
-					alt="Cuttle Game Ace One-Off"
-					max-width="600px"
-				/>
+			<h1 class="gradient-text">
+				What is Cuttle?
+			</h1>
+		</v-row>
+		<v-row class="mt-0">
+			<v-col
+				md="6"
+				sm="12"
+				class="d-flex justify-start flex-column mt-4"
+			>
+				<p>
+					Cuttle is a 2 player battle card game played with a standard 52-card deck of cards. 
+					It has the strategic nuance of trading card games like Magic, with the elegant balance of a standard deck--and you can play it for free! 
+					Test your mettle in the deepest cardgame under the sea!
+				</p>
+				<p>
+					Be the first to score 21 points in this explosive battle of wits.
+					Mount a valient offense while disupting your opponent with dastardly tricks.
+					Do you have what it takes to become the Lord of the Deep?
+				</p>
 				<v-btn
 					text
 					color="primary"
@@ -90,8 +100,19 @@
 				>
 					Learn the Rules
 				</v-btn>
-			</div>
-		</v-row>
+			</v-col>
+			<v-col
+				md="6"
+				sm="12"
+				class="mt-2 mb-4"
+			>
+				<v-img
+					src="../assets/game_images/cuttle_one_off_ace.png"
+					alt="Cuttle Game Ace One-Off"
+					max-width="600px"
+				/>
+			</v-col>
+		</v-row>	
 	</v-container>
 </template>
 
