@@ -125,6 +125,11 @@
 					One-Offs
 				</h1>
 			</div>
+			<p>
+				Number cards (except 8’s and 10’s) can be played for a One-Off effect, 
+				which scraps the card for an effect based on the rank of the card played. 
+				Whenever a one-off is played, the other player may counter it using a two to cancel the effect.
+			</p>
 		</v-row>
 		<v-row
 			v-for="(ruleRow, rowIndex) in oneOffs"
@@ -255,18 +260,18 @@ export default {
 					{
 						title: 'Two - Effect 1',
 						icon: 'delete',
-						description: 'Twos have two alternative one-off effects: Scrap target Royal',
+						description: 'Twos have two alternative one-off effects: Counter target One-Off Effect',
 						staticImg: 'cuttle_one_off_ace.png',
-						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/two.gif?raw=true',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/counter.gif?raw=true',
 					},
 				],
 				[
 					{
 						title: 'Two - Effect 2',
 						icon: 'delete',
-						description: 'Twos have two alternative one-off effects: Counter target One-Off Effect',
+						description: 'Twos have two alternative one-off effects: Scrap target Royal',
 						staticImg: 'cuttle_one_off_ace.png',
-						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/counter.gif?raw=true',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/two.gif?raw=true',
 					},
 					{
 						title: 'Three',
