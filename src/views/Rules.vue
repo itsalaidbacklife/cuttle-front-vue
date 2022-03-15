@@ -21,10 +21,9 @@
 			<div class="d-flex justify-center">
 				<v-btn
 					to="login"
-					text
 					color="primary"
 				>
-					Sign Up To Play Online
+					{{ buttonText }}
 				</v-btn>
 			</div>
 		</div>
@@ -150,6 +149,21 @@
 					@click="selectOneOff(rowIndex, colIndex)"
 				/>
 			</v-col>
+		</v-row>
+		<v-row class="d-flex flex-column mb-4 flex-grow-0">
+			<h1 class="gradient-text">Got It?</h1>
+			<p>
+				Ready to Give Cuttle a Try?
+				Join our growing community and test your mettle in the deepest cardgame under the sea!
+			</p>
+			<v-btn
+				to="/"
+				width="300px"
+				color="primary"
+				class="align-self-center"
+			>
+				{{ buttonText }}
+			</v-btn>
 		</v-row>
 	</v-container>
 </template>
@@ -325,6 +339,14 @@ export default {
 			],
 		};
 	},
+	computed: {
+		buttonText() {
+			if (this.$store.state.auth.username) {
+				return 'Find a Game';
+			}
+			return 'Sign Up to Play Online';
+		},
+	},
 	methods: {
 		selectRule(rowIndex, colIndex) {
 			if (this.isRuleSelected(rowIndex, colIndex)) {
@@ -365,7 +387,7 @@ export default {
 				this.activeOneOffIndices = [rowIndex, colIndex];
 			}
 		}
-	}
+	},
 }
 </script>
 <style scoped>
