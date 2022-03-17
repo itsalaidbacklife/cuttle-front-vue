@@ -1,171 +1,211 @@
 <template>
-	<v-container>
-		<v-row>
-			<img
-				id="logo"
-				alt="Cuttle logo"
-				src="../assets/logo.png"
-				height="20vh"
+	<div class="pa-4">
+		<v-container>
+			<v-row>
+				<img
+					id="logo"
+					alt="Cuttle logo"
+					src="../assets/logo.png"
+					height="20vh"
+				>
+			</v-row>
+			<!-- Rules -->
+			<div>
+				<h1 class="gradient-text">
+					Rules of Cuttle
+				</h1>
+				<p class="d-block">
+					Cuttle is a 2 player battle card game played with a standard 52-card deck of cards. 
+					It has the strategic nuance of trading card games like Magic, with the elegant balance of a standard deck--and you can play it for free! 
+					Test your mettle in the deepest cardgame under the sea!
+				</p>
+				<div class="d-flex justify-center">
+					<v-btn
+						to="login"
+						color="primary"
+					>
+						{{ buttonText }}
+					</v-btn>
+				</div>
+			</div>
+			<!-- Goal -->
+			<v-row class="flex-column align-start mt-10">
+				<h1 class="gradient-text">
+					Goal
+				</h1>
+				<p class="d-block">
+					The goal is to be the first player to have 21 or more points worth of point cards on your field. 
+					The first player to reach the goal wins immediately.
+				</p>
+			</v-row>
+			<!-- Play -->
+			<v-row class="flex-column">
+				<h1 class="d-block gradient-text">
+					Play
+				</h1>
+				<p class="d-block">
+					On your turn you must perform exactly one of the following actions:
+				</p>
+			</v-row>
+			<v-row
+				v-for="(ruleRow, rowIndex) in rules"
+				:key="`rule-row-${rowIndex}`"
+				align="start"
+				class="my-6"
 			>
-		</v-row>
-		<!-- Rules -->
-		<div>
-			<h1 class="gradient-text">
-				Rules of Cuttle
-			</h1>
-			<p class="d-block">
-				Cuttle is a 2 player battle card game played with a standard 52-card deck of cards. 
-				It has the strategic nuance of trading card games like Magic, with the elegant balance of a standard deck--and you can play it for free! 
-				Test your mettle in the deepest cardgame under the sea!
-			</p>
-			<div class="d-flex justify-center">
+				<v-col
+					v-for="(rule, colIndex) in ruleRow"
+					:key="rule.title"
+					md="6"
+					sm="12"
+					class="my-4"
+				>
+					<rule-preview
+						v-bind="rule"
+						:animate="isRuleSelected(rowIndex, colIndex)"
+						@click="selectRule(rowIndex, colIndex)"
+					/>
+				</v-col>
+			</v-row>
+			<!-- Royals -->
+			<v-row class="flex-column">
+				<div class="d-flex">
+					<v-icon
+						x-large
+						color="black"
+						class="mr-4"
+					>
+						mdi-crown
+					</v-icon>
+					<h1 class="gradient-text">
+						Royals
+					</h1>
+				</div>
+				<p class="d-block">
+					Number cards (except 8’s and 10’s) can be played for a One-Off effect, 
+					which scraps the card for an effect based on the rank of the card played. 
+					Whenever a one-off is played, the other player may 
+					<strong>
+						counter 
+					</strong>
+					it using a two to cancel the effect.
+				</p>
+			</v-row>
+			<v-row
+				v-for="(ruleRow, rowIndex) in royals"
+				:key="`royal-row-${rowIndex}`"
+				align="start"
+				class="my-6"
+			>
+				<v-col
+					v-for="(rule, colIndex) in ruleRow"
+					:key="rule.title"
+					md="6"
+					sm="12"
+					class="my-4"
+				>
+					<rule-preview
+						v-bind="rule"
+						:animate="isRoyalSelected(rowIndex, colIndex)"
+						@click="selectRoyal(rowIndex, colIndex)"
+					/>
+				</v-col>
+			</v-row>
+			<!-- One-Offs -->
+			<v-row>
+				<div class="d-flex">
+					<v-icon
+						x-large
+						color="black"
+						class="mr-4"
+					>
+						mdi-delete
+					</v-icon>
+					<h1 class="gradient-text">
+						One-Offs
+					</h1>
+				</div>
+				<p>
+					Number cards (except 8’s and 10’s) can be played for a One-Off effect, 
+					which scraps the card for an effect based on the rank of the card played. 
+					Whenever a one-off is played, the other player may counter it using a two to cancel the effect.
+				</p>
+			</v-row>
+			<v-row
+				v-for="(ruleRow, rowIndex) in oneOffs"
+				:key="`one-off-row-${rowIndex}`"
+				align="start"
+				class="my-6"
+			>
+				<v-col
+					v-for="(rule, colIndex) in ruleRow"
+					:key="rule.title"
+					md="6"
+					sm="12"
+					class="my-4"
+				>
+					<rule-preview
+						v-bind="rule"
+						:animate="isOneOffSelected(rowIndex, colIndex)"
+						@click="selectOneOff(rowIndex, colIndex)"
+					/>
+				</v-col>
+			</v-row>
+			<!-- FAQ -->
+			<v-row class="d-flex flex-column mb-4">
+				<h1 class="gradient-text">
+					FAQ
+				</h1>
+				<h3>Can I play a two to counter a point card? What about a scuttle?</h3>
+				<p class="mb-4">
+					Nope! Twos can only counter One-Offs. 
+					You can play a two to destroy a Face Card or Glasses Eight, but this takes your turn, unlike countering.
+				</p>
+				<h3>Do Queens protect against countering with a two?</h3>
+				<p class="mb-4">
+					Yes! Queens protect against targeting, when a card applies a unique effect to one specific card. 
+					This means your other cards (not the Queen, herself) are protected against Twos (either effect), Nines, and Jacks.
+				</p>
+				<h3>Do Queens protect against scuttling? What about Aces & Sixes?</h3>
+				<p class="mb-4">
+					No! Scuttling doesn't count as targeting, and neither do the board-wiping effects of Aces or Sixes.
+					Queens only protect against the effects of Twos, Nines, and Jacks.
+				</p>
+				<h3>Can I counter a Two with a Two?</h3>
+				<p class="mb-4">
+					Heck yeah! Playing a Two to counter is a One-Off, which can be countered with a two. 
+					Stacked counters make for exciting plays and pivotal strategic moments.
+				</p>
+				<h3>Can I win by playing a King?</h3>
+				<p class="mb-4">
+					Yes! If you meet the required number of points, you win immediately. 
+					This means if you play a King when you already have enough points to meet the new limit, you win on that turn.
+				</p>
+				<h3>If I play an Ace or a Six, are my cards destroyed as well?</h3>
+				<p class="mb-4">
+					Yes. Aces and Sixes destroy all Point Cards and all Face Cards plus Glasses Eights, respectively. 
+					That includes any that you have out. Try to avoid destroying too many of your own cards!
+				</p>
+			</v-row>
+			<v-row class="d-flex flex-column mb-4">
+				<h1 class="gradient-text">
+					Got It?
+				</h1>
+				<p>
+					Ready to Give Cuttle a Try?
+					Join our growing community and test your mettle in the deepest cardgame under the sea!
+				</p>
 				<v-btn
-					to="login"
+					to="/"
+					width="300px"
 					color="primary"
+					class="align-self-center"
 				>
 					{{ buttonText }}
 				</v-btn>
-			</div>
-		</div>
-		<!-- Goal -->
-		<v-row class="flex-column align-start mt-10">
-			<h1 class="gradient-text">
-				Goal
-			</h1>
-			<p class="d-block">
-				The goal is to be the first player to have 21 or more points worth of point cards on your field. 
-				The first player to reach the goal wins immediately.
-			</p>
-		</v-row>
-		<!-- Play -->
-		<v-row class="flex-column">
-			<h1 class="d-block gradient-text">
-				Play
-			</h1>
-			<p class="d-block">
-				On your turn you must perform exactly one of the following actions:
-			</p>
-		</v-row>
-		<v-row
-			v-for="(ruleRow, rowIndex) in rules"
-			:key="`rule-row-${rowIndex}`"
-			align="start"
-			class="my-6"
-		>
-			<v-col
-				v-for="(rule, colIndex) in ruleRow"
-				:key="rule.title"
-				md="6"
-				sm="12"
-				class="my-4"
-			>
-				<rule-preview
-					v-bind="rule"
-					:animate="isRuleSelected(rowIndex, colIndex)"
-					@click="selectRule(rowIndex, colIndex)"
-				/>
-			</v-col>
-		</v-row>
-		<!-- Royals -->
-		<v-row class="flex-column">
-			<div class="d-flex">
-				<v-icon
-					x-large
-					color="black"
-					class="mr-4"
-				>
-					mdi-crown
-				</v-icon>
-				<h1 class="gradient-text">
-					Royals
-				</h1>
-			</div>
-			<p class="d-block">
-				Number cards (except 8’s and 10’s) can be played for a One-Off effect, 
-				which scraps the card for an effect based on the rank of the card played. 
-				Whenever a one-off is played, the other player may 
-				<strong>
-					counter 
-				</strong>
-				it using a two to cancel the effect.
-			</p>
-		</v-row>
-		<v-row
-			v-for="(ruleRow, rowIndex) in royals"
-			:key="`royal-row-${rowIndex}`"
-			align="start"
-			class="my-6"
-		>
-			<v-col
-				v-for="(rule, colIndex) in ruleRow"
-				:key="rule.title"
-				md="6"
-				sm="12"
-				class="my-4"
-			>
-				<rule-preview
-					v-bind="rule"
-					:animate="isRoyalSelected(rowIndex, colIndex)"
-					@click="selectRoyal(rowIndex, colIndex)"
-				/>
-			</v-col>
-		</v-row>
-		<!-- One-Offs -->
-		<v-row>
-			<div class="d-flex">
-				<v-icon
-					x-large
-					color="black"
-					class="mr-4"
-				>
-					mdi-delete
-				</v-icon>
-				<h1 class="gradient-text">
-					One-Offs
-				</h1>
-			</div>
-			<p>
-				Number cards (except 8’s and 10’s) can be played for a One-Off effect, 
-				which scraps the card for an effect based on the rank of the card played. 
-				Whenever a one-off is played, the other player may counter it using a two to cancel the effect.
-			</p>
-		</v-row>
-		<v-row
-			v-for="(ruleRow, rowIndex) in oneOffs"
-			:key="`one-off-row-${rowIndex}`"
-			align="start"
-			class="my-6"
-		>
-			<v-col
-				v-for="(rule, colIndex) in ruleRow"
-				:key="rule.title"
-				md="6"
-				sm="12"
-				class="my-4"
-			>
-				<rule-preview
-					v-bind="rule"
-					:animate="isOneOffSelected(rowIndex, colIndex)"
-					@click="selectOneOff(rowIndex, colIndex)"
-				/>
-			</v-col>
-		</v-row>
-		<v-row class="d-flex flex-column mb-4 flex-grow-0">
-			<h1 class="gradient-text">Got It?</h1>
-			<p>
-				Ready to Give Cuttle a Try?
-				Join our growing community and test your mettle in the deepest cardgame under the sea!
-			</p>
-			<v-btn
-				to="/"
-				width="300px"
-				color="primary"
-				class="align-self-center"
-			>
-				{{ buttonText }}
-			</v-btn>
-		</v-row>
-	</v-container>
+			</v-row>
+		</v-container>
+	</div>
 </template>
 <script>
 import RulePreview from '@/components/RulePreview.vue';
