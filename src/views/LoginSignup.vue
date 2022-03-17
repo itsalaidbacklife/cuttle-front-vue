@@ -96,7 +96,8 @@
 					text
 					color="primary"
 					to="rules"
-					class="mt-2"
+					class="mt-2 align-self-center"
+					max-width="500"
 				>
 					Learn the Rules
 				</v-btn>
