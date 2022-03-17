@@ -186,14 +186,15 @@
 					Yes. Aces and Sixes destroy all Point Cards and all Face Cards plus Glasses Eights, respectively. 
 					That includes any that you have out. Try to avoid destroying too many of your own cards!
 				</p>
-			</v-row>
-			<v-row class="d-flex flex-column mb-4">
-				<h1 class="gradient-text">
-					Got It?
-				</h1>
-				<p>
-					Ready to Give Cuttle a Try?
-					Join our growing community and test your mettle in the deepest cardgame under the sea!
+				<h3>
+					Where can I play Cuttle?
+				</h3>
+				<p class="mb-4">
+					You can play Cuttle anywhere you have a deck of cards and a friend! 
+					If you want to play online, there is only one place: 
+					<a href="https://www.cuttle.cards">
+						www.cuttle.cards
+					</a>
 				</p>
 				<v-btn
 					to="/"
