@@ -21,7 +21,7 @@
 				</p>
 				<div class="d-flex justify-center">
 					<v-btn
-						to="login"
+						to="/"
 						color="primary"
 					>
 						{{ buttonText }}
