@@ -37,6 +37,8 @@
 				<p class="d-block">
 					The goal is to be the first player to have 21 or more points worth of point cards on your field. 
 					The first player to reach the goal wins immediately.
+					One player (traditionally the dealer) is dealt 6 cards, and their opponent is dealt 5. 
+					The player with 5 cards goes first.
 				</p>
 			</v-row>
 			<!-- Play -->
