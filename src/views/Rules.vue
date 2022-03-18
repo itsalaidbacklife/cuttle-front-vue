@@ -23,6 +23,7 @@
 					<v-btn
 						to="/"
 						color="primary"
+						data-cy="top-home-button"
 					>
 						{{ buttonText }}
 					</v-btn>
@@ -201,6 +202,7 @@
 					width="300px"
 					color="primary"
 					class="align-self-center"
+					data-cy="bottom-home-button"
 				>
 					{{ buttonText }}
 				</v-btn>
