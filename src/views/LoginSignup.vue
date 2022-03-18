@@ -98,6 +98,7 @@
 					to="rules"
 					class="mt-2 align-self-center"
 					max-width="500"
+					data-cy="rules-link"
 				>
 					Learn the Rules
 				</v-btn>

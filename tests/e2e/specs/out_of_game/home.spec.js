@@ -28,12 +28,15 @@ describe('Home - Page Content', () => {
 	it('Displays logo', () => {
 		cy.get('#logo')
 	});
-	it('Play AI button links to CuttleBot', () => {
-		cy.contains('a', 'Play with AI').should(
-			'have.attr',
-			'href',
-			'https://human-ai-interaction.github.io/cuttle-bot/'
-		);
+	it('Play AI and Rules page links work', () => {
+		cy.get('[data-cy=ai-link]')
+			.should(
+				'have.attr',
+				'href',
+				'https://human-ai-interaction.github.io/cuttle-bot/'
+			);
+		cy.get('[data-cy=rules-link]').click();
+		cy.hash().should('eq', '#/rules');
 	});
 	it('Logs user out', () => {
 		cy.get('[data-cy=btn-logout]').click();

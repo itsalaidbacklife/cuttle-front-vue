@@ -89,6 +89,7 @@
 							class="mt-4"
 							:small="$vuetify.breakpoint.mdAndDown ? true : false"
 							to="rules"
+							data-cy="rules-link"
 						>
 							Rules
 						</v-btn>
@@ -99,6 +100,7 @@
 							:small="$vuetify.breakpoint.mdAndDown ? true : false"
 							href="https://human-ai-interaction.github.io/cuttle-bot/"
 							target="_blank"
+							data-cy="ai-link"
 						>
 							Play with AI
 						</v-btn>
