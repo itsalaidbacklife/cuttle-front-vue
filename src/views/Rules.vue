@@ -255,7 +255,7 @@ export default {
 						icon: 'crown',
 						description: 'Play a face card for a persistent benefit based on rank (lasts until scrapped)',
 						staticImg: 'cuttle_king.png',
-						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/kings.gif?raw=true',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/king.gif?raw=true',
 					},
 				],
 				// Third Row
@@ -284,7 +284,7 @@ export default {
 						icon: 'crown',
 						description: 'Reduce the number of points you need to win (21, 14, 10, 7, 5 points with 0, 1, 2, 3, 4 kings)',
 						staticImg: 'cuttle_king.png',
-						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/kings.gif?raw=true',
+						animatedImg: 'https://github.com/cuttle-cards/cuttle-assets/blob/main/assets/king.gif?raw=true',
 					},
 					{
 						title: 'Queen',
