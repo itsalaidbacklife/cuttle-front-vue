@@ -226,9 +226,6 @@ export default {
 	justify-content: center;
 	margin-top: 16px;;
 }
-.full-width-row {
-	width: 100%;
-}
 @media (orientation: landscape) and (max-width: 979px){
 	#logo {
 		width: 64px;
