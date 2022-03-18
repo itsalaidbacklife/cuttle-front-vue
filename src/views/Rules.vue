@@ -83,13 +83,8 @@
 					</h1>
 				</div>
 				<p class="d-block">
-					Number cards (except 8’s and 10’s) can be played for a One-Off effect, 
-					which scraps the card for an effect based on the rank of the card played. 
-					Whenever a one-off is played, the other player may 
-					<strong>
-						counter 
-					</strong>
-					it using a two to cancel the effect.
+					Royals (Kings, Queens, and Jacks) may be played to the field for a persistent benefit
+					that remains in effect until the card is scrapped. Each Royal gives a different effect.
 				</p>
 			</v-row>
 			<v-row
