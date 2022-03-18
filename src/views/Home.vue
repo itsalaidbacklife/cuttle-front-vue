@@ -83,7 +83,16 @@
 							alt="Vue logo"
 							src="../assets/logo.png"
 						>
-						<rules-dialog />
+						<v-btn
+							outlined
+							color="primary"
+							class="mt-4"
+							:small="$vuetify.breakpoint.mdAndDown ? true : false"
+							to="rules"
+							data-cy="rules-link"
+						>
+							Rules
+						</v-btn>
 						<v-btn
 							outlined
 							color="secondary"
@@ -91,6 +100,7 @@
 							:small="$vuetify.breakpoint.mdAndDown ? true : false"
 							href="https://human-ai-interaction.github.io/cuttle-bot/"
 							target="_blank"
+							data-cy="ai-link"
 						>
 							Play with AI
 						</v-btn>
@@ -125,13 +135,11 @@
 </template>
 <script>
 import GameListItem from '@/components/GameListItem.vue';
-import RulesDialog from '@/components/RulesDialog.vue';
 
 export default {
 	name: 'Home',
 	components: {
 		GameListItem,
-		RulesDialog,
 	},
 	data() {
 		return {
