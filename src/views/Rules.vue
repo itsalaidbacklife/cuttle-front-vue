@@ -155,7 +155,7 @@
 				<h3>Can I play a two to counter a point card? What about a scuttle?</h3>
 				<p class="mb-4">
 					Nope! Twos can only counter One-Offs. 
-					You can play a two to destroy a Face Card or Glasses Eight, but this takes your turn, unlike countering.
+					You can play a two to destroy a Royal or Glasses Eight, but this takes your turn, unlike countering.
 				</p>
 				<h3>Do Queens protect against countering with a two?</h3>
 				<p class="mb-4">
@@ -179,7 +179,7 @@
 				</p>
 				<h3>If I play an Ace or a Six, are my cards destroyed as well?</h3>
 				<p class="mb-4">
-					Yes. Aces and Sixes destroy all Point Cards and all Face Cards plus Glasses Eights, respectively. 
+					Yes. Aces and Sixes destroy all Point Cards and all Royals plus Glasses Eights, respectively. 
 					That includes any that you have out. Try to avoid destroying too many of your own cards!
 				</p>
 				<h3>
