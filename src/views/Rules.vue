@@ -7,6 +7,7 @@
 					alt="Cuttle logo"
 					src="../assets/logo.png"
 					height="20vh"
+					class="mb-6"
 				>
 			</v-row>
 			<!-- Rules -->
