@@ -71,7 +71,7 @@
 				</v-snackbar>
 			</v-col>
 		</v-row>
-		<v-row>
+		<v-row class="mt-8">
 			<h1 class="gradient-text">
 				What is Cuttle?
 			</h1>
