@@ -1,3 +1,11 @@
+# ARCHIVED
+
+This repo is now archived.  It has moved to be a part of the mono-repo [here](https://github.com/cuttle-cards/cuttle)
+
+Everything below this line is preserved for historical purposes only
+
+----
+
 # cuttle-front-vue
 This repository is the front end web app for [Cuttle](https://www.pagat.com/combat/cuttle.html), the pvp card game, built in VueJs using Vuetify. It must be run in tandem with the [back end web server](https://github.com/TeasingSisyphus/cuttleV2), built with SailsJs.
 
