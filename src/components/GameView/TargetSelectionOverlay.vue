@@ -25,6 +25,14 @@
 				Cancel
 			</v-btn>
 		</div>
+		<v-btn
+			color="primary"
+			text
+			data-cy="cancel-target-mobile"
+			@click="$emit('cancel')"
+		>
+			X
+		</v-btn>
 	</div>
 </template>
 
